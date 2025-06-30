@@ -24,7 +24,7 @@ const OutlineIconValueCircle: React.FC<OutlineIconValueCircleProps> = ({
 }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-      <Box sx={{ position: 'relative', display: 'inline-flex', mb: 2 }}>
+      <Box sx={{ position: 'relative', display: 'inline-flex', mb: 3 }}> {/* Increased margin-bottom here */}
         {/* Background circle (always 100% for outline or full background) */}
         <CircularProgress
           variant="determinate"
@@ -60,7 +60,7 @@ const OutlineIconValueCircle: React.FC<OutlineIconValueCircleProps> = ({
           {/* If filled, icon should be white for contrast, otherwise use iconColor */}
         </Box>
       </Box>
-      <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: '#333', fontSize: '1.2rem', mb: 0.5 }}>
+      <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: '#333', fontSize: '1.2rem', mb: 1 }}> {/* Increased margin-bottom here */}
         {value}{unit}
       </Typography>
       <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}>
