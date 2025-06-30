@@ -109,8 +109,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper sx={{
       p: 4, // Increased overall padding
-      height: { xs: 'auto', md: 500 }, // Adjusted height to better contain content
-      minHeight: { xs: 400, md: 500 },
+      height: 'auto', // Allow height to adjust based on content
+      minHeight: { xs: 400, md: 450 }, // Maintain a minimum height
       display: 'flex',
       flexDirection: 'column',
       bgcolor: '#fafbfc', // Subtle background tint
@@ -141,7 +141,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         borderRadius: 2,
         bgcolor: '#f0f4f8', // Subtle flat background
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-        flexGrow: 1,
+        flexGrow: 1, // Allow this section to grow
       }}>
         <StatCircle
           value={85.7}
@@ -166,8 +166,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
       }}>
         <NumberCircle
           value={1247}
-          label="Total Commitments" // Updated label
-          subLabel="1247 Total Commitments" // Updated subLabel
+          label="Total Commitments"
+          subLabel="1247 Total Commitments"
           icon={Adjust}
           iconColor="#2196f3"
           size={100}
@@ -175,8 +175,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         />
         <StatCircle
           value={92.3}
-          label="Commitment Follow-Through Rate" // Updated label
-          subLabel="94.4% Commitment Follow-Through Rate" // Updated subLabel
+          label="Commitment Follow-Through Rate"
+          subLabel="94.4% Commitment Follow-Through Rate"
           color="#42a5f5"
           textColor="#1976d2"
           size={100}
@@ -184,8 +184,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         />
         <StatCircle
           value={2.3}
-          label="Average Nudges Received" // Updated label
-          subLabel="2.3 Average Nudges Received" // Updated subLabel
+          label="Average Nudges Received"
+          subLabel="2.3 Average Nudges Received"
           color="#66bb6a"
           textColor="#388e3c"
           size={100}
