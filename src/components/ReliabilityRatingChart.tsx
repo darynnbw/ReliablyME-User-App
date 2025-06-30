@@ -15,7 +15,7 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
     <Paper
       sx={{
         p: 4,
-        bgcolor: '#f7fafd', // Very light blue background
+        background: 'linear-gradient(135deg, #e3f2fd 0%, #fff3e0 100%)', // Gradient background
         borderRadius: 3,
         boxShadow: 1,
         display: 'flex',
@@ -54,7 +54,7 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h5" component="div" sx={{ fontWeight: 700, color: '#333' }}>
+          <Typography variant="h5" component="div" sx={{ fontWeight: 700, color: '#333', fontSize: '2rem' }}> {/* Increased font size */}
             {value}%
           </Typography>
         </Box>

@@ -18,8 +18,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
   ringColor,
   unit = '',
 }) => {
-  const circleSize = 80; // Smaller size for metric cards
-  const circleThickness = 4; // Thin ring
+  const circleSize = 80;
+  const circleThickness = 2; // Thinner ring
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
@@ -45,7 +45,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
           }}
         >
           {/* Icon in the center */}
-          <Icon sx={{ fontSize: 28, color: iconColor }} />
+          <Icon sx={{ fontSize: 24, color: iconColor }} /> {/* Adjusted icon size */}
         </Box>
       </Box>
       <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: '#333', fontSize: '1.5rem', mb: 0.5 }}>
