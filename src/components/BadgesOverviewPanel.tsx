@@ -209,7 +209,7 @@ const BadgesOverviewPanel: React.FC = () => {
           Badges Overview (389)
         </Typography>
         <FormControl variant="outlined" size="small" sx={{ minWidth: 180 }}>
-          <InputLabel id="badge-filter-label" sx={{ fontSize: '0.875rem' }}>Badge Type</InputLabel> {/* Updated label */}
+          <InputLabel id="badge-filter-label" sx={{ fontSize: '0.875rem' }}>Badge Type</InputLabel>
           <Select
             labelId="badge-filter-label"
             value={badgeFilter}
@@ -217,11 +217,9 @@ const BadgesOverviewPanel: React.FC = () => {
             label="Badge Type"
             input={
               <OutlinedInput
-                startAdornment={ // Moved to startAdornment
-                  <InputAdornment position="start">
-                    <IconButton edge="start" sx={{ color: '#666' }} aria-label="filter list">
-                      <FilterList fontSize="small" />
-                    </IconButton>
+                startAdornment={
+                  <InputAdornment position="start" sx={{ mr: 0.5 }}> {/* Added margin-right for spacing */}
+                    <FilterList fontSize="small" sx={{ color: '#666' }} />
                   </InputAdornment>
                 }
               />
@@ -231,12 +229,13 @@ const BadgesOverviewPanel: React.FC = () => {
               '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e0e0e0' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#bdbdbd' },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#1976d2' },
-              '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem', pl: '14px' }, // Adjusted padding
+              '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem', pl: '14px' },
+              '& .MuiSelect-icon': { right: 8 }, // Adjust dropdown icon position
             }}
           >
             <MenuItem value="">All Badges</MenuItem>
             <MenuItem value="Promise Kept General">Promise Kept General</MenuItem>
-            <MenuItem value="Slack Promise Kept General">Slack Promise Kept General</MenuItem> {/* Added new option */}
+            <MenuItem value="Slack Promise Kept General">Slack Promise Kept General</MenuItem>
             <MenuItem value="Attendance">Attendance</MenuItem>
             <MenuItem value="Teamwork">Teamwork</MenuItem>
           </Select>

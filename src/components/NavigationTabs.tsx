@@ -48,7 +48,7 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab
           '& .MuiTab-root': {
             textTransform: 'none',
             minHeight: 56,
-            fontWeight: 500,
+            fontWeight: 600, // Made bolder
             color: '#666',
             '&.Mui-selected': {
               color: '#1976d2',

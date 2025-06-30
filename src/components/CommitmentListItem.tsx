@@ -9,7 +9,7 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, WorkspacePremium as WorkspacePremiumIcon } from '@mui/icons-material'; // Added WorkspacePremiumIcon
+import { CalendarToday, Person, MoreHoriz, WorkspacePremium as WorkspacePremiumIcon } from '@mui/icons-material';
 
 interface CommitmentListItemProps {
   id: number;
@@ -86,20 +86,17 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           <Button
             variant="contained"
             onClick={onRequestBadge}
-            // Added leading icon
             startIcon={<WorkspacePremiumIcon />}
             sx={{
-              bgcolor: '#ff7043',
+              bgcolor: '#607d8b', // Changed to match dashboard "See all" button
               textTransform: 'none',
-              minWidth: '140px', // Increased minWidth
-              minHeight: '40px', // Increased minHeight
-              px: 3, // Increased horizontal padding
-              py: 1.5, // Increased vertical padding
+              px: 3, // Kept original px for better fit with icon
+              py: 1, // Adjusted py to match dashboard "See all" button
               borderRadius: 1,
               fontSize: '14px',
               fontWeight: 600,
               flexShrink: 0,
-              '&:hover': { bgcolor: '#f4511e' },
+              '&:hover': { bgcolor: '#546e7a' }, // Changed to match dashboard "See all" button
             }}
           >
             Request Badge

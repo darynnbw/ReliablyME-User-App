@@ -50,7 +50,7 @@ const StatCircle: React.FC<StatCircleProps> = ({ value, label, subLabel, color, 
     <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', textAlign: 'center', mb: 0.5 }}>
       {label}
     </Typography>
-    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.85rem' }}>
+    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}> {/* Increased font size and line height */}
       {subLabel}
     </Typography>
   </Box>
@@ -98,7 +98,7 @@ const NumberCircle: React.FC<NumberCircleProps> = ({ value, label, subLabel, ico
     <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', textAlign: 'center', mb: 0.5 }}>
       {label}
     </Typography>
-    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.85rem' }}>
+    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}> {/* Increased font size and line height */}
       {subLabel}
     </Typography>
   </Box>
