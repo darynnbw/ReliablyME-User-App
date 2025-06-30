@@ -101,7 +101,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
           <Button
             variant="contained"
             sx={{
-              bgcolor: '#607d8b',
+              bgcolor: '#607d8b', // Changed to match dashboard "See all" button
               color: 'white',
               textTransform: 'none',
               width: '100%',
@@ -110,7 +110,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
               borderRadius: 2,
               fontWeight: 600,
               fontSize: '16px',
-              '&:hover': { bgcolor: '#546e7a' },
+              '&:hover': { bgcolor: '#546e7a' }, // Changed to match dashboard "See all" button
             }}
           >
             Request Badge

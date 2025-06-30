@@ -160,7 +160,7 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
             onClick={handleRequestBadge}
             disabled={!explanation.trim()}
             sx={{
-              bgcolor: '#607d8b',
+              bgcolor: '#607d8b', // Changed to match dashboard "See all" button
               color: 'white',
               textTransform: 'none',
               width: '100%',
@@ -169,7 +169,7 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
               borderRadius: 2,
               fontWeight: 600,
               fontSize: '16px',
-              '&:hover': { bgcolor: '#546e7a' },
+              '&:hover': { bgcolor: '#546e7a' }, // Changed to match dashboard "See all" button
               '&:disabled': { 
                 bgcolor: '#e0e0e0',
                 color: '#9e9e9e'

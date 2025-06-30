@@ -218,7 +218,7 @@ const BadgesOverviewPanel: React.FC = () => {
             input={
               <OutlinedInput
                 startAdornment={
-                  <InputAdornment position="start" sx={{ mr: 0.5 }}> {/* Added margin-right for spacing */}
+                  <InputAdornment position="start" sx={{ mr: 0.5 }}>
                     <FilterList fontSize="small" sx={{ color: '#666' }} />
                   </InputAdornment>
                 }
@@ -226,11 +226,12 @@ const BadgesOverviewPanel: React.FC = () => {
             }
             sx={{
               borderRadius: 1,
+              height: 40, // Fixed height
               '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e0e0e0' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#bdbdbd' },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#1976d2' },
               '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem', pl: '14px' },
-              '& .MuiSelect-icon': { right: 8 }, // Adjust dropdown icon position
+              '& .MuiSelect-icon': { right: 8 },
             }}
           >
             <MenuItem value="">All Badges</MenuItem>
@@ -257,21 +258,7 @@ const BadgesOverviewPanel: React.FC = () => {
         ))}
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: '#607d8b',
-            textTransform: 'none',
-            px: 6,
-            py: 1,
-            borderRadius: 1,
-            '&:hover': { bgcolor: '#546e7a' },
-          }}
-        >
-          See all
-        </Button>
-      </Box>
+      {/* Removed "See all" button from this section */}
     </Paper>
   );
 };

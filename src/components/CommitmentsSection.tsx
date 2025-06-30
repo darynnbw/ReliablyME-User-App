@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Paper,
   Typography,
@@ -13,7 +13,8 @@ import {
   InputAdornment,
   IconButton,
   Tooltip,
-  TextField, // Added TextField import
+  TextField,
+  Checkbox, // Added Checkbox import
 } from '@mui/material';
 import {
   Person,
@@ -32,6 +33,7 @@ interface Commitment {
   dueDate: string;
   description: string;
   assignee: string;
+  selected?: boolean; // Added selected property
 }
 
 interface CommitmentsSectionProps {
@@ -48,13 +50,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [selectedCommitment, setSelectedCommitment] = useState<Commitment | null>(null);
+  const [commitments, setCommitments] = useState<Commitment[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
 
-  const currentItems = tabs[activeTab].items.filter(item =>
+  useEffect(() => {
+    // Initialize commitments with selected: false
+    setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
+  }, [activeTab, tabs]);
+
+  const currentItems = commitments.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.assignee.toLowerCase().includes(searchTerm.toLowerCase())
   ).sort((a, b) => {
-    // Simple date parsing for sorting, assuming "Month Day, Year" format
     const dateA = new Date(a.dueDate.split(',')[0]);
     const dateB = new Date(b.dueDate.split(',')[0]);
     return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
@@ -69,6 +77,24 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setSelectedCommitment(commitment);
     setRequestBadgeModalOpen(true);
   };
+
+  const handleToggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    setSelectAll(checked);
+    setCommitments(prev => prev.map(item => ({ ...item, selected: checked })));
+  };
+
+  const handleToggleSelectItem = (id: number, checked: boolean) => {
+    setCommitments(prev => prev.map(item =>
+      item.id === id ? { ...item, selected: checked } : item
+    ));
+    // If any item is unchecked, uncheck selectAll
+    if (!checked) {
+      setSelectAll(false);
+    }
+  };
+
+  const selectedCount = commitments.filter(item => item.selected).length;
 
   return (
     <>
@@ -196,9 +222,18 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Tabs>
         </Box>
 
-        <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-          0 commitments selected
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Checkbox
+            size="small"
+            sx={{ p: 0, mr: 1 }}
+            checked={selectAll}
+            onChange={handleToggleSelectAll}
+            indeterminate={selectedCount > 0 && selectedCount < currentItems.length}
+          />
+          <Typography variant="body2" sx={{ color: '#666' }}>
+            {selectedCount} commitments selected
+          </Typography>
+        </Box>
 
         <Box sx={{
           height: { xs: 'auto', md: 350 },
@@ -228,6 +263,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 {...item}
                 onViewDetails={() => handleViewDetails(item)}
                 onRequestBadge={() => handleRequestBadge(item)}
+                onToggleSelect={handleToggleSelectItem} // Pass the new handler
               />
             ))
           ) : (

@@ -17,23 +17,32 @@ interface CommitmentListItemProps {
   dueDate: string;
   description: string;
   assignee: string;
+  selected?: boolean; // Added selected property
   onViewDetails: () => void;
   onRequestBadge: () => void;
+  onToggleSelect: (id: number, checked: boolean) => void; // Added onToggleSelect handler
 }
 
 const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
+  id,
   title,
   dueDate,
   description,
   assignee,
+  selected = false, // Default to false
   onViewDetails,
   onRequestBadge,
+  onToggleSelect,
 }) => {
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onToggleSelect(id, event.target.checked);
+  };
+
   return (
     <Card
       sx={{
         minHeight: 140,
-        borderLeft: '4px solid #1976d2', // Consistent with badge request color
+        borderLeft: '4px solid #1976d2',
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',
         flexShrink: 0,
@@ -46,7 +55,12 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-            <Checkbox size="small" sx={{ p: 0, mr: 1 }} />
+            <Checkbox
+              size="small"
+              sx={{ p: 0, mr: 1 }}
+              checked={selected}
+              onChange={handleCheckboxChange}
+            />
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
@@ -88,7 +102,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             onClick={onRequestBadge}
             startIcon={<WorkspacePremiumIcon />}
             sx={{
-              bgcolor: '#607d8b', // Changed to match dashboard "See all" button
+              bgcolor: '#607d8b',
               textTransform: 'none',
               px: 3,
               py: 1,

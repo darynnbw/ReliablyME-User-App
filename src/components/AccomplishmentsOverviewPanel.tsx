@@ -1,6 +1,6 @@
 import React from 'react';
 import { Paper, Typography, Box, CircularProgress } from '@mui/material';
-import { Adjust, AccessTime, ShowChart } from '@mui/icons-material'; // Importing new icons
+import { Adjust, AccessTime, ShowChart } from '@mui/icons-material';
 
 interface StatCircleProps {
   value: number;
@@ -10,7 +10,7 @@ interface StatCircleProps {
   textColor: string;
   size?: number;
   thickness?: number;
-  unit?: string; // Optional unit for display
+  unit?: string;
 }
 
 const StatCircle: React.FC<StatCircleProps> = ({ value, label, subLabel, color, textColor, size = 100, thickness = 4, unit = '%' }) => (
@@ -71,7 +71,7 @@ const NumberCircle: React.FC<NumberCircleProps> = ({ value, label, subLabel, ico
     <Box sx={{ position: 'relative', display: 'inline-flex', mb: 2 }}>
       <CircularProgress
         variant="determinate"
-        value={100} // Always 100 for a full circle background
+        value={100}
         size={size}
         thickness={thickness}
         sx={{ color: '#e0e0e0' }}
@@ -123,7 +123,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         sx={{
           fontWeight: 600,
           color: '#1976d2',
-          mb: 4, // Increased margin-bottom for title separation
+          mb: 4,
           fontSize: '1.25rem',
         }}
       >
@@ -139,7 +139,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         p: 3,
         mb: 4,
         borderRadius: 2,
-        bgcolor: '#f0f4f8', // Replaced gradient with a subtle flat background
+        bgcolor: '#f0f4f8',
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
         flexGrow: 1,
       }}>
@@ -147,41 +147,49 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           value={85.7}
           label="Reliability Rating"
           subLabel="85.7% after 24 commitments in the past 90 days"
-          color="#ff9800" // Muted orange
-          textColor="#e65100" // Darker orange for text for contrast
+          color="#ff9800"
+          textColor="#e65100"
           size={150}
-          thickness={5} // Slightly reduced thickness
+          thickness={5}
         />
       </Box>
 
       {/* Other Stats Section (Bottom) */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-around', 
+        alignItems: 'flex-start', 
+        flexWrap: 'wrap', 
+        gap: 2,
+        px: { xs: 0, sm: 2 }, // Added horizontal padding for smaller circles
+        pb: { xs: 2, sm: 0 } // Added bottom padding for smaller circles
+      }}>
         <NumberCircle
           value={1247}
-          label="Total Commitments" // Updated label
-          subLabel="1247 Total Commitments" // Updated subLabel
+          label="Total Commitments"
+          subLabel="1247 Total Commitments"
           icon={Adjust}
-          iconColor="#2196f3" // Muted blue
+          iconColor="#2196f3"
           size={100}
-          thickness={3} // Slightly reduced thickness
+          thickness={3}
         />
         <StatCircle
           value={92.3}
-          label="Commitment Follow-through" // Updated label
-          subLabel="94.4% Commitment Follow-through" // Updated subLabel
-          color="#42a5f5" // Muted blue
-          textColor="#1976d2" // Darker blue for text for contrast
+          label="Commitment Follow-through"
+          subLabel="94.4% Commitment Follow-through"
+          color="#42a5f5"
+          textColor="#1976d2"
           size={100}
-          thickness={3} // Slightly reduced thickness
+          thickness={3}
         />
         <StatCircle
           value={2.3}
-          label="Average Nudges Received" // Updated label
-          subLabel="2.3 Average Nudges Received" // Updated subLabel
-          color="#66bb6a" // Muted green
-          textColor="#388e3c" // Darker green for text for contrast
+          label="Average Nudges Received"
+          subLabel="2.3 Average Nudges Received"
+          color="#66bb6a"
+          textColor="#388e3c"
           size={100}
-          thickness={3} // Slightly reduced thickness
+          thickness={3}
           unit=""
         />
       </Box>

@@ -113,7 +113,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             variant="contained"
             onClick={handleConfirm}
             sx={{
-              bgcolor: '#4caf50',
+              bgcolor: '#ff7043', // Changed to orange
               color: 'white',
               textTransform: 'none',
               flex: 1,
@@ -122,7 +122,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               fontWeight: 600,
               fontSize: '14px',
               '&:hover': { 
-                bgcolor: '#45a049'
+                bgcolor: '#f4511e' // Darker orange on hover
               },
             }}
           >

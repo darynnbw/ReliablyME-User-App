@@ -122,7 +122,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
             onClick={handleSubmit}
             disabled={!answer.trim()}
             sx={{
-              bgcolor: '#607d8b',
+              bgcolor: '#ff7043', // Changed to orange
               color: 'white',
               textTransform: 'none',
               width: '100%',
@@ -132,7 +132,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
               borderRadius: 2,
               fontWeight: 600,
               fontSize: '16px',
-              '&:hover': { bgcolor: '#546e7a' },
+              '&:hover': { bgcolor: '#f4511e' }, // Darker orange on hover
               '&:disabled': { 
                 bgcolor: '#e0e0e0',
                 color: '#9e9e9e'
