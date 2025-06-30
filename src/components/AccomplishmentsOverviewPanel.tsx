@@ -25,7 +25,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           fontWeight: 'bold',
           color: 'primary.main', // Title color set to primary
           fontSize: '1.25rem',
-          mb: 3,
+          mb: 0, // Removed bottom margin to tighten space
         }}
       >
         Accomplishments Overview
@@ -33,7 +33,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
 
       <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
 
-      <Grid container spacing={{ xs: 4, sm: 2 }} justifyContent="center" alignItems="flex-start" sx={{ pt: 4, pb: 2 }}>
+      <Grid container spacing={{ xs: 4, sm: 2 }} justifyContent="center" alignItems="flex-start" sx={{ pt: 2, pb: 2 }}>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={MyLocation}

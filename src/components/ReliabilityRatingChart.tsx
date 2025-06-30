@@ -14,8 +14,8 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
   return (
     <Box
       sx={{
-        pt: { xs: 4, md: 6 },
-        pb: 4,
+        pt: 3, // Reduced top padding
+        pb: 2, // Reduced bottom padding
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
