@@ -9,7 +9,7 @@ import {
   IconButton,
   Tooltip,
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz } from '@mui/icons-material';
+import { CalendarToday, Person, MoreHoriz, WorkspacePremium as WorkspacePremiumIcon } from '@mui/icons-material'; // Added WorkspacePremiumIcon
 
 interface CommitmentListItemProps {
   id: number;
@@ -86,13 +86,14 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           <Button
             variant="contained"
             onClick={onRequestBadge}
+            startIcon={<WorkspacePremiumIcon />} {/* Added leading icon */}
             sx={{
               bgcolor: '#ff7043',
               textTransform: 'none',
-              minWidth: '120px',
-              minHeight: '36px',
-              px: 2,
-              py: 1,
+              minWidth: '140px', // Increased minWidth
+              minHeight: '40px', // Increased minHeight
+              px: 3, // Increased horizontal padding
+              py: 1.5, // Increased vertical padding
               borderRadius: 1,
               fontSize: '14px',
               fontWeight: 600,

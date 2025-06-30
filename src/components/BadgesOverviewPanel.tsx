@@ -209,17 +209,17 @@ const BadgesOverviewPanel: React.FC = () => {
           Badges Overview (389)
         </Typography>
         <FormControl variant="outlined" size="small" sx={{ minWidth: 180 }}>
-          <InputLabel id="badge-filter-label" sx={{ fontSize: '0.875rem' }}>Filter by badge type...</InputLabel>
+          <InputLabel id="badge-filter-label" sx={{ fontSize: '0.875rem' }}>Badge Type</InputLabel> {/* Updated label */}
           <Select
             labelId="badge-filter-label"
             value={badgeFilter}
             onChange={(e) => setBadgeFilter(e.target.value as string)}
-            label="Filter by badge type..."
+            label="Badge Type"
             input={
               <OutlinedInput
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton edge="end" sx={{ color: '#666' }}>
+                startAdornment={ // Moved to startAdornment
+                  <InputAdornment position="start">
+                    <IconButton edge="start" sx={{ color: '#666' }} aria-label="filter list">
                       <FilterList fontSize="small" />
                     </IconButton>
                   </InputAdornment>
@@ -231,13 +231,14 @@ const BadgesOverviewPanel: React.FC = () => {
               '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e0e0e0' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#bdbdbd' },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#1976d2' },
-              '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' },
+              '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem', pl: '14px' }, // Adjusted padding
             }}
           >
             <MenuItem value="">All Badges</MenuItem>
             <MenuItem value="Promise Kept General">Promise Kept General</MenuItem>
-            <MenuItem value="Teamwork">Teamwork</MenuItem>
+            <MenuItem value="Slack Promise Kept General">Slack Promise Kept General</MenuItem> {/* Added new option */}
             <MenuItem value="Attendance">Attendance</MenuItem>
+            <MenuItem value="Teamwork">Teamwork</MenuItem>
           </Select>
         </FormControl>
       </Box>
