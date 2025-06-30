@@ -100,12 +100,12 @@ const CommitmentPortfolio: React.FC = () => {
 
         <Grid container spacing={3}>
           {/* Accomplishments Overview */}
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ mb: 3 }}> {/* Added mb */}
             <AccomplishmentsOverviewPanel />
           </Grid>
 
           {/* Badges Overview */}
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ mb: 3 }}> {/* Added mb */}
             <BadgesOverviewPanel />
           </Grid>
 

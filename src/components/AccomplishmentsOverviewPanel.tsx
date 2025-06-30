@@ -50,7 +50,7 @@ const StatCircle: React.FC<StatCircleProps> = ({ value, label, subLabel, color, 
     <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', textAlign: 'center', mb: 0.5 }}>
       {label}
     </Typography>
-    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}> {/* Increased font size and line height */}
+    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}>
       {subLabel}
     </Typography>
   </Box>
@@ -98,7 +98,7 @@ const NumberCircle: React.FC<NumberCircleProps> = ({ value, label, subLabel, ico
     <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', textAlign: 'center', mb: 0.5 }}>
       {label}
     </Typography>
-    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}> {/* Increased font size and line height */}
+    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}>
       {subLabel}
     </Typography>
   </Box>
@@ -109,7 +109,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper sx={{
       p: 3,
-      height: { xs: 'auto', md: 450 }, // Adjusted height to accommodate new layout
+      height: { xs: 'auto', md: 450 },
       minHeight: { xs: 350, md: 450 },
       display: 'flex',
       flexDirection: 'column',
@@ -123,7 +123,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         sx={{
           fontWeight: 600,
           color: '#1976d2',
-          mb: 3,
+          mb: 4, // Increased margin-bottom for title separation
           fontSize: '1.25rem',
         }}
       >
@@ -139,18 +139,18 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         p: 3,
         mb: 4,
         borderRadius: 2,
-        background: 'linear-gradient(135deg, #e3f2fd 0%, #fff3e0 100%)', // Subtle gradient
+        bgcolor: '#f0f4f8', // Replaced gradient with a subtle flat background
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-        flexGrow: 1, // Allow it to take available space
+        flexGrow: 1,
       }}>
         <StatCircle
           value={85.7}
           label="Reliability Rating"
           subLabel="85.7% after 24 commitments in the past 90 days"
-          color="#ff7043"
-          textColor="#ff7043"
-          size={150} // Larger size for the main stat
-          thickness={6}
+          color="#ff9800" // Muted orange
+          textColor="#e65100" // Darker orange for text for contrast
+          size={150}
+          thickness={5} // Slightly reduced thickness
         />
       </Box>
 
@@ -158,31 +158,31 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2 }}>
         <NumberCircle
           value={1247}
-          label="Total Points"
-          subLabel="1247 Total Points"
+          label="Total Commitments" // Updated label
+          subLabel="1247 Total Commitments" // Updated subLabel
           icon={Adjust}
-          iconColor="#1976d2"
+          iconColor="#2196f3" // Muted blue
           size={100}
-          thickness={4}
+          thickness={3} // Slightly reduced thickness
         />
         <StatCircle
           value={92.3}
-          label="Punctuality Record"
-          subLabel="94.4% Punctuality Record"
-          color="#1976d2"
-          textColor="#1976d2"
+          label="Commitment Follow-through" // Updated label
+          subLabel="94.4% Commitment Follow-through" // Updated subLabel
+          color="#42a5f5" // Muted blue
+          textColor="#1976d2" // Darker blue for text for contrast
           size={100}
-          thickness={4}
+          thickness={3} // Slightly reduced thickness
         />
         <StatCircle
           value={2.3}
-          label="Confidence Score"
-          subLabel="2.3 Confidence Score"
-          color="#4caf50"
-          textColor="#4caf50"
+          label="Average Nudges Received" // Updated label
+          subLabel="2.3 Average Nudges Received" // Updated subLabel
+          color="#66bb6a" // Muted green
+          textColor="#388e3c" // Darker green for text for contrast
           size={100}
-          thickness={4}
-          unit="" // No unit for confidence score
+          thickness={3} // Slightly reduced thickness
+          unit=""
         />
       </Box>
     </Paper>

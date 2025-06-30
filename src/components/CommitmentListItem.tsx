@@ -90,13 +90,13 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             sx={{
               bgcolor: '#607d8b', // Changed to match dashboard "See all" button
               textTransform: 'none',
-              px: 3, // Kept original px for better fit with icon
-              py: 1, // Adjusted py to match dashboard "See all" button
+              px: 3,
+              py: 1,
               borderRadius: 1,
               fontSize: '14px',
               fontWeight: 600,
               flexShrink: 0,
-              '&:hover': { bgcolor: '#546e7a' }, // Changed to match dashboard "See all" button
+              '&:hover': { bgcolor: '#546e7a' },
             }}
           >
             Request Badge
