@@ -36,14 +36,13 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
       <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
 
       {/* B. Three Circular Metric Cards */}
-      <Grid container spacing={3} justifyContent="center" alignItems="flex-start">
+      <Grid container spacing={3} justifyContent="center" alignItems="flex-start" sx={{ mt: 4 }}> {/* Added top margin */}
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={MyLocation}
             value={1247}
             label="Total Points"
             iconColor="#1976d2" // Blue icon
-            ringColor="#e0e0e0" // Light grey ring
           />
         </Grid>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -53,7 +52,6 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
             unit="%"
             label="Punctuality Record"
             iconColor="#1976d2" // Blue icon
-            ringColor="#e0e0e0" // Light grey ring
           />
         </Grid>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -62,7 +60,6 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
             value={2.3}
             label="Confidence Score"
             iconColor="#4caf50" // Green icon
-            ringColor="#e0e0e0" // Light grey ring
           />
         </Grid>
       </Grid>
