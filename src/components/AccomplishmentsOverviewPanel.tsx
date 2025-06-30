@@ -25,7 +25,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           fontWeight: 600,
           color: 'primary.main',
           fontSize: '1.25rem',
-          mb: 3,
+          mb: 1, // Reduced bottom margin
         }}
       >
         Accomplishments Overview

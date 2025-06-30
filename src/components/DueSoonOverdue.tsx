@@ -251,17 +251,15 @@ const DueSoonOverdue: React.FC = () => {
                     variant="contained"
                     onClick={() => setRequestBadgeModalOpen(true)}
                     sx={{
-                      bgcolor: '#607d8b', // Changed to match dashboard "See all" button
+                      bgcolor: '#F4611A',
+                      color: 'white',
                       textTransform: 'none',
-                      minWidth: '120px',
-                      minHeight: '36px',
-                      px: 2,
-                      py: 1,
-                      borderRadius: 1,
-                      fontSize: '14px',
-                      fontWeight: 600,
+                      fontWeight: 'bold',
+                      px: 3,
+                      py: 1.5,
+                      borderRadius: '999px',
                       flexShrink: 0,
-                      '&:hover': { bgcolor: '#546e7a' }, // Changed to match dashboard "See all" button
+                      '&:hover': { bgcolor: '#E05A18' },
                     }}
                   >
                     Request Badge
