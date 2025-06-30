@@ -8,21 +8,23 @@ interface ReliabilityRatingChartProps {
 }
 
 const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, commitments, days }) => {
-  const circleSize = 150;
-  const circleThickness = 8;
+  const circleSize = 140;
+  const circleThickness = 5;
 
   return (
     <Box
       sx={{
+        pt: { xs: 4, md: 6 },
+        pb: 4,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center', // Horizontally center all items in this flex container
+        alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
       }}
     >
       {/* Circular Chart */}
-      <Box sx={{ position: 'relative', display: 'inline-flex', mb: 2 }}> {/* mb: 2 is 16px */}
+      <Box sx={{ position: 'relative', display: 'inline-flex', width: circleSize, height: circleSize }}>
         <CircularProgress
           variant="determinate"
           value={100}
@@ -35,7 +37,7 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
           value={value}
           size={circleSize}
           thickness={circleThickness}
-          sx={{ color: 'secondary.main' }} // Uses theme's secondary color (orange)
+          sx={{ color: 'secondary.main' }}
         />
         <Box
           sx={{
@@ -49,14 +51,14 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: 'text.primary', fontSize: '2rem' }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
             {`${value}%`}
           </Typography>
         </Box>
       </Box>
 
       {/* Label */}
-      <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 1 }}> {/* mb: 1 is 8px */}
+      <Typography variant="subtitle1" sx={{ fontWeight: 700, mt: 2 }}>
         Reliability Rating
       </Typography>
 
