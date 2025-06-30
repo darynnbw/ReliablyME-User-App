@@ -1,0 +1,253 @@
+import React, { useState } from 'react';
+import {
+  Paper,
+  Typography,
+  Box,
+  Tabs,
+  Tab,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
+import {
+  Person,
+  CalendarToday,
+  Search,
+  ArrowUpward,
+  ArrowDownward,
+} from '@mui/icons-material';
+import CommitmentListItem from './CommitmentListItem';
+import CommitmentDetailsModal from './CommitmentDetailsModal';
+import RequestBadgeModal from './RequestBadgeModal';
+
+interface Commitment {
+  id: number;
+  title: string;
+  dueDate: string;
+  description: string;
+  assignee: string;
+}
+
+interface CommitmentsSectionProps {
+  title: string;
+  tabs: { label: string; count: number; items: Commitment[] }[];
+}
+
+const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) => {
+  const [activeTab, setActiveTab] = useState(0);
+  const [personFilter, setPersonFilter] = useState('');
+  const [allFilter, setAllFilter] = useState('');
+  const [sortOrder, setSortOrder] = useState('soonest');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
+  const [selectedCommitment, setSelectedCommitment] = useState<Commitment | null>(null);
+
+  const currentItems = tabs[activeTab].items.filter(item =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.assignee.toLowerCase().includes(searchTerm.toLowerCase())
+  ).sort((a, b) => {
+    // Simple date parsing for sorting, assuming "Month Day, Year" format
+    const dateA = new Date(a.dueDate.split(',')[0]);
+    const dateB = new Date(b.dueDate.split(',')[0]);
+    return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+  });
+
+  const handleViewDetails = (commitment: Commitment) => {
+    setSelectedCommitment(commitment);
+    setModalOpen(true);
+  };
+
+  const handleRequestBadge = (commitment: Commitment) => {
+    setSelectedCommitment(commitment);
+    setRequestBadgeModalOpen(true);
+  };
+
+  return (
+    <>
+      <Paper sx={{
+        p: 3,
+        height: 'auto',
+        minHeight: 500,
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: '#fafbfc',
+        borderRadius: 3,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+        border: '1px solid #e8eaed',
+        mb: 4,
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              color: '#1976d2',
+              fontSize: '1.25rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            {title}
+            <Tooltip title="More options" placement="top" arrow>
+              <IconButton size="small" sx={{ color: '#666' }}>
+                <ArrowDownward fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+              <InputLabel id="person-filter-label" sx={{ fontSize: '0.875rem' }}>Person</InputLabel>
+              <Select
+                labelId="person-filter-label"
+                value={personFilter}
+                onChange={(e) => setPersonFilter(e.target.value as string)}
+                label="Person"
+                startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="Alex Todd">Alex Todd</MenuItem>
+                <MenuItem value="Riley Chen">Riley Chen</MenuItem>
+                <MenuItem value="Jamie Smith">Jamie Smith</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 100 }}>
+              <InputLabel id="all-filter-label" sx={{ fontSize: '0.875rem' }}>All</InputLabel>
+              <Select
+                labelId="all-filter-label"
+                value={allFilter}
+                onChange={(e) => setAllFilter(e.target.value as string)}
+                label="All"
+                startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="Today">Today</MenuItem>
+                <MenuItem value="This Week">This Week</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
+              <InputLabel id="sort-order-label" sx={{ fontSize: '0.875rem' }}>Due Date (Soonest)</InputLabel>
+              <Select
+                labelId="sort-order-label"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as string)}
+                label="Due Date (Soonest)"
+                startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
+              >
+                <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
+                <MenuItem value="latest">Due Date (Latest)</MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Search commitments..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search fontSize="small" sx={{ color: '#666' }} />
+                  </InputAdornment>
+                ),
+                sx: { borderRadius: 1, py: '2.5px', px: 1, fontSize: '0.875rem' }
+              }}
+              sx={{ minWidth: 200 }}
+            />
+          </Box>
+        </Box>
+
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+          <Tabs
+            value={activeTab}
+            onChange={(_, newValue) => setActiveTab(newValue)}
+            sx={{
+              '& .MuiTab-root': {
+                textTransform: 'none',
+                fontWeight: 600,
+                color: '#666',
+                '&.Mui-selected': {
+                  color: '#1976d2',
+                },
+              },
+              '& .MuiTabs-indicator': {
+                backgroundColor: '#1976d2',
+              },
+            }}
+          >
+            {tabs.map((tab, index) => (
+              <Tab key={index} label={`${tab.label} (${tab.count})`} />
+            ))}
+          </Tabs>
+        </Box>
+
+        <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
+          0 commitments selected
+        </Typography>
+
+        <Box sx={{
+          height: { xs: 'auto', md: 350 },
+          maxHeight: { xs: '60vh', md: 350 },
+          overflowY: 'scroll',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          mb: 2,
+          pr: 1,
+          scrollbarWidth: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#888',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: '#f0f0f0',
+          },
+        }}>
+          {currentItems.length > 0 ? (
+            currentItems.map((item) => (
+              <CommitmentListItem
+                key={item.id}
+                {...item}
+                onViewDetails={() => handleViewDetails(item)}
+                onRequestBadge={() => handleRequestBadge(item)}
+              />
+            ))
+          ) : (
+            <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>
+              No commitments found.
+            </Typography>
+          )}
+        </Box>
+      </Paper>
+
+      <CommitmentDetailsModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
+
+      <RequestBadgeModal
+        open={requestBadgeModalOpen}
+        onClose={() => setRequestBadgeModalOpen(false)}
+      />
+    </>
+  );
+};
+
+export default CommitmentsSection;

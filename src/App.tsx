@@ -1,7 +1,9 @@
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
+import CommitmentPortfolio from './pages/CommitmentPortfolio';
 
 const theme = createTheme({
   palette: {
@@ -33,7 +35,14 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Dashboard />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/commitment-portfolio" element={<CommitmentPortfolio />} />
+          {/* Add other routes here as needed */}
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 }

@@ -5,28 +5,44 @@ import {
   Tab,
   Badge,
 } from '@mui/material';
-import { 
+import {
   Dashboard as DashboardIcon,
   FolderOpen,
   PlayArrow,
   Notifications,
 } from '@mui/icons-material';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavigationTabsProps {
-  activeTab: number;
-  setActiveTab: (tab: number) => void;
+  activeTab: number; // This prop is now less critical as location handles active state
+  setActiveTab: (tab: number) => void; // This prop can be removed if not used elsewhere
 }
 
 const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab }) => {
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
+  const location = useLocation();
+
+  // Determine active tab based on current path
+  const getActiveTabIndex = () => {
+    switch (location.pathname) {
+      case '/dashboard':
+        return 0;
+      case '/commitment-portfolio':
+        return 1;
+      case '/actions': // Assuming a future /actions route
+        return 2;
+      case '/notifications': // Assuming a future /notifications route
+        return 3;
+      default:
+        return 0; // Default to dashboard
+    }
   };
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'white' }}>
       <Tabs
-        value={activeTab}
-        onChange={handleChange}
+        value={getActiveTabIndex()}
+        // onChange is not strictly needed if using Link, but can be kept for consistency or future logic
+        // onChange={(_event: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)}
         sx={{
           px: 3,
           '& .MuiTab-root': {
@@ -45,18 +61,24 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab
           iconPosition="start"
           label="Dashboard"
           sx={{ gap: 1 }}
+          component={Link}
+          to="/dashboard"
         />
         <Tab
           icon={<FolderOpen />}
           iconPosition="start"
           label="Commitment Portfolio"
           sx={{ gap: 1 }}
+          component={Link}
+          to="/commitment-portfolio"
         />
         <Tab
           icon={<PlayArrow />}
           iconPosition="start"
           label="Actions"
           sx={{ gap: 1 }}
+          component={Link}
+          to="/actions" // Placeholder for future route
         />
         <Tab
           icon={
@@ -67,6 +89,8 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab
           iconPosition="start"
           label="Notifications"
           sx={{ gap: 1 }}
+          component={Link}
+          to="/notifications" // Placeholder for future route
         />
       </Tabs>
     </Box>
