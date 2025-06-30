@@ -106,8 +106,8 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
               textTransform: 'none',
               fontWeight: 'bold',
               width: '100%',
-              py: 1.5,
-              borderRadius: '999px',
+              py: 1,
+              borderRadius: 1,
               fontSize: '16px',
               '&:hover': { bgcolor: '#E05A18' },
             }}

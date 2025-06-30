@@ -256,8 +256,8 @@ const DueSoonOverdue: React.FC = () => {
                       textTransform: 'none',
                       fontWeight: 'bold',
                       px: 3,
-                      py: 1.5,
-                      borderRadius: '999px',
+                      py: 1,
+                      borderRadius: 1,
                       flexShrink: 0,
                       '&:hover': { bgcolor: '#E05A18' },
                     }}
