@@ -86,7 +86,8 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           <Button
             variant="contained"
             onClick={onRequestBadge}
-            startIcon={<WorkspacePremiumIcon />} {/* Added leading icon */}
+            // Added leading icon
+            startIcon={<WorkspacePremiumIcon />}
             sx={{
               bgcolor: '#ff7043',
               textTransform: 'none',
