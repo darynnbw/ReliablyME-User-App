@@ -91,7 +91,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         p: 3,
-        mb: 5, // Margin after this section
+        mb: 6, // Increased spacing between main chart and lower stats
         borderRadius: 2,
         bgcolor: '#f0f4f8',
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
