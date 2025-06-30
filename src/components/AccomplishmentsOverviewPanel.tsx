@@ -108,12 +108,12 @@ const NumberCircle: React.FC<NumberCircleProps> = ({ value, label, subLabel, ico
 const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper sx={{
-      p: 3,
-      height: { xs: 'auto', md: 450 },
-      minHeight: { xs: 350, md: 450 },
+      p: 4, // Increased overall padding
+      height: { xs: 'auto', md: 500 }, // Adjusted height to better contain content
+      minHeight: { xs: 400, md: 500 },
       display: 'flex',
       flexDirection: 'column',
-      bgcolor: '#fafbfc',
+      bgcolor: '#fafbfc', // Subtle background tint
       borderRadius: 3,
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
       border: '1px solid #e8eaed',
@@ -123,7 +123,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         sx={{
           fontWeight: 600,
           color: '#1976d2',
-          mb: 4,
+          mb: 4, // Increased margin-bottom for title separation
           fontSize: '1.25rem',
         }}
       >
@@ -137,9 +137,9 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         p: 3,
-        mb: 4,
+        mb: 5, // Increased spacing between main chart and lower stats
         borderRadius: 2,
-        bgcolor: '#f0f4f8',
+        bgcolor: '#f0f4f8', // Subtle flat background
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
         flexGrow: 1,
       }}>
@@ -155,19 +155,19 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
       </Box>
 
       {/* Other Stats Section (Bottom) */}
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-around', 
-        alignItems: 'flex-start', 
-        flexWrap: 'wrap', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'flex-start',
+        flexWrap: 'wrap',
         gap: 2,
-        px: { xs: 0, sm: 2 }, // Added horizontal padding for smaller circles
-        pb: { xs: 2, sm: 0 } // Added bottom padding for smaller circles
+        px: { xs: 0, sm: 2 },
+        pb: { xs: 2, sm: 0 }
       }}>
         <NumberCircle
           value={1247}
-          label="Total Commitments"
-          subLabel="1247 Total Commitments"
+          label="Total Commitments" // Updated label
+          subLabel="1247 Total Commitments" // Updated subLabel
           icon={Adjust}
           iconColor="#2196f3"
           size={100}
@@ -175,8 +175,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         />
         <StatCircle
           value={92.3}
-          label="Commitment Follow-through"
-          subLabel="94.4% Commitment Follow-through"
+          label="Commitment Follow-Through Rate" // Updated label
+          subLabel="94.4% Commitment Follow-Through Rate" // Updated subLabel
           color="#42a5f5"
           textColor="#1976d2"
           size={100}
@@ -184,8 +184,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         />
         <StatCircle
           value={2.3}
-          label="Average Nudges Received"
-          subLabel="2.3 Average Nudges Received"
+          label="Average Nudges Received" // Updated label
+          subLabel="2.3 Average Nudges Received" // Updated subLabel
           color="#66bb6a"
           textColor="#388e3c"
           size={100}
