@@ -104,7 +104,9 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             sx={{
               bgcolor: '#607d8b',
               textTransform: 'none',
-              px: 3,
+              minWidth: '120px', // Added for consistency
+              minHeight: '36px', // Added for consistency
+              px: 2, // Changed from 3 to 2 for consistency
               py: 1,
               borderRadius: 1,
               fontSize: '14px',

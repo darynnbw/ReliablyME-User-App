@@ -197,7 +197,7 @@ const BadgesOverviewPanel: React.FC = () => {
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
       border: '1px solid #e8eaed',
     }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}> {/* Added flexWrap and gap */}
         <Typography
           variant="h6"
           sx={{
@@ -208,7 +208,7 @@ const BadgesOverviewPanel: React.FC = () => {
         >
           Badges Overview (389)
         </Typography>
-        <FormControl variant="outlined" size="small" sx={{ minWidth: 180 }}>
+        <FormControl variant="outlined" size="small" sx={{ minWidth: 180, flexShrink: 0 }}> {/* Added flexShrink */}
           <InputLabel id="badge-filter-label" sx={{ fontSize: '0.875rem' }}>Badge Type</InputLabel>
           <Select
             labelId="badge-filter-label"

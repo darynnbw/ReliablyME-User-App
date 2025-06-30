@@ -61,7 +61,7 @@ const StatCircle: React.FC<StatCircleProps> = ({ value, label, subLabel, color, 
 const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper sx={{
-      p: 4, // Increased overall padding
+      p: 4, // Overall padding for the Paper
       height: 'auto', // Allow height to adjust based on content
       minHeight: { xs: 400, md: 450 }, // Maintain a minimum height
       display: 'flex',
@@ -70,13 +70,14 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
       borderRadius: 3,
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
       border: '1px solid #e8eaed',
+      mb: 4, // Margin after the entire panel
     }}>
       <Typography
         variant="h6"
         sx={{
           fontWeight: 600,
           color: '#1976d2',
-          mb: 4, // Increased margin-bottom for title separation
+          mb: 4, // Margin after title
           fontSize: '1.25rem',
         }}
       >
@@ -90,11 +91,11 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         p: 3,
-        mb: 5, // Increased spacing between main chart and lower stats
+        mb: 5, // Margin after this section
         borderRadius: 2,
-        bgcolor: '#f0f4f8', // Subtle flat background
+        bgcolor: '#f0f4f8',
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-        flexGrow: 1, // Allow this section to grow
+        flexGrow: 1,
       }}>
         <StatCircle
           value={85.7}
@@ -115,32 +116,34 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         flexWrap: 'wrap',
         gap: 2,
         px: { xs: 0, sm: 2 },
-        pb: { xs: 2, sm: 0 }
       }}>
         <OutlineIconValueCircle
           value={1247}
-          label="Total Points" // Reverted label
+          label="Total Points"
           icon={Adjust}
-          iconColor="#2196f3" // Keep original color
+          iconColor="#2196f3"
           size={100}
           thickness={3}
+          isFilledProgress={false}
         />
         <OutlineIconValueCircle
           value={94.4}
-          label="Punctuality Record" // Reverted label
+          label="Punctuality Record"
           icon={AccessTime}
-          iconColor="#42a5f5" // Keep original color
+          iconColor="#42a5f5"
           size={100}
           thickness={3}
           unit="%"
+          isFilledProgress={true}
         />
         <OutlineIconValueCircle
           value={2.3}
-          label="Confidence Score" // Reverted label
+          label="Confidence Score"
           icon={ShowChart}
-          iconColor="#66bb6a" // Keep original color
+          iconColor="#66bb6a"
           size={100}
           thickness={3}
+          isFilledProgress={false}
         />
       </Box>
     </Paper>
