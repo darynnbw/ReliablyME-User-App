@@ -160,7 +160,7 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
             onClick={handleRequestBadge}
             disabled={!explanation.trim()}
             sx={{
-              bgcolor: '#F4611A',
+              bgcolor: '#FF7F41',
               color: 'white',
               textTransform: 'none',
               fontWeight: 'bold',
@@ -168,7 +168,7 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
               py: 1,
               borderRadius: 1,
               fontSize: '16px',
-              '&:hover': { bgcolor: '#E05A18' },
+              '&:hover': { bgcolor: '#F4611A' },
               '&:disabled': { 
                 bgcolor: '#e0e0e0',
                 color: '#9e9e9e'

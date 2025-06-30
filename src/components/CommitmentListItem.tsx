@@ -101,7 +101,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             variant="contained"
             onClick={onRequestBadge}
             sx={{
-              bgcolor: '#F4611A',
+              bgcolor: '#FF7F41',
               color: 'white',
               textTransform: 'none',
               fontWeight: 'bold',
@@ -109,7 +109,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
               py: 1,
               borderRadius: 1,
               flexShrink: 0,
-              '&:hover': { bgcolor: '#E05A18' },
+              '&:hover': { bgcolor: '#F4611A' },
             }}
           >
             Request Badge

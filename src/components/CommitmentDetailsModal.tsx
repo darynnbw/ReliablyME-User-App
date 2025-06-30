@@ -101,7 +101,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
           <Button
             variant="contained"
             sx={{
-              bgcolor: '#F4611A',
+              bgcolor: '#FF7F41',
               color: 'white',
               textTransform: 'none',
               fontWeight: 'bold',
@@ -109,7 +109,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
               py: 1,
               borderRadius: 1,
               fontSize: '16px',
-              '&:hover': { bgcolor: '#E05A18' },
+              '&:hover': { bgcolor: '#F4611A' },
             }}
           >
             Request Badge

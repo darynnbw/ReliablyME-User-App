@@ -251,15 +251,15 @@ const DueSoonOverdue: React.FC = () => {
                     variant="contained"
                     onClick={() => setRequestBadgeModalOpen(true)}
                     sx={{
-                      bgcolor: '#F4611A',
+                      bgcolor: '#FF7F41',
                       color: 'white',
                       textTransform: 'none',
                       fontWeight: 'bold',
-                      px: 3,
-                      py: 1,
+                      px: 2.5,
+                      py: 0.75,
                       borderRadius: 1,
                       flexShrink: 0,
-                      '&:hover': { bgcolor: '#E05A18' },
+                      '&:hover': { bgcolor: '#F4611A' },
                     }}
                   >
                     Request Badge
