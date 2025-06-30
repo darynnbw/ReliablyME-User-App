@@ -1,6 +1,6 @@
 import React from 'react';
-import { Paper, Typography, Box, Grid } from '@mui/material';
-import { MyLocation, AccessTime, ShowChart } from '@mui/icons-material'; // Icons for metric cards
+import { Paper, Typography, Grid } from '@mui/material';
+import { MyLocation, AccessTime, TrendingUp } from '@mui/icons-material';
 import ReliabilityRatingChart from './ReliabilityRatingChart';
 import MetricCard from './MetricCard';
 
@@ -8,61 +8,58 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper
       sx={{
-        p: 3,
+        p: { xs: 2, sm: 3 },
         height: 'auto',
-        minHeight: 500,
         display: 'flex',
         flexDirection: 'column',
-        bgcolor: '#fafbfc', // Light background for the whole panel
+        bgcolor: '#f7fafd',
         borderRadius: 3,
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
         border: '1px solid #e8eaed',
-        mb: 4, // Margin bottom for separation from other sections
+        mb: 4,
       }}
     >
       <Typography
         variant="h6"
         sx={{
-          fontWeight: 600,
-          color: '#333', // Darker color for section title
-          fontSize: '1.5rem',
+          fontWeight: 'bold',
+          color: 'text.primary',
+          fontSize: '1.25rem',
           mb: 3,
         }}
       >
         Accomplishments Overview
       </Typography>
 
-      {/* A. Reliability Rating Chart */}
       <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
 
-      {/* B. Three Circular Metric Cards */}
-      <Grid container spacing={3} justifyContent="center" alignItems="flex-start" sx={{ mt: 4 }}> {/* Added top margin */}
+      <Grid container spacing={{ xs: 4, sm: 2 }} justifyContent="center" alignItems="flex-start" sx={{ pt: 4, pb: 2 }}>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={MyLocation}
             value={1247}
             label="Total Points"
-            iconColor="#1976d2" // Blue icon
-            ringColor="#e0e0e0" // Light grey ring
+            iconColor="primary.main"
+            avatarBgColor="primary.light"
           />
         </Grid>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={AccessTime}
-            value={94.4}
+            value="94.4"
             unit="%"
-            label="Punctuality Record"
-            iconColor="#1976d2" // Blue icon
-            ringColor="#e0e0e0" // Light grey ring
+            label="Punctuality Rate"
+            iconColor="primary.main"
+            avatarBgColor="primary.light"
           />
         </Grid>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
-            icon={ShowChart}
+            icon={TrendingUp}
             value={2.3}
             label="Confidence Score"
-            iconColor="#4caf50" // Green icon
-            ringColor="#e0e0e0" // Light grey ring
+            iconColor="success.dark"
+            avatarBgColor="success.light"
           />
         </Grid>
       </Grid>

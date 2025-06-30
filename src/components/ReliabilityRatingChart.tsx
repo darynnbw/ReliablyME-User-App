@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, CircularProgress, Paper } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 
 interface ReliabilityRatingChartProps {
   value: number;
@@ -12,21 +12,16 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
   const circleThickness = 8;
 
   return (
-    <Paper
+    <Box
       sx={{
-        p: 4,
-        background: 'linear-gradient(135deg, #f7fafd 0%, #fff3e0 100%)', // Subtle blue to light orange gradient
-        borderRadius: 3,
-        boxShadow: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        mb: 4, // Margin bottom to separate from metric cards
+        width: '100%',
       }}
     >
-      <Box sx={{ position: 'relative', display: 'inline-flex', mb: 3 }}>
-        {/* Background circle (for full ring) */}
+      <Box sx={{ position: 'relative', display: 'inline-flex', mb: 2 }}>
         <CircularProgress
           variant="determinate"
           value={100}
@@ -34,13 +29,12 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
           thickness={circleThickness}
           sx={{ color: '#e0e0e0', position: 'absolute', left: 0, top: 0 }}
         />
-        {/* Foreground progress ring */}
         <CircularProgress
           variant="determinate"
           value={value}
           size={circleSize}
           thickness={circleThickness}
-          sx={{ color: '#ff7043' }} // Orange ring color
+          sx={{ color: 'secondary.main' }}
         />
         <Box
           sx={{
@@ -54,28 +48,28 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h5" component="div" sx={{ fontWeight: 700, color: '#333', fontSize: '2rem' }}>
+          <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: 'text.primary', fontSize: '2rem' }}>
             {value}%
           </Typography>
         </Box>
       </Box>
-      <Typography variant="h6" sx={{ fontWeight: 700, color: '#333', mb: 1 }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.primary', mb: 1 }}>
         Reliability Rating
       </Typography>
-      <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', lineHeight: 1.4 }}>
-        <Typography component="span" sx={{ fontWeight: 700, color: '#333' }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+        <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
           {value}%
         </Typography>{' '}
         after{' '}
-        <Typography component="span" sx={{ fontWeight: 700, color: '#333' }}>
+        <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
           {commitments} commitments
         </Typography>{' '}
         in the past{' '}
-        <Typography component="span" sx={{ fontWeight: 700, color: '#333' }}>
+        <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
           {days} days
         </Typography>
       </Typography>
-    </Paper>
+    </Box>
   );
 };
 
