@@ -8,7 +8,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper
       sx={{
-        p: { xs: 2, sm: 3 },
+        p: 3, // Consistent padding of 24px
         height: 'auto',
         display: 'flex',
         flexDirection: 'column',
@@ -23,7 +23,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         variant="h6"
         sx={{
           fontWeight: 'bold',
-          color: 'text.primary',
+          color: 'primary.main', // Title color set to primary
           fontSize: '1.25rem',
           mb: 3,
         }}
@@ -39,8 +39,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
             icon={MyLocation}
             value={1247}
             label="Total Points"
-            iconColor="primary.main"
-            avatarBgColor="primary.light"
+            iconColor="#1976d2" // Blue icon
+            avatarBgColor="#e3f2fd" // Light blue background
           />
         </Grid>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -49,8 +49,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
             value="94.4"
             unit="%"
             label="Punctuality Rate"
-            iconColor="primary.main"
-            avatarBgColor="primary.light"
+            iconColor="#1976d2" // Blue icon
+            avatarBgColor="#e3f2fd" // Light blue background
           />
         </Grid>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -58,8 +58,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
             icon={TrendingUp}
             value={2.3}
             label="Confidence Score"
-            iconColor="success.dark"
-            avatarBgColor="success.light"
+            iconColor="#2e7d32" // Green icon
+            avatarBgColor="#e8f5e9" // Light green background
           />
         </Grid>
       </Grid>
