@@ -22,10 +22,10 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
       <Typography
         variant="h6"
         sx={{
-          fontWeight: 'bold',
-          color: 'primary.main', // Title color set to primary
+          fontWeight: 600,
+          color: 'primary.main',
           fontSize: '1.25rem',
-          mb: 0, // Removed bottom margin to tighten space
+          mb: 3,
         }}
       >
         Accomplishments Overview
