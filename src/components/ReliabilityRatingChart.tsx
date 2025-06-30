@@ -15,7 +15,7 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
     <Paper
       sx={{
         p: 4,
-        bgcolor: '#f7fafd', // Changed to flat light blue background
+        background: 'linear-gradient(135deg, #f7fafd 0%, #fff3e0 100%)', // Subtle blue to light orange gradient
         borderRadius: 3,
         boxShadow: 1,
         display: 'flex',
