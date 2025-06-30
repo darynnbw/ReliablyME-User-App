@@ -7,7 +7,6 @@ import {
 import Header from '../components/Header';
 import NavigationTabs from '../components/NavigationTabs';
 import UserProfileSection from '../components/UserProfileSection';
-import AccomplishmentsOverviewPanel from '../components/AccomplishmentsOverviewPanel';
 import BadgesOverviewPanel from '../components/BadgesOverviewPanel';
 import CommitmentsSection from '../components/CommitmentsSection';
 
@@ -99,13 +98,8 @@ const CommitmentPortfolio: React.FC = () => {
         <UserProfileSection name="Alex Johnson" phone="+1 (555) 123-4567" />
 
         <Grid container spacing={3}>
-          {/* Accomplishments Overview */}
-          <Grid item xs={12} sx={{ mb: 3 }}> {/* Added mb */}
-            <AccomplishmentsOverviewPanel />
-          </Grid>
-
           {/* Badges Overview */}
-          <Grid item xs={12} sx={{ mb: 3 }}> {/* Added mb */}
+          <Grid item xs={12} sx={{ mb: 3 }}>
             <BadgesOverviewPanel />
           </Grid>
 
