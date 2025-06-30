@@ -1,6 +1,7 @@
 import React from 'react';
 import { Paper, Typography, Box, CircularProgress } from '@mui/material';
 import { Adjust, AccessTime, ShowChart } from '@mui/icons-material';
+import OutlineIconValueCircle from './OutlineIconValueCircle'; // Import the new component
 
 interface StatCircleProps {
   value: number;
@@ -13,7 +14,7 @@ interface StatCircleProps {
   unit?: string;
 }
 
-const StatCircle: React.FC<StatCircleProps> = ({ value, label, subLabel, color, textColor, size = 100, thickness = 4, unit = '%' }) => (
+const StatCircle: React.FC<StatCircleProps> = ({ value, label, subLabel, color, textColor, size = 150, thickness = 5, unit = '%' }) => (
   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
     <Box sx={{ position: 'relative', display: 'inline-flex', mb: 2 }}>
       <CircularProgress
@@ -44,54 +45,6 @@ const StatCircle: React.FC<StatCircleProps> = ({ value, label, subLabel, color, 
       >
         <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: textColor, fontSize: '1.2rem' }}>
           {value}{unit}
-        </Typography>
-      </Box>
-    </Box>
-    <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', textAlign: 'center', mb: 0.5 }}>
-      {label}
-    </Typography>
-    <Typography variant="body2" sx={{ color: '#666', textAlign: 'center', fontSize: '0.9rem', lineHeight: 1.4 }}>
-      {subLabel}
-    </Typography>
-  </Box>
-);
-
-interface NumberCircleProps {
-  value: number;
-  label: string;
-  subLabel: string;
-  icon: React.ElementType;
-  iconColor: string;
-  size?: number;
-  thickness?: number;
-}
-
-const NumberCircle: React.FC<NumberCircleProps> = ({ value, label, subLabel, icon: Icon, iconColor, size = 100, thickness = 4 }) => (
-  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-    <Box sx={{ position: 'relative', display: 'inline-flex', mb: 2 }}>
-      <CircularProgress
-        variant="determinate"
-        value={100}
-        size={size}
-        thickness={thickness}
-        sx={{ color: '#e0e0e0' }}
-      />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Icon sx={{ fontSize: 24, color: iconColor, mb: 0.5 }} />
-        <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: '#333', fontSize: '1.2rem' }}>
-          {value}
         </Typography>
       </Box>
     </Box>
@@ -164,33 +117,30 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         px: { xs: 0, sm: 2 },
         pb: { xs: 2, sm: 0 }
       }}>
-        <NumberCircle
+        <OutlineIconValueCircle
           value={1247}
-          label="Total Commitments"
-          subLabel="1247 Total Commitments"
+          label="Total Points" // Reverted label
           icon={Adjust}
-          iconColor="#2196f3"
+          iconColor="#2196f3" // Keep original color
           size={100}
           thickness={3}
         />
-        <StatCircle
-          value={92.3}
-          label="Commitment Follow-Through Rate"
-          subLabel="94.4% Commitment Follow-Through Rate"
-          color="#42a5f5"
-          textColor="#1976d2"
+        <OutlineIconValueCircle
+          value={94.4}
+          label="Punctuality Record" // Reverted label
+          icon={AccessTime}
+          iconColor="#42a5f5" // Keep original color
           size={100}
           thickness={3}
+          unit="%"
         />
-        <StatCircle
+        <OutlineIconValueCircle
           value={2.3}
-          label="Average Nudges Received"
-          subLabel="2.3 Average Nudges Received"
-          color="#66bb6a"
-          textColor="#388e3c"
+          label="Confidence Score" // Reverted label
+          icon={ShowChart}
+          iconColor="#66bb6a" // Keep original color
           size={100}
           thickness={3}
-          unit=""
         />
       </Box>
     </Paper>
