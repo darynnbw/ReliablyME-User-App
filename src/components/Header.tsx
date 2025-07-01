@@ -18,7 +18,6 @@ import { Logout } from '@mui/icons-material';
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const userName = "Alex Johnson"; // Placeholder for dynamic user name
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -185,9 +184,6 @@ const Header: React.FC = () => {
           />
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
-            <Typography variant="body1" sx={{ color: 'text.primary', whiteSpace: 'nowrap' }}>
-              Welcome, {userName}
-            </Typography>
             <Tooltip title="Logout">
               <IconButton onClick={handleLogout} size="small">
                 <Logout sx={{ color: 'text.secondary' }} />
