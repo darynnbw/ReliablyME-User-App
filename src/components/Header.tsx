@@ -9,12 +9,16 @@ import {
   Chip,
   Menu,
   MenuItem,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import { Star, Plus, ChevronDown } from 'lucide-react';
+import { Logout } from '@mui/icons-material';
 
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const userName = "Alex Johnson"; // Placeholder for dynamic user name
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -27,6 +31,11 @@ const Header: React.FC = () => {
   const handleMenuItemClick = (option: string) => {
     console.log(`Selected: ${option}`);
     handleClose();
+  };
+
+  const handleLogout = () => {
+    console.log('Logout clicked');
+    // In a real app, you would handle logout logic here
   };
 
   return (
@@ -174,6 +183,17 @@ const Header: React.FC = () => {
               height: 40,
             }}
           />
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
+            <Typography variant="body1" sx={{ color: 'text.primary', whiteSpace: 'nowrap' }}>
+              Welcome, {userName}
+            </Typography>
+            <Tooltip title="Logout">
+              <IconButton onClick={handleLogout} size="small">
+                <Logout sx={{ color: 'text.secondary' }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
       </Toolbar>
     </AppBar>
