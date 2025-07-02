@@ -97,6 +97,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const selectedCount = commitments.filter(item => item.selected).length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
+  const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
 
   return (
     <>
@@ -224,17 +225,34 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Tabs>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Checkbox
-            size="small"
-            sx={{ p: 0, mr: 1 }}
-            checked={selectAll}
-            onChange={handleToggleSelectAll}
-            indeterminate={selectedCount > 0 && selectedCount < currentItems.length}
-          />
-          <Typography variant="body2" sx={{ color: '#666' }}>
-            {selectedCount} {isBadgesTab ? 'badges' : 'commitments'} selected
-          </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Checkbox
+              size="small"
+              sx={{ p: 0, mr: 1 }}
+              checked={selectAll}
+              onChange={handleToggleSelectAll}
+              indeterminate={selectedCount > 0 && selectedCount < currentItems.length}
+            />
+            <Typography variant="body2" sx={{ color: '#666' }}>
+              {selectedCount} {isBadgesTab ? 'badges' : 'commitments'} selected
+            </Typography>
+          </Box>
+          {showBulkRequest && (
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'primary.main',
+                fontWeight: 500,
+                cursor: 'pointer',
+                '&:hover': {
+                  textDecoration: 'underline',
+                },
+              }}
+            >
+              Bulk Request
+            </Typography>
+          )}
         </Box>
 
         <Box sx={{
@@ -261,10 +279,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               currentItems.map((item) => (
                 <MyBadgeListItem
                   key={item.id}
+                  id={item.id}
                   title={item.title}
                   approvalDate={item.dueDate}
                   commitment={item.description}
                   recipient={item.assignee}
+                  selected={item.selected}
+                  onToggleSelect={handleToggleSelectItem}
+                  onViewDetails={() => handleViewDetails(item)}
                 />
               ))
             ) : (
