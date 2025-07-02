@@ -96,7 +96,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   };
 
   const selectedCount = commitments.filter(item => item.selected).length;
-  const isBadgesTab = tabs[activeTab].label.includes('My Badges');
+  const isBadgesTab = tabs[activeTab].label.includes('Badges');
 
   return (
     <>
@@ -285,7 +285,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           )}
         </Box>
         
-        {currentItems.length > 0 && (
+        {currentItems.length > 0 && isBadgesTab && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
             <Pagination count={10} page={1} color="primary" />
           </Box>
