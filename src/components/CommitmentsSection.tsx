@@ -14,7 +14,8 @@ import {
   IconButton,
   Tooltip,
   TextField,
-  Checkbox, // Added Checkbox import
+  Checkbox,
+  Pagination,
 } from '@mui/material';
 import {
   Person,
@@ -26,6 +27,7 @@ import {
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
+import MyBadgeListItem from './MyBadgeListItem';
 
 interface Commitment {
   id: number;
@@ -33,7 +35,7 @@ interface Commitment {
   dueDate: string;
   description: string;
   assignee: string;
-  selected?: boolean; // Added selected property
+  selected?: boolean;
 }
 
 interface CommitmentsSectionProps {
@@ -54,8 +56,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
-    // Initialize commitments with selected: false
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
+    setSelectAll(false);
   }, [activeTab, tabs]);
 
   const currentItems = commitments.filter(item =>
@@ -88,13 +90,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setCommitments(prev => prev.map(item =>
       item.id === id ? { ...item, selected: checked } : item
     ));
-    // If any item is unchecked, uncheck selectAll
     if (!checked) {
       setSelectAll(false);
     }
   };
 
   const selectedCount = commitments.filter(item => item.selected).length;
+  const isBadgesTab = tabs[activeTab].label.includes('My Badges');
 
   return (
     <>
@@ -231,18 +233,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             indeterminate={selectedCount > 0 && selectedCount < currentItems.length}
           />
           <Typography variant="body2" sx={{ color: '#666' }}>
-            {selectedCount} commitments selected
+            {selectedCount} {isBadgesTab ? 'badges' : 'commitments'} selected
           </Typography>
         </Box>
 
         <Box sx={{
-          height: { xs: 'auto', md: 350 },
-          maxHeight: { xs: '60vh', md: 350 },
-          overflowY: 'scroll',
+          flex: 1,
+          overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          mb: 2,
           pr: 1,
           scrollbarWidth: 'auto',
           '&::-webkit-scrollbar': {
@@ -257,21 +257,39 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           },
         }}>
           {currentItems.length > 0 ? (
-            currentItems.map((item) => (
-              <CommitmentListItem
-                key={item.id}
-                {...item}
-                onViewDetails={() => handleViewDetails(item)}
-                onRequestBadge={() => handleRequestBadge(item)}
-                onToggleSelect={handleToggleSelectItem} // Pass the new handler
-              />
-            ))
+            isBadgesTab ? (
+              currentItems.map((item) => (
+                <MyBadgeListItem
+                  key={item.id}
+                  title={item.title}
+                  approvalDate={item.dueDate}
+                  commitment={item.description}
+                  recipient={item.assignee}
+                />
+              ))
+            ) : (
+              currentItems.map((item) => (
+                <CommitmentListItem
+                  key={item.id}
+                  {...item}
+                  onViewDetails={() => handleViewDetails(item)}
+                  onRequestBadge={() => handleRequestBadge(item)}
+                  onToggleSelect={handleToggleSelectItem}
+                />
+              ))
+            )
           ) : (
             <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>
-              No commitments found.
+              No items found.
             </Typography>
           )}
         </Box>
+        
+        {currentItems.length > 0 && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
+            <Pagination count={10} page={1} color="primary" />
+          </Box>
+        )}
       </Paper>
 
       <CommitmentDetailsModal

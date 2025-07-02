@@ -38,7 +38,29 @@ const CommitmentPortfolio: React.FC = () => {
     {
       label: 'My Badges',
       count: 120,
-      items: [],
+      items: [
+        {
+          id: 3,
+          title: 'Teamwork',
+          dueDate: 'Mar 28, 12:00 AM',
+          description: 'I will attend today’s intern meeting',
+          assignee: 'Riley Chen',
+        },
+        {
+          id: 4,
+          title: 'Promise Kept General',
+          dueDate: 'Mar 27, 09:15 PM',
+          description: 'I will join the project kickoff meeting to discuss the upcoming launch.',
+          assignee: 'Chris Parker',
+        },
+        {
+          id: 5,
+          title: 'Attendance',
+          dueDate: 'Mar 26, 10:00 AM',
+          description: 'I will be on time for all the daily stand-ups this week.',
+          assignee: 'Alex Johnson',
+        },
+      ],
     },
     {
       label: 'My Unkept Promises',
