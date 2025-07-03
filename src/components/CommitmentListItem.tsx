@@ -60,8 +60,9 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
       }}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+        {/* Top row: Checkbox, Title, MoreHoriz */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
             {showCheckbox && (
               <Checkbox
                 size="small"
@@ -70,10 +71,10 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
                 onChange={handleCheckboxChange}
               />
             )}
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, pl: showCheckbox ? 0 : 4 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
-          </Box>
+          </Stack>
           <Tooltip title="View details" placement="top" arrow>
             <IconButton size="small" onClick={onViewDetails}>
               <MoreHoriz />
@@ -81,50 +82,54 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           </Tooltip>
         </Box>
 
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.75, pl: showCheckbox ? 0 : 4 }}>
-          <CalendarToday sx={{ fontSize: 16, color: color }} />
-          <Typography variant="body2" sx={{ color: '#666' }}>
-            Due {dueDate}
-          </Typography>
-        </Stack>
+        {/* Main content area with padding and vertical stack */}
+        <Box sx={{ pl: showCheckbox ? 4.5 : 1.5, mt: 1 }}>
+          <Stack spacing={1.25}>
+            {/* Due Date */}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <CalendarToday sx={{ fontSize: 16, color: color }} />
+              <Typography variant="body2" sx={{ color: '#666' }}>
+                Due {dueDate}
+              </Typography>
+            </Stack>
 
-        <Typography
-          variant="body2"
-          sx={{ color: '#666', mb: 2, lineHeight: 1.5, pl: showCheckbox ? 0 : 4 }}
-        >
-          {description}
-        </Typography>
-
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, pl: showCheckbox ? 0 : 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Person sx={{
-              fontSize: 16,
-              color: color
-            }} />
-            <Typography variant="body2" sx={{ color: '#666' }}>
-              To: {assignee}
+            {/* Description */}
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+              {description}
             </Typography>
-          </Box>
 
-          {showRequestBadgeButton && (
-            <Button
-              variant="contained"
-              onClick={onRequestBadge}
-              sx={{
-                bgcolor: '#FF7F41',
-                color: 'white',
-                textTransform: 'none',
-                fontWeight: 'bold',
-                px: 3,
-                py: 1,
-                borderRadius: 1,
-                flexShrink: 0,
-                '&:hover': { bgcolor: '#F4611A' },
-              }}
-            >
-              Request Badge
-            </Button>
-          )}
+            {/* Bottom row: Assignee and Button */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+              {/* Assignee */}
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Person sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  To: {assignee}
+                </Typography>
+              </Stack>
+
+              {/* Button */}
+              {showRequestBadgeButton && (
+                <Button
+                  variant="contained"
+                  onClick={onRequestBadge}
+                  sx={{
+                    bgcolor: '#FF7F41',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 3,
+                    py: 1,
+                    borderRadius: 1,
+                    flexShrink: 0,
+                    '&:hover': { bgcolor: '#F4611A' },
+                  }}
+                >
+                  Request Badge
+                </Button>
+              )}
+            </Box>
+          </Stack>
         </Box>
       </CardContent>
     </Card>
