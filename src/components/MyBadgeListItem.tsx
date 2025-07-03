@@ -72,8 +72,8 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
             </Tooltip>
           </Box>
 
-          <Stack spacing={1}>
-            <Stack direction="row" spacing={1} alignItems="center">
+          <Stack>
+            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
                 Approved {approvalDate}
@@ -82,7 +82,7 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
 
             <Typography
               variant="body2"
-              sx={{ color: '#666', lineHeight: 1.5 }}
+              sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}
             >
               {commitment}
             </Typography>
