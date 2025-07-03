@@ -47,7 +47,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   return (
     <Card
       sx={{
-        minHeight: 120,
+        minHeight: 140,
         borderLeft: `4px solid ${color}`,
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',

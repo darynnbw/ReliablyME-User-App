@@ -38,7 +38,7 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
   return (
     <Card
       sx={{
-        minHeight: 120,
+        minHeight: 140,
         borderLeft: '4px solid #4caf50', // Green border for badges
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',
