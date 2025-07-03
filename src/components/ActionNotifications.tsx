@@ -149,8 +149,8 @@ const ActionNotifications: React.FC = () => {
         </Box>
 
         <Box sx={{ 
-          height: { xs: 'auto', md: 350 },
-          maxHeight: { xs: '60vh', md: 350 },
+          flex: 1,
+          minHeight: 0,
           overflowY: 'auto',
           mb: 2,
           pr: 1,

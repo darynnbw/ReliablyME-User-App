@@ -262,9 +262,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
         <Box sx={{
           flex: 1,
+          minHeight: 0,
           overflowY: 'auto',
           pr: 1,
-          height: 400,
           scrollbarWidth: 'auto',
           '&::-webkit-scrollbar': {
             width: '8px',

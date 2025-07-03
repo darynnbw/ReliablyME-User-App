@@ -124,8 +124,8 @@ const DueSoonOverdue: React.FC = () => {
         </Box>
 
         <Box sx={{ 
-          height: { xs: 'auto', md: 280 },
-          maxHeight: { xs: '50vh', md: 280 },
+          flex: 1,
+          minHeight: 0,
           overflowY: 'auto',
           mb: 2,
           pr: 1,
