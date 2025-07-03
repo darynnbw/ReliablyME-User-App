@@ -143,8 +143,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={personFilter}
                 onChange={(e) => setPersonFilter(e.target.value as string)}
                 label="Person"
-                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><Person fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
-                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
+                startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', pl: 1, pr: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="">All</MenuItem>
                 <MenuItem value="Alex Todd">Alex Todd</MenuItem>
@@ -160,8 +160,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={allFilter}
                 onChange={(e) => setAllFilter(e.target.value as string)}
                 label="All"
-                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
-                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
+                startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', pl: 1, pr: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="">All</MenuItem>
                 <MenuItem value="Today">Today</MenuItem>
@@ -176,8 +176,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value as string)}
                 label="Due Date (Soonest)"
-                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><ArrowUpward fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
-                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
+                startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', pl: 1, pr: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
                 <MenuItem value="latest">Due Date (Latest)</MenuItem>
@@ -227,35 +227,37 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Tabs>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Checkbox
-              size="small"
-              sx={{ p: 0, mr: 1 }}
-              checked={selectAll}
-              onChange={handleToggleSelectAll}
-              indeterminate={selectedCount > 0 && selectedCount < currentItems.length}
-            />
-            <Typography variant="body2" sx={{ color: '#666' }}>
-              {selectedCount} {isBadgesTab ? 'badges' : 'commitments'} selected
-            </Typography>
+        {!isUnkeptTab && (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Checkbox
+                size="small"
+                sx={{ p: 0, mr: 1 }}
+                checked={selectAll}
+                onChange={handleToggleSelectAll}
+                indeterminate={selectedCount > 0 && selectedCount < currentItems.length}
+              />
+              <Typography variant="body2" sx={{ color: '#666' }}>
+                {selectedCount} {isBadgesTab ? 'badges' : 'commitments'} selected
+              </Typography>
+            </Box>
+            {showBulkRequest && (
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                }}
+              >
+                Bulk Request
+              </Typography>
+            )}
           </Box>
-          {showBulkRequest && (
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'primary.main',
-                fontWeight: 500,
-                cursor: 'pointer',
-                '&:hover': {
-                  textDecoration: 'underline',
-                },
-              }}
-            >
-              Bulk Request
-            </Typography>
-          )}
-        </Box>
+        )}
 
         <Box sx={{
           flex: 1,
@@ -298,6 +300,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   key={item.id}
                   {...item}
                   color={itemColor}
+                  showCheckbox={!isUnkeptTab}
+                  showRequestBadgeButton={!isUnkeptTab}
                   onViewDetails={() => handleViewDetails(item)}
                   onRequestBadge={() => handleRequestBadge(item)}
                   onToggleSelect={handleToggleSelectItem}

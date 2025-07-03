@@ -19,6 +19,8 @@ interface CommitmentListItemProps {
   assignee: string;
   selected?: boolean;
   color: string;
+  showCheckbox: boolean;
+  showRequestBadgeButton: boolean;
   onViewDetails: () => void;
   onRequestBadge: () => void;
   onToggleSelect: (id: number, checked: boolean) => void;
@@ -32,6 +34,8 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   assignee,
   selected = false,
   color,
+  showCheckbox,
+  showRequestBadgeButton,
   onViewDetails,
   onRequestBadge,
   onToggleSelect,
@@ -57,13 +61,15 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-            <Checkbox
-              size="small"
-              sx={{ p: 0, mr: 1 }}
-              checked={selected}
-              onChange={handleCheckboxChange}
-            />
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            {showCheckbox && (
+              <Checkbox
+                size="small"
+                sx={{ p: 0, mr: 1 }}
+                checked={selected}
+                onChange={handleCheckboxChange}
+              />
+            )}
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, pl: showCheckbox ? 0 : 4 }}>
               {title}
             </Typography>
           </Box>
@@ -74,7 +80,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           </Tooltip>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, pl: showCheckbox ? 0 : 4 }}>
           <CalendarToday sx={{ fontSize: 16, color: color }} />
           <Typography variant="body2" sx={{ color: '#666' }}>
             Due {dueDate}
@@ -83,12 +89,12 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
 
         <Typography
           variant="body2"
-          sx={{ color: '#666', mb: 2, lineHeight: 1.5 }}
+          sx={{ color: '#666', mb: 2, lineHeight: 1.5, pl: showCheckbox ? 0 : 4 }}
         >
           {description}
         </Typography>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, pl: showCheckbox ? 0 : 4 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Person sx={{
               fontSize: 16,
@@ -99,23 +105,25 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             </Typography>
           </Box>
 
-          <Button
-            variant="contained"
-            onClick={onRequestBadge}
-            sx={{
-              bgcolor: '#FF7F41',
-              color: 'white',
-              textTransform: 'none',
-              fontWeight: 'bold',
-              px: 3,
-              py: 1,
-              borderRadius: 1,
-              flexShrink: 0,
-              '&:hover': { bgcolor: '#F4611A' },
-            }}
-          >
-            Request Badge
-          </Button>
+          {showRequestBadgeButton && (
+            <Button
+              variant="contained"
+              onClick={onRequestBadge}
+              sx={{
+                bgcolor: '#FF7F41',
+                color: 'white',
+                textTransform: 'none',
+                fontWeight: 'bold',
+                px: 3,
+                py: 1,
+                borderRadius: 1,
+                flexShrink: 0,
+                '&:hover': { bgcolor: '#F4611A' },
+              }}
+            >
+              Request Badge
+            </Button>
+          )}
         </Box>
       </CardContent>
     </Card>
