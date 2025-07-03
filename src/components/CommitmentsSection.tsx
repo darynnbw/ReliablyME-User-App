@@ -101,13 +101,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const itemColor = isUnkeptTab ? 'grey.500' : '#ff7043';
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
+  const isMyCommitments = title === 'My Commitments';
 
   return (
     <>
       <Paper sx={{
         p: 3,
         height: 'auto',
-        minHeight: 500,
+        minHeight: isMyCommitments ? 'auto' : 500,
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#fafbfc',
@@ -261,7 +262,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         )}
 
         <Box sx={{
-          flex: 1,
+          flex: isMyCommitments ? undefined : 1,
+          height: isMyCommitments ? 288 : undefined, // 2 cards (140px each) + 1 spacing (8px)
           minHeight: 0,
           overflowY: 'auto',
           pr: 1,
@@ -277,7 +279,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             backgroundColor: '#f0f0f0',
           },
         }}>
-          <Stack spacing={2}>
+          <Stack spacing={1}>
             {currentItems.length > 0 ? (
               isBadgesTab ? (
                 currentItems.map((item) => (
