@@ -70,26 +70,28 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
           </Tooltip>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, pl: 4 }}>
-          <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
-          <Typography variant="body2" color="text.secondary">
-            Approved {approvalDate}
-          </Typography>
-        </Box>
-
-        <Typography
-          variant="body2"
-          sx={{ color: '#666', mb: 2, lineHeight: 1.5, pl: 4 }}
-        >
-          {commitment}
-        </Typography>
-
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, pl: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
+        <Box sx={{ pl: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+            <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
             <Typography variant="body2" color="text.secondary">
-              To: <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>{recipient}</Typography>
+              Approved {approvalDate}
             </Typography>
+          </Box>
+
+          <Typography
+            variant="body2"
+            sx={{ color: '#666', mb: 2, lineHeight: 1.5, pl: '24px' }}
+          >
+            {commitment}
+          </Typography>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                To: <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>{recipient}</Typography>
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </CardContent>
