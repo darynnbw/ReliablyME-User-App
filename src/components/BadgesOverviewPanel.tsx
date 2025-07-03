@@ -12,7 +12,9 @@ import {
   Checkbox,
   ListItemText,
   SelectChangeEvent,
+  InputAdornment,
 } from '@mui/material';
+import { FilterList } from '@mui/icons-material';
 import BadgeCard from './BadgeCard';
 
 const BadgesOverviewPanel: React.FC = () => {
@@ -23,7 +25,7 @@ const BadgesOverviewPanel: React.FC = () => {
     { id: 2, title: 'Attendance', count: 56 },
     { id: 3, title: 'Teamwork', count: 45 },
     { id: 4, title: 'Slack Promise Kept General', count: 124 },
-    { id: 5, title: 'On Track (Mid-Week Progress)', count: 18 },
+    { id: 5, title: 'On Track. Mid-Week Progress.', count: 18 },
     { id: 6, title: 'On Track (Daily)', count: 23 },
     { id: 7, title: 'Leadership', count: 12 },
   ];
@@ -70,7 +72,16 @@ const BadgesOverviewPanel: React.FC = () => {
             multiple
             value={selectedBadges}
             onChange={handleFilterChange}
-            input={<OutlinedInput label="Badge Type" />}
+            input={
+              <OutlinedInput 
+                label="Badge Type" 
+                startAdornment={
+                  <InputAdornment position="start">
+                    <FilterList />
+                  </InputAdornment>
+                }
+              />
+            }
             renderValue={(selected) => (selected as string[]).join(', ')}
             sx={{ borderRadius: 2 }}
           >

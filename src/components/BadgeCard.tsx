@@ -26,7 +26,6 @@ const BadgeCard: React.FC<BadgeCardProps> = ({ title, count }) => {
         '&:hover': {
           transform: 'translateY(-4px)',
           boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-          borderColor: 'primary.main',
         },
       }}
     >
