@@ -263,7 +263,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
         <Box sx={{
           flex: isMyCommitments ? undefined : 1,
-          height: isMyCommitments ? 294 : undefined, // 2 cards (140px * 2) + spacing (8px) + buffer (6px)
+          height: isMyCommitments ? 336 : undefined, // Accommodates two taller cards + spacing + buffer
           minHeight: 0,
           overflowY: 'auto',
           pr: 1,
