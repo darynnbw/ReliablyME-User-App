@@ -23,7 +23,6 @@ import {
   CalendarToday,
   Search,
   ArrowUpward,
-  ArrowDownward,
 } from '@mui/icons-material';
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
@@ -42,9 +41,10 @@ interface Commitment {
 interface CommitmentsSectionProps {
   title: string;
   tabs: { label: string; count: number; items: Commitment[] }[];
+  visibleCards?: number;
 }
 
-const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) => {
+const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, visibleCards = 5 }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [allFilter, setAllFilter] = useState('');
@@ -57,10 +57,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [selectAll, setSelectAll] = useState(false);
 
   // Define the fixed card height and visible card count
-  const CARD_HEIGHT = 120; // Adjust based on your card content and spacing
-  const VISIBLE_CARDS = 5; // Number of items to display at once
-  const SPACING = 8; // Corresponds to theme.spacing(1)
-  const LIST_HEIGHT = CARD_HEIGHT * VISIBLE_CARDS + SPACING * (VISIBLE_CARDS - 1);
+  const CARD_HEIGHT = 120;
+  const SPACING = 8;
+  const LIST_HEIGHT = CARD_HEIGHT * visibleCards + SPACING * (visibleCards - 1);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -105,7 +104,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const selectedCount = commitments.filter(item => item.selected).length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
-  const itemColor = isUnkeptTab ? 'grey.500' : '#ff7043';
+  const itemColor = isUnkeptTab ? '#C1C1C1' : '#ff7043';
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
 
   return (
@@ -127,17 +126,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               fontWeight: 600,
               color: '#1976d2',
               fontSize: '1.25rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
             }}
           >
             {title}
-            <Tooltip title="More options" placement="top" arrow>
-              <IconButton size="small" sx={{ color: '#666' }}>
-                <ArrowDownward fontSize="small" />
-              </IconButton>
-            </Tooltip>
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
