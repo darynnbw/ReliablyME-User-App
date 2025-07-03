@@ -143,7 +143,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={personFilter}
                 onChange={(e) => setPersonFilter(e.target.value as string)}
                 label="Person"
-                startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><Person fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
                 sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', pl: 1, pr: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -160,7 +160,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={allFilter}
                 onChange={(e) => setAllFilter(e.target.value as string)}
                 label="All"
-                startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
                 sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', pl: 1, pr: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -176,7 +176,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value as string)}
                 label="Due Date (Soonest)"
-                startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><ArrowUpward fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
                 sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', pl: 1, pr: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
@@ -261,12 +261,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
         <Box sx={{
           flex: 1,
-          overflowY: 'auto',
+          overflowY: 'scroll',
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
           pr: 1,
-          height: 400, // Set fixed height to enable scrolling
+          height: 400,
           scrollbarWidth: 'auto',
           '&::-webkit-scrollbar': {
             width: '8px',
