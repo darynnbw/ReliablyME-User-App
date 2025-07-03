@@ -56,6 +56,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
 
+  // Define the fixed card height and visible card count
+  const CARD_HEIGHT = 120; // Adjust based on your card content and spacing
+  const VISIBLE_CARDS = 5; // Number of items to display at once
+  const SPACING = 8; // Corresponds to theme.spacing(1)
+  const LIST_HEIGHT = CARD_HEIGHT * VISIBLE_CARDS + SPACING * (VISIBLE_CARDS - 1);
+
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
@@ -106,8 +112,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     <>
       <Paper sx={{
         p: 3,
-        height: 'auto',
-        minHeight: 500,
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#fafbfc',
@@ -261,23 +265,18 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         )}
 
         <Box sx={{
-          flex: 1,
-          minHeight: 0,
+          height: `${LIST_HEIGHT}px`,
           overflowY: 'auto',
           pr: 1,
-          scrollbarWidth: 'auto',
           '&::-webkit-scrollbar': {
-            width: '8px',
+            width: '6px'
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: '#888',
-            borderRadius: '4px',
-          },
-          '&::-webkit-scrollbar-track': {
-            backgroundColor: '#f0f0f0',
-          },
+            backgroundColor: '#bbb',
+            borderRadius: '4px'
+          }
         }}>
-          <Stack spacing={2}>
+          <Stack spacing={1}>
             {currentItems.length > 0 ? (
               isBadgesTab ? (
                 currentItems.map((item) => (
