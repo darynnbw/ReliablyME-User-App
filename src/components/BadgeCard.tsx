@@ -16,7 +16,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({ title, count }) => {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        p: 2,
+        p: 2.5, // Increased padding
         borderRadius: 2,
         bgcolor: 'grey.50',
         border: '1px solid',
@@ -32,8 +32,8 @@ const BadgeCard: React.FC<BadgeCardProps> = ({ title, count }) => {
     >
       <Box
         sx={{
-          width: 70,
-          height: 70,
+          width: 82, // Increased size by ~17%
+          height: 82, // Increased size by ~17%
           mb: 2,
           bgcolor: 'primary.light',
           color: 'primary.main',
@@ -43,14 +43,16 @@ const BadgeCard: React.FC<BadgeCardProps> = ({ title, count }) => {
           clipPath: 'polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%)', // Hexagon shape
         }}
       >
-        <Shield sx={{ fontSize: 40 }} />
+        <Shield sx={{ fontSize: 48 }} /> {/* Increased size */}
       </Box>
-      <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>
-        {title}
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        ({count})
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '1.1rem' }}>
+          {title}
+        </Typography>
+        <Typography variant="body1" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+          ({count})
+        </Typography>
+      </Box>
     </Box>
   );
 };
