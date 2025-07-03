@@ -8,6 +8,7 @@ import {
   Button,
   IconButton,
   Tooltip,
+  Stack,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz } from '@mui/icons-material';
 
@@ -80,12 +81,12 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           </Tooltip>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, pl: showCheckbox ? 0 : 4 }}>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.75, pl: showCheckbox ? 0 : 4 }}>
           <CalendarToday sx={{ fontSize: 16, color: color }} />
           <Typography variant="body2" sx={{ color: '#666' }}>
             Due {dueDate}
           </Typography>
-        </Box>
+        </Stack>
 
         <Typography
           variant="body2"

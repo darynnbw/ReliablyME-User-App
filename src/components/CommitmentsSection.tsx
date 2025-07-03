@@ -40,7 +40,7 @@ interface Commitment {
 }
 
 interface CommitmentsSectionProps {
-  title: string;
+  title:string;
   tabs: { label: string; count: number; items: Commitment[] }[];
 }
 
@@ -263,7 +263,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
         <Box sx={{
           flex: isMyCommitments ? undefined : 1,
-          height: isMyCommitments ? 290 : undefined, // 2 cards (140px each) + 1 spacing (8px) + buffer (2px)
+          height: isMyCommitments ? 288 : undefined, // Exactly 2 cards (140px * 2) + spacing (8px)
           minHeight: 0,
           overflowY: 'auto',
           pr: 1,
