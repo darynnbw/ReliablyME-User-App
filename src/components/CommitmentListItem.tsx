@@ -48,7 +48,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   return (
     <Card
       sx={{
-        minHeight: 140,
+        height: 140, // Set a fixed height instead of minHeight
         borderLeft: `4px solid ${color}`,
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',
@@ -59,7 +59,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5, height: '100%' }}>
         {showCheckbox && (
           <Checkbox
             size="small"
@@ -68,7 +68,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             onChange={handleCheckboxChange}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -82,19 +82,32 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           </Box>
 
           {/* Main content area with vertical stack */}
-          <Stack>
-            {/* Due Date */}
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-              <CalendarToday sx={{ fontSize: 16, color: color }} />
-              <Typography variant="body2" sx={{ color: '#666' }}>
-                Due {dueDate}
-              </Typography>
-            </Stack>
+          <Stack sx={{ flexGrow: 1, justifyContent: 'space-between' }}>
+            <Box>
+              {/* Due Date */}
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                <CalendarToday sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  Due {dueDate}
+                </Typography>
+              </Stack>
 
-            {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
-              {description}
-            </Typography>
+              {/* Description */}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#666',
+                  lineHeight: 1.4,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: '2',
+                  WebkitBoxOrient: 'vertical',
+                }}
+              >
+                {description}
+              </Typography>
+            </Box>
 
             {/* Bottom row: Assignee and Button */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
