@@ -11,8 +11,6 @@ import {
   InputLabel,
   OutlinedInput,
   InputAdornment,
-  IconButton,
-  Tooltip,
   TextField,
   Checkbox,
   Pagination,
@@ -23,7 +21,6 @@ import {
   CalendarToday,
   Search,
   ArrowUpward,
-  ArrowDownward,
 } from '@mui/icons-material';
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
@@ -124,17 +121,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               fontWeight: 600,
               color: '#1976d2',
               fontSize: '1.25rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
             }}
           >
             {title}
-            <Tooltip title="More options" placement="top" arrow>
-              <IconButton size="small" sx={{ color: '#666' }}>
-                <ArrowDownward fontSize="small" />
-              </IconButton>
-            </Tooltip>
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
