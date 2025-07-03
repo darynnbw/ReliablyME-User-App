@@ -17,7 +17,7 @@ const CommitmentPortfolio: React.FC = () => {
   const myCommitmentsTabs = [
     {
       label: 'My Promises',
-      count: 2,
+      count: 5,
       items: [
         {
           id: 1,
@@ -32,6 +32,27 @@ const CommitmentPortfolio: React.FC = () => {
           dueDate: 'Due Mar 28, 12:00 AM',
           description: 'Need the quarterly marketing report with all KPIs and campaign results.',
           assignee: 'Jamie Smith',
+        },
+        {
+          id: 6,
+          title: 'Promise Kept General',
+          dueDate: 'Apr 02, 05:00 PM',
+          description: 'I will complete the code review for the new feature branch by end of day.',
+          assignee: 'Alex Johnson',
+        },
+        {
+          id: 7,
+          title: 'Teamwork',
+          dueDate: 'Apr 04, 10:00 AM',
+          description: 'Prepare and share the agenda for the upcoming sprint planning meeting.',
+          assignee: 'Sarah Connor',
+        },
+        {
+          id: 8,
+          title: 'Attendance',
+          dueDate: 'Apr 05, 09:00 AM',
+          description: 'I will join the all-hands meeting on time and prepared to discuss Q2 goals.',
+          assignee: 'Mike Miller',
         },
       ],
     },
@@ -65,7 +86,29 @@ const CommitmentPortfolio: React.FC = () => {
     {
       label: 'My Unkept Promises',
       count: 3,
-      items: [],
+      items: [
+        {
+          id: 9,
+          title: 'Promise Kept General',
+          dueDate: 'Mar 20, 03:00 PM',
+          description: 'Failed to deliver the final report on the agreed-upon deadline.',
+          assignee: 'John Doe',
+        },
+        {
+          id: 10,
+          title: 'Attendance',
+          dueDate: 'Mar 22, 11:00 AM',
+          description: 'Missed the critical client call without prior notification.',
+          assignee: 'Jane Smith',
+        },
+        {
+          id: 11,
+          title: 'Teamwork',
+          dueDate: 'Mar 25, 06:00 PM',
+          description: 'Did not provide the necessary assets for the marketing campaign.',
+          assignee: 'Peter Jones',
+        },
+      ],
     },
     {
       label: 'Nudges History',

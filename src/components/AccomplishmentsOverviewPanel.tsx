@@ -12,7 +12,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         height: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        bgcolor: '#f7fafd',
+        bgcolor: '#ffffff',
         borderRadius: 3,
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
         border: '1px solid #e8eaed',

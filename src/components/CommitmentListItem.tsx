@@ -17,10 +17,11 @@ interface CommitmentListItemProps {
   dueDate: string;
   description: string;
   assignee: string;
-  selected?: boolean; // Added selected property
+  selected?: boolean;
+  color: string;
   onViewDetails: () => void;
   onRequestBadge: () => void;
-  onToggleSelect: (id: number, checked: boolean) => void; // Added onToggleSelect handler
+  onToggleSelect: (id: number, checked: boolean) => void;
 }
 
 const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
@@ -29,7 +30,8 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   dueDate,
   description,
   assignee,
-  selected = false, // Default to false
+  selected = false,
+  color,
   onViewDetails,
   onRequestBadge,
   onToggleSelect,
@@ -42,7 +44,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
     <Card
       sx={{
         minHeight: 140,
-        borderLeft: '4px solid #1976d2',
+        borderLeft: `4px solid ${color}`,
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',
         flexShrink: 0,
@@ -73,7 +75,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <CalendarToday sx={{ fontSize: 16, color: '#004C97' }} />
+          <CalendarToday sx={{ fontSize: 16, color: color }} />
           <Typography variant="body2" sx={{ color: '#666' }}>
             Due {dueDate}
           </Typography>
@@ -90,7 +92,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Person sx={{
               fontSize: 16,
-              color: '#1976d2'
+              color: color
             }} />
             <Typography variant="body2" sx={{ color: '#666' }}>
               To: {assignee}

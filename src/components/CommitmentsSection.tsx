@@ -97,6 +97,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const selectedCount = commitments.filter(item => item.selected).length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
+  const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
+  const itemColor = isUnkeptTab ? 'grey.500' : '#ff7043';
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
 
   return (
@@ -141,7 +143,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={personFilter}
                 onChange={(e) => setPersonFilter(e.target.value as string)}
                 label="Person"
-                startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><Person fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
                 sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -158,7 +160,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={allFilter}
                 onChange={(e) => setAllFilter(e.target.value as string)}
                 label="All"
-                startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
                 sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -174,7 +176,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value as string)}
                 label="Due Date (Soonest)"
-                startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><ArrowUpward fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
                 sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', px: 2, fontSize: '0.875rem' } }}
               >
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
@@ -262,6 +264,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           flexDirection: 'column',
           gap: 2,
           pr: 1,
+          height: 400, // Set fixed height to enable scrolling
           scrollbarWidth: 'auto',
           '&::-webkit-scrollbar': {
             width: '8px',
@@ -294,6 +297,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 <CommitmentListItem
                   key={item.id}
                   {...item}
+                  color={itemColor}
                   onViewDetails={() => handleViewDetails(item)}
                   onRequestBadge={() => handleRequestBadge(item)}
                   onToggleSelect={handleToggleSelectItem}

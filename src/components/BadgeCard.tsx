@@ -24,8 +24,8 @@ const BadgeCard: React.FC<BadgeCardProps> = ({ title, count }) => {
         transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
         height: '100%',
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+          transform: 'translateY(-2px)',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.08)',
         },
       }}
     >
