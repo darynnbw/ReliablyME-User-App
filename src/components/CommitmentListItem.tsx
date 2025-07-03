@@ -59,31 +59,29 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-        {/* Top row: Checkbox, Title, MoreHoriz */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            {showCheckbox && (
-              <Checkbox
-                size="small"
-                sx={{ p: 0, mr: 1 }}
-                checked={selected}
-                onChange={handleCheckboxChange}
-              />
-            )}
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+        {showCheckbox && (
+          <Checkbox
+            size="small"
+            sx={{ p: 0, mt: 0.5 }} // Align checkbox with title
+            checked={selected}
+            onChange={handleCheckboxChange}
+          />
+        )}
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          {/* Top row: Title, MoreHoriz */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
-          </Stack>
-          <Tooltip title="View details" placement="top" arrow>
-            <IconButton size="small" onClick={onViewDetails}>
-              <MoreHoriz />
-            </IconButton>
-          </Tooltip>
-        </Box>
+            <Tooltip title="View details" placement="top" arrow>
+              <IconButton size="small" onClick={onViewDetails}>
+                <MoreHoriz />
+              </IconButton>
+            </Tooltip>
+          </Box>
 
-        {/* Main content area with padding and vertical stack */}
-        <Box sx={{ pl: showCheckbox ? 4.5 : 1.5, mt: 1 }}>
+          {/* Main content area with vertical stack */}
           <Stack spacing={1.25}>
             {/* Due Date */}
             <Stack direction="row" spacing={1} alignItems="center">
