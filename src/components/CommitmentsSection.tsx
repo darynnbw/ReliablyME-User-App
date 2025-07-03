@@ -16,6 +16,7 @@ import {
   TextField,
   Checkbox,
   Pagination,
+  Stack,
 } from '@mui/material';
 import {
   Person,
@@ -261,10 +262,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
         <Box sx={{
           flex: 1,
-          overflowY: 'scroll',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
+          overflowY: 'auto',
           pr: 1,
           height: 400,
           scrollbarWidth: 'auto',
@@ -279,40 +277,42 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             backgroundColor: '#f0f0f0',
           },
         }}>
-          {currentItems.length > 0 ? (
-            isBadgesTab ? (
-              currentItems.map((item) => (
-                <MyBadgeListItem
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  approvalDate={item.dueDate}
-                  commitment={item.description}
-                  recipient={item.assignee}
-                  selected={item.selected}
-                  onToggleSelect={handleToggleSelectItem}
-                  onViewDetails={() => handleViewDetails(item)}
-                />
-              ))
+          <Stack spacing={2}>
+            {currentItems.length > 0 ? (
+              isBadgesTab ? (
+                currentItems.map((item) => (
+                  <MyBadgeListItem
+                    key={item.id}
+                    id={item.id}
+                    title={item.title}
+                    approvalDate={item.dueDate}
+                    commitment={item.description}
+                    recipient={item.assignee}
+                    selected={item.selected}
+                    onToggleSelect={handleToggleSelectItem}
+                    onViewDetails={() => handleViewDetails(item)}
+                  />
+                ))
+              ) : (
+                currentItems.map((item) => (
+                  <CommitmentListItem
+                    key={item.id}
+                    {...item}
+                    color={itemColor}
+                    showCheckbox={!isUnkeptTab}
+                    showRequestBadgeButton={!isUnkeptTab}
+                    onViewDetails={() => handleViewDetails(item)}
+                    onRequestBadge={() => handleRequestBadge(item)}
+                    onToggleSelect={handleToggleSelectItem}
+                  />
+                ))
+              )
             ) : (
-              currentItems.map((item) => (
-                <CommitmentListItem
-                  key={item.id}
-                  {...item}
-                  color={itemColor}
-                  showCheckbox={!isUnkeptTab}
-                  showRequestBadgeButton={!isUnkeptTab}
-                  onViewDetails={() => handleViewDetails(item)}
-                  onRequestBadge={() => handleRequestBadge(item)}
-                  onToggleSelect={handleToggleSelectItem}
-                />
-              ))
-            )
-          ) : (
-            <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>
-              No items found.
-            </Typography>
-          )}
+              <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>
+                No items found.
+              </Typography>
+            )}
+          </Stack>
         </Box>
         
         {currentItems.length > 0 && isBadgesTab && (

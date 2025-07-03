@@ -9,6 +9,7 @@ import {
   Chip,
   Button,
   Tooltip,
+  Stack,
 } from '@mui/material';
 import {
   Check,
@@ -150,10 +151,7 @@ const ActionNotifications: React.FC = () => {
         <Box sx={{ 
           height: { xs: 'auto', md: 350 },
           maxHeight: { xs: '60vh', md: 350 },
-          overflowY: 'scroll',
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: 2,
+          overflowY: 'auto',
           mb: 2,
           pr: 1,
           scrollbarWidth: 'auto', // for Firefox
@@ -168,147 +166,149 @@ const ActionNotifications: React.FC = () => {
             backgroundColor: '#f0f0f0',
           },
         }}>
-          {notifications.map((notification) => (
-            <Card
-              key={notification.id}
-              sx={{
-                minHeight: 140,
-                borderLeft: `4px solid ${getTypeColor(notification.type)}`,
-                boxShadow: 1,
-                transition: 'all 0.2s ease-in-out',
-                flexShrink: 0,
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: 3,
-                },
-              }}
-            >
-              <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                      {notification.title}
-                    </Typography>
-                    <Chip
-                      label={notification.type}
-                      size="small"
-                      sx={{
-                        bgcolor: getTypeBackground(notification.type),
-                        color: getTypeColor(notification.type),
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        height: 28,
-                        px: 1,
-                      }}
-                    />
+          <Stack spacing={2}>
+            {notifications.map((notification) => (
+              <Card
+                key={notification.id}
+                sx={{
+                  minHeight: 140,
+                  borderLeft: `4px solid ${getTypeColor(notification.type)}`,
+                  boxShadow: 1,
+                  transition: 'all 0.2s ease-in-out',
+                  flexShrink: 0,
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: 3,
+                  },
+                }}
+              >
+                <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                        {notification.title}
+                      </Typography>
+                      <Chip
+                        label={notification.type}
+                        size="small"
+                        sx={{
+                          bgcolor: getTypeBackground(notification.type),
+                          color: getTypeColor(notification.type),
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          height: 28,
+                          px: 1,
+                        }}
+                      />
+                    </Box>
+                    <Tooltip title="View details" placement="top" arrow>
+                      <IconButton size="small" onClick={() => setModalOpen(true)}>
+                        <MoreHoriz />
+                      </IconButton>
+                    </Tooltip>
                   </Box>
-                  <Tooltip title="View details" placement="top" arrow>
-                    <IconButton size="small" onClick={() => setModalOpen(true)}>
-                      <MoreHoriz />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
 
-                <Typography
-                  variant="body2"
-                  sx={{ color: '#666', mb: 2, lineHeight: 1.5 }}
-                >
-                  {notification.description}
-                </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: '#666', mb: 2, lineHeight: 1.5 }}
+                  >
+                    {notification.description}
+                  </Typography>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Person sx={{ 
-                      fontSize: 16, 
-                      color: getTypeColor(notification.type)
-                    }} />
-                    <Typography variant="body2" sx={{ color: '#666' }}>
-                      To:{' '}
-                      {notification.assignee === 'Chris Parker' ? (
-                        <ContactTooltip name={notification.assignee}>
-                          <span 
-                            style={{ 
-                              color: '#666',
-                              cursor: 'pointer',
-                              fontSize: 'inherit',
-                              fontFamily: 'inherit',
-                              fontWeight: 'inherit'
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Person sx={{ 
+                        fontSize: 16, 
+                        color: getTypeColor(notification.type)
+                      }} />
+                      <Typography variant="body2" sx={{ color: '#666' }}>
+                        To:{' '}
+                        {notification.assignee === 'Chris Parker' ? (
+                          <ContactTooltip name={notification.assignee}>
+                            <span 
+                              style={{ 
+                                color: '#666',
+                                cursor: 'pointer',
+                                fontSize: 'inherit',
+                                fontFamily: 'inherit',
+                                fontWeight: 'inherit'
+                              }}
+                            >
+                              {notification.assignee}
+                            </span>
+                          </ContactTooltip>
+                        ) : (
+                          notification.assignee
+                        )}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      {notification.actions.includes('accept') && (
+                        <Tooltip title="Accept" placement="top" arrow>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleActionClick('accept', notification)}
+                            sx={{
+                              bgcolor: '#e8f5e8',
+                              color: '#4caf50',
+                              '&:hover': { bgcolor: '#d4edda' },
                             }}
                           >
-                            {notification.assignee}
-                          </span>
-                        </ContactTooltip>
-                      ) : (
-                        notification.assignee
+                            <Check fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                       )}
-                    </Typography>
+                      {notification.actions.includes('decline') && (
+                        <Tooltip title="Decline" placement="top" arrow>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleActionClick('decline', notification)}
+                            sx={{
+                              bgcolor: '#fde8e8',
+                              color: '#f44336',
+                              '&:hover': { bgcolor: '#f8d7da' },
+                            }}
+                          >
+                            <Close fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {notification.actions.includes('edit') && (
+                        <Tooltip title="Answer Nudge" placement="top" arrow>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleActionClick('edit', notification)}
+                            sx={{
+                              bgcolor: '#fff3e0',
+                              color: '#ff7043',
+                              '&:hover': { bgcolor: '#ffe0b2' },
+                            }}
+                          >
+                            <Edit fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {notification.actions.includes('undo') && (
+                        <Tooltip title="Request Clarification" placement="top" arrow>
+                          <IconButton
+                            size="small"
+                            sx={{
+                              bgcolor: '#fff8e1',
+                              color: '#ff9800',
+                              '&:hover': { bgcolor: '#fff3c4' },
+                            }}
+                          >
+                            <Undo fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Box>
                   </Box>
-
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    {notification.actions.includes('accept') && (
-                      <Tooltip title="Accept" placement="top" arrow>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleActionClick('accept', notification)}
-                          sx={{
-                            bgcolor: '#e8f5e8',
-                            color: '#4caf50',
-                            '&:hover': { bgcolor: '#d4edda' },
-                          }}
-                        >
-                          <Check fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    {notification.actions.includes('decline') && (
-                      <Tooltip title="Decline" placement="top" arrow>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleActionClick('decline', notification)}
-                          sx={{
-                            bgcolor: '#fde8e8',
-                            color: '#f44336',
-                            '&:hover': { bgcolor: '#f8d7da' },
-                          }}
-                        >
-                          <Close fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    {notification.actions.includes('edit') && (
-                      <Tooltip title="Answer Nudge" placement="top" arrow>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleActionClick('edit', notification)}
-                          sx={{
-                            bgcolor: '#fff3e0',
-                            color: '#ff7043',
-                            '&:hover': { bgcolor: '#ffe0b2' },
-                          }}
-                        >
-                          <Edit fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    {notification.actions.includes('undo') && (
-                      <Tooltip title="Request Clarification" placement="top" arrow>
-                        <IconButton
-                          size="small"
-                          sx={{
-                            bgcolor: '#fff8e1',
-                            color: '#ff9800',
-                            '&:hover': { bgcolor: '#fff3c4' },
-                          }}
-                        >
-                          <Undo fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </Stack>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
