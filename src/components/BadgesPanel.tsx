@@ -27,8 +27,7 @@ const BadgesPanel: React.FC = () => {
   return (
     <Paper sx={{ 
       p: 3, 
-      height: { xs: 'auto', md: 450 },
-      minHeight: { xs: 350, md: 450 },
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
       bgcolor: '#fafbfc',

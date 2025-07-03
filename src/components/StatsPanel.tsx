@@ -10,8 +10,7 @@ const StatsPanel: React.FC = () => {
   return (
     <Paper sx={{ 
       p: 3, 
-      height: { xs: 'auto', md: 500 },
-      minHeight: { xs: 400, md: 500 },
+      height: '100%',
       display: 'flex',
       flexDirection: 'column'
     }}>
