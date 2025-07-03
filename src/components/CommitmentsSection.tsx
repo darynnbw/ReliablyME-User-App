@@ -99,7 +99,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const selectedCount = commitments.filter(item => item.selected).length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
-  const itemColor = isUnkeptTab ? '#4F4F4F' : '#ff7043';
+  const itemColor = isUnkeptTab ? 'grey.500' : '#ff7043';
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
   const isMyCommitments = title === 'My Commitments';
 
