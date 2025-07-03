@@ -92,7 +92,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             </Stack>
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, pl: '24px' }}>
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
               {description}
             </Typography>
 

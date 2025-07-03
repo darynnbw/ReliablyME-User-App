@@ -7,6 +7,7 @@ import {
   Checkbox,
   IconButton,
   Tooltip,
+  Stack,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Shield } from '@mui/icons-material';
 
@@ -49,50 +50,50 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-            <Checkbox
-              size="small"
-              sx={{ p: 0, mr: 1 }}
-              checked={selected}
-              onChange={handleCheckboxChange}
-            />
-            <Shield sx={{ color: '#4caf50', mr: 1 }} /> {/* Badge Icon */}
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              {title}
-            </Typography>
-          </Box>
-          <Tooltip title="View details" placement="top" arrow>
-            <IconButton size="small" onClick={onViewDetails}>
-              <MoreHoriz />
-            </IconButton>
-          </Tooltip>
-        </Box>
-
-        <Box sx={{ pl: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
-            <Typography variant="body2" color="text.secondary">
-              Approved {approvalDate}
-            </Typography>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+        <Checkbox
+          size="small"
+          sx={{ p: 0, mt: 0.5 }}
+          checked={selected}
+          onChange={handleCheckboxChange}
+        />
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+              <Shield sx={{ color: '#4caf50' }} /> {/* Badge Icon */}
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                {title}
+              </Typography>
+            </Box>
+            <Tooltip title="View details" placement="top" arrow>
+              <IconButton size="small" onClick={onViewDetails}>
+                <MoreHoriz />
+              </IconButton>
+            </Tooltip>
           </Box>
 
-          <Typography
-            variant="body2"
-            sx={{ color: '#666', mb: 2, lineHeight: 1.5, pl: '24px' }}
-          >
-            {commitment}
-          </Typography>
+          <Stack spacing={1.25}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                Approved {approvalDate}
+              </Typography>
+            </Stack>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{ color: '#666', lineHeight: 1.5 }}
+            >
+              {commitment}
+            </Typography>
+
+            <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
                 To: <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>{recipient}</Typography>
               </Typography>
-            </Box>
-          </Box>
+            </Stack>
+          </Stack>
         </Box>
       </CardContent>
     </Card>
