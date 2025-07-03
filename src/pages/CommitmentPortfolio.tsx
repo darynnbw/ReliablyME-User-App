@@ -176,7 +176,7 @@ const CommitmentPortfolio: React.FC = () => {
 
           {/* My Commitments */}
           <Grid item xs={12}>
-            <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} visibleCards={2} />
+            <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} />
           </Grid>
 
           {/* Commitments Received & Badges Issued */}
