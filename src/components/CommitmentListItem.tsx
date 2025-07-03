@@ -60,16 +60,17 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
       }}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-        <Checkbox
-          size="small"
-          sx={{
-            p: 0,
-            mt: 0.5,
-            visibility: showCheckbox ? 'visible' : 'hidden',
-          }}
-          checked={selected}
-          onChange={handleCheckboxChange}
-        />
+        {showCheckbox && (
+          <Checkbox
+            size="small"
+            sx={{
+              p: 0,
+              mt: 0.5,
+            }}
+            checked={selected}
+            onChange={handleCheckboxChange}
+          />
+        )}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
