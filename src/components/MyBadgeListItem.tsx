@@ -73,7 +73,7 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
           </Box>
 
           <Stack>
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
               <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
                 Approved {approvalDate}

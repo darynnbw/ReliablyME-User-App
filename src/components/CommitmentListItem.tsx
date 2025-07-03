@@ -84,7 +84,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           {/* Main content area with vertical stack */}
           <Stack>
             {/* Due Date */}
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
               <CalendarToday sx={{ fontSize: 16, color: color }} />
               <Typography variant="body2" sx={{ color: '#666' }}>
                 Due {dueDate}
