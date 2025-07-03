@@ -82,7 +82,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           </Box>
 
           {/* Main content area with vertical stack */}
-          <Stack spacing={1.25}>
+          <Stack spacing={1}>
             {/* Due Date */}
             <Stack direction="row" spacing={1} alignItems="center">
               <CalendarToday sx={{ fontSize: 16, color: color }} />
@@ -97,7 +97,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
             </Typography>
 
             {/* Bottom row: Assignee and Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
               {/* Assignee */}
               <Stack direction="row" spacing={1} alignItems="center">
                 <Person sx={{ fontSize: 16, color: color }} />

@@ -72,7 +72,7 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
             </Tooltip>
           </Box>
 
-          <Stack spacing={1.25}>
+          <Stack spacing={1}>
             <Stack direction="row" spacing={1} alignItems="center">
               <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
