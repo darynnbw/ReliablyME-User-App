@@ -58,7 +58,7 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
           onChange={handleCheckboxChange}
         />
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
               <Shield sx={{ color: '#4caf50' }} /> {/* Badge Icon */}
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>

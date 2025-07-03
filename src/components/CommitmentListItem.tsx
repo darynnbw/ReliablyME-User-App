@@ -70,7 +70,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
         )}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
