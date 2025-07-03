@@ -125,7 +125,8 @@ const ActionNotifications: React.FC = () => {
     <>
       <Paper sx={{ 
         p: 3, 
-        height: '100%',
+        height: { xs: 'auto', md: 500 },
+        minHeight: { xs: 400, md: 500 },
         display: 'flex',
         flexDirection: 'column'
       }}>
@@ -165,7 +166,7 @@ const ActionNotifications: React.FC = () => {
             backgroundColor: '#f0f0f0',
           },
         }}>
-          <Stack spacing={2}>
+          <Stack spacing={1}>
             {notifications.map((notification) => (
               <Card
                 key={notification.id}

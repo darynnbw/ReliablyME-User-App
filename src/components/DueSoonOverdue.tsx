@@ -95,7 +95,8 @@ const DueSoonOverdue: React.FC = () => {
     <>
       <Paper sx={{ 
         p: 3, 
-        height: '100%',
+        height: { xs: 'auto', md: 450 },
+        minHeight: { xs: 350, md: 450 },
         display: 'flex',
         flexDirection: 'column'
       }}>
@@ -140,7 +141,7 @@ const DueSoonOverdue: React.FC = () => {
             backgroundColor: '#f0f0f0',
           },
         }}>
-          <Stack spacing={2}>
+          <Stack spacing={1}>
             {currentItems.map((item) => (
               <Card
                 key={item.id}
