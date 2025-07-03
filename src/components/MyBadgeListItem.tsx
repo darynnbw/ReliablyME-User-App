@@ -48,20 +48,19 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
           transform: 'translateY(-2px)',
           boxShadow: 3,
         },
-        display: 'flex',
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5, flex: 1 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
         <Checkbox
           size="small"
           sx={{ p: 0, mt: 0.5 }}
           checked={selected}
           onChange={handleCheckboxChange}
         />
-        <Stack sx={{ flex: 1, minWidth: 0, height: '100%', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-              <Shield sx={{ color: '#4caf50' }} />
+              <Shield sx={{ color: '#4caf50' }} /> {/* Badge Icon */}
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
               </Typography>
@@ -73,27 +72,29 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
             </Tooltip>
           </Box>
 
-          <Stack direction="row" spacing={1} alignItems="center">
-            <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
-            <Typography variant="body2" color="text.secondary">
-              Approved {approvalDate}
-            </Typography>
-          </Stack>
+          <Stack spacing={1.25}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                Approved {approvalDate}
+              </Typography>
+            </Stack>
 
-          <Typography
-            variant="body2"
-            sx={{ color: '#666', lineHeight: 1.5 }}
-          >
-            {commitment}
-          </Typography>
-
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
-            <Typography variant="body2" color="text.secondary">
-              To: <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>{recipient}</Typography>
+            <Typography
+              variant="body2"
+              sx={{ color: '#666', lineHeight: 1.5 }}
+            >
+              {commitment}
             </Typography>
+
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                To: <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>{recipient}</Typography>
+              </Typography>
+            </Stack>
           </Stack>
-        </Stack>
+        </Box>
       </CardContent>
     </Card>
   );
