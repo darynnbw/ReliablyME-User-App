@@ -68,7 +68,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   ).sort((a, b) => {
     const dateA = new Date(a.dueDate.split(',')[0]);
     const dateB = new Date(b.dueDate.split(',')[0]);
-    return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - a.getTime();
   });
 
   const handleViewDetails = (commitment: Commitment) => {
@@ -263,7 +263,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
         <Box sx={{
           flex: isMyCommitments ? undefined : 1,
-          height: isMyCommitments ? 288 : undefined, // Exactly 2 cards (140px * 2) + spacing (8px)
+          height: isMyCommitments ? 294 : undefined, // 2 cards (140px * 2) + spacing (8px) + buffer (6px)
           minHeight: 0,
           overflowY: 'auto',
           pr: 1,
