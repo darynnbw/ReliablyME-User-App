@@ -13,12 +13,7 @@ import {
 } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 
-interface NavigationTabsProps {
-  activeTab: number; // This prop is now less critical as location handles active state
-  setActiveTab: (tab: number) => void; // This prop can be removed if not used elsewhere
-}
-
-const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab }) => {
+const NavigationTabs: React.FC = () => {
   const location = useLocation();
 
   // Determine active tab based on current path
