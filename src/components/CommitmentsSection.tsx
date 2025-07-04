@@ -27,8 +27,7 @@ import {
   ArrowUpward,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import type { PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDay, type PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -49,32 +48,48 @@ const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) =>
     prop !== 'isStartDate' && prop !== 'isEndDate' && prop !== 'isInRange',
 })<CustomPickerDayProps>(({ theme, isStartDate, isEndDate, isInRange, outsideCurrentMonth }) => ({
-  ...(isInRange && !outsideCurrentMonth && {
-    backgroundColor: alpha(theme.palette.primary.light, 0.2),
-    borderRadius: 0,
-  }),
-  ...(isStartDate && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-    borderRadius: '50%',
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  }),
-  ...(isEndDate && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-    borderRadius: '50%',
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  }),
-  transition: theme.transitions.create('background-color', {
-    duration: theme.transitions.duration.short,
-  }),
+  // Base styles for all days
+  width: 36,
+  height: 36,
+  margin: 'auto',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  // Generic hover for non-selected days
   '&:hover': {
-    backgroundColor: alpha(theme.palette.primary.light, 0.4),
-  }
+    backgroundColor: alpha(theme.palette.grey[500], 0.1),
+  },
+  // Remove default focus outline
+  '&.Mui-focusVisible': {
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
+  },
+  // Styles for days within the selected range (but not start/end)
+  ...(isInRange && !outsideCurrentMonth && {
+    borderRadius: 0,
+    backgroundColor: alpha(theme.palette.primary.light, 0.2),
+    color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.2)),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.primary.light, 0.4),
+    },
+  }),
+  // Styles for the start date of the range
+  ...(isStartDate && !outsideCurrentMonth && {
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    '&:hover, &.Mui-focusVisible': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  }),
+  // Styles for the end date of the range
+  ...(isEndDate && !outsideCurrentMonth && {
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    '&:hover, &.Mui-focusVisible': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  }),
 }));
 
 
@@ -180,18 +195,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   };
 
   const renderCustomDay = (props: PickersDayProps) => {
-    const { day, outsideCurrentMonth } = props as PickersDayProps & { day: Dayjs };
+    const { day, outsideCurrentMonth } = props;
     const [start, end] = tempDateRange;
+
     const isStartDate = !outsideCurrentMonth && start?.isSame(day, 'day') || false;
     const isEndDate = !outsideCurrentMonth && end?.isSame(day, 'day') || false;
-    const isInRange = !outsideCurrentMonth && start && end && day.isBetween(start, end);
+    const isInRange = (!outsideCurrentMonth && start && end && day.isBetween(start, end, null, '()')) || false;
 
     return (
       <CustomPickersDay
         {...props}
         isStartDate={isStartDate}
         isEndDate={isEndDate}
-        isInRange={isInRange || false}
+        isInRange={isInRange}
       />
     );
   };
@@ -296,14 +312,24 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-              <DateCalendar
-                value={tempDateRange[0]}
-                onChange={handleDateChange}
-                slots={{ day: renderCustomDay }}
-              />
-              <Box sx={{ p: 1, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                <Button onClick={handleClearDateRange} variant="text" size="small">Clear</Button>
-                <Button onClick={handleApplyDateRange} variant="text" size="small">Apply</Button>
+              <Box sx={{ p: 2 }}>
+                <DateCalendar
+                  value={tempDateRange[0]}
+                  onChange={handleDateChange}
+                  slots={{ day: renderCustomDay }}
+                />
+                <Box sx={{ 
+                  pt: 1.5, 
+                  mt: 1, 
+                  borderTop: '1px solid', 
+                  borderColor: 'divider', 
+                  display: 'flex', 
+                  justifyContent: 'flex-end', 
+                  gap: 1 
+                }}>
+                  <Button onClick={handleClearDateRange} variant="text" size="small">Clear</Button>
+                  <Button onClick={handleApplyDateRange} variant="contained" size="small">Apply</Button>
+                </Box>
               </Box>
             </Popover>
 
