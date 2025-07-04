@@ -16,10 +16,11 @@ import {
   Stack,
   Popover,
   Button,
-  styled,
   alpha,
   SelectChangeEvent,
+  SxProps,
 } from '@mui/material';
+import { Theme } from '@mui/material/styles';
 import {
   Person,
   CalendarToday,
@@ -27,7 +28,7 @@ import {
   ArrowUpward,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -36,43 +37,6 @@ import RequestBadgeModal from './RequestBadgeModal';
 import MyBadgeListItem from './MyBadgeListItem';
 
 dayjs.extend(isBetween);
-
-// Custom styled component for rendering days in the calendar
-interface CustomPickerDayProps extends PickersDayProps {
-  isStartDate: boolean;
-  isEndDate: boolean;
-  isInRange: boolean;
-}
-
-const CustomPickersDay = styled(PickersDay, {
-  shouldForwardProp: (prop) =>
-    prop !== 'isStartDate' && prop !== 'isEndDate' && prop !== 'isInRange',
-})<CustomPickerDayProps>(({ theme, isStartDate, isEndDate, isInRange, outsideCurrentMonth }) => {
-  const isRangeBoundary = isStartDate || isEndDate;
-
-  return {
-    borderRadius: '50%',
-    // In-between days are light blue circles
-    ...(isInRange && !isRangeBoundary && !outsideCurrentMonth && {
-      backgroundColor: alpha(theme.palette.primary.light, 0.3),
-      color: theme.palette.primary.dark,
-    }),
-    // Start and end dates are darker blue circles
-    ...(isRangeBoundary && !outsideCurrentMonth && {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.dark,
-      },
-      // Ensure selected state doesn't override our style
-      '&.Mui-selected': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.common.white,
-      },
-    }),
-  };
-});
-
 
 interface Commitment {
   id: number;
@@ -187,24 +151,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   };
 
-  const CustomDay = (props: PickersDayProps) => {
-    const { day } = props;
-    const [start, end] = tempDateRange;
-
-    const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
-    const isEndDate = end?.isSame(day as Dayjs, 'day') ?? false;
-    const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
-  
-    return (
-      <CustomPickersDay
-        {...props}
-        isStartDate={isStartDate}
-        isEndDate={isEndDate}
-        isInRange={isInRange}
-      />
-    );
-  };
-
   const handleClosePopover = () => setPopoverAnchor(null);
   
   const handleApplyDateRange = () => {
@@ -308,7 +254,36 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <DateCalendar
                 value={tempDateRange[0]}
                 onChange={handleDateChange}
-                slots={{ day: CustomDay }}
+                slotProps={{
+                  day: (ownerState) => {
+                    const { day, outsideCurrentMonth } = ownerState;
+                    const [start, end] = tempDateRange;
+
+                    const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
+                    const isEndDate = end?.isSame(day as Dayjs, 'day') ?? false;
+                    const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
+                    const isRangeBoundary = isStartDate || isEndDate;
+
+                    const sx: SxProps<Theme> = {
+                      borderRadius: '50%',
+                    };
+
+                    if (isRangeBoundary && !outsideCurrentMonth) {
+                      sx.backgroundColor = 'primary.main';
+                      sx.color = 'common.white';
+                      sx['&:hover, &:focus, &.Mui-selected'] = {
+                        backgroundColor: 'primary.main',
+                        color: 'common.white',
+                      };
+                    } else if (isInRange && !outsideCurrentMonth) {
+                      sx.backgroundColor = (theme) => alpha(theme.palette.primary.light, 0.3);
+                      sx.color = 'primary.dark';
+                      sx.borderRadius = '50%';
+                    }
+                    
+                    return { sx } as any;
+                  },
+                }}
                 sx={{ mb: -2 }}
               />
               <Box sx={{ 
