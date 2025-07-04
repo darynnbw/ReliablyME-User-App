@@ -8,4 +8,7 @@ export default defineConfig({
     exclude: ['lucide-react', '@emotion/react', '@emotion/styled', '@mui/icons-material'],
     include: ['@mui/material', '@mui/material/utils', 'hoist-non-react-statics']
   },
+  server: {
+    preTransformRequests: false
+  }
 });
