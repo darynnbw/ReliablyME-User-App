@@ -18,6 +18,7 @@ import {
   Button,
   styled,
   alpha,
+  SelectChangeEvent,
 } from '@mui/material';
 import {
   Person,
@@ -105,7 +106,7 @@ const parseCommitmentDate = (dateString: string): Dayjs | null => {
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
-  const [allFilter, setAllFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('All');
   const [sortOrder, setSortOrder] = useState('soonest');
   const [searchTerm, setSearchTerm] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -115,7 +116,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
-  const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null);
+  const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -132,11 +133,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     const itemDate = parseCommitmentDate(item.dueDate);
     let dateMatch = true;
 
-    if (dateRange[0] && dateRange[1] && itemDate) {
+    if (dateFilter === 'Custom Range' && dateRange[0] && dateRange[1] && itemDate) {
       dateMatch = !itemDate.isBefore(dateRange[0], 'day') && !itemDate.isAfter(dateRange[1], 'day');
-    } else if (allFilter === 'Today') {
+    } else if (dateFilter === 'Today') {
       dateMatch = itemDate ? itemDate.isSame(dayjs(), 'day') : false;
-    } else if (allFilter === 'This Week') {
+    } else if (dateFilter === 'This Week') {
       dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
     }
     
@@ -195,17 +196,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     );
   };
 
-  const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setTempDateRange(dateRange);
-    setPopoverAnchor(event.currentTarget);
-  };
   const handleClosePopover = () => setPopoverAnchor(null);
   
   const handleApplyDateRange = () => {
     setDateRange(tempDateRange);
-    if (tempDateRange[0] && tempDateRange[1]) {
-      setAllFilter('');
-    }
     handleClosePopover();
   };
 
@@ -215,11 +209,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     handleClosePopover();
   };
 
-  const handleAllFilterChange = (value: string) => {
-    setAllFilter(value);
-    if (value) {
+  const handleDateFilterChange = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value;
+    setDateFilter(value);
+
+    if (value === 'Custom Range') {
+      setTempDateRange(dateRange);
+      setPopoverAnchor(event.currentTarget as HTMLElement);
+    } else {
       setDateRange([null, null]);
     }
+  };
+
+  const renderDateFilterValue = (selectedValue: string) => {
+    if (selectedValue === 'Custom Range' && dateRange[0] && dateRange[1]) {
+      return `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`;
+    }
+    return selectedValue;
   };
 
   const selectedCount = commitments.filter(item => item.selected).length;
@@ -259,22 +265,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
               <InputLabel>Date</InputLabel>
-              <Select value={allFilter} onChange={(e) => handleAllFilterChange(e.target.value as string)} label="Date">
-                <MenuItem value="">All</MenuItem>
+              <Select
+                value={dateFilter}
+                onChange={handleDateFilterChange}
+                label="Date"
+                renderValue={renderDateFilterValue}
+                startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}
+              >
+                <MenuItem value="All">All</MenuItem>
                 <MenuItem value="Today">Today</MenuItem>
                 <MenuItem value="This Week">This Week</MenuItem>
+                <MenuItem value="Custom Range">Custom Range</MenuItem>
               </Select>
             </FormControl>
-
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<CalendarToday fontSize="small" />}
-              onClick={handleOpenPopover}
-              sx={{ textTransform: 'none', color: 'text.secondary', borderColor: 'rgba(0, 0, 0, 0.23)', height: '40px' }}
-            >
-              {dateRange[0] && dateRange[1] ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}` : 'Select date range'}
-            </Button>
             <Popover
               open={Boolean(popoverAnchor)}
               anchorEl={popoverAnchor}
