@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Paper,
   Typography,
@@ -117,6 +117,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
+  const dateFilterControlRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -215,7 +216,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
     if (value === 'Custom Range') {
       setTempDateRange(dateRange);
-      setPopoverAnchor(event.currentTarget as HTMLElement);
+      setPopoverAnchor(dateFilterControlRef.current);
     } else {
       setDateRange([null, null]);
     }
@@ -263,7 +264,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               </Select>
             </FormControl>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+            <FormControl ref={dateFilterControlRef} variant="outlined" size="small" sx={{ minWidth: 120 }}>
               <InputLabel>Date</InputLabel>
               <Select
                 value={dateFilter}
