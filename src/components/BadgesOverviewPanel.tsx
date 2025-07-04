@@ -30,8 +30,6 @@ const BadgesOverviewPanel: React.FC = () => {
     { id: 7, title: 'Leadership', count: 12 },
   ];
 
-  const totalBadgeCount = badges.reduce((sum, badge) => sum + badge.count, 0);
-
   const handleFilterChange = (event: SelectChangeEvent<typeof selectedBadges>) => {
     const {
       target: { value },
@@ -42,6 +40,9 @@ const BadgesOverviewPanel: React.FC = () => {
   const filteredBadges = selectedBadges.length === 0
     ? badges
     : badges.filter(badge => selectedBadges.includes(badge.title));
+
+  // Calculate the total count based on the *filtered* badges.
+  const totalBadgeCount = filteredBadges.reduce((sum, badge) => sum + badge.count, 0);
 
   return (
     <Paper sx={{
