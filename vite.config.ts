@@ -6,6 +6,12 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react', '@emotion/react', '@emotion/styled', '@mui/icons-material'],
-    include: ['@mui/material', '@mui/material/utils', 'hoist-non-react-statics']
+    include: [
+      '@mui/material', 
+      '@mui/material/utils', 
+      'hoist-non-react-statics',
+      '@mui/x-date-pickers',
+      '@mui/x-date-pickers-pro'
+    ]
   },
 });
