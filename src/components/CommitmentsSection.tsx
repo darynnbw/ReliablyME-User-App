@@ -22,10 +22,15 @@ import {
   Search,
   ArrowUpward,
 } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
 import MyBadgeListItem from './MyBadgeListItem';
+
+dayjs.extend(isBetween);
 
 interface Commitment {
   id: number;
@@ -41,6 +46,17 @@ interface CommitmentsSectionProps {
   tabs: { label: string; count: number; items: Commitment[] }[];
 }
 
+const parseCommitmentDate = (dateString: string): Dayjs | null => {
+  try {
+    const cleanDateString = dateString.replace('Due ', '');
+    const fullDateString = `${cleanDateString} ${new Date().getFullYear()}`;
+    const date = dayjs(fullDateString);
+    return date.isValid() ? date : null;
+  } catch (error) {
+    return null;
+  }
+};
+
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
@@ -52,20 +68,42 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [selectedCommitment, setSelectedCommitment] = useState<Commitment | null>(null);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
   }, [activeTab, tabs]);
 
-  const currentItems = commitments.filter(item =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.assignee.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => {
-    const dateA = new Date(a.dueDate.split(',')[0]);
-    const dateB = new Date(b.dueDate.split(',')[0]);
-    return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - a.getTime();
+  const currentItems = commitments.filter(item => {
+    const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.assignee.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (!searchMatch) return false;
+
+    const itemDate = parseCommitmentDate(item.dueDate);
+    
+    if (allFilter === 'Today') {
+      return itemDate ? itemDate.isSame(dayjs(), 'day') : false;
+    }
+    if (allFilter === 'This Week') {
+      if (!itemDate) return false;
+      const startOfWeek = dayjs().startOf('week');
+      const endOfWeek = dayjs().endOf('week');
+      return itemDate.isBetween(startOfWeek, endOfWeek, null, '[]');
+    }
+    if (allFilter === 'Custom Range' && startDate && endDate && itemDate) {
+      return !itemDate.isBefore(startDate, 'day') && !itemDate.isAfter(endDate, 'day');
+    }
+
+    return true;
+  }).sort((a, b) => {
+    const dateA = parseCommitmentDate(a.dueDate);
+    const dateB = parseCommitmentDate(b.dueDate);
+    if (!dateA || !dateB) return 0;
+    return sortOrder === 'soonest' ? dateA.valueOf() - dateB.valueOf() : dateB.valueOf() - a.valueOf();
   });
 
   const handleViewDetails = (commitment: Commitment) => {
@@ -157,8 +195,39 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 <MenuItem value="">All</MenuItem>
                 <MenuItem value="Today">Today</MenuItem>
                 <MenuItem value="This Week">This Week</MenuItem>
+                <MenuItem value="Custom Range">Custom Range</MenuItem>
               </Select>
             </FormControl>
+
+            {allFilter === 'Custom Range' && (
+              <>
+                <DatePicker
+                  label="From"
+                  value={startDate}
+                  onChange={(newValue) => setStartDate(newValue)}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      sx: { minWidth: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
+                    }
+                  }}
+                />
+                <DatePicker
+                  label="To"
+                  value={endDate}
+                  onChange={(newValue) => setEndDate(newValue)}
+                  minDate={startDate}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      sx: { minWidth: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } },
+                      error: startDate && endDate ? endDate.isBefore(startDate) : false,
+                      helperText: startDate && endDate && endDate.isBefore(startDate) ? 'End date must be after start date' : ''
+                    }
+                  }}
+                />
+              </>
+            )}
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
               <InputLabel id="sort-order-label" sx={{ fontSize: '0.875rem' }}>Due Date (Soonest)</InputLabel>

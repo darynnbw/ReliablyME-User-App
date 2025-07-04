@@ -4,6 +4,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import CommitmentPortfolio from './pages/CommitmentPortfolio';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme({
   palette: {
@@ -33,17 +35,19 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/commitment-portfolio" element={<CommitmentPortfolio />} />
-          {/* Add other routes here as needed */}
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/commitment-portfolio" element={<CommitmentPortfolio />} />
+            {/* Add other routes here as needed */}
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 
