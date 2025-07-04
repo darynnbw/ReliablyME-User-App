@@ -21,7 +21,7 @@ import {
   Search,
   ArrowUpward,
 } from '@mui/icons-material';
-import { DateRangePicker } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -66,7 +66,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -91,10 +92,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       const endOfWeek = dayjs().endOf('week');
       return itemDate.isBetween(startOfWeek, endOfWeek, null, '[]');
     }
-    if (allFilter === 'Custom Range' && dateRange[0] && dateRange[1] && itemDate) {
-      // Ensure the range is valid before filtering
-      if (dateRange[0]!.isAfter(dateRange[1]!)) return false;
-      return !itemDate.isBefore(dateRange[0], 'day') && !itemDate.isAfter(dateRange[1], 'day');
+    if (allFilter === 'Custom Range' && startDate && endDate && itemDate) {
+      if (startDate.isAfter(endDate)) return false;
+      return !itemDate.isBefore(startDate, 'day') && !itemDate.isAfter(endDate, 'day');
     }
 
     return true;
@@ -197,17 +197,33 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             </FormControl>
 
             {allFilter === 'Custom Range' && (
-              <DateRangePicker
-                localeText={{ start: 'From', end: 'To' }}
-                value={dateRange}
-                onChange={(newValue) => setDateRange(newValue)}
-                slotProps={{
-                  textField: {
-                    size: 'small',
-                    sx: { minWidth: 240, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
-                  }
-                }}
-              />
+              <>
+                <DatePicker
+                  label="From"
+                  value={startDate}
+                  onChange={(newValue: Dayjs | null) => setStartDate(newValue)}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      sx: { width: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
+                    }
+                  }}
+                />
+                <DatePicker
+                  label="To"
+                  value={endDate}
+                  onChange={(newValue: Dayjs | null) => setEndDate(newValue)}
+                  minDate={startDate || undefined}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      sx: { width: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } },
+                      error: startDate && endDate ? endDate.isBefore(startDate) : false,
+                      helperText: startDate && endDate && endDate.isBefore(startDate) ? 'End date must be after start date' : ''
+                    }
+                  }}
+                />
+              </>
             )}
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
