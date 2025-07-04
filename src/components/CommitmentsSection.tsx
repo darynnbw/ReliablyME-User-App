@@ -17,6 +17,7 @@ import {
   Popover,
   Button,
   styled,
+  alpha,
 } from '@mui/material';
 import {
   Person,
@@ -47,19 +48,32 @@ const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) =>
     prop !== 'isStartDate' && prop !== 'isEndDate' && prop !== 'isInRange',
 })<CustomPickerDayProps>(({ theme, isStartDate, isEndDate, isInRange, outsideCurrentMonth }) => ({
-  ...(!outsideCurrentMonth && isInRange && {
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.getContrastText(theme.palette.secondary.light),
+  ...(isInRange && !outsideCurrentMonth && {
+    backgroundColor: alpha(theme.palette.primary.light, 0.2),
     borderRadius: 0,
   }),
-  ...(!outsideCurrentMonth && (isStartDate || isEndDate) && {
-    backgroundColor: theme.palette.secondary.main,
+  ...(isStartDate && {
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
     borderRadius: '50%',
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.secondary.dark,
+      backgroundColor: theme.palette.primary.dark,
     },
   }),
+  ...(isEndDate && {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    borderRadius: '50%',
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  }),
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+  }),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.primary.light, 0.4),
+  }
 }));
 
 
@@ -99,8 +113,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   
-  // State for the custom date range picker
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
+  const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
@@ -116,22 +130,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     if (!searchMatch) return false;
 
     const itemDate = parseCommitmentDate(item.dueDate);
-    
-    if (allFilter === 'Today') {
-      return itemDate ? itemDate.isSame(dayjs(), 'day') : false;
-    }
-    if (allFilter === 'This Week') {
-      if (!itemDate) return false;
-      const startOfWeek = dayjs().startOf('week');
-      const endOfWeek = dayjs().endOf('week');
-      return itemDate.isBetween(startOfWeek, endOfWeek, null, '[]');
-    }
-    if (allFilter === 'Custom Range' && dateRange[0] && dateRange[1] && itemDate) {
-      if (dateRange[0]!.isAfter(dateRange[1]!)) return false;
-      return !itemDate.isBefore(dateRange[0], 'day') && !itemDate.isAfter(dateRange[1], 'day');
-    }
+    let dateMatch = true;
 
-    return true;
+    if (dateRange[0] && dateRange[1] && itemDate) {
+      dateMatch = !itemDate.isBefore(dateRange[0], 'day') && !itemDate.isAfter(dateRange[1], 'day');
+    } else if (allFilter === 'Today') {
+      dateMatch = itemDate ? itemDate.isSame(dayjs(), 'day') : false;
+    } else if (allFilter === 'This Week') {
+      dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
+    }
+    
+    return dateMatch;
   }).sort((a, b) => {
     const dateA = parseCommitmentDate(a.dueDate);
     const dateB = parseCommitmentDate(b.dueDate);
@@ -155,48 +164,63 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     if (!checked) setSelectAll(false);
   };
 
-  // --- Custom Date Range Picker Logic ---
   const handleDateChange = (newValue: Dayjs | null) => {
     if (!newValue) return;
-    const [start, end] = dateRange;
-
-    if (!start) {
-      setDateRange([newValue, null]);
-    } else if (start && !end) {
-      if (newValue.isAfter(start)) {
-        setDateRange([start, newValue]);
+    const [start] = tempDateRange;
+    if (!start || (start && tempDateRange[1])) {
+      setTempDateRange([newValue, null]);
+    } else {
+      if (newValue.isBefore(start)) {
+        setTempDateRange([newValue, null]);
       } else {
-        setDateRange([newValue, null]); // Reset if end is before start
+        setTempDateRange([start, newValue]);
       }
-    } else if (start && end) {
-      setDateRange([newValue, null]); // Reset and start new selection
     }
   };
 
   const renderCustomDay = (props: PickersDayProps) => {
     const { day, outsideCurrentMonth } = props as PickersDayProps & { day: Dayjs };
-    const [start, end] = dateRange;
+    const [start, end] = tempDateRange;
     const isStartDate = !outsideCurrentMonth && start?.isSame(day, 'day') || false;
     const isEndDate = !outsideCurrentMonth && end?.isSame(day, 'day') || false;
-    const isInRange = (!outsideCurrentMonth && start && end && day.isBetween(start, end)) || false;
+    const isInRange = !outsideCurrentMonth && start && end && day.isBetween(start, end);
 
     return (
       <CustomPickersDay
         {...props}
         isStartDate={isStartDate}
         isEndDate={isEndDate}
-        isInRange={isInRange}
+        isInRange={isInRange || false}
       />
     );
   };
 
-  const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => setPopoverAnchor(event.currentTarget);
+  const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setTempDateRange(dateRange);
+    setPopoverAnchor(event.currentTarget);
+  };
   const handleClosePopover = () => setPopoverAnchor(null);
-  const handleClearRange = () => {
+  
+  const handleApplyDateRange = () => {
+    setDateRange(tempDateRange);
+    if (tempDateRange[0] && tempDateRange[1]) {
+      setAllFilter('');
+    }
+    handleClosePopover();
+  };
+
+  const handleClearDateRange = () => {
+    setTempDateRange([null, null]);
     setDateRange([null, null]);
     handleClosePopover();
   };
-  // --- End Custom Date Range Picker Logic ---
+
+  const handleAllFilterChange = (value: string) => {
+    setAllFilter(value);
+    if (value) {
+      setDateRange([null, null]);
+    }
+  };
 
   const selectedCount = commitments.filter(item => item.selected).length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
@@ -225,7 +249,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
-            {/* Filters */}
             <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
               <InputLabel>Person</InputLabel>
               <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
@@ -234,38 +257,41 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               </Select>
             </FormControl>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 100 }}>
-              <InputLabel>All</InputLabel>
-              <Select value={allFilter} onChange={(e) => setAllFilter(e.target.value as string)} label="All" startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+              <InputLabel>Date</InputLabel>
+              <Select value={allFilter} onChange={(e) => handleAllFilterChange(e.target.value as string)} label="Date">
                 <MenuItem value="">All</MenuItem>
                 <MenuItem value="Today">Today</MenuItem>
                 <MenuItem value="This Week">This Week</MenuItem>
-                <MenuItem value="Custom Range">Custom Range</MenuItem>
               </Select>
             </FormControl>
 
-            {allFilter === 'Custom Range' && (
-              <>
-                <Button variant="outlined" size="small" onClick={handleOpenPopover} sx={{ textTransform: 'none', color: 'text.secondary', borderColor: 'rgba(0, 0, 0, 0.23)' }}>
-                  {dateRange[0] && dateRange[1] ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}` : 'Select Date Range'}
-                </Button>
-                <Popover
-                  open={Boolean(popoverAnchor)}
-                  anchorEl={popoverAnchor}
-                  onClose={handleClosePopover}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                >
-                  <DateCalendar
-                    onChange={handleDateChange}
-                    slots={{ day: renderCustomDay }}
-                  />
-                  <Box sx={{ p: 1, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                    <Button onClick={handleClearRange}>Clear</Button>
-                    <Button variant="contained" onClick={handleClosePopover}>Apply</Button>
-                  </Box>
-                </Popover>
-              </>
-            )}
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<CalendarToday fontSize="small" />}
+              onClick={handleOpenPopover}
+              sx={{ textTransform: 'none', color: 'text.secondary', borderColor: 'rgba(0, 0, 0, 0.23)', height: '40px' }}
+            >
+              {dateRange[0] && dateRange[1] ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}` : 'Select date range'}
+            </Button>
+            <Popover
+              open={Boolean(popoverAnchor)}
+              anchorEl={popoverAnchor}
+              onClose={handleClosePopover}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+              <DateCalendar
+                value={tempDateRange[0]}
+                onChange={handleDateChange}
+                slots={{ day: renderCustomDay }}
+              />
+              <Box sx={{ p: 1, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                <Button onClick={handleClearDateRange} variant="text" size="small">Clear</Button>
+                <Button onClick={handleApplyDateRange} variant="text" size="small">Apply</Button>
+              </Box>
+            </Popover>
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
               <InputLabel>Due Date (Soonest)</InputLabel>
