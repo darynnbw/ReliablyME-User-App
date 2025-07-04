@@ -18,10 +18,10 @@ import {
 } from '@mui/material';
 import {
   Person,
+  CalendarToday,
   Search,
   ArrowUpward,
 } from '@mui/icons-material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
@@ -44,6 +44,7 @@ interface CommitmentsSectionProps {
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
+  const [allFilter, setAllFilter] = useState('');
   const [sortOrder, setSortOrder] = useState('soonest');
   const [searchTerm, setSearchTerm] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,7 +52,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [selectedCommitment, setSelectedCommitment] = useState<Commitment | null>(null);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -62,39 +62,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.assignee.toLowerCase().includes(searchTerm.toLowerCase())
-  ).filter(item => {
-    const [startDate, endDate] = dateRange;
-    if (!startDate && !endDate) return true;
-    
-    try {
-      const itemDate = new Date(item.dueDate);
-      if (isNaN(itemDate.getTime())) return false;
-
-      if (startDate && endDate) {
-        const startOfDay = new Date(startDate);
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date(endDate);
-        endOfDay.setHours(23, 59, 59, 999);
-        return itemDate >= startOfDay && itemDate <= endOfDay;
-      }
-      if (startDate) {
-        const startOfDay = new Date(startDate);
-        startOfDay.setHours(0, 0, 0, 0);
-        return itemDate >= startOfDay;
-      }
-      if (endDate) {
-        const endOfDay = new Date(endDate);
-        endOfDay.setHours(23, 59, 59, 999);
-        return itemDate <= endOfDay;
-      }
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }).sort((a, b) => {
-    const dateA = new Date(a.dueDate);
-    const dateB = new Date(b.dueDate);
-    if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return 0;
+  ).sort((a, b) => {
+    const dateA = new Date(a.dueDate.split(',')[0]);
+    const dateB = new Date(b.dueDate.split(',')[0]);
     return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - a.getTime();
   });
 
@@ -156,7 +126,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             {title}
           </Typography>
 
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' }, alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
             <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
               <InputLabel id="person-filter-label" sx={{ fontSize: '0.875rem' }}>Person</InputLabel>
               <Select
@@ -174,19 +144,21 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               </Select>
             </FormControl>
 
-            <DatePicker
-              label="Start Date"
-              value={dateRange[0]}
-              onChange={(newValue) => setDateRange([newValue, dateRange[1]])}
-              slotProps={{ textField: { size: 'small', sx: { width: { xs: 'calc(50% - 4px)', sm: 150 } } } }}
-            />
-            <DatePicker
-              label="End Date"
-              value={dateRange[1]}
-              onChange={(newValue) => setDateRange([dateRange[0], newValue])}
-              minDate={dateRange[0]}
-              slotProps={{ textField: { size: 'small', sx: { width: { xs: 'calc(50% - 4px)', sm: 150 } } } }}
-            />
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 100 }}>
+              <InputLabel id="all-filter-label" sx={{ fontSize: '0.875rem' }}>All</InputLabel>
+              <Select
+                labelId="all-filter-label"
+                value={allFilter}
+                onChange={(e) => setAllFilter(e.target.value as string)}
+                label="All"
+                startAdornment={<InputAdornment position="start" sx={{ mr: 0.5 }}><CalendarToday fontSize="small" sx={{ color: '#666' }} /></InputAdornment>}
+                sx={{ borderRadius: 1, '& .MuiSelect-select': { py: '8.5px', pl: 1, pr: 2, fontSize: '0.875rem' } }}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="Today">Today</MenuItem>
+                <MenuItem value="This Week">This Week</MenuItem>
+              </Select>
+            </FormControl>
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
               <InputLabel id="sort-order-label" sx={{ fontSize: '0.875rem' }}>Due Date (Soonest)</InputLabel>
