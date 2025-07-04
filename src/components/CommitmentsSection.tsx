@@ -50,7 +50,7 @@ const CustomPickersDay = styled(PickersDay, {
 })<CustomPickerDayProps>(({ theme, isStartDate, isEndDate, isInRange, outsideCurrentMonth }) => {
   const isRangeBoundary = isStartDate || isEndDate;
 
-  const dayStyles = {
+  return {
     borderRadius: '50%',
     // In-between days are light blue circles
     ...(isInRange && !isRangeBoundary && !outsideCurrentMonth && {
@@ -64,10 +64,13 @@ const CustomPickersDay = styled(PickersDay, {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.dark,
       },
+      // Ensure selected state doesn't override our style
+      '&.Mui-selected': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+      },
     }),
   };
-
-  return dayStyles;
 });
 
 
@@ -321,7 +324,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   color="primary"
                   sx={{
                     py: 0.75,
-                    px: 2,
+                    px: 4,
                     fontWeight: 600,
                   }}
                 >
