@@ -273,20 +273,34 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             </FormControl>
 
             {dateFilter === 'Custom Range' && (
-              <TextField
-                variant="outlined"
-                size="small"
-                value={
-                  dateRange[0] && dateRange[1]
+              <Box
+                onClick={handleCustomRangeClick}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  height: '40px', // Match size="small" of other controls
+                  border: '1px solid',
+                  borderColor: 'rgba(0, 0, 0, 0.23)',
+                  borderRadius: 1,
+                  px: 1.5,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    borderColor: 'rgba(0, 0, 0, 0.87)',
+                  },
+                  color: 'text.secondary',
+                  minWidth: 180,
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <CalendarToday fontSize="small" />
+                <Typography variant="body2" sx={{ color: (dateRange[0] && dateRange[1]) ? 'text.primary' : 'text.secondary', whiteSpace: 'nowrap' }}>
+                  {dateRange[0] && dateRange[1]
                     ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
                     : 'Select Range'
-                }
-                onClick={handleCustomRangeClick}
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ minWidth: 180, cursor: 'pointer' }}
-              />
+                  }
+                </Typography>
+              </Box>
             )}
 
             <Popover
