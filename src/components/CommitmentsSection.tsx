@@ -294,6 +294,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={tempDateRange[0]}
                 onChange={handleDateChange}
                 slots={{ day: CustomDay }}
+                sx={{ mb: -2 }}
               />
               <Box sx={{ 
                 display: 'flex', 
