@@ -45,6 +45,7 @@ interface Commitment {
   description: string;
   assignee: string;
   selected?: boolean;
+  committedDate?: string;
 }
 
 interface CommitmentsSectionProps {

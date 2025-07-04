@@ -10,7 +10,7 @@ import {
   Divider,
   TextField,
 } from '@mui/material';
-import { Close, Person, CalendarToday } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 
 interface Commitment {
   id: number;
@@ -18,6 +18,7 @@ interface Commitment {
   dueDate: string;
   description: string;
   assignee: string;
+  committedDate?: string;
 }
 
 interface BulkRequestBadgeModalProps {
@@ -110,6 +111,18 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
               </Typography>
             </Typography>
           </Box>
+
+          {currentCommitment.committedDate && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                Committed:{' '}
+                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                  {currentCommitment.committedDate}
+                </Typography>
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
