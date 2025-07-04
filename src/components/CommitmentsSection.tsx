@@ -34,6 +34,7 @@ import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
 import MyBadgeListItem from './MyBadgeListItem';
+import BulkRequestBadgeModal from './BulkRequestBadgeModal';
 
 dayjs.extend(isBetween);
 
@@ -70,6 +71,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [searchTerm, setSearchTerm] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
+  const [bulkRequestModalOpen, setBulkRequestModalOpen] = useState(false);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   
@@ -176,12 +178,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setPopoverAnchor(event.currentTarget);
   };
 
-  const selectedCount = commitments.filter(item => item.selected).length;
+  const selectedCommitments = commitments.filter(item => item.selected);
+  const selectedCount = selectedCommitments.length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const itemColor = isUnkeptTab ? '#4F4F4F' : '#ff7043';
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
   const isMyCommitments = title === 'My Commitments';
+  const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
 
   return (
     <>
@@ -344,7 +348,21 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <Checkbox size="small" sx={{ p: 0, mr: 1 }} checked={selectAll} onChange={handleToggleSelectAll} indeterminate={selectedCount > 0 && selectedCount < currentItems.length} />
               <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} {isBadgesTab ? 'badges' : 'commitments'} selected</Typography>
             </Box>
-            {showBulkRequest && <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 500, cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>Bulk Request</Typography>}
+            {showBulkRequest && (
+              <Button
+                variant="text"
+                onClick={() => setBulkRequestModalOpen(true)}
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 500,
+                  textTransform: 'none',
+                  p: 0,
+                  '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' },
+                }}
+              >
+                Bulk Request
+              </Button>
+            )}
           </Box>
         )}
 
@@ -371,6 +389,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
       <CommitmentDetailsModal open={modalOpen} onClose={() => setModalOpen(false)} />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />
+      <BulkRequestBadgeModal
+        open={bulkRequestModalOpen}
+        onClose={() => setBulkRequestModalOpen(false)}
+        commitments={selectedCommitments}
+        isOwedToMe={isOwedToMe}
+      />
     </>
   );
 };
