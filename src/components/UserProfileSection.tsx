@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Avatar } from '@mui/material';
+import { Box, Typography, Avatar, Paper } from '@mui/material';
 import { Phone } from '@mui/icons-material';
 
 interface UserProfileSectionProps {
@@ -17,7 +17,18 @@ const getInitials = (name: string) => {
 
 const UserProfileSection: React.FC<UserProfileSectionProps> = ({ name, phone }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+    <Paper
+      sx={{
+        p: 3,
+        display: 'flex',
+        alignItems: 'center',
+        bgcolor: '#ffffff',
+        borderRadius: 3,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+        border: '1px solid #e8eaed',
+        mb: 4,
+      }}
+    >
       <Avatar 
         variant="rounded"
         sx={{ 
@@ -43,7 +54,7 @@ const UserProfileSection: React.FC<UserProfileSectionProps> = ({ name, phone }) 
           </Typography>
         </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 
