@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Paper,
   Typography,
@@ -117,7 +117,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
-  const dateFilterControlRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -213,20 +212,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const handleDateFilterChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value;
     setDateFilter(value);
-
-    if (value === 'Custom Range') {
-      setTempDateRange(dateRange);
-      setPopoverAnchor(dateFilterControlRef.current);
-    } else {
+    if (value !== 'Custom Range') {
       setDateRange([null, null]);
     }
   };
 
-  const renderDateFilterValue = (selectedValue: string) => {
-    if (selectedValue === 'Custom Range' && dateRange[0] && dateRange[1]) {
-      return `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`;
-    }
-    return selectedValue;
+  const handleCustomRangeClick = (event: React.MouseEvent<HTMLElement>) => {
+    setTempDateRange(dateRange);
+    setPopoverAnchor(event.currentTarget);
   };
 
   const selectedCount = commitments.filter(item => item.selected).length;
@@ -264,13 +257,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               </Select>
             </FormControl>
 
-            <FormControl ref={dateFilterControlRef} variant="outlined" size="small" sx={{ minWidth: 120 }}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
               <InputLabel>Date</InputLabel>
               <Select
                 value={dateFilter}
                 onChange={handleDateFilterChange}
                 label="Date"
-                renderValue={renderDateFilterValue}
                 startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}
               >
                 <MenuItem value="All">All</MenuItem>
@@ -279,6 +271,24 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 <MenuItem value="Custom Range">Custom Range</MenuItem>
               </Select>
             </FormControl>
+
+            {dateFilter === 'Custom Range' && (
+              <TextField
+                variant="outlined"
+                size="small"
+                value={
+                  dateRange[0] && dateRange[1]
+                    ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
+                    : 'Select Range'
+                }
+                onClick={handleCustomRangeClick}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ minWidth: 180, cursor: 'pointer' }}
+              />
+            )}
+
             <Popover
               open={Boolean(popoverAnchor)}
               anchorEl={popoverAnchor}
