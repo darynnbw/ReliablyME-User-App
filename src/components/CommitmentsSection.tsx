@@ -324,7 +324,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   color="primary"
                   sx={{
                     py: 0.75,
-                    px: 4,
+                    px: 6,
                     fontWeight: 600,
                   }}
                 >
