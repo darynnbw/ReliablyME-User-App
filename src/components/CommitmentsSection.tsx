@@ -27,8 +27,7 @@ import {
   ArrowUpward,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import type { PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -48,34 +47,28 @@ interface CustomPickerDayProps extends PickersDayProps {
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) =>
     prop !== 'isStartDate' && prop !== 'isEndDate' && prop !== 'isInRange',
-})<CustomPickerDayProps>(({ theme, isStartDate, isEndDate, isInRange, outsideCurrentMonth }) => ({
-  ...(isInRange && !outsideCurrentMonth && {
-    backgroundColor: alpha(theme.palette.primary.light, 0.2),
-    borderRadius: 0,
-  }),
-  ...(isStartDate && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
+})<CustomPickerDayProps>(({ theme, isStartDate, isEndDate, isInRange, outsideCurrentMonth }) => {
+  const isRangeBoundary = isStartDate || isEndDate;
+
+  const dayStyles = {
     borderRadius: '50%',
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  }),
-  ...(isEndDate && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-    borderRadius: '50%',
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  }),
-  transition: theme.transitions.create('background-color', {
-    duration: theme.transitions.duration.short,
-  }),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.primary.light, 0.4),
-  }
-}));
+    // In-between days are light blue circles
+    ...(isInRange && !isRangeBoundary && !outsideCurrentMonth && {
+      backgroundColor: alpha(theme.palette.primary.light, 0.3),
+      color: theme.palette.primary.dark,
+    }),
+    // Start and end dates are darker blue circles
+    ...(isRangeBoundary && !outsideCurrentMonth && {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.common.white,
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.dark,
+      },
+    }),
+  };
+
+  return dayStyles;
+});
 
 
 interface Commitment {
@@ -179,19 +172,20 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   };
 
-  const renderCustomDay = (props: PickersDayProps) => {
-    const { day, outsideCurrentMonth } = props as PickersDayProps & { day: Dayjs };
+  const CustomDay = (props: PickersDayProps) => {
+    const { day } = props;
     const [start, end] = tempDateRange;
-    const isStartDate = !outsideCurrentMonth && start?.isSame(day, 'day') || false;
-    const isEndDate = !outsideCurrentMonth && end?.isSame(day, 'day') || false;
-    const isInRange = !outsideCurrentMonth && start && end && day.isBetween(start, end);
 
+    const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
+    const isEndDate = end?.isSame(day as Dayjs, 'day') ?? false;
+    const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
+  
     return (
       <CustomPickersDay
         {...props}
         isStartDate={isStartDate}
         isEndDate={isEndDate}
-        isInRange={isInRange || false}
+        isInRange={isInRange}
       />
     );
   };
@@ -299,9 +293,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <DateCalendar
                 value={tempDateRange[0]}
                 onChange={handleDateChange}
-                slots={{ day: renderCustomDay }}
+                slots={{ day: CustomDay }}
               />
-              <Box sx={{ p: 1, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+              <Box sx={{ p: 1.5, pt: 0.5, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                 <Button onClick={handleClearDateRange} variant="text" size="small">Clear</Button>
                 <Button onClick={handleApplyDateRange} variant="text" size="small">Apply</Button>
               </Box>
