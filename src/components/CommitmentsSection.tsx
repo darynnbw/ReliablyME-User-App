@@ -9,7 +9,6 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  OutlinedInput,
   InputAdornment,
   TextField,
   Checkbox,
@@ -22,7 +21,7 @@ import {
   Search,
   ArrowUpward,
 } from '@mui/icons-material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -65,11 +64,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [searchTerm, setSearchTerm] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
-  const [selectedCommitment, setSelectedCommitment] = useState<Commitment | null>(null);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [startDate, setStartDate] = useState<Dayjs | null>(null);
-  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -94,8 +91,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       const endOfWeek = dayjs().endOf('week');
       return itemDate.isBetween(startOfWeek, endOfWeek, null, '[]');
     }
-    if (allFilter === 'Custom Range' && startDate && endDate && itemDate) {
-      return !itemDate.isBefore(startDate, 'day') && !itemDate.isAfter(endDate, 'day');
+    if (allFilter === 'Custom Range' && dateRange[0] && dateRange[1] && itemDate) {
+      // Ensure the range is valid before filtering
+      if (dateRange[0]!.isAfter(dateRange[1]!)) return false;
+      return !itemDate.isBefore(dateRange[0], 'day') && !itemDate.isAfter(dateRange[1], 'day');
     }
 
     return true;
@@ -103,16 +102,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     const dateA = parseCommitmentDate(a.dueDate);
     const dateB = parseCommitmentDate(b.dueDate);
     if (!dateA || !dateB) return 0;
-    return sortOrder === 'soonest' ? dateA.valueOf() - dateB.valueOf() : dateB.valueOf() - a.valueOf();
+    return sortOrder === 'soonest' ? dateA.valueOf() - dateB.valueOf() : dateB.valueOf() - dateA.valueOf();
   });
 
-  const handleViewDetails = (commitment: Commitment) => {
-    setSelectedCommitment(commitment);
+  const handleViewDetails = () => {
     setModalOpen(true);
   };
 
-  const handleRequestBadge = (commitment: Commitment) => {
-    setSelectedCommitment(commitment);
+  const handleRequestBadge = () => {
     setRequestBadgeModalOpen(true);
   };
 
@@ -200,33 +197,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             </FormControl>
 
             {allFilter === 'Custom Range' && (
-              <>
-                <DatePicker
-                  label="From"
-                  value={startDate}
-                  onChange={(newValue) => setStartDate(newValue)}
-                  slotProps={{
-                    textField: {
-                      size: 'small',
-                      sx: { minWidth: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
-                    }
-                  }}
-                />
-                <DatePicker
-                  label="To"
-                  value={endDate}
-                  onChange={(newValue) => setEndDate(newValue)}
-                  minDate={startDate}
-                  slotProps={{
-                    textField: {
-                      size: 'small',
-                      sx: { minWidth: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } },
-                      error: startDate && endDate ? endDate.isBefore(startDate) : false,
-                      helperText: startDate && endDate && endDate.isBefore(startDate) ? 'End date must be after start date' : ''
-                    }
-                  }}
-                />
-              </>
+              <DateRangePicker
+                localeText={{ start: 'From', end: 'To' }}
+                value={dateRange}
+                onChange={(newValue) => setDateRange(newValue)}
+                slotProps={{
+                  textField: {
+                    size: 'small',
+                    sx: { minWidth: 240, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
+                  }
+                }}
+              />
             )}
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
@@ -266,7 +247,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <Tabs
             value={activeTab}
-            onChange={(_, newValue) => setActiveTab(newValue)}
+            onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)}
             sx={{
               '& .MuiTab-root': {
                 textTransform: 'none',
@@ -350,7 +331,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     recipient={item.assignee}
                     selected={item.selected}
                     onToggleSelect={handleToggleSelectItem}
-                    onViewDetails={() => handleViewDetails(item)}
+                    onViewDetails={() => handleViewDetails()}
                   />
                 ))
               ) : (
@@ -361,8 +342,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     color={itemColor}
                     showCheckbox={!isUnkeptTab}
                     showRequestBadgeButton={!isUnkeptTab}
-                    onViewDetails={() => handleViewDetails(item)}
-                    onRequestBadge={() => handleRequestBadge(item)}
+                    onViewDetails={() => handleViewDetails()}
+                    onRequestBadge={() => handleRequestBadge()}
                     onToggleSelect={handleToggleSelectItem}
                   />
                 ))

@@ -224,7 +224,7 @@ const ActionNotifications: React.FC = () => {
                       <Typography variant="body2" sx={{ color: '#666' }}>
                         To:{' '}
                         {notification.assignee === 'Chris Parker' ? (
-                          <ContactTooltip name={notification.assignee}>
+                          <ContactTooltip>
                             <span 
                               style={{ 
                                 color: '#666',
