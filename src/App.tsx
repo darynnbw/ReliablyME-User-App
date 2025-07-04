@@ -5,11 +5,11 @@ import Dashboard from './components/Dashboard';
 import CommitmentPortfolio from './pages/CommitmentPortfolio';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LicenseInfo } from '@mui/x-license-pro';
+// import { LicenseInfo } from '@mui/x-date-pickers-pro';
 
-LicenseInfo.setLicenseKey(
-  'e0d9bb8070ce0054c9d9ecb6e82cb58fTz0wLEU9MzI0NzIxNDQwMDAwMDAsUz1wcmVtaXVtLExNPXBlcnBldHVhbCxLVj0y'
-);
+// TODO: Add your MUI X Pro license key here to remove the watermark.
+// To use, uncomment the import above and the line below.
+// LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 const theme = createTheme({
   palette: {
