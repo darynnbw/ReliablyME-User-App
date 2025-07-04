@@ -28,7 +28,6 @@ import {
   ArrowUpward,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -256,7 +255,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 onChange={handleDateChange}
                 slotProps={{
                   day: (ownerState) => {
-                    const { day, outsideCurrentMonth } = ownerState;
+                    const { day, outsideCurrentMonth } = ownerState as any;
                     const [start, end] = tempDateRange;
 
                     const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
@@ -266,20 +265,20 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
                     const sx: SxProps<Theme> = {
                       borderRadius: '50%',
-                    };
-
-                    if (isRangeBoundary && !outsideCurrentMonth) {
-                      sx.backgroundColor = 'primary.main';
-                      sx.color = 'common.white';
-                      sx['&:hover, &:focus, &.Mui-selected'] = {
+                      ...(isRangeBoundary && !outsideCurrentMonth && {
                         backgroundColor: 'primary.main',
                         color: 'common.white',
-                      };
-                    } else if (isInRange && !outsideCurrentMonth) {
-                      sx.backgroundColor = (theme) => alpha(theme.palette.primary.light, 0.3);
-                      sx.color = 'primary.dark';
-                      sx.borderRadius = '50%';
-                    }
+                        '&:hover, &:focus, &.Mui-selected': {
+                          backgroundColor: 'primary.main',
+                          color: 'common.white',
+                        },
+                      }),
+                      ...(isInRange && !outsideCurrentMonth && {
+                        backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
+                        color: 'primary.dark',
+                        borderRadius: '50%',
+                      }),
+                    };
                     
                     return { sx } as any;
                   },
@@ -349,7 +348,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Box>
         )}
 
-        <Box sx={{ flex: isMyCommitments ? undefined : 1, height: isMyCommitments ? 336 : undefined, minHeight: 0, overflowY: 'auto', pr: 1 }}>
+        <Box sx={{ flex: isMyCommitments ? undefined : 1, height: isMyCommitments ? 360 : undefined, minHeight: 0, overflowY: 'auto', pr: 1 }}>
           <Stack spacing={1}>
             {currentItems.length > 0 ? (
               isBadgesTab ? (
