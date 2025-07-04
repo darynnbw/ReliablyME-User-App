@@ -301,7 +301,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 gap: 1,
                 px: 2,
                 pb: 1.5,
-                pt: 0.5,
+                pt: 0,
               }}>
                 <Button 
                   onClick={handleClearDateRange} 
