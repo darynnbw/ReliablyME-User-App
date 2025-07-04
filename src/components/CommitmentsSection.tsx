@@ -103,7 +103,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
-  const [sortOrder, setSortOrder] = useState('soonest');
+  const [filterBy, setFilterBy] = useState('soonest');
   const [searchTerm, setSearchTerm] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
@@ -137,12 +137,24 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
     }
     
-    return dateMatch;
+    if (!dateMatch) return false;
+
+    if (filterBy === 'pastDue') {
+      if (!itemDate) return false;
+      return itemDate.isBefore(dayjs(), 'day');
+    }
+
+    return true;
   }).sort((a, b) => {
     const dateA = parseCommitmentDate(a.dueDate);
     const dateB = parseCommitmentDate(b.dueDate);
     if (!dateA || !dateB) return 0;
-    return sortOrder === 'soonest' ? dateA.valueOf() - dateB.valueOf() : dateB.valueOf() - dateA.valueOf();
+
+    if (filterBy === 'latest') {
+      return dateB.valueOf() - dateA.valueOf();
+    }
+    // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
+    return dateA.valueOf() - dateB.valueOf();
   });
 
   const handleViewDetails = () => setModalOpen(true);
@@ -168,7 +180,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       setTempDateRange([newValue, null]);
     } else {
       if (newValue.isBefore(start)) {
-        setTempDateRange([newValue, null]);
+        setTempDateRange([newValue, start]);
       } else {
         setTempDateRange([start, newValue]);
       }
@@ -255,11 +267,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             </FormControl>
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-              <InputLabel>Date</InputLabel>
+              <InputLabel>Due Date</InputLabel>
               <Select
                 value={dateFilter}
                 onChange={handleDateFilterChange}
-                label="Date"
+                label="Due Date"
                 startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}
               >
                 <MenuItem value="All">All</MenuItem>
@@ -334,10 +346,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             </Popover>
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
-              <InputLabel>Due Date (Soonest)</InputLabel>
-              <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as string)} label="Due Date (Soonest)" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
+              <InputLabel>Filter By</InputLabel>
+              <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
                 <MenuItem value="latest">Due Date (Latest)</MenuItem>
+                <MenuItem value="pastDue">Past Due</MenuItem>
               </Select>
             </FormControl>
 
