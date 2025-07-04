@@ -295,9 +295,37 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 onChange={handleDateChange}
                 slots={{ day: CustomDay }}
               />
-              <Box sx={{ p: 1.5, pt: 0.5, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                <Button onClick={handleClearDateRange} variant="text" size="small">Clear</Button>
-                <Button onClick={handleApplyDateRange} variant="text" size="small">Apply</Button>
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'flex-end', 
+                gap: 1,
+                px: 2,
+                pb: 1.5,
+                pt: 1,
+              }}>
+                <Button 
+                  onClick={handleClearDateRange} 
+                  variant="text" 
+                  sx={{ 
+                    py: 0.75, 
+                    px: 2,
+                    color: 'text.secondary' 
+                  }}
+                >
+                  Clear
+                </Button>
+                <Button 
+                  onClick={handleApplyDateRange} 
+                  variant="contained" 
+                  color="primary"
+                  sx={{
+                    py: 0.75,
+                    px: 2,
+                    fontWeight: 600,
+                  }}
+                >
+                  Apply
+                </Button>
               </Box>
             </Popover>
 
