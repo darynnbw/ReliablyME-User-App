@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
@@ -12,10 +12,12 @@ import StatsPanel from './StatsPanel';
 import BadgesPanel from './BadgesPanel';
 
 const Dashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState(0);
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Header />
-      <NavigationTabs />
+      <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
         <Grid container spacing={3}>

@@ -13,9 +13,12 @@ import {
 } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 
-interface NavigationTabsProps {}
+interface NavigationTabsProps {
+  activeTab: number; // This prop is now less critical as location handles active state
+  setActiveTab: (tab: number) => void; // This prop can be removed if not used elsewhere
+}
 
-const NavigationTabs: React.FC<NavigationTabsProps> = () => {
+const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab }) => {
   const location = useLocation();
 
   // Determine active tab based on current path
@@ -38,6 +41,8 @@ const NavigationTabs: React.FC<NavigationTabsProps> = () => {
     <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'white' }}>
       <Tabs
         value={getActiveTabIndex()}
+        // onChange is not strictly needed if using Link, but can be kept for consistency or future logic
+        // onChange={(_event: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)}
         sx={{
           px: 3,
           '& .MuiTab-root': {

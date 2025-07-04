@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
@@ -12,6 +12,8 @@ import CommitmentsSection from '../components/CommitmentsSection';
 import AccomplishmentsOverviewPanel from '../components/AccomplishmentsOverviewPanel'; // Import the new panel
 
 const CommitmentPortfolio: React.FC = () => {
+  const [activeTab, setActiveTab] = useState(1); // Set to 1 for "Commitment Portfolio" tab
+
   const myCommitmentsTabs = [
     {
       label: 'My Promises',
@@ -156,7 +158,7 @@ const CommitmentPortfolio: React.FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Header />
-      <NavigationTabs />
+      <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
         <UserProfileSection name="Alex Johnson" phone="+1 (555) 123-4567" />

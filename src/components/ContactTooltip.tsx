@@ -8,9 +8,10 @@ import { Phone, Public, Schedule } from '@mui/icons-material';
 
 interface ContactTooltipProps {
   children: React.ReactElement;
+  name: string;
 }
 
-const ContactTooltip: React.FC<ContactTooltipProps> = ({ children }) => {
+const ContactTooltip: React.FC<ContactTooltipProps> = ({ children, name }) => {
   const tooltipContent = (
     <Box sx={{ p: 1 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
