@@ -10,8 +10,7 @@ export default defineConfig({
       '@mui/material', 
       '@mui/material/utils', 
       'hoist-non-react-statics',
-      '@mui/x-date-pickers',
-      '@mui/x-date-pickers-pro'
+      '@mui/x-date-pickers'
     ]
   },
 });

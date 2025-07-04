@@ -21,7 +21,7 @@ import {
   Search,
   ArrowUpward,
 } from '@mui/icons-material';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -196,17 +196,32 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             </FormControl>
 
             {allFilter === 'Custom Range' && (
-              <DateRangePicker
-                localeText={{ start: 'From', end: 'To' }}
-                value={dateRange}
-                onChange={(newValue) => setDateRange(newValue)}
-                slotProps={{
-                  textField: {
-                    size: 'small',
-                    sx: { minWidth: 240, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
-                  }
-                }}
-              />
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <DatePicker
+                  label="From"
+                  value={dateRange[0]}
+                  onChange={(newValue) => setDateRange([newValue, dateRange[1]])}
+                  maxDate={dateRange[1] ?? undefined}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      sx: { width: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
+                    }
+                  }}
+                />
+                <DatePicker
+                  label="To"
+                  value={dateRange[1]}
+                  onChange={(newValue) => setDateRange([dateRange[0], newValue])}
+                  minDate={dateRange[0] ?? undefined}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      sx: { width: 140, '& .MuiInputBase-root': { borderRadius: 1, fontSize: '0.875rem' } }
+                    }
+                  }}
+                />
+              </Box>
             )}
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
