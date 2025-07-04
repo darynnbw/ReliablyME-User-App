@@ -9,7 +9,6 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  OutlinedInput,
   InputAdornment,
   TextField,
   Checkbox,
@@ -48,7 +47,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [searchTerm, setSearchTerm] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
-  const [selectedCommitment, setSelectedCommitment] = useState<Commitment | null>(null);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
@@ -95,16 +93,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     const dateA = new Date(a.dueDate);
     const dateB = new Date(b.dueDate);
     if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return 0;
-    return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - a.getTime();
+    return sortOrder === 'soonest' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
   });
 
-  const handleViewDetails = (commitment: Commitment) => {
-    setSelectedCommitment(commitment);
+  const handleViewDetails = (_commitment: Commitment) => {
     setModalOpen(true);
   };
 
-  const handleRequestBadge = (commitment: Commitment) => {
-    setSelectedCommitment(commitment);
+  const handleRequestBadge = (_commitment: Commitment) => {
     setRequestBadgeModalOpen(true);
   };
 
