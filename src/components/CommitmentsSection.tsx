@@ -193,7 +193,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       <Paper sx={{
         p: 3,
         height: 'auto',
-        minHeight: isMyCommitments ? 450 : 500,
+        minHeight: isMyCommitments ? 'auto' : 500,
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#fafbfc',
@@ -367,7 +367,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Box>
         )}
 
-        <Box sx={{ flex: 1, minHeight: 0, overflowY: 'scroll', pr: 1 }}>
+        <Box sx={{ flex: isMyCommitments ? undefined : 1, height: isMyCommitments ? 360 : undefined, minHeight: 0, overflowY: 'auto', pr: 1 }}>
           <Stack spacing={1}>
             {currentItems.length > 0 ? (
               isBadgesTab ? (
