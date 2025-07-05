@@ -22,7 +22,7 @@ interface MyBadgeListItemProps {
   onViewDetails: () => void;
 }
 
-const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
+const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>(({
   id,
   title,
   approvalDate,
@@ -31,13 +31,14 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
   selected = false,
   onToggleSelect,
   onViewDetails,
-}) => {
+}, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
 
   return (
     <Card
+      ref={ref}
       sx={{
         minHeight: 140,
         borderLeft: '4px solid #4caf50', // Green border for badges
@@ -98,6 +99,6 @@ const MyBadgeListItem: React.FC<MyBadgeListItemProps> = ({
       </CardContent>
     </Card>
   );
-};
+});
 
 export default MyBadgeListItem;

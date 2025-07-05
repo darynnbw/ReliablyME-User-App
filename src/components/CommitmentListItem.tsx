@@ -27,7 +27,7 @@ interface CommitmentListItemProps {
   onToggleSelect: (id: number, checked: boolean) => void;
 }
 
-const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
+const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
   id,
   title,
   dueDate,
@@ -40,13 +40,14 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   onViewDetails,
   onRequestBadge,
   onToggleSelect,
-}) => {
+}, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
 
   return (
     <Card
+      ref={ref}
       sx={{
         minHeight: 140,
         borderLeft: `4px solid ${color}`,
@@ -134,6 +135,6 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
       </CardContent>
     </Card>
   );
-};
+});
 
 export default CommitmentListItem;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Paper,
   Typography,
@@ -80,6 +80,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
 
+  const [containerHeight, setContainerHeight] = useState<number | string>(360);
+  const firstItemRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
@@ -122,6 +125,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
     return dateA.valueOf() - dateB.valueOf();
   });
+
+  useEffect(() => {
+    if (title === 'My Commitments' && firstItemRef.current) {
+      const cardHeight = firstItemRef.current.offsetHeight;
+      const spacing = 8; // From <Stack spacing={1}>
+      const calculatedHeight = (cardHeight * 2) + spacing;
+      setContainerHeight(calculatedHeight);
+    }
+  }, [currentItems, title]);
 
   const handleViewDetails = () => setModalOpen(true);
   const handleRequestBadge = () => setRequestBadgeModalOpen(true);
@@ -367,13 +379,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Box>
         )}
 
-        <Box sx={{ flex: isMyCommitments ? undefined : 1, height: isMyCommitments ? 360 : undefined, minHeight: 0, overflowY: 'auto', pr: 1 }}>
+        <Box sx={{ 
+          flex: isMyCommitments ? undefined : 1, 
+          height: isMyCommitments ? containerHeight : undefined, 
+          minHeight: 0, 
+          overflowY: 'scroll', 
+          pr: 1 
+        }}>
           <Stack spacing={1}>
             {currentItems.length > 0 ? (
               isBadgesTab ? (
-                currentItems.map((item) => <MyBadgeListItem key={item.id} {...item} selected={item.selected} onToggleSelect={handleToggleSelectItem} onViewDetails={handleViewDetails} approvalDate={item.dueDate} commitment={item.description} recipient={item.assignee} />)
+                currentItems.map((item, index) => <MyBadgeListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} selected={item.selected} onToggleSelect={handleToggleSelectItem} onViewDetails={handleViewDetails} approvalDate={item.dueDate} commitment={item.description} recipient={item.assignee} />)
               ) : (
-                currentItems.map((item) => <CommitmentListItem key={item.id} {...item} color={itemColor} showCheckbox={!isUnkeptTab} showRequestBadgeButton={!isUnkeptTab} onViewDetails={handleViewDetails} onRequestBadge={handleRequestBadge} onToggleSelect={handleToggleSelectItem} />)
+                currentItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showRequestBadgeButton={!isUnkeptTab} onViewDetails={handleViewDetails} onRequestBadge={handleRequestBadge} onToggleSelect={handleToggleSelectItem} />)
               )
             ) : (
               <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>No items found.</Typography>
