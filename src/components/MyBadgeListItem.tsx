@@ -45,7 +45,7 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
         {/* Badge Image Placeholder */}
         <Box sx={{
           width: 100,
-          alignSelf: 'stretch',
+          height: 100,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
