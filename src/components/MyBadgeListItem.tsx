@@ -42,9 +42,9 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
       }}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 2 }}>
-        {/* Badge Image Placeholder */}
+        {/* Badge Image Placeholder - Made wider */}
         <Box sx={{
-          width: 80,
+          width: 100,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -89,11 +89,11 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
               </Typography>
             </Box>
 
-            {/* Bottom row: Recipient */}
+            {/* Bottom row: Recipient - Removed boldness */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
-                To: <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>{recipient}</Typography>
+                To: {recipient}
               </Typography>
             </Stack>
           </Stack>
