@@ -62,11 +62,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
-            width: 100,
-            height: 100,
+            aspectRatio: '1 / 1',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -74,7 +73,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             borderRadius: 1,
             flexShrink: 0,
           }}>
-            <Shield sx={{ fontSize: 40, color: 'grey.400' }} />
+            <Shield sx={{ fontSize: '40%', color: 'grey.400' }} />
           </Box>
         )}
         {showCheckbox && (
@@ -87,7 +86,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             onChange={handleCheckboxChange}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -101,7 +100,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Box>
 
           {/* Main content area with vertical stack */}
-          <Stack>
+          <Stack sx={{ flexGrow: 1 }}>
             {/* Due Date */}
             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
               <CalendarToday sx={{ fontSize: 16, color: color }} />
@@ -111,7 +110,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5, flexGrow: 1 }}>
               {description}
             </Typography>
 
