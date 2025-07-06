@@ -10,7 +10,7 @@ import {
   Tooltip,
   Stack,
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz } from '@mui/icons-material';
+import { CalendarToday, Person, MoreHoriz, Shield } from '@mui/icons-material';
 
 interface CommitmentListItemProps {
   id: number;
@@ -22,6 +22,7 @@ interface CommitmentListItemProps {
   color: string;
   showCheckbox: boolean;
   showRequestBadgeButton: boolean;
+  showBadgePlaceholder?: boolean;
   onViewDetails: () => void;
   onRequestBadge: () => void;
   onToggleSelect: (id: number, checked: boolean) => void;
@@ -37,6 +38,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   color,
   showCheckbox,
   showRequestBadgeButton,
+  showBadgePlaceholder = false,
   onViewDetails,
   onRequestBadge,
   onToggleSelect,
@@ -61,6 +63,21 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
       }}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+        {showBadgePlaceholder && (
+          <Box sx={{
+            width: 60,
+            height: 60,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: 'grey.100',
+            borderRadius: 1,
+            flexShrink: 0,
+            mt: 0.5,
+          }}>
+            <Shield sx={{ fontSize: 32, color: 'grey.400' }} />
+          </Box>
+        )}
         {showCheckbox && (
           <Checkbox
             size="small"

@@ -411,6 +411,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     color="#4caf50"
                     showCheckbox={false}
                     showRequestBadgeButton={false}
+                    showBadgePlaceholder={true}
                     onViewDetails={() => handleViewBadgeDetails(item)}
                     onRequestBadge={() => {}}
                     onToggleSelect={() => {}}
