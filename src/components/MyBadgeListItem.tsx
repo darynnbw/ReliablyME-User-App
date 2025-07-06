@@ -41,10 +41,11 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
         {/* Badge Image Placeholder */}
         <Box sx={{
           width: 100,
+          alignSelf: 'stretch',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -55,10 +56,10 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
           <Shield sx={{ fontSize: 40, color: 'grey.400' }} />
         </Box>
 
-        {/* Main Content */}
-        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        {/* Main Content - Structure now matches CommitmentListItem */}
+        <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
@@ -69,33 +70,33 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
             </Tooltip>
           </Box>
 
-          {/* Middle content area with vertical stack */}
-          <Stack sx={{ flex: 1, justifyContent: 'space-between' }}>
-            <Box>
-              {/* Approval Date */}
-              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-                <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
-                <Typography variant="body2" color="text.secondary">
-                  Approved {approvalDate}
-                </Typography>
-              </Stack>
-
-              {/* Commitment Description */}
-              <Typography
-                variant="body2"
-                sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}
-              >
-                {commitment}
-              </Typography>
-            </Box>
-
-            {/* Bottom row: Recipient */}
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
+          {/* Main content area with vertical stack */}
+          <Stack>
+            {/* Approval Date */}
+            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+              <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
-                To: {recipient}
+                Approved {approvalDate}
               </Typography>
             </Stack>
+
+            {/* Commitment Description */}
+            <Typography
+              variant="body2"
+              sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}
+            >
+              {commitment}
+            </Typography>
+
+            {/* Bottom row: Recipient */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
+                <Typography variant="body2" color="text.secondary">
+                  To: {recipient}
+                </Typography>
+              </Stack>
+            </Box>
           </Stack>
         </Box>
       </CardContent>
