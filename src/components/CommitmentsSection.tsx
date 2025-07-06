@@ -33,7 +33,6 @@ import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
-import MyBadgeListItem from './MyBadgeListItem';
 import BulkRequestBadgeModal from './BulkRequestBadgeModal';
 import MyBadgeDetailsModal from './MyBadgeDetailsModal';
 
@@ -404,7 +403,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           <Stack spacing={1}>
             {paginatedItems.length > 0 ? (
               isBadgesTab ? (
-                paginatedItems.map((item, index) => <MyBadgeListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} onViewDetails={() => handleViewBadgeDetails(item)} approvalDate={item.dueDate} commitment={item.description} recipient={item.assignee} />)
+                paginatedItems.map((item, index) => (
+                  <CommitmentListItem
+                    key={item.id}
+                    {...item}
+                    ref={index === 0 ? firstItemRef : null}
+                    color="#4caf50"
+                    showCheckbox={false}
+                    showRequestBadgeButton={false}
+                    onViewDetails={() => handleViewBadgeDetails(item)}
+                    onRequestBadge={() => {}}
+                    onToggleSelect={() => {}}
+                  />
+                ))
               ) : (
                 paginatedItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showRequestBadgeButton={!isUnkeptTab} onViewDetails={handleViewCommitmentDetails} onRequestBadge={handleRequestBadge} onToggleSelect={handleToggleSelectItem} />)
               )
