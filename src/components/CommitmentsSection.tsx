@@ -35,6 +35,7 @@ import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
 import MyBadgeListItem from './MyBadgeListItem';
 import BulkRequestBadgeModal from './BulkRequestBadgeModal';
+import MyBadgeDetailsModal from './MyBadgeDetailsModal';
 
 dayjs.extend(isBetween);
 
@@ -83,9 +84,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [containerHeight, setContainerHeight] = useState<number | string>(360);
   const firstItemRef = useRef<HTMLDivElement>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [badgeDetailsModalOpen, setBadgeDetailsModalOpen] = useState(false);
+  const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
+
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
+    setCurrentPage(1);
   }, [activeTab, tabs]);
 
   const currentItems = commitments.filter(item => {
@@ -135,8 +141,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   }, [currentItems, title]);
 
-  const handleViewDetails = () => setModalOpen(true);
+  const handleViewCommitmentDetails = () => setModalOpen(true);
   const handleRequestBadge = () => setRequestBadgeModalOpen(true);
+
+  const handleViewBadgeDetails = (badge: Commitment) => {
+    setSelectedBadge(badge);
+    setBadgeDetailsModalOpen(true);
+  };
 
   const handleToggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
@@ -199,6 +210,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
   const isMyCommitments = title === 'My Commitments';
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
+
+  const itemsPerPage = 15;
+  const paginatedItems = isBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
+  const totalPages = isBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
 
   return (
     <>
@@ -387,11 +402,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           pr: 1 
         }}>
           <Stack spacing={1}>
-            {currentItems.length > 0 ? (
+            {paginatedItems.length > 0 ? (
               isBadgesTab ? (
-                currentItems.map((item, index) => <MyBadgeListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} onViewDetails={handleViewDetails} approvalDate={item.dueDate} commitment={item.description} recipient={item.assignee} />)
+                paginatedItems.map((item, index) => <MyBadgeListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} onViewDetails={() => handleViewBadgeDetails(item)} approvalDate={item.dueDate} commitment={item.description} recipient={item.assignee} />)
               ) : (
-                currentItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showRequestBadgeButton={!isUnkeptTab} onViewDetails={handleViewDetails} onRequestBadge={handleRequestBadge} onToggleSelect={handleToggleSelectItem} />)
+                paginatedItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showRequestBadgeButton={!isUnkeptTab} onViewDetails={handleViewCommitmentDetails} onRequestBadge={handleRequestBadge} onToggleSelect={handleToggleSelectItem} />)
               )
             ) : (
               <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>No items found.</Typography>
@@ -401,7 +416,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         
         {currentItems.length > 0 && isBadgesTab && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
-            <Pagination count={10} page={1} color="primary" />
+            <Pagination count={totalPages} page={currentPage} onChange={(_, page) => setCurrentPage(page)} color="primary" />
           </Box>
         )}
       </Paper>
@@ -413,6 +428,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         onClose={() => setBulkRequestModalOpen(false)}
         commitments={selectedCommitments}
         isOwedToMe={isOwedToMe}
+      />
+      <MyBadgeDetailsModal
+        open={badgeDetailsModalOpen}
+        onClose={() => setBadgeDetailsModalOpen(false)}
+        badge={selectedBadge ? {
+          title: selectedBadge.title,
+          approvalDate: selectedBadge.dueDate,
+          commitment: selectedBadge.description,
+          recipient: selectedBadge.assignee,
+        } : null}
       />
     </>
   );
