@@ -41,8 +41,8 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 2 }}>
-        {/* Badge Image Placeholder - Made wider */}
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
+        {/* Badge Image Placeholder */}
         <Box sx={{
           width: 100,
           display: 'flex',
@@ -83,13 +83,13 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
               {/* Commitment Description */}
               <Typography
                 variant="body2"
-                sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}
+                sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}
               >
                 {commitment}
               </Typography>
             </Box>
 
-            {/* Bottom row: Recipient - Removed boldness */}
+            {/* Bottom row: Recipient */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
