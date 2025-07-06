@@ -8,13 +8,14 @@ import {
   IconButton,
   Divider,
 } from '@mui/material';
-import { Close, Person, CalendarToday } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 
 interface Badge {
   title: string;
   approvalDate: string;
   commitment: string;
   recipient: string;
+  committedDate?: string;
 }
 
 interface MyBadgeDetailsModalProps {
@@ -77,6 +78,18 @@ const MyBadgeDetailsModal: React.FC<MyBadgeDetailsModalProps> = ({ open, onClose
               </Typography>
             </Typography>
           </Box>
+
+          {badge.committedDate && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                Committed:{' '}
+                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                  {badge.committedDate}
+                </Typography>
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         <Box 

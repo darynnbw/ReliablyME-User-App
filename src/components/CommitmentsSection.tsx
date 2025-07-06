@@ -437,6 +437,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           approvalDate: selectedBadge.dueDate,
           commitment: selectedBadge.description,
           recipient: selectedBadge.assignee,
+          committedDate: selectedBadge.committedDate,
         } : null}
       />
     </>
