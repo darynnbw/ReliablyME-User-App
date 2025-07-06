@@ -62,11 +62,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
-            height: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -82,6 +81,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             size="small"
             sx={{
               p: 0,
+              mt: 0.5,
+              alignSelf: 'flex-start',
             }}
             checked={selected}
             onChange={handleCheckboxChange}
