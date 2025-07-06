@@ -4,7 +4,6 @@ import {
   CardContent,
   Box,
   Typography,
-  Checkbox,
   IconButton,
   Tooltip,
   Stack,
@@ -17,25 +16,16 @@ interface MyBadgeListItemProps {
   approvalDate: string;
   commitment: string;
   recipient: string;
-  selected?: boolean;
-  onToggleSelect: (id: number, checked: boolean) => void;
   onViewDetails: () => void;
 }
 
 const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>(({
-  id,
   title,
   approvalDate,
   commitment,
   recipient,
-  selected = false,
-  onToggleSelect,
   onViewDetails,
 }, ref) => {
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onToggleSelect(id, event.target.checked);
-  };
-
   return (
     <Card
       ref={ref}
@@ -51,21 +41,27 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
         },
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-        <Checkbox
-          size="small"
-          sx={{ p: 0, mt: 0.5 }}
-          checked={selected}
-          onChange={handleCheckboxChange}
-        />
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 2 }}>
+        {/* Badge Image Placeholder */}
+        <Box sx={{
+          width: 80,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: 'grey.100',
+          borderRadius: 1,
+          flexShrink: 0,
+        }}>
+          <Shield sx={{ fontSize: 40, color: 'grey.400' }} />
+        </Box>
+
+        {/* Main Content */}
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-              <Shield sx={{ color: '#4caf50' }} /> {/* Badge Icon */}
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                {title}
-              </Typography>
-            </Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              {title}
+            </Typography>
             <Tooltip title="View details" placement="top" arrow>
               <IconButton size="small" onClick={onViewDetails}>
                 <MoreHoriz />
@@ -73,21 +69,27 @@ const MyBadgeListItem = React.forwardRef<HTMLDivElement, MyBadgeListItemProps>((
             </Tooltip>
           </Box>
 
-          <Stack>
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-              <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="body2" color="text.secondary">
-                Approved {approvalDate}
+          {/* Middle content area with vertical stack */}
+          <Stack sx={{ flex: 1, justifyContent: 'space-between' }}>
+            <Box>
+              {/* Approval Date */}
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                <CalendarToday sx={{ fontSize: 16, color: 'text.secondary' }} />
+                <Typography variant="body2" color="text.secondary">
+                  Approved {approvalDate}
+                </Typography>
+              </Stack>
+
+              {/* Commitment Description */}
+              <Typography
+                variant="body2"
+                sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}
+              >
+                {commitment}
               </Typography>
-            </Stack>
+            </Box>
 
-            <Typography
-              variant="body2"
-              sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}
-            >
-              {commitment}
-            </Typography>
-
+            {/* Bottom row: Recipient */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">

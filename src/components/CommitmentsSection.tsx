@@ -355,11 +355,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Tabs>
         </Box>
 
-        {!isUnkeptTab && (
+        {!isUnkeptTab && !isBadgesTab && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Checkbox size="small" sx={{ p: 0, mr: 1 }} checked={selectAll} onChange={handleToggleSelectAll} indeterminate={selectedCount > 0 && selectedCount < currentItems.length} />
-              <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} {isBadgesTab ? 'badges' : 'commitments'} selected</Typography>
+              <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} commitments selected</Typography>
             </Box>
             {showBulkRequest && (
               <Button
@@ -389,7 +389,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           <Stack spacing={1}>
             {currentItems.length > 0 ? (
               isBadgesTab ? (
-                currentItems.map((item, index) => <MyBadgeListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} selected={item.selected} onToggleSelect={handleToggleSelectItem} onViewDetails={handleViewDetails} approvalDate={item.dueDate} commitment={item.description} recipient={item.assignee} />)
+                currentItems.map((item, index) => <MyBadgeListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} onViewDetails={handleViewDetails} approvalDate={item.dueDate} commitment={item.description} recipient={item.assignee} />)
               ) : (
                 currentItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showRequestBadgeButton={!isUnkeptTab} onViewDetails={handleViewDetails} onRequestBadge={handleRequestBadge} onToggleSelect={handleToggleSelectItem} />)
               )
