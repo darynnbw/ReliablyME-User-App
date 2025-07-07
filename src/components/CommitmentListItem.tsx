@@ -9,6 +9,7 @@ import {
   IconButton,
   Tooltip,
   Stack,
+  alpha,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Shield } from '@mui/icons-material';
 
@@ -21,11 +22,12 @@ interface CommitmentListItemProps {
   selected?: boolean;
   color: string;
   showCheckbox: boolean;
-  showRequestBadgeButton: boolean;
-  showBadgePlaceholder?: boolean;
+  showActionButton: boolean;
+  buttonText: string;
   onViewDetails: () => void;
-  onRequestBadge: () => void;
+  onActionButtonClick: () => void;
   onToggleSelect: (id: number, checked: boolean) => void;
+  showBadgePlaceholder?: boolean;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -37,11 +39,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   selected = false,
   color,
   showCheckbox,
-  showRequestBadgeButton,
-  showBadgePlaceholder = false,
+  showActionButton,
+  buttonText,
   onViewDetails,
-  onRequestBadge,
+  onActionButtonClick,
   onToggleSelect,
+  showBadgePlaceholder = false,
 }, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
@@ -129,9 +132,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               {/* Button */}
               <Button
                 variant="contained"
-                onClick={onRequestBadge}
+                onClick={onActionButtonClick}
                 sx={{
-                  bgcolor: '#FF7F41',
+                  bgcolor: color,
                   color: 'white',
                   textTransform: 'none',
                   fontWeight: 'bold',
@@ -139,11 +142,11 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   py: 1,
                   borderRadius: 1,
                   flexShrink: 0,
-                  '&:hover': { bgcolor: '#F4611A' },
-                  visibility: showRequestBadgeButton ? 'visible' : 'hidden',
+                  '&:hover': { bgcolor: alpha(color, 0.8) },
+                  visibility: showActionButton ? 'visible' : 'hidden',
                 }}
               >
-                Request Badge
+                {buttonText}
               </Button>
             </Box>
           </Stack>

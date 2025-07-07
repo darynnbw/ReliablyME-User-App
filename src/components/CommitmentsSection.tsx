@@ -93,6 +93,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setCurrentPage(1);
   }, [activeTab, tabs]);
 
+  const handleClarifyClick = () => {
+    // Placeholder for future functionality
+    console.log('Clarify button clicked');
+  };
+
   const currentItems = commitments.filter(item => {
     const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -205,10 +210,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const selectedCount = selectedCommitments.length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
-  const itemColor = isUnkeptTab ? '#4F4F4F' : '#ff7043';
-  const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
-  const isMyCommitments = title === 'My Commitments';
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
+  const isMyCommitments = title === 'My Commitments';
+
+  let itemColor = '#ff7043'; // Default for 'My Promises'
+  let buttonText = 'Request Badge';
+  let onButtonClick: () => void = handleRequestBadge;
+
+  if (isOwedToMe) {
+    itemColor = '#1976d2'; // Blue for 'Promises Owed to Me'
+    buttonText = 'Clarify';
+    onButtonClick = handleClarifyClick;
+  } else if (isUnkeptTab) {
+    itemColor = '#4F4F4F'; // Grey for unkept promises
+  }
+
+  const showActionButton = !isUnkeptTab && !isBadgesTab;
+  const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
 
   const itemsPerPage = 15;
   const paginatedItems = isBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
@@ -410,15 +428,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     ref={index === 0 ? firstItemRef : null}
                     color="#4caf50"
                     showCheckbox={false}
-                    showRequestBadgeButton={false}
+                    showActionButton={false}
+                    buttonText=""
+                    onActionButtonClick={() => {}}
                     showBadgePlaceholder={true}
                     onViewDetails={() => handleViewBadgeDetails(item)}
-                    onRequestBadge={() => {}}
                     onToggleSelect={() => {}}
                   />
                 ))
               ) : (
-                paginatedItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showRequestBadgeButton={!isUnkeptTab} onViewDetails={handleViewCommitmentDetails} onRequestBadge={handleRequestBadge} onToggleSelect={handleToggleSelectItem} />)
+                paginatedItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showActionButton={showActionButton} buttonText={buttonText} onViewDetails={handleViewCommitmentDetails} onActionButtonClick={onButtonClick} onToggleSelect={handleToggleSelectItem} />)
               )
             ) : (
               <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>No items found.</Typography>

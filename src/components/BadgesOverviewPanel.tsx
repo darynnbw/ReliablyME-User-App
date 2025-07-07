@@ -25,7 +25,7 @@ const BadgesOverviewPanel: React.FC = () => {
     { id: 2, title: 'Attendance', count: 56 },
     { id: 3, title: 'Teamwork', count: 45 },
     { id: 4, title: 'Slack Promise Kept General', count: 124 },
-    { id: 5, title: 'On Track. Mid-Week Progress.', count: 18 },
+    { id: 5, title: 'On Track (Mid-Week Progress)', count: 18 },
     { id: 6, title: 'On Track (Daily)', count: 23 },
     { id: 7, title: 'Leadership', count: 12 },
   ];
