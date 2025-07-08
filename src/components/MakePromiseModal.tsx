@@ -155,8 +155,19 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
               onChange={handleRecipientsChange}
               renderTags={(value: readonly string[], getTagProps) =>
                 value.map((option: string, index: number) => {
-                  const isPhone = /^\+?[\d\s()-]+$/.test(option);
-                  const label = isPhone ? `📱 Invite: ${option}` : option;
+                  const isKnownUser = recipientOptions.some(user => user.name === option);
+                  let label = option;
+
+                  if (!isKnownUser) {
+                    const isPhone = /^\+?[\d\s()-]+$/.test(option);
+                    const isEmail = /\S+@\S+\.\S+/.test(option);
+                    if (isPhone) {
+                      label = `📱 Invite: ${option}`;
+                    } else if (isEmail) {
+                      label = `✉️ Invite: ${option}`;
+                    }
+                  }
+                  
                   return (
                     <Chip
                       variant="outlined"
