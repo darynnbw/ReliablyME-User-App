@@ -110,14 +110,14 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     promise: {
       title: 'Make a Promise',
       subtitle: 'Promise to do something & earn a badge when you follow through.',
-      promiseLabel: '2. What do you promise to do?',
+      promiseLabel: 'What do you promise to do?',
       promisePlaceholder: 'Write your promise...',
       buttonText: 'Make Promise',
     },
     request: {
       title: 'Request a Commitment',
-      subtitle: 'Request someone to do something & they can earn a badge.',
-      promiseLabel: '2. What are you requesting?',
+      subtitle: 'Ask someone to do something—and reward them with a badge.',
+      promiseLabel: 'What will they need to do?',
       promisePlaceholder: 'Write your request...',
       buttonText: 'Send Request',
     },
@@ -170,7 +170,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 <AnimatedCheck d="M100.2,40.2L51.5,88.8L29.8,67.5" />
               </svg>
             </Box>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
               You're all set! Earn your badge by following through.
             </Typography>
           </Box>
@@ -178,7 +178,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           <>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, flex: 1 }}>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>1. Badge they'll earn</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Badge they'll earn</Typography>
                 <FormControl fullWidth>
                   <Select value={badge} onChange={(e: SelectChangeEvent) => setBadge(e.target.value)} displayEmpty sx={{ borderRadius: 2, bgcolor: 'grey.50' }}>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
@@ -190,8 +190,31 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 <TextField fullWidth multiline rows={3} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
               </Box>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>3. Recipient(s)</Typography>
-                <Autocomplete multiple freeSolo options={recipientOptions.map((option) => option.name)} value={recipients} onChange={handleRecipientsChange} renderTags={(value: readonly string[], getTagProps) => value.map((option: string, index: number) => <Chip variant="outlined" label={!recipientOptions.some(user => user.name === option) ? (/\S+@\S+\.\S+/.test(option) ? `✉️ Invite: ${option}` : `📱 Invite: ${option}`) : option} {...getTagProps({ index })} />)} renderInput={(params) => <TextField {...params} variant="outlined" placeholder="Type a name, email, or phone number" />} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Recipient(s)</Typography>
+                <Autocomplete
+                  multiple
+                  freeSolo
+                  options={recipientOptions.map((option) => option.name)}
+                  value={recipients}
+                  onChange={handleRecipientsChange}
+                  renderTags={(value: readonly string[], getTagProps) =>
+                    value.map((option: string, index: number) => (
+                      <Chip
+                        variant="outlined"
+                        label={!recipientOptions.some(user => user.name === option) ? `📱 Invite: ${option}` : option}
+                        {...getTagProps({ index })}
+                      />
+                    ))
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      placeholder="Type a name or phone number"
+                    />
+                  )}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
+                />
                 {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1.5, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 18 }} /><Typography variant="body2" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
               </Box>
             </Box>
