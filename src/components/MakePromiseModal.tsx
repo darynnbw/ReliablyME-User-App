@@ -14,6 +14,7 @@ import {
   FormControl,
   Autocomplete,
   SelectChangeEvent,
+  Chip,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
@@ -29,12 +30,6 @@ const badgeOptions = [
   'Leadership',
 ];
 
-const promiseCardOptions = [
-  'I will complete the code review for the new feature branch by end of day.',
-  'I will join the all-hands meeting on time and prepared to discuss Q2 goals.',
-  'I will review and provide approval for the proposed changes to our design system components',
-];
-
 const recipientOptions = [
   { name: 'Alex Johnson' },
   { name: 'Chris Parker' },
@@ -43,30 +38,26 @@ const recipientOptions = [
 
 const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) => {
   const [badge, setBadge] = useState('');
-  const [promiseCard, setPromiseCard] = useState('');
-  const [customPromise, setCustomPromise] = useState('');
+  const [promise, setPromise] = useState('');
   const [recipients, setRecipients] = useState<string[]>([]);
-  const [phoneNumber, setPhoneNumber] = useState('');
   
-  const isFormValid = !!(badge && (promiseCard || customPromise) && (recipients.length > 0 || phoneNumber));
+  const isFormValid = !!(badge && promise.trim() && recipients.length > 0);
 
   const handleSubmit = () => {
     console.log({
       badge,
-      promise: customPromise || promiseCard,
+      promise,
       recipients,
-      phoneNumber,
     });
+    // In a real app, a success toast would be shown here.
     handleClose();
   };
 
   const handleClose = () => {
     // Reset state on close
     setBadge('');
-    setPromiseCard('');
-    setCustomPromise('');
+    setPromise('');
     setRecipients([]);
-    setPhoneNumber('');
     onClose();
   };
 
@@ -85,10 +76,15 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
       }}
     >
       <DialogTitle sx={{ p: 0, mb: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
-            Make a Promise
-          </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <Box>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
+              Make a Promise
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              You're about to promise to do something for someone
+            </Typography>
+          </Box>
           <IconButton onClick={handleClose} sx={{ color: '#666' }}>
             <Close />
           </IconButton>
@@ -101,13 +97,14 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Choose a badge to earn</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>1. Badge you’ll earn</Typography>
             <FormControl fullWidth>
               <Select
                 value={badge}
                 onChange={(e: SelectChangeEvent) => setBadge(e.target.value)}
                 displayEmpty
                 sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
+                inputProps={{ 'aria-label': 'Badge you’ll earn' }}
               >
                 <MenuItem value="" disabled>
                   <Typography sx={{color: 'text.secondary'}}>Select a badge</Typography>
@@ -120,53 +117,44 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
           </Box>
 
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Choose or create a promise card</Typography>
-            <FormControl fullWidth>
-              <Select
-                value={promiseCard}
-                onChange={(e: SelectChangeEvent) => {
-                  setPromiseCard(e.target.value);
-                  if (e.target.value) setCustomPromise(''); // Clear custom if template is selected
-                }}
-                displayEmpty
-                sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
-              >
-                <MenuItem value="" disabled>
-                  <Typography sx={{color: 'text.secondary'}}>Select a promise card</Typography>
-                </MenuItem>
-                {promiseCardOptions.map((option) => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>2. What do you promise to do?</Typography>
             <TextField
               fullWidth
-              variant="standard"
-              label="Or enter custom promise"
-              value={customPromise}
-              onChange={(e) => {
-                setCustomPromise(e.target.value);
-                if (e.target.value) setPromiseCard(''); // Clear template if custom is typed
+              multiline
+              rows={3}
+              label="Write your promise"
+              placeholder="e.g. I'll finish the report"
+              value={promise}
+              onChange={(e) => setPromise(e.target.value)}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  bgcolor: 'grey.50',
+                },
               }}
-              sx={{ mt: 2 }}
             />
           </Box>
 
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Select recipients</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>3. Recipient(s)</Typography>
             <Autocomplete
               multiple
+              freeSolo
               options={recipientOptions.map((option) => option.name)}
               value={recipients}
               onChange={(_, newValue) => {
                 setRecipients(newValue);
               }}
-              freeSolo
+              renderTags={(value: readonly string[], getTagProps) =>
+                value.map((option: string, index: number) => (
+                  <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                ))
+              }
               renderInput={(params) => (
                 <TextField
                   {...params}
                   variant="outlined"
-                  placeholder="Select or enter recipients"
+                  placeholder="Type a name, email, or phone number"
                 />
               )}
               sx={{
@@ -176,14 +164,6 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
                   p: 1,
                 },
               }}
-            />
-            <TextField
-              fullWidth
-              variant="standard"
-              label="Or enter phone number"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              sx={{ mt: 2 }}
             />
           </Box>
         </Box>
@@ -196,7 +176,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
             onClick={handleSubmit}
             disabled={!isFormValid}
             sx={{
-              bgcolor: '#ff7043',
+              bgcolor: 'primary.main',
               color: 'white',
               textTransform: 'none',
               width: '100%',
@@ -206,14 +186,14 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
               borderRadius: 2,
               fontWeight: 600,
               fontSize: '16px',
-              '&:hover': { bgcolor: '#f4511e' },
+              '&:hover': { bgcolor: 'primary.dark' },
               '&:disabled': {
                 bgcolor: '#e0e0e0',
                 color: '#9e9e9e',
               },
             }}
           >
-            Request Badge
+            Make Promise
           </Button>
         </Box>
       </DialogContent>
