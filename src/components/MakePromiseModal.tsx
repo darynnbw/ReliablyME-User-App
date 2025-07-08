@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -15,8 +15,41 @@ import {
   Autocomplete,
   SelectChangeEvent,
   Chip,
+  styled,
+  keyframes,
 } from '@mui/material';
-import { Close, WarningAmber, CheckCircleOutline } from '@mui/icons-material';
+import { Close, WarningAmber } from '@mui/icons-material';
+
+// Keyframes for the SVG animation
+const drawCircle = keyframes`
+  to { stroke-dashoffset: 0; }
+`;
+
+const drawCheck = keyframes`
+  to { stroke-dashoffset: 0; }
+`;
+
+// Styled components for the animated SVG parts
+const AnimatedCircle = styled('circle')(({ theme }) => ({
+  fill: 'none',
+  stroke: theme.palette.success.main,
+  strokeWidth: 6,
+  strokeMiterlimit: 10,
+  strokeDasharray: 390,
+  strokeDashoffset: 390,
+  animation: `${drawCircle} 0.6s ease-out forwards`,
+}));
+
+const AnimatedCheck = styled('path')(({ theme }) => ({
+  fill: 'none',
+  stroke: theme.palette.success.main,
+  strokeWidth: 6,
+  strokeLinecap: 'round',
+  strokeMiterlimit: 10,
+  strokeDasharray: 100,
+  strokeDashoffset: 100,
+  animation: `${drawCheck} 0.4s 0.4s ease-out forwards`,
+}));
 
 interface MakePromiseModalProps {
   open: boolean;
@@ -45,6 +78,28 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
 
   const isFormValid = !!(badge && promise.trim() && recipients.length > 0);
 
+  const handleClose = () => {
+    // Reset all states before closing
+    setIsSubmitted(false);
+    setBadge('');
+    setPromise('');
+    setRecipients([]);
+    setHasExternalRecipient(false);
+    onClose();
+  };
+
+  useEffect(() => {
+    if (isSubmitted) {
+      const timerId = setTimeout(() => {
+        handleClose();
+      }, 3000); // Auto-close after 3 seconds
+      
+      return () => {
+        clearTimeout(timerId);
+      };
+    }
+  }, [isSubmitted, handleClose]);
+
   const handleRecipientsChange = (_: any, newValue: string[]) => {
     setRecipients(newValue);
     const external = newValue.some(val => !recipientOptions.find(opt => opt.name === val));
@@ -60,16 +115,6 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
     setIsSubmitted(true);
   };
 
-  const handleClose = () => {
-    // Reset all states before closing
-    setBadge('');
-    setPromise('');
-    setRecipients([]);
-    setHasExternalRecipient(false);
-    setIsSubmitted(false);
-    onClose();
-  };
-
   return (
     <Dialog
       open={open}
@@ -81,7 +126,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
           borderRadius: 3,
           p: 3,
           maxWidth: '700px',
-          maxHeight: '90vh',
+          transition: 'height 0.3s ease-in-out',
         },
       }}
     >
@@ -105,34 +150,22 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
 
       <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
-      <DialogContent sx={{ p: 0 }}>
+      <DialogContent sx={{ p: 0, minHeight: 450, display: 'flex', flexDirection: 'column' }}>
         {isSubmitted ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 4, textAlign: 'center' }}>
-            <CheckCircleOutline sx={{ fontSize: 56, color: 'success.main', mb: 2 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
+            <Box sx={{ width: 80, height: 80, mb: 3 }}>
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <AnimatedCircle cx="65.1" cy="65.1" r="62.1" />
+                <AnimatedCheck d="M100.2,40.2L51.5,88.8L29.8,67.5" />
+              </svg>
+            </Box>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
               You're all set! Earn your badge by following through.
             </Typography>
-            <Button
-              variant="contained"
-              onClick={handleClose}
-              sx={{
-                bgcolor: '#ff7043',
-                color: 'white',
-                textTransform: 'none',
-                height: '48px',
-                borderRadius: 2,
-                fontWeight: 600,
-                fontSize: '16px',
-                px: 8,
-                '&:hover': { bgcolor: '#f4511e' },
-              }}
-            >
-              Done
-            </Button>
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, flex: 1 }}>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>1. Badge you’ll earn</Typography>
                 <FormControl fullWidth>
@@ -232,7 +265,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
               </Box>
             </Box>
 
-            <Box sx={{ mt: 3, pt: 3 }}>
+            <Box sx={{ mt: 'auto', pt: 3 }}>
               <Button
                 variant="contained"
                 onClick={handleSubmit}
