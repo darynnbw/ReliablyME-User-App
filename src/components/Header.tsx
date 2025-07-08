@@ -14,11 +14,12 @@ import {
 } from '@mui/material';
 import { Star, Plus, ChevronDown } from 'lucide-react';
 import { Logout } from '@mui/icons-material';
-import MakePromiseModal from './MakePromiseModal';
+import CommitmentActionModal from './CommitmentActionModal';
 
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'promise' | 'request'>('promise');
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,12 +30,9 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (option: string) => {
-    if (option === 'Make a Promise') {
-      setMakePromiseModalOpen(true);
-    } else {
-      console.log(`Selected: ${option}`);
-    }
+  const handleMenuItemClick = (type: 'promise' | 'request') => {
+    setModalType(type);
+    setModalOpen(true);
     handleClose();
   };
 
@@ -143,7 +141,7 @@ const Header: React.FC = () => {
               }}
             >
               <MenuItem 
-                onClick={() => handleMenuItemClick('Request a Commitment')}
+                onClick={() => handleMenuItemClick('request')}
                 sx={{ 
                   py: 1.5, 
                   px: 3,
@@ -162,7 +160,7 @@ const Header: React.FC = () => {
                 </Typography>
               </MenuItem>
               <MenuItem 
-                onClick={() => handleMenuItemClick('Make a Promise')}
+                onClick={() => handleMenuItemClick('promise')}
                 sx={{ 
                   py: 1.5, 
                   px: 3,
@@ -200,7 +198,11 @@ const Header: React.FC = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <MakePromiseModal open={makePromiseModalOpen} onClose={() => setMakePromiseModalOpen(false)} />
+      <CommitmentActionModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        type={modalType}
+      />
     </>
   );
 };
