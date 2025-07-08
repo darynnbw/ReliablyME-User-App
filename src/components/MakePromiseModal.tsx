@@ -16,7 +16,7 @@ import {
   SelectChangeEvent,
   Chip,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, WarningAmber } from '@mui/icons-material';
 
 interface MakePromiseModalProps {
   open: boolean;
@@ -40,11 +40,18 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
   const [badge, setBadge] = useState('');
   const [promise, setPromise] = useState('');
   const [recipients, setRecipients] = useState<string[]>([]);
-  
+  const [hasExternalRecipient, setHasExternalRecipient] = useState(false);
+
   const isFormValid = !!(badge && promise.trim() && recipients.length > 0);
 
+  const handleRecipientsChange = (_: any, newValue: string[]) => {
+    setRecipients(newValue);
+    const external = newValue.some(val => !recipientOptions.find(opt => opt.name === val));
+    setHasExternalRecipient(external);
+  };
+
   const handleSubmit = () => {
-    console.log({
+    console.log("Promise sent!", {
       badge,
       promise,
       recipients,
@@ -54,10 +61,10 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
   };
 
   const handleClose = () => {
-    // Reset state on close
     setBadge('');
     setPromise('');
     setRecipients([]);
+    setHasExternalRecipient(false);
     onClose();
   };
 
@@ -71,18 +78,19 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
         sx: {
           borderRadius: 3,
           p: 3,
-          maxWidth: '550px',
+          maxWidth: '600px',
+          maxHeight: '90vh',
         },
       }}
     >
       <DialogTitle sx={{ p: 0, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <Box>
-            <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 2 }}>
               Make a Promise
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You're about to promise to do something for someone
+              Promise to do something—and earn a badge when you follow through.
             </Typography>
           </Box>
           <IconButton onClick={handleClose} sx={{ color: '#666' }}>
@@ -93,7 +101,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
 
       <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
-      <DialogContent sx={{ p: 0 }}>
+      <DialogContent sx={{ p: 0, overflowY: 'auto' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           
           <Box>
@@ -104,7 +112,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
                 onChange={(e: SelectChangeEvent) => setBadge(e.target.value)}
                 displayEmpty
                 sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
-                inputProps={{ 'aria-label': 'Badge you’ll earn' }}
+                inputProps={{ 'aria-label': '1. Badge you’ll earn' }}
               >
                 <MenuItem value="" disabled>
                   <Typography sx={{color: 'text.secondary'}}>Select a badge</Typography>
@@ -122,14 +130,16 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
               fullWidth
               multiline
               rows={3}
-              label="Write your promise"
-              placeholder="e.g. I'll finish the report"
+              placeholder="Write your promise..."
               value={promise}
               onChange={(e) => setPromise(e.target.value)}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
                   bgcolor: 'grey.50',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    border: 'none',
+                  },
                 },
               }}
             />
@@ -142,13 +152,19 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
               freeSolo
               options={recipientOptions.map((option) => option.name)}
               value={recipients}
-              onChange={(_, newValue) => {
-                setRecipients(newValue);
-              }}
+              onChange={handleRecipientsChange}
               renderTags={(value: readonly string[], getTagProps) =>
-                value.map((option: string, index: number) => (
-                  <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                ))
+                value.map((option: string, index: number) => {
+                  const isPhone = /^\+?[\d\s()-]+$/.test(option);
+                  const label = isPhone ? `📱 Invite: ${option}` : option;
+                  return (
+                    <Chip
+                      variant="outlined"
+                      label={label}
+                      {...getTagProps({ index })}
+                    />
+                  );
+                })
               }
               renderInput={(params) => (
                 <TextField
@@ -165,28 +181,32 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
                 },
               }}
             />
+            {hasExternalRecipient && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1.5, color: 'warning.dark' }}>
+                <WarningAmber sx={{ fontSize: 18 }} />
+                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                  This person isn’t in the system. They’ll receive your promise via text message.
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Box>
 
-        <Divider sx={{ my: 3, borderColor: '#e0e0e0' }} />
-
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ mt: 3, pt: 3 }}>
           <Button
             variant="contained"
             onClick={handleSubmit}
             disabled={!isFormValid}
+            fullWidth
             sx={{
-              bgcolor: 'primary.main',
+              bgcolor: '#ff7043',
               color: 'white',
               textTransform: 'none',
-              width: '100%',
-              maxWidth: '400px',
-              minHeight: '48px',
-              py: 1.5,
+              height: '48px',
               borderRadius: 2,
               fontWeight: 600,
               fontSize: '16px',
-              '&:hover': { bgcolor: 'primary.dark' },
+              '&:hover': { bgcolor: '#f4511e' },
               '&:disabled': {
                 bgcolor: '#e0e0e0',
                 color: '#9e9e9e',
