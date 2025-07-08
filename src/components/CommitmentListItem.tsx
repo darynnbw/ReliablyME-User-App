@@ -91,10 +91,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             onChange={handleCheckboxChange}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, flex: 1, pr: 1 }} noWrap>
               {title}
             </Typography>
             <Tooltip title="View details" placement="top" arrow>
@@ -105,22 +105,36 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Box>
 
           {/* Main content area with vertical stack */}
-          <Stack>
-            {/* Due Date */}
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-              <CalendarToday sx={{ fontSize: 16, color: color }} />
-              <Typography variant="body2" sx={{ color: '#666' }}>
-                Due {dueDate}
-              </Typography>
-            </Stack>
+          <Stack sx={{ flex: 1, justifyContent: 'space-between' }}>
+            <Box>
+              {/* Due Date */}
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                <CalendarToday sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  Due {dueDate}
+                </Typography>
+              </Stack>
 
-            {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
-              {description}
-            </Typography>
+              {/* Description */}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#666',
+                  lineHeight: 1.5,
+                  mb: 0.5,
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 2,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {description}
+              </Typography>
+            </Box>
 
             {/* Bottom row: Assignee and Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: 1 }}>
               {/* Assignee */}
               <Stack direction="row" spacing={1} alignItems="center">
                 <Person sx={{ fontSize: 16, color: color }} />
