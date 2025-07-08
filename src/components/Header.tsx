@@ -14,9 +14,11 @@ import {
 } from '@mui/material';
 import { Star, Plus, ChevronDown } from 'lucide-react';
 import { Logout } from '@mui/icons-material';
+import MakePromiseModal from './MakePromiseModal';
 
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,7 +30,11 @@ const Header: React.FC = () => {
   };
 
   const handleMenuItemClick = (option: string) => {
-    console.log(`Selected: ${option}`);
+    if (option === 'Make a Promise') {
+      setMakePromiseModalOpen(true);
+    } else {
+      console.log(`Selected: ${option}`);
+    }
     handleClose();
   };
 
@@ -38,161 +44,164 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ bgcolor: 'white', boxShadow: 1 }}>
-      <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: 1,
-                bgcolor: '#ff7043',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '14px',
-              }}
-            >
-              ME
-            </Box>
-            <Typography
-              variant="h6"
-              sx={{ 
-                color: '#1976d2', 
-                fontWeight: 600,
-                fontSize: '18px',
-              }}
-            >
-              RELIABLY
+    <>
+      <AppBar position="static" sx={{ bgcolor: 'white', boxShadow: 1 }}>
+        <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 1,
+                  bgcolor: '#ff7043',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                }}
+              >
+                ME
+              </Box>
               <Typography
-                component="span"
+                variant="h6"
                 sx={{ 
-                  color: '#ff7043', 
+                  color: '#1976d2', 
                   fontWeight: 600,
                   fontSize: '18px',
                 }}
               >
-                ME
+                RELIABLY
+                <Typography
+                  component="span"
+                  sx={{ 
+                    color: '#ff7043', 
+                    fontWeight: 600,
+                    fontSize: '18px',
+                  }}
+                >
+                  ME
+                </Typography>
               </Typography>
-            </Typography>
-          </Box>
-          
-          <Chip
-            icon={<Star size={16} />}
-            label="Classic"
-            variant="outlined"
-            sx={{
-              bgcolor: '#fff3e0',
-              borderColor: '#ff7043',
-              color: '#ff7043',
-              '& .MuiChip-icon': {
+            </Box>
+            
+            <Chip
+              icon={<Star size={16} />}
+              label="Classic"
+              variant="outlined"
+              sx={{
+                bgcolor: '#fff3e0',
+                borderColor: '#ff7043',
                 color: '#ff7043',
-              },
-            }}
-          />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button
-            variant="contained"
-            startIcon={<Plus size={18} />}
-            endIcon={<ChevronDown size={16} />}
-            onClick={handleClick}
-            sx={{
-              bgcolor: '#1976d2',
-              textTransform: 'none',
-              fontWeight: 500,
-              px: 3,
-              py: 1,
-              borderRadius: 1,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Create Commitment
-          </Button>
-          
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            PaperProps={{
-              sx: {
-                mt: 1,
-                minWidth: anchorEl?.offsetWidth || 'auto',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                borderRadius: 2,
-              },
-            }}
-          >
-            <MenuItem 
-              onClick={() => handleMenuItemClick('Send Invitation')}
-              sx={{ 
-                py: 1.5, 
-                px: 3,
-                textAlign: 'left',
-                '&:hover': { bgcolor: '#f5f5f5' }
+                '& .MuiChip-icon': {
+                  color: '#ff7043',
+                },
               }}
-            >
-              <Typography sx={{ 
-                fontWeight: 500, 
-                fontSize: '18px',
-                color: '#333',
-                textAlign: 'left',
-                width: '100%'
-              }}>
-                Send Invitation
-              </Typography>
-            </MenuItem>
-            <MenuItem 
-              onClick={() => handleMenuItemClick('Send Offer')}
-              sx={{ 
-                py: 1.5, 
-                px: 3,
-                textAlign: 'left',
-                '&:hover': { bgcolor: '#f5f5f5' }
-              }}
-            >
-              <Typography sx={{ 
-                fontWeight: 500, 
-                fontSize: '18px',
-                color: '#333',
-                textAlign: 'left',
-                width: '100%'
-              }}>
-                Send Offer
-              </Typography>
-            </MenuItem>
-          </Menu>
-          
-          <Avatar
-            sx={{
-              bgcolor: '#ff7043',
-              width: 40,
-              height: 40,
-            }}
-          />
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
-            <Tooltip title="Logout">
-              <IconButton onClick={handleLogout} size="small">
-                <Logout sx={{ color: 'text.secondary' }} />
-              </IconButton>
-            </Tooltip>
+            />
           </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Button
+              variant="contained"
+              startIcon={<Plus size={18} />}
+              endIcon={<ChevronDown size={16} />}
+              onClick={handleClick}
+              sx={{
+                bgcolor: '#1976d2',
+                textTransform: 'none',
+                fontWeight: 500,
+                px: 3,
+                py: 1,
+                borderRadius: 1,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Create Commitment
+            </Button>
+            
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              PaperProps={{
+                sx: {
+                  mt: 1,
+                  minWidth: anchorEl?.offsetWidth || 'auto',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                  borderRadius: 2,
+                },
+              }}
+            >
+              <MenuItem 
+                onClick={() => handleMenuItemClick('Request a Commitment')}
+                sx={{ 
+                  py: 1.5, 
+                  px: 3,
+                  textAlign: 'left',
+                  '&:hover': { bgcolor: '#f5f5f5' }
+                }}
+              >
+                <Typography sx={{ 
+                  fontWeight: 500, 
+                  fontSize: '18px',
+                  color: '#333',
+                  textAlign: 'left',
+                  width: '100%'
+                }}>
+                  Request a Commitment
+                </Typography>
+              </MenuItem>
+              <MenuItem 
+                onClick={() => handleMenuItemClick('Make a Promise')}
+                sx={{ 
+                  py: 1.5, 
+                  px: 3,
+                  textAlign: 'left',
+                  '&:hover': { bgcolor: '#f5f5f5' }
+                }}
+              >
+                <Typography sx={{ 
+                  fontWeight: 500, 
+                  fontSize: '18px',
+                  color: '#333',
+                  textAlign: 'left',
+                  width: '100%'
+                }}>
+                  Make a Promise
+                </Typography>
+              </MenuItem>
+            </Menu>
+            
+            <Avatar
+              sx={{
+                bgcolor: '#ff7043',
+                width: 40,
+                height: 40,
+              }}
+            />
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
+              <Tooltip title="Logout">
+                <IconButton onClick={handleLogout} size="small">
+                  <Logout sx={{ color: 'text.secondary' }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <MakePromiseModal open={makePromiseModalOpen} onClose={() => setMakePromiseModalOpen(false)} />
+    </>
   );
 };
 
