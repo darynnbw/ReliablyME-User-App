@@ -78,7 +78,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
         sx: {
           borderRadius: 3,
           p: 3,
-          maxWidth: '600px',
+          maxWidth: '700px',
           maxHeight: '90vh',
         },
       }}
@@ -90,7 +90,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
               Make a Promise
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Promise to do something—and earn a badge when you follow through.
+              Promise to do something & earn a badge when you follow through.
             </Typography>
           </Box>
           <IconButton onClick={handleClose} sx={{ color: '#666' }}>
@@ -101,7 +101,7 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
 
       <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
-      <DialogContent sx={{ p: 0, overflowY: 'auto' }}>
+      <DialogContent sx={{ p: 0 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           
           <Box>
@@ -114,9 +114,6 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
                 sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                 inputProps={{ 'aria-label': '1. Badge you’ll earn' }}
               >
-                <MenuItem value="" disabled>
-                  <Typography sx={{color: 'text.secondary'}}>Select a badge</Typography>
-                </MenuItem>
                 {badgeOptions.map((option) => (
                   <MenuItem key={option} value={option}>{option}</MenuItem>
                 ))}
@@ -139,6 +136,9 @@ const MakePromiseModal: React.FC<MakePromiseModalProps> = ({ open, onClose }) =>
                   bgcolor: 'grey.50',
                   '& .MuiOutlinedInput-notchedOutline': {
                     border: 'none',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    border: '2px solid #1976d2',
                   },
                 },
               }}
