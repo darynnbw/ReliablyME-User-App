@@ -102,7 +102,7 @@ const DeclineModal: React.FC<DeclineModalProps> = ({
             variant="contained"
             onClick={handleDecline}
             sx={{
-              bgcolor: '#ff7043', // Changed to orange
+              bgcolor: 'error.main',
               color: 'white',
               textTransform: 'none',
               flex: 1,
@@ -111,7 +111,7 @@ const DeclineModal: React.FC<DeclineModalProps> = ({
               fontWeight: 600,
               fontSize: '14px',
               '&:hover': { 
-                bgcolor: '#f4511e' // Darker orange on hover
+                bgcolor: 'error.dark'
               },
             }}
           >

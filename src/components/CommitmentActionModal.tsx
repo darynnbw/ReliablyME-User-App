@@ -113,6 +113,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
       promiseLabel: 'What do you promise to do?',
       promisePlaceholder: 'Write your promise...',
       buttonText: 'Make Promise',
+      confirmationText: "You're all set! Earn your badge by following through.",
     },
     request: {
       title: 'Request a Commitment',
@@ -120,6 +121,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
       promiseLabel: 'What will they need to do?',
       promisePlaceholder: 'Write your request...',
       buttonText: 'Send Request',
+      confirmationText: "Your request is on its way! They’ll earn a badge once it’s done.",
     },
   };
   const currentTexts = modalTexts[type];
@@ -171,7 +173,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </svg>
             </Box>
             <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
-              You're all set! Earn your badge by following through.
+              {currentTexts.confirmationText}
             </Typography>
           </Box>
         ) : (

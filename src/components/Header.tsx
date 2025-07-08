@@ -141,25 +141,6 @@ const Header: React.FC = () => {
               }}
             >
               <MenuItem 
-                onClick={() => handleMenuItemClick('request')}
-                sx={{ 
-                  py: 1.5, 
-                  px: 3,
-                  textAlign: 'left',
-                  '&:hover': { bgcolor: '#f5f5f5' }
-                }}
-              >
-                <Typography sx={{ 
-                  fontWeight: 500, 
-                  fontSize: '18px',
-                  color: '#333',
-                  textAlign: 'left',
-                  width: '100%'
-                }}>
-                  Request a Commitment
-                </Typography>
-              </MenuItem>
-              <MenuItem 
                 onClick={() => handleMenuItemClick('promise')}
                 sx={{ 
                   py: 1.5, 
@@ -176,6 +157,25 @@ const Header: React.FC = () => {
                   width: '100%'
                 }}>
                   Make a Promise
+                </Typography>
+              </MenuItem>
+              <MenuItem 
+                onClick={() => handleMenuItemClick('request')}
+                sx={{ 
+                  py: 1.5, 
+                  px: 3,
+                  textAlign: 'left',
+                  '&:hover': { bgcolor: '#f5f5f5' }
+                }}
+              >
+                <Typography sx={{ 
+                  fontWeight: 500, 
+                  fontSize: '18px',
+                  color: '#333',
+                  textAlign: 'left',
+                  width: '100%'
+                }}>
+                  Request a Commitment
                 </Typography>
               </MenuItem>
             </Menu>
