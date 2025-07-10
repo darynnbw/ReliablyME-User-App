@@ -3,6 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import CommitmentPortfolio from './pages/CommitmentPortfolio';
+import Actions from './pages/Actions';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -42,6 +43,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/commitment-portfolio" element={<CommitmentPortfolio />} />
+            <Route path="/actions" element={<Actions />} />
             {/* Add other routes here as needed */}
           </Routes>
         </Router>
