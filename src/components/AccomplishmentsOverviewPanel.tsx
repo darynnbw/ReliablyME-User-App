@@ -9,14 +9,13 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
     <Paper
       sx={{
         p: 3, // Consistent padding of 24px
-        height: 'auto',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#ffffff',
         borderRadius: 3,
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
         border: '1px solid #e8eaed',
-        mb: 4,
       }}
     >
       <Typography

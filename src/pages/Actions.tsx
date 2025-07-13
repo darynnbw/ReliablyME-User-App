@@ -3,6 +3,7 @@ import {
   Box,
   Container,
   Grid,
+  Paper,
 } from '@mui/material';
 import Header from '../components/Header';
 import NavigationTabs from '../components/NavigationTabs';
@@ -217,8 +218,19 @@ const Actions: React.FC = () => {
 
         <Grid container spacing={3}>
           {/* Accomplishments Overview */}
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
             <AccomplishmentsOverviewPanel />
+          </Grid>
+
+          {/* New Square White Section */}
+          <Grid item xs={12} md={6}>
+            <Paper sx={{
+              bgcolor: 'white',
+              aspectRatio: '1 / 1',
+              borderRadius: 3,
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+              border: '1px solid #e8eaed',
+            }} />
           </Grid>
 
           {/* Badges Overview */}
