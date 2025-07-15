@@ -3,19 +3,19 @@ import { Box, Typography, CircularProgress } from '@mui/material';
 
 interface ReliabilityRatingChartProps {
   value: number;
-  commitments: number;
-  days: number;
+  displayValue: string | number;
+  title: string;
 }
 
-const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, commitments, days }) => {
+const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, displayValue, title }) => {
   const circleSize = 140;
   const circleThickness = 5;
 
   return (
     <Box
       sx={{
-        pt: 4,
-        pb: 3,
+        pt: 2,
+        pb: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -37,7 +37,7 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
           value={value}
           size={circleSize}
           thickness={circleThickness}
-          sx={{ color: 'secondary.main' }}
+          sx={{ color: 'secondary.main', transition: 'transform 0.4s ease' }}
         />
         <Box
           sx={{
@@ -51,30 +51,15 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-            {`${value}%`}
+          <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
+            {displayValue}
           </Typography>
         </Box>
       </Box>
 
       {/* Label */}
       <Typography variant="subtitle1" sx={{ fontWeight: 700, mt: 2 }}>
-        Reliability Rating
-      </Typography>
-
-      {/* Description */}
-      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2 }}>
-        <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-          {`${value}%`}
-        </Typography>
-        {' after '}
-        <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-          {commitments} commitments
-        </Typography>
-        {' in the past '}
-        <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-          {days} days
-        </Typography>
+        {title}
       </Typography>
     </Box>
   );
