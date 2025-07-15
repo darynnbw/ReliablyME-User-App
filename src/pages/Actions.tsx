@@ -9,7 +9,6 @@ import NavigationTabs from '../components/NavigationTabs';
 import UserProfileSection from '../components/UserProfileSection';
 import BadgesOverviewPanel from '../components/BadgesOverviewPanel';
 import CommitmentsSection from '../components/CommitmentsSection';
-import AccomplishmentsOverviewPanel from '../components/AccomplishmentsOverviewPanel';
 
 const Actions: React.FC = () => {
   const myCommitmentsTabs = [
@@ -216,11 +215,6 @@ const Actions: React.FC = () => {
         <UserProfileSection name="Alex Johnson" phone="+1 (555) 123-4567" />
 
         <Grid container spacing={3}>
-          {/* Accomplishments Overview */}
-          <Grid item xs={12}>
-            <AccomplishmentsOverviewPanel />
-          </Grid>
-
           {/* Badges Overview */}
           <Grid item xs={12} sx={{ mb: 3 }}>
             <BadgesOverviewPanel />
