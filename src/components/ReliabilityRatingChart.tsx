@@ -15,7 +15,7 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
     <Box
       sx={{
         pt: 3, // 24px space above chart
-        pb: 5, // Increased space below description
+        pb: 3, // Reduced to 24px to better connect sections
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
