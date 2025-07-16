@@ -29,7 +29,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         Accomplishments Overview
       </Typography>
 
-      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
       </Box>
 
