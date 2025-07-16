@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import StatCard from './StatCard';
 import StatisticsChart from './StatisticsChart';
 
