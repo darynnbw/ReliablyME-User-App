@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Grid } from '@mui/material';
+import { Paper, Typography, Grid, Box } from '@mui/material';
 import { MyLocation, AccessTime, TrendingUp } from '@mui/icons-material';
 import ReliabilityRatingChart from './ReliabilityRatingChart';
 import MetricCard from './MetricCard';
@@ -8,7 +8,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper
       sx={{
-        p: 3, // Consistent padding
+        p: 3,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -30,9 +30,11 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         Accomplishments Overview
       </Typography>
 
-      <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
+      <Box sx={{ mb: 4 }}>
+        <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
+      </Box>
 
-      <Grid container spacing={{ xs: 3, sm: 4 }} justifyContent="center" alignItems="flex-start">
+      <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={MyLocation}
