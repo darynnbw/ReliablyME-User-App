@@ -19,46 +19,58 @@ import { Theme } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { Dayjs } from 'dayjs';
 import StatCard from './StatCard';
-import StatisticsChart from './StatisticsChart';
+import LineGraph from './LineGraph';
 
 type StatKey = 'commitments' | 'points' | 'punctuality' | 'confidence';
 
+const generateMockData = (min: number, max: number) => {
+  const data = [];
+  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  for (let i = 0; i < labels.length; i++) {
+    data.push({
+      name: labels[i],
+      value: Math.floor(Math.random() * (max - min + 1)) + min,
+    });
+  }
+  return data;
+};
+
 const statsData = {
   commitments: {
-    value: 24,
-    label: '24',
-    chartValue: 70, // arbitrary for visual effect
-    legend: 'Number of commitments made',
+    title: 'Commitments Made',
+    displayValue: '24',
+    color: '#1976d2',
+    data: generateMockData(15, 30),
   },
   points: {
-    value: 1234,
-    label: '1234',
-    chartValue: 85,
-    legend: 'Total points earned',
+    title: 'Total Points',
+    displayValue: '1234',
+    color: '#4caf50',
+    data: generateMockData(800, 1500),
   },
   punctuality: {
-    value: '94.4%',
-    label: '94.4%',
-    chartValue: 94.4,
-    legend: 'Punctuality rate',
+    title: 'Punctuality Record',
+    displayValue: '94.4%',
+    color: '#ff7043',
+    data: generateMockData(85, 98),
   },
   confidence: {
-    value: 7.9,
-    label: '7.9',
-    chartValue: 79,
-    legend: 'Average confidence score',
+    title: 'Confidence Score',
+    displayValue: '7.9',
+    color: '#f44336',
+    data: generateMockData(6, 9),
   },
 };
 
 const YourStatisticsPanel: React.FC = () => {
-  const [selectedStat, setSelectedStat] = useState<StatKey>('commitments');
+  const [selectedStat, setSelectedStat] = useState<StatKey>('punctuality');
   const [daysFilter, setDaysFilter] = useState('90');
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
 
   const handleStatClick = (stat: StatKey) => {
-    setSelectedStat(prev => (prev === stat ? 'commitments' : stat));
+    setSelectedStat(prev => (prev === stat ? 'punctuality' : stat));
   };
 
   const handleDaysFilterChange = (event: SelectChangeEvent) => {
@@ -189,18 +201,21 @@ const YourStatisticsPanel: React.FC = () => {
       </Popover>
 
       {/* Chart */}
-      <StatisticsChart
-        value={currentStat.chartValue}
-        label={currentStat.label}
-        legend={currentStat.legend}
-      />
+      <Box sx={{ flex: 1, minHeight: 250, mb: 2 }}>
+        <LineGraph
+          title={currentStat.title}
+          value={currentStat.displayValue}
+          data={currentStat.data}
+          color={currentStat.color}
+        />
+      </Box>
 
       {/* Stat Cards */}
-      <Grid container spacing={2} sx={{ mt: 'auto', pt: 2 }}>
+      <Grid container spacing={2}>
         <Grid item xs={6}>
           <StatCard
             label="Total Points"
-            value={statsData.points.value}
+            value={statsData.points.displayValue}
             isSelected={selectedStat === 'points'}
             onClick={() => handleStatClick('points')}
           />
@@ -208,7 +223,7 @@ const YourStatisticsPanel: React.FC = () => {
         <Grid item xs={6}>
           <StatCard
             label="Punctuality"
-            value={statsData.punctuality.value}
+            value={statsData.punctuality.displayValue}
             isSelected={selectedStat === 'punctuality'}
             onClick={() => handleStatClick('punctuality')}
           />
@@ -216,7 +231,7 @@ const YourStatisticsPanel: React.FC = () => {
         <Grid item xs={6}>
           <StatCard
             label="Confidence Score"
-            value={statsData.confidence.value}
+            value={statsData.confidence.displayValue}
             isSelected={selectedStat === 'confidence'}
             onClick={() => handleStatClick('confidence')}
           />
@@ -224,7 +239,7 @@ const YourStatisticsPanel: React.FC = () => {
         <Grid item xs={6}>
           <StatCard
             label="Commitments Made"
-            value={statsData.commitments.value}
+            value={statsData.commitments.displayValue}
             isSelected={selectedStat === 'commitments'}
             onClick={() => handleStatClick('commitments')}
           />
