@@ -58,35 +58,35 @@ const statsData = {
   commitments: {
     title: 'Number of Commitments Made',
     displayValue: '24',
-    color: '#607d8b',
+    color: '#75787b', // Reliably Black
     min: 15,
     max: 30,
   },
   points: {
     title: 'Total Points',
     displayValue: '1234',
-    color: '#4caf50',
+    color: '#97d700', // Reliably Green
     min: 800,
     max: 1500,
   },
   reliability: {
     title: 'Reliability Record (%)',
     displayValue: '88.9%',
-    color: '#1976d2',
+    color: '#004c97', // Reliably Blue
     min: 80,
     max: 99,
   },
   punctuality: {
     title: 'Punctuality Record (%)',
     displayValue: '94.4%',
-    color: '#ff7043',
+    color: '#ff7f41', // Reliably Orange
     min: 85,
     max: 98,
   },
   confidence: {
     title: 'Confidence Score',
     displayValue: '7.9',
-    color: '#f44336',
+    color: '#00b5e2', // Reliably Aqua
     min: 6,
     max: 9,
   },
@@ -257,6 +257,7 @@ const YourStatisticsPanel: React.FC = () => {
       <Box sx={{ flex: 1, minHeight: 250, mb: 2 }}>
         <LineGraph
           title={currentStat.title}
+          yAxisLabel={currentStat.title}
           data={chartData}
           color={currentStat.color}
         />
