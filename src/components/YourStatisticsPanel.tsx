@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Paper,
   Typography,
@@ -22,11 +22,30 @@ import StatCard from './StatCard';
 import LineGraph from './LineGraph';
 
 type StatKey = 'commitments' | 'points' | 'reliability' | 'punctuality' | 'confidence';
+type GroupByOption = 'day' | 'week' | 'month';
 
-const generateMockData = (min: number, max: number) => {
+const generateMockData = (min: number, max: number, groupBy: GroupByOption) => {
   const data = [];
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-  for (let i = 0; i < labels.length; i++) {
+  let labels: string[] = [];
+  let count = 0;
+
+  switch (groupBy) {
+    case 'day':
+      count = 7;
+      labels = Array.from({ length: count }, (_, i) => `Day ${i + 1}`);
+      break;
+    case 'week':
+      count = 4;
+      labels = Array.from({ length: count }, (_, i) => `Week ${i + 1}`);
+      break;
+    case 'month':
+    default:
+      count = 6;
+      labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+      break;
+  }
+
+  for (let i = 0; i < count; i++) {
     data.push({
       name: labels[i],
       value: Math.floor(Math.random() * (max - min + 1)) + min,
@@ -39,49 +58,76 @@ const statsData = {
   commitments: {
     title: 'Number of Commitments Made',
     displayValue: '24',
-    color: '#607d8b', // A neutral color for the default state
-    data: generateMockData(15, 30),
+    color: '#607d8b',
+    min: 15,
+    max: 30,
   },
   points: {
     title: 'Total Points',
     displayValue: '1234',
     color: '#4caf50',
-    data: generateMockData(800, 1500),
+    min: 800,
+    max: 1500,
   },
   reliability: {
     title: 'Reliability Record (%)',
     displayValue: '88.9%',
     color: '#1976d2',
-    data: generateMockData(80, 99),
+    min: 80,
+    max: 99,
   },
   punctuality: {
     title: 'Punctuality Record (%)',
     displayValue: '94.4%',
     color: '#ff7043',
-    data: generateMockData(85, 98),
+    min: 85,
+    max: 98,
   },
   confidence: {
     title: 'Confidence Score',
     displayValue: '7.9',
     color: '#f44336',
-    data: generateMockData(6, 9),
+    min: 6,
+    max: 9,
   },
 };
 
 const YourStatisticsPanel: React.FC = () => {
   const [selectedStat, setSelectedStat] = useState<StatKey>('commitments');
-  const [daysFilter, setDaysFilter] = useState('90');
+  const [groupBy, setGroupBy] = useState<GroupByOption>('week');
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
+  const [chartData, setChartData] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (dateRange[0] && dateRange[1]) {
+      const diffInDays = dateRange[1].diff(dateRange[0], 'day');
+      if (diffInDays <= 31) {
+        setGroupBy('day');
+      } else if (diffInDays <= 90) {
+        setGroupBy('week');
+      } else {
+        setGroupBy('month');
+      }
+    } else {
+      // Default when no range is selected
+      setGroupBy('week');
+    }
+  }, [dateRange]);
+
+  useEffect(() => {
+    const currentStatInfo = statsData[selectedStat];
+    const newData = generateMockData(currentStatInfo.min, currentStatInfo.max, groupBy);
+    setChartData(newData);
+  }, [selectedStat, groupBy, dateRange]);
 
   const handleStatClick = (stat: StatKey) => {
-    // If clicking the active stat, revert to default, otherwise set to new stat
     setSelectedStat(prev => (prev === stat ? 'commitments' : stat));
   };
 
-  const handleDaysFilterChange = (event: SelectChangeEvent) => {
-    setDaysFilter(event.target.value as string);
+  const handleGroupByChange = (event: SelectChangeEvent) => {
+    setGroupBy(event.target.value as GroupByOption);
   };
 
   const handleDateChange = (newValue: Dayjs | null) => {
@@ -153,13 +199,11 @@ const YourStatisticsPanel: React.FC = () => {
           sx={{ flex: 1, cursor: 'pointer' }}
         />
         <FormControl size="small" sx={{ minWidth: 120 }}>
-          <InputLabel>By</InputLabel>
-          <Select value={daysFilter} label="By" onChange={handleDaysFilterChange}>
-            <MenuItem value="7">1 week</MenuItem>
-            <MenuItem value="14">2 weeks</MenuItem>
-            <MenuItem value="30">Last 30 days</MenuItem>
-            <MenuItem value="60">Last 60 days</MenuItem>
-            <MenuItem value="90">Last 90 days</MenuItem>
+          <InputLabel>Group By</InputLabel>
+          <Select value={groupBy} label="Group By" onChange={handleGroupByChange}>
+            <MenuItem value="day">Day</MenuItem>
+            <MenuItem value="week">Week</MenuItem>
+            <MenuItem value="month">Month</MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -213,7 +257,7 @@ const YourStatisticsPanel: React.FC = () => {
       <Box sx={{ flex: 1, minHeight: 250, mb: 2 }}>
         <LineGraph
           title={currentStat.title}
-          data={currentStat.data}
+          data={chartData}
           color={currentStat.color}
         />
       </Box>
