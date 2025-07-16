@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   LineChart,
   Line,
@@ -13,7 +13,6 @@ import {
 interface LineGraphProps {
   data: { name: string; value: number }[];
   title: string;
-  value: string | number;
   color: string;
 }
 
@@ -26,17 +25,9 @@ const CustomDot: React.FC<DotProps & { color: string }> = (props) => {
   );
 };
 
-const LineGraph: React.FC<LineGraphProps> = ({ data, title, value, color }) => {
+const LineGraph: React.FC<LineGraphProps> = ({ data, title, color }) => {
   return (
-    <Box sx={{ height: 300, width: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, px: 1 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-          {title}
-        </Typography>
-        <Typography variant="h5" sx={{ fontWeight: 'bold', color: color }}>
-          {value}
-        </Typography>
-      </Box>
+    <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
@@ -50,11 +41,14 @@ const LineGraph: React.FC<LineGraphProps> = ({ data, title, value, color }) => {
           <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
           <Tooltip
+            formatter={(value: number) => [`${value}`, title]}
             contentStyle={{
               borderRadius: '8px',
               boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
               border: '1px solid #e0e0e0',
             }}
+            labelStyle={{ display: 'none' }}
+            cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: '3 3' }}
           />
           <Line
             type="monotone"

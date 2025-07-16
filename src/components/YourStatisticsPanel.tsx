@@ -21,7 +21,7 @@ import { Dayjs } from 'dayjs';
 import StatCard from './StatCard';
 import LineGraph from './LineGraph';
 
-type StatKey = 'commitments' | 'points' | 'punctuality' | 'confidence';
+type StatKey = 'commitments' | 'points' | 'reliability' | 'punctuality' | 'confidence';
 
 const generateMockData = (min: number, max: number) => {
   const data = [];
@@ -37,9 +37,9 @@ const generateMockData = (min: number, max: number) => {
 
 const statsData = {
   commitments: {
-    title: 'Commitments Made',
+    title: 'Number of Commitments Made',
     displayValue: '24',
-    color: '#1976d2',
+    color: '#607d8b', // A neutral color for the default state
     data: generateMockData(15, 30),
   },
   points: {
@@ -48,8 +48,14 @@ const statsData = {
     color: '#4caf50',
     data: generateMockData(800, 1500),
   },
+  reliability: {
+    title: 'Reliability Record (%)',
+    displayValue: '88.9%',
+    color: '#1976d2',
+    data: generateMockData(80, 99),
+  },
   punctuality: {
-    title: 'Punctuality Record',
+    title: 'Punctuality Record (%)',
     displayValue: '94.4%',
     color: '#ff7043',
     data: generateMockData(85, 98),
@@ -63,14 +69,15 @@ const statsData = {
 };
 
 const YourStatisticsPanel: React.FC = () => {
-  const [selectedStat, setSelectedStat] = useState<StatKey>('punctuality');
+  const [selectedStat, setSelectedStat] = useState<StatKey>('commitments');
   const [daysFilter, setDaysFilter] = useState('90');
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
 
   const handleStatClick = (stat: StatKey) => {
-    setSelectedStat(prev => (prev === stat ? 'punctuality' : stat));
+    // If clicking the active stat, revert to default, otherwise set to new stat
+    setSelectedStat(prev => (prev === stat ? 'commitments' : stat));
   };
 
   const handleDaysFilterChange = (event: SelectChangeEvent) => {
@@ -131,7 +138,7 @@ const YourStatisticsPanel: React.FC = () => {
       </Typography>
 
       {/* Filters */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
         <TextField
           variant="outlined"
           size="small"
@@ -148,6 +155,8 @@ const YourStatisticsPanel: React.FC = () => {
         <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel>By</InputLabel>
           <Select value={daysFilter} label="By" onChange={handleDaysFilterChange}>
+            <MenuItem value="7">1 week</MenuItem>
+            <MenuItem value="14">2 weeks</MenuItem>
             <MenuItem value="30">Last 30 days</MenuItem>
             <MenuItem value="60">Last 60 days</MenuItem>
             <MenuItem value="90">Last 90 days</MenuItem>
@@ -204,7 +213,6 @@ const YourStatisticsPanel: React.FC = () => {
       <Box sx={{ flex: 1, minHeight: 250, mb: 2 }}>
         <LineGraph
           title={currentStat.title}
-          value={currentStat.displayValue}
           data={currentStat.data}
           color={currentStat.color}
         />
@@ -222,7 +230,15 @@ const YourStatisticsPanel: React.FC = () => {
         </Grid>
         <Grid item xs={6}>
           <StatCard
-            label="Punctuality"
+            label="Reliability Record (%)"
+            value={statsData.reliability.displayValue}
+            isSelected={selectedStat === 'reliability'}
+            onClick={() => handleStatClick('reliability')}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <StatCard
+            label="Punctuality Record (%)"
             value={statsData.punctuality.displayValue}
             isSelected={selectedStat === 'punctuality'}
             onClick={() => handleStatClick('punctuality')}
@@ -234,14 +250,6 @@ const YourStatisticsPanel: React.FC = () => {
             value={statsData.confidence.displayValue}
             isSelected={selectedStat === 'confidence'}
             onClick={() => handleStatClick('confidence')}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <StatCard
-            label="Commitments Made"
-            value={statsData.commitments.displayValue}
-            isSelected={selectedStat === 'commitments'}
-            onClick={() => handleStatClick('commitments')}
           />
         </Grid>
       </Grid>
