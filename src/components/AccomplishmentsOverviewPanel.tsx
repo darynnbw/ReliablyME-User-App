@@ -8,7 +8,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper
       sx={{
-        p: 3, // Consistent padding of 24px
+        p: 3, // Consistent padding
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -24,7 +24,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           fontWeight: 600,
           color: 'primary.main',
           fontSize: '1.25rem',
-          mb: 1, // Reduced bottom margin
+          mb: 1,
         }}
       >
         Accomplishments Overview
@@ -32,7 +32,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
 
       <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
 
-      <Grid container spacing={{ xs: 4, sm: 2 }} justifyContent="center" alignItems="flex-start" sx={{ pt: 2, pb: 2 }}>
+      <Grid container spacing={{ xs: 3, sm: 4 }} justifyContent="center" alignItems="flex-start">
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={MyLocation}
