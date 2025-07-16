@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Box } from '@mui/material';
+import { Paper, Typography, Box, Grid } from '@mui/material';
 import { MyLocation, AccessTime, TrendingUp } from '@mui/icons-material';
 import ReliabilityRatingChart from './ReliabilityRatingChart';
 import MetricCard from './MetricCard';
@@ -8,7 +8,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
   return (
     <Paper
       sx={{
-        p: 3,
+        p: 4, // 32px padding on all sides
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -24,7 +24,6 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           fontWeight: 600,
           color: 'primary.main',
           fontSize: '1.25rem',
-          mb: 2,
         }}
       >
         Accomplishments Overview
@@ -34,30 +33,36 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start', width: '100%', pt: 2 }}>
-        <MetricCard
-          icon={MyLocation}
-          value={1247}
-          label="Total Points"
-          iconColor="#1976d2"
-          avatarBgColor="#e3f2fd"
-        />
-        <MetricCard
-          icon={AccessTime}
-          value="94.4"
-          unit="%"
-          label="Punctuality Rate"
-          iconColor="#1976d2"
-          avatarBgColor="#e3f2fd"
-        />
-        <MetricCard
-          icon={TrendingUp}
-          value={2.3}
-          label="Confidence Score"
-          iconColor="#2e7d32"
-          avatarBgColor="#e8f5e9"
-        />
-      </Box>
+      <Grid container spacing={4} justifyContent="center">
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <MetricCard
+            icon={MyLocation}
+            value={1247}
+            label="Total Points"
+            iconColor="#1976d2"
+            avatarBgColor="#e3f2fd"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <MetricCard
+            icon={AccessTime}
+            value="94.4"
+            unit="%"
+            label="Punctuality Rate"
+            iconColor="#1976d2"
+            avatarBgColor="#e3f2fd"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <MetricCard
+            icon={TrendingUp}
+            value={2.3}
+            label="Confidence Score"
+            iconColor="#2e7d32"
+            avatarBgColor="#e8f5e9"
+          />
+        </Grid>
+      </Grid>
     </Paper>
   );
 };

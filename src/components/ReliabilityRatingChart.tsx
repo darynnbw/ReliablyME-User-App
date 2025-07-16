@@ -14,6 +14,8 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
   return (
     <Box
       sx={{
+        pt: 3, // 24px space above chart
+        pb: 4, // 32px space below description
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -56,12 +58,12 @@ const ReliabilityRatingChart: React.FC<ReliabilityRatingChartProps> = ({ value, 
       </Box>
 
       {/* Label */}
-      <Typography variant="subtitle1" sx={{ fontWeight: 700, mt: 2.5 }}>
+      <Typography variant="subtitle1" sx={{ fontWeight: 700, mt: 3 }}> {/* 24px space below chart */}
         Reliability Rating
       </Typography>
 
       {/* Description */}
-      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2, mt: 0.5, fontSize: '0.875rem' }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2, mt: 1, fontSize: '0.875rem' }}> {/* 8px space between title and description */}
         <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
           {`${value}%`}
         </Typography>
