@@ -33,7 +33,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
       </Box>
 
-      <Grid container spacing={4} justifyContent="center">
+      <Grid container spacing={5} justifyContent="center">
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={MyLocation}
