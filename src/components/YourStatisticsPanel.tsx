@@ -271,6 +271,7 @@ const YourStatisticsPanel: React.FC = () => {
             value={statsData.points.displayValue}
             isSelected={selectedStat === 'points'}
             onClick={() => handleStatClick('points')}
+            color={statsData.points.color}
           />
         </Grid>
         <Grid item xs={6}>
@@ -279,6 +280,7 @@ const YourStatisticsPanel: React.FC = () => {
             value={statsData.reliability.displayValue}
             isSelected={selectedStat === 'reliability'}
             onClick={() => handleStatClick('reliability')}
+            color={statsData.reliability.color}
           />
         </Grid>
         <Grid item xs={6}>
@@ -287,6 +289,7 @@ const YourStatisticsPanel: React.FC = () => {
             value={statsData.punctuality.displayValue}
             isSelected={selectedStat === 'punctuality'}
             onClick={() => handleStatClick('punctuality')}
+            color={statsData.punctuality.color}
           />
         </Grid>
         <Grid item xs={6}>
@@ -295,6 +298,7 @@ const YourStatisticsPanel: React.FC = () => {
             value={statsData.confidence.displayValue}
             isSelected={selectedStat === 'confidence'}
             onClick={() => handleStatClick('confidence')}
+            color={statsData.confidence.color}
           />
         </Grid>
       </Grid>

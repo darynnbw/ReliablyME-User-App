@@ -1,14 +1,15 @@
 import React from 'react';
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, alpha } from '@mui/material';
 
 interface StatCardProps {
   label: string;
   value: string | number;
   onClick: () => void;
   isSelected: boolean;
+  color: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, onClick, isSelected }) => {
+const StatCard: React.FC<StatCardProps> = ({ label, value, onClick, isSelected, color }) => {
   return (
     <Paper
       variant="outlined"
@@ -17,8 +18,8 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, onClick, isSelected }
         p: 2,
         textAlign: 'center',
         cursor: 'pointer',
-        borderColor: isSelected ? 'primary.main' : 'grey.300',
-        backgroundColor: isSelected ? '#e3f2fd' : 'white',
+        borderColor: isSelected ? color : 'grey.300',
+        backgroundColor: isSelected ? alpha(color, 0.1) : 'white',
         borderWidth: isSelected ? '2px' : '1px',
         transition: 'all 0.2s ease-in-out',
         height: '100%',
@@ -28,14 +29,14 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, onClick, isSelected }
         '&:hover': {
           transform: 'translateY(-2px)',
           boxShadow: 3,
-          borderColor: 'primary.dark',
+          borderColor: color,
         },
       }}
     >
-      <Typography variant="h5" sx={{ fontWeight: 'bold', color: isSelected ? 'primary.dark' : 'text.primary' }}>
+      <Typography variant="h5" sx={{ fontWeight: 'bold', color: isSelected ? color : 'text.primary' }}>
         {value}
       </Typography>
-      <Typography variant="body2" sx={{ color: isSelected ? 'primary.dark' : 'text.secondary' }}>
+      <Typography variant="body2" sx={{ color: isSelected ? color : 'text.secondary' }}>
         {label}
       </Typography>
     </Paper>
