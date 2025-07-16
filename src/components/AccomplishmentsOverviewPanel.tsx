@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Grid, Box } from '@mui/material';
+import { Paper, Typography, Box } from '@mui/material';
 import { MyLocation, AccessTime, TrendingUp } from '@mui/icons-material';
 import ReliabilityRatingChart from './ReliabilityRatingChart';
 import MetricCard from './MetricCard';
@@ -24,46 +24,40 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           fontWeight: 600,
           color: 'primary.main',
           fontSize: '1.25rem',
-          mb: 1,
+          mb: 2,
         }}
       >
         Accomplishments Overview
       </Typography>
 
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
       </Box>
 
-      <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
-        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <MetricCard
-            icon={MyLocation}
-            value={1247}
-            label="Total Points"
-            iconColor="#1976d2" // Blue icon
-            avatarBgColor="#e3f2fd" // Light blue background
-          />
-        </Grid>
-        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <MetricCard
-            icon={AccessTime}
-            value="94.4"
-            unit="%"
-            label="Punctuality Rate"
-            iconColor="#1976d2" // Blue icon
-            avatarBgColor="#e3f2fd" // Light blue background
-          />
-        </Grid>
-        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <MetricCard
-            icon={TrendingUp}
-            value={2.3}
-            label="Confidence Score"
-            iconColor="#2e7d32" // Green icon
-            avatarBgColor="#e8f5e9" // Light green background
-          />
-        </Grid>
-      </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start', width: '100%', pt: 2 }}>
+        <MetricCard
+          icon={MyLocation}
+          value={1247}
+          label="Total Points"
+          iconColor="#1976d2"
+          avatarBgColor="#e3f2fd"
+        />
+        <MetricCard
+          icon={AccessTime}
+          value="94.4"
+          unit="%"
+          label="Punctuality Rate"
+          iconColor="#1976d2"
+          avatarBgColor="#e3f2fd"
+        />
+        <MetricCard
+          icon={TrendingUp}
+          value={2.3}
+          label="Confidence Score"
+          iconColor="#2e7d32"
+          avatarBgColor="#e8f5e9"
+        />
+      </Box>
     </Paper>
   );
 };

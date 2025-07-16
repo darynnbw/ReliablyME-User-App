@@ -19,7 +19,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
   unit = '',
 }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Avatar sx={{ width: 56, height: 56, bgcolor: avatarBgColor, mb: 1.5 }}>
         <Icon sx={{ color: iconColor, fontSize: 28 }} />
       </Avatar>
