@@ -159,18 +159,34 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 {showAcceptDeclineButtons && (
                   <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
                     <Button
-                      variant="outlined"
-                      color="error"
+                      variant="contained"
                       onClick={onDecline}
-                      sx={{ textTransform: 'none', px: 3, py: 0.5 }}
+                      sx={{
+                        bgcolor: 'error.main',
+                        color: 'white',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                        px: 2.5,
+                        py: 0.75,
+                        borderRadius: 1,
+                        '&:hover': { bgcolor: 'error.dark' },
+                      }}
                     >
                       Decline
                     </Button>
                     <Button
                       variant="contained"
-                      color="success"
                       onClick={onAccept}
-                      sx={{ textTransform: 'none', color: 'white', px: 3, py: 0.5 }}
+                      sx={{
+                        bgcolor: 'success.main',
+                        color: 'white',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                        px: 2.5,
+                        py: 0.75,
+                        borderRadius: 1,
+                        '&:hover': { bgcolor: 'success.dark' },
+                      }}
                     >
                       Accept
                     </Button>

@@ -9,6 +9,7 @@ import {
   Button,
   Divider,
   Stack,
+  InputLabel,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -78,23 +79,31 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
         </Typography>
 
         <Stack spacing={2.5} sx={{ mb: 4 }}>
-          <DatePicker
-            label="Completion Date"
-            value={date}
-            onChange={(newDate) => setDate(newDate)}
-            sx={{ width: '100%' }}
-            slotProps={{
-              popper: {
-                placement: 'bottom',
-              },
-            }}
-          />
-          <TimePicker
-            label="Completion Time"
-            value={time}
-            onChange={(newTime) => setTime(newTime)}
-            sx={{ width: '100%' }}
-          />
+          <Box>
+            <InputLabel sx={{ mb: 1, fontWeight: 500, color: 'text.secondary' }}>
+              Completion Date
+            </InputLabel>
+            <DatePicker
+              value={date}
+              onChange={(newDate) => setDate(newDate)}
+              sx={{ width: '100%' }}
+              slotProps={{
+                popper: {
+                  placement: 'bottom',
+                },
+              }}
+            />
+          </Box>
+          <Box>
+            <InputLabel sx={{ mb: 1, fontWeight: 500, color: 'text.secondary' }}>
+              Completion Time
+            </InputLabel>
+            <TimePicker
+              value={time}
+              onChange={(newTime) => setTime(newTime)}
+              sx={{ width: '100%' }}
+            />
+          </Box>
         </Stack>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
