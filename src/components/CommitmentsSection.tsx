@@ -26,6 +26,8 @@ import {
   CalendarToday,
   Search,
   ArrowUpward,
+  Check,
+  Close,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import dayjs, { Dayjs } from 'dayjs';
@@ -36,6 +38,7 @@ import RequestBadgeModal from './RequestBadgeModal';
 import BulkRequestBadgeModal from './BulkRequestBadgeModal';
 import MyBadgeDetailsModal from './MyBadgeDetailsModal';
 import AcceptRequestModal from './AcceptRequestModal';
+import DeclineModal from './DeclineModal';
 
 dayjs.extend(isBetween);
 
@@ -90,6 +93,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
+  const [bulkDeclineModalOpen, setBulkDeclineModalOpen] = useState(false);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -251,6 +255,21 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     console.log('Committed with date:', date?.format(), 'and time:', time?.format(), 'for commitment:', commitmentToAccept?.id);
     setAcceptModalOpen(false);
     setCommitmentToAccept(null);
+  };
+
+  const handleConfirmBulkDecline = () => {
+    console.log('Bulk declining commitments:', selectedCommitments.map(c => c.id));
+    // Here you would add the logic to actually decline them
+    setBulkDeclineModalOpen(false);
+    // Unselect all after action
+    setCommitments(prev => prev.map(item => ({ ...item, selected: false })));
+    setSelectAll(false);
+  };
+
+  const handleBulkAccept = () => {
+    console.log('Bulk accepting commitments:', selectedCommitments.map(c => c.id));
+    // This might open a modal for each, or a new kind of bulk accept modal.
+    // For now, just logging.
   };
 
   const selectedCommitments = commitments.filter(item => item.selected);
@@ -441,9 +460,31 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
         {!isUnkeptTab && !isBadgesTab && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Checkbox size="small" sx={{ p: 0, mr: 1 }} checked={selectAll} onChange={handleToggleSelectAll} indeterminate={selectedCount > 0 && selectedCount < currentItems.length} />
-              <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} commitments selected</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Checkbox size="small" sx={{ p: 0 }} checked={selectAll} onChange={handleToggleSelectAll} indeterminate={selectedCount > 0 && selectedCount < currentItems.length} />
+              <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} commitment{selectedCount !== 1 ? 's' : ''} selected</Typography>
+              {selectedCount > 0 && isRequestsToCommitTab && (
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Check />}
+                    onClick={handleBulkAccept}
+                    sx={{ bgcolor: 'success.main', '&:hover': { bgcolor: 'success.dark' }, color: 'white', textTransform: 'none' }}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Close />}
+                    onClick={() => setBulkDeclineModalOpen(true)}
+                    sx={{ bgcolor: 'error.main', '&:hover': { bgcolor: 'error.dark' }, color: 'white', textTransform: 'none' }}
+                  >
+                    Decline
+                  </Button>
+                </Box>
+              )}
             </Box>
             {showBulkRequest && (
               <Button
@@ -504,6 +545,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     showAcceptDeclineButtons={isRequestsToCommitTab}
                     onAccept={() => handleAcceptClick(item)}
                     onDecline={() => handleDeclineClick(item)}
+                    isBulkSelecting={selectedCount > 0}
+                    hideDueDate={isRequestsToCommitTab}
                   />
                 ))
               )
@@ -552,6 +595,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         onClose={() => setAcceptModalOpen(false)}
         onCommit={handleCommit}
         commitmentDescription={commitmentToAccept?.description || ''}
+      />
+      <DeclineModal
+        open={bulkDeclineModalOpen}
+        onClose={() => setBulkDeclineModalOpen(false)}
+        title="Decline Invitations"
+        description={
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            Are you sure you want to decline {selectedCount} selected invitation{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+          </Typography>
+        }
+        onDecline={handleConfirmBulkDecline}
       />
     </>
   );

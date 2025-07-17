@@ -31,6 +31,8 @@ interface CommitmentListItemProps {
   showAcceptDeclineButtons?: boolean;
   onAccept?: () => void;
   onDecline?: () => void;
+  isBulkSelecting?: boolean;
+  hideDueDate?: boolean;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -51,6 +53,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showAcceptDeclineButtons = false,
   onAccept,
   onDecline,
+  isBulkSelecting = false,
+  hideDueDate = false,
 }, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
@@ -113,12 +117,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Main content area with vertical stack */}
           <Stack>
             {/* Due Date */}
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-              <CalendarToday sx={{ fontSize: 16, color: color }} />
-              <Typography variant="body2" sx={{ color: '#666' }}>
-                Due {dueDate}
-              </Typography>
-            </Stack>
+            {!hideDueDate && (
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                <CalendarToday sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  Due {dueDate}
+                </Typography>
+              </Stack>
+            )}
 
             {/* Description */}
             <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
@@ -141,6 +147,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   <Button
                     variant="contained"
                     onClick={onActionButtonClick}
+                    disabled={isBulkSelecting}
                     sx={{
                       bgcolor: color,
                       color: 'white',
@@ -161,6 +168,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     <Button
                       variant="contained"
                       onClick={onDecline}
+                      disabled={isBulkSelecting}
                       sx={{
                         bgcolor: 'error.main',
                         color: 'white',
@@ -177,6 +185,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     <Button
                       variant="contained"
                       onClick={onAccept}
+                      disabled={isBulkSelecting}
                       sx={{
                         bgcolor: 'success.main',
                         color: 'white',

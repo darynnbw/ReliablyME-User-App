@@ -15,6 +15,7 @@ interface DeclineModalProps {
   open: boolean;
   onClose: () => void;
   title: string;
+  description?: React.ReactNode;
   onDecline: () => void;
 }
 
@@ -22,12 +23,36 @@ const DeclineModal: React.FC<DeclineModalProps> = ({
   open, 
   onClose, 
   title,
+  description,
   onDecline 
 }) => {
   const handleDecline = () => {
     onDecline();
     onClose();
   };
+
+  const defaultDescription = (
+    <>
+      <Typography variant="body1" sx={{ 
+        fontWeight: 400, 
+        mb: 2, 
+        color: '#333', 
+        fontSize: '16px', 
+        lineHeight: 1.6
+      }}>
+        Are you sure you want to decline this invitation?
+      </Typography>
+      <Typography variant="body2" sx={{ 
+        fontWeight: 400, 
+        mb: 4, 
+        color: '#666', 
+        fontSize: '16px', 
+        lineHeight: 1.6
+      }}>
+        This action cannot be undone. The sender will be notified of your decision.
+      </Typography>
+    </>
+  );
 
   return (
     <Dialog
@@ -57,25 +82,7 @@ const DeclineModal: React.FC<DeclineModalProps> = ({
       <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
 
       <DialogContent sx={{ p: 0 }}>
-        <Typography variant="body1" sx={{ 
-          fontWeight: 400, 
-          mb: 2, 
-          color: '#333', 
-          fontSize: '16px', 
-          lineHeight: 1.6
-        }}>
-          Are you sure you want to decline this invitation?
-        </Typography>
-
-        <Typography variant="body2" sx={{ 
-          fontWeight: 400, 
-          mb: 4, 
-          color: '#666', 
-          fontSize: '16px', 
-          lineHeight: 1.6
-        }}>
-          This action cannot be undone. The sender will be notified of your decision.
-        </Typography>
+        {description || defaultDescription}
 
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
