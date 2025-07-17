@@ -98,12 +98,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     console.log('Clarify button clicked');
   };
 
+  const uniquePeople = [...new Set(tabs.flatMap(tab => tab.items.map(item => item.assignee)))];
+
   const currentItems = commitments.filter(item => {
     const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.assignee.toLowerCase().includes(searchTerm.toLowerCase());
 
     if (!searchMatch) return false;
+
+    const personMatch = !personFilter || item.assignee === personFilter;
+    if (!personMatch) return false;
 
     const itemDate = parseCommitmentDate(item.dueDate);
     let dateMatch = true;
@@ -147,6 +152,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const handleViewCommitmentDetails = () => setModalOpen(true);
   const handleRequestBadge = () => setRequestBadgeModalOpen(true);
+  const handleRequestBadgeFromDetails = () => {
+    setModalOpen(false);
+    setRequestBadgeModalOpen(true);
+  };
 
   const handleViewBadgeDetails = (badge: Commitment) => {
     setSelectedBadge(badge);
@@ -256,7 +265,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <InputLabel>Person</InputLabel>
               <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
                 <MenuItem value="">All</MenuItem>
-                <MenuItem value="Alex Todd">Alex Todd</MenuItem>
+                {uniquePeople.map(person => (
+                  <MenuItem key={person} value={person}>{person}</MenuItem>
+                ))}
               </Select>
             </FormControl>
 
@@ -452,7 +463,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         )}
       </Paper>
 
-      <CommitmentDetailsModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <CommitmentDetailsModal 
+        open={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        onRequestBadgeClick={handleRequestBadgeFromDetails} 
+      />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />
       <BulkRequestBadgeModal
         open={bulkRequestModalOpen}

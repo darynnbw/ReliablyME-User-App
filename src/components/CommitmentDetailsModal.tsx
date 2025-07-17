@@ -14,9 +14,10 @@ import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 interface CommitmentDetailsModalProps {
   open: boolean;
   onClose: () => void;
+  onRequestBadgeClick?: () => void;
 }
 
-const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, onClose }) => {
+const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, onClose, onRequestBadgeClick }) => {
   return (
     <Dialog
       open={open}
@@ -100,6 +101,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Button
             variant="contained"
+            onClick={onRequestBadgeClick}
             sx={{
               bgcolor: '#FF7F41',
               color: 'white',
