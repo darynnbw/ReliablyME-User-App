@@ -264,8 +264,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     onButtonClick = handleClarifyClick;
   } else if (isUnkeptTab) {
     itemColor = '#4F4F4F'; // Grey for unkept promises
-  } else if (isRequestsToCommitTab) {
-    itemColor = '#4caf50'; // Green for requests
   }
 
   const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab;
