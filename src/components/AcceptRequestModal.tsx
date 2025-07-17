@@ -78,31 +78,23 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
         </Typography>
 
         <Stack spacing={2.5} sx={{ mb: 4 }}>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'text.secondary' }}>
-              Completion Date
-            </Typography>
-            <DatePicker
-              value={date}
-              onChange={(newDate) => setDate(newDate)}
-              sx={{ width: '100%' }}
-              slotProps={{
-                popper: {
-                  placement: 'bottom',
-                },
-              }}
-            />
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'text.secondary' }}>
-              Completion Time
-            </Typography>
-            <TimePicker
-              value={time}
-              onChange={(newTime) => setTime(newTime)}
-              sx={{ width: '100%' }}
-            />
-          </Box>
+          <DatePicker
+            label="Completion Date"
+            value={date}
+            onChange={(newDate) => setDate(newDate)}
+            sx={{ width: '100%' }}
+            slotProps={{
+              popper: {
+                placement: 'bottom',
+              },
+            }}
+          />
+          <TimePicker
+            label="Completion Time"
+            value={time}
+            onChange={(newTime) => setTime(newTime)}
+            sx={{ width: '100%' }}
+          />
         </Stack>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
