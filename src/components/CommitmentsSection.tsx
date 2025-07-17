@@ -88,6 +88,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [badgeDetailsModalOpen, setBadgeDetailsModalOpen] = useState(false);
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
+  const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
+  const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -152,8 +154,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   }, [currentItems, title]);
 
-  const handleViewCommitmentDetails = () => setModalOpen(true);
+  const handleViewCommitmentDetails = (item: Commitment) => {
+    setCommitmentForDetails(item);
+    setModalOpen(true);
+  };
+
   const handleRequestBadge = () => setRequestBadgeModalOpen(true);
+  
   const handleRequestBadgeFromDetails = () => {
     setModalOpen(false);
     setRequestBadgeModalOpen(true);
@@ -217,17 +224,26 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setPopoverAnchor(event.currentTarget);
   };
 
-  const handleAcceptClick = () => {
+  const handleAcceptClick = (item: Commitment) => {
+    setCommitmentToAccept(item);
     setAcceptModalOpen(true);
   };
 
-  const handleDeclineClick = () => {
-    console.log('Decline clicked');
+  const handleDeclineClick = (item: Commitment) => {
+    console.log('Decline clicked for:', item.id);
+  };
+
+  const handleAcceptFromDetails = () => {
+    setModalOpen(false);
+    if (commitmentForDetails) {
+      handleAcceptClick(commitmentForDetails);
+    }
   };
 
   const handleCommit = (date: Dayjs | null, time: Dayjs | null) => {
-    console.log('Committed with date:', date?.format(), 'and time:', time?.format());
+    console.log('Committed with date:', date?.format(), 'and time:', time?.format(), 'for commitment:', commitmentToAccept?.id);
     setAcceptModalOpen(false);
+    setCommitmentToAccept(null);
   };
 
   const selectedCommitments = commitments.filter(item => item.selected);
@@ -475,12 +491,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     showCheckbox={!isUnkeptTab}
                     showActionButton={showActionButton}
                     buttonText={buttonText}
-                    onViewDetails={handleViewCommitmentDetails}
+                    onViewDetails={() => handleViewCommitmentDetails(item)}
                     onActionButtonClick={onButtonClick}
                     onToggleSelect={handleToggleSelectItem}
                     showAcceptDeclineButtons={isRequestsToCommitTab}
-                    onAccept={handleAcceptClick}
-                    onDecline={handleDeclineClick}
+                    onAccept={() => handleAcceptClick(item)}
+                    onDecline={() => handleDeclineClick(item)}
                   />
                 ))
               )
@@ -500,6 +516,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       <CommitmentDetailsModal 
         open={modalOpen} 
         onClose={() => setModalOpen(false)} 
+        commitment={commitmentForDetails}
+        isRequest={isRequestsToCommitTab}
+        onAcceptRequestClick={handleAcceptFromDetails}
         onRequestBadgeClick={handleRequestBadgeFromDetails} 
       />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />
@@ -524,6 +543,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         open={acceptModalOpen}
         onClose={() => setAcceptModalOpen(false)}
         onCommit={handleCommit}
+        commitmentDescription={commitmentToAccept?.description || ''}
       />
     </>
   );

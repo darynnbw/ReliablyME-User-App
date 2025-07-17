@@ -11,13 +11,33 @@ import {
 } from '@mui/material';
 import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 
+interface Commitment {
+  title: string;
+  description: string;
+  assignee: string;
+  dueDate: string;
+  committedDate?: string;
+}
+
 interface CommitmentDetailsModalProps {
   open: boolean;
   onClose: () => void;
+  commitment: Commitment | null;
   onRequestBadgeClick?: () => void;
+  isRequest?: boolean;
+  onAcceptRequestClick?: () => void;
 }
 
-const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, onClose, onRequestBadgeClick }) => {
+const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
+  open,
+  onClose,
+  commitment,
+  onRequestBadgeClick,
+  isRequest,
+  onAcceptRequestClick,
+}) => {
+  if (!commitment) return null;
+
   return (
     <Dialog
       open={open}
@@ -47,7 +67,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
 
       <DialogContent sx={{ p: 0 }}>
         <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>
-          Promise Kept General
+          {commitment.title}
         </Typography>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
@@ -56,7 +76,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               To:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                Alex Johnson
+                {commitment.assignee}
               </Typography>
             </Typography>
           </Box>
@@ -66,20 +86,22 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               Due:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                Apr 4, 9:30 PM
+                {commitment.dueDate}
               </Typography>
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
-            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Committed:{' '}
-              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                Mar 27, 9:15 PM
+          {commitment.committedDate && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                Committed:{' '}
+                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                  {commitment.committedDate}
+                </Typography>
               </Typography>
-            </Typography>
-          </Box>
+            </Box>
+          )}
         </Box>
 
         <Box 
@@ -92,31 +114,42 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({ open, o
           }}
         >
           <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-            I will review and provide approval for the proposed changes to our design system components
+            {commitment.description}
           </Typography>
         </Box>
 
         <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="contained"
-            onClick={onRequestBadgeClick}
-            sx={{
-              bgcolor: '#FF7F41',
-              color: 'white',
-              textTransform: 'none',
-              fontWeight: 'bold',
-              width: '100%',
-              py: 1,
-              borderRadius: 1,
-              fontSize: '16px',
-              '&:hover': { bgcolor: '#F4611A' },
-            }}
-          >
-            Request Badge
-          </Button>
-        </Box>
+        {isRequest ? (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button variant="outlined" onClick={onClose} sx={{ textTransform: 'none' }}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={onAcceptRequestClick} sx={{ textTransform: 'none' }}>
+              Commit
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              onClick={onRequestBadgeClick}
+              sx={{
+                bgcolor: '#FF7F41',
+                color: 'white',
+                textTransform: 'none',
+                fontWeight: 'bold',
+                width: '100%',
+                py: 1,
+                borderRadius: 1,
+                fontSize: '16px',
+                '&:hover': { bgcolor: '#F4611A' },
+              }}
+            >
+              Request Badge
+            </Button>
+          </Box>
+        )}
       </DialogContent>
     </Dialog>
   );

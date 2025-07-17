@@ -25,6 +25,7 @@ const DueSoonOverdue: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
+  const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
   const dueSoonItems = [
     {
@@ -87,6 +88,11 @@ const DueSoonOverdue: React.FC = () => {
       dueDate: '13th June, 11:30',
     },
   ];
+
+  const handleViewDetails = (item: any) => {
+    setCommitmentForDetails(item);
+    setModalOpen(true);
+  };
 
   const currentItems = activeTab === 0 ? dueSoonItems : overdueItems;
   const isOverdue = activeTab === 1;
@@ -194,7 +200,7 @@ const DueSoonOverdue: React.FC = () => {
                       )}
                     </Box>
                     <Tooltip title="View details" placement="top" arrow>
-                      <IconButton size="small" onClick={() => setModalOpen(true)}>
+                      <IconButton size="small" onClick={() => handleViewDetails(item)}>
                         <MoreHoriz />
                       </IconButton>
                     </Tooltip>
@@ -290,6 +296,7 @@ const DueSoonOverdue: React.FC = () => {
       <CommitmentDetailsModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        commitment={commitmentForDetails}
       />
 
       <RequestBadgeModal

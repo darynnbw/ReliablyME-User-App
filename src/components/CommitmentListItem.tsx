@@ -11,7 +11,7 @@ import {
   Stack,
   alpha,
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Shield, Check, Close } from '@mui/icons-material';
+import { CalendarToday, Person, MoreHoriz, Shield } from '@mui/icons-material';
 
 interface CommitmentListItemProps {
   id: number;
@@ -158,32 +158,24 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 )}
                 {showAcceptDeclineButtons && (
                   <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                    <Tooltip title="Accept" placement="top" arrow>
-                      <IconButton
-                        size="small"
-                        onClick={onAccept}
-                        sx={{
-                          bgcolor: '#e8f5e8',
-                          color: '#4caf50',
-                          '&:hover': { bgcolor: '#d4edda' },
-                        }}
-                      >
-                        <Check fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Decline" placement="top" arrow>
-                      <IconButton
-                        size="small"
-                        onClick={onDecline}
-                        sx={{
-                          bgcolor: '#fde8e8',
-                          color: '#f44336',
-                          '&:hover': { bgcolor: '#f8d7da' },
-                        }}
-                      >
-                        <Close fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                      onClick={onDecline}
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Decline
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      size="small"
+                      onClick={onAccept}
+                      sx={{ textTransform: 'none', color: 'white' }}
+                    >
+                      Accept
+                    </Button>
                   </Box>
                 )}
               </Box>

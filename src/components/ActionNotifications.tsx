@@ -31,6 +31,7 @@ const ActionNotifications: React.FC = () => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [declineModalOpen, setDeclineModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
   const notifications = [
     {
@@ -40,6 +41,7 @@ const ActionNotifications: React.FC = () => {
       description: 'I will join the project kickoff meeting to discuss the upcoming launch and provide my input on the project roadmap.',
       assignee: 'Chris Parker',
       actions: ['accept', 'decline'],
+      dueDate: 'Apr 10, 5:00 PM',
     },
     {
       id: 2,
@@ -48,6 +50,7 @@ const ActionNotifications: React.FC = () => {
       description: 'Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text.',
       assignee: 'Chris Parker',
       actions: ['edit'],
+      dueDate: 'Apr 11, 9:00 AM',
     },
     {
       id: 3,
@@ -56,6 +59,7 @@ const ActionNotifications: React.FC = () => {
       description: 'Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text.',
       assignee: 'Chris Parker',
       actions: ['accept', 'decline', 'undo'],
+      dueDate: 'Apr 12, 12:00 PM',
     },
     {
       id: 4,
@@ -64,6 +68,7 @@ const ActionNotifications: React.FC = () => {
       description: 'Please review the weekly progress report and provide feedback on the team performance metrics.',
       assignee: 'Sarah Wilson',
       actions: ['accept', 'decline'],
+      dueDate: 'Apr 13, 2:00 PM',
     },
     {
       id: 5,
@@ -72,6 +77,7 @@ const ActionNotifications: React.FC = () => {
       description: 'Your input is needed on the latest pull request for the authentication system updates.',
       assignee: 'Mike Johnson',
       actions: ['edit'],
+      dueDate: 'Apr 14, 4:00 PM',
     },
   ];
 
@@ -119,6 +125,11 @@ const ActionNotifications: React.FC = () => {
 
   const handleDecline = () => {
     console.log('Declined invitation:', selectedNotification?.title);
+  };
+
+  const handleViewDetails = (notification: any) => {
+    setCommitmentForDetails(notification);
+    setModalOpen(true);
   };
 
   return (
@@ -202,7 +213,7 @@ const ActionNotifications: React.FC = () => {
                       />
                     </Box>
                     <Tooltip title="View details" placement="top" arrow>
-                      <IconButton size="small" onClick={() => setModalOpen(true)}>
+                      <IconButton size="small" onClick={() => handleViewDetails(notification)}>
                         <MoreHoriz />
                       </IconButton>
                     </Tooltip>
@@ -331,6 +342,7 @@ const ActionNotifications: React.FC = () => {
       <CommitmentDetailsModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        commitment={commitmentForDetails}
       />
 
       <AnswerNudgeModal

@@ -19,9 +19,10 @@ interface AcceptRequestModalProps {
   open: boolean;
   onClose: () => void;
   onCommit: (date: Dayjs | null, time: Dayjs | null) => void;
+  commitmentDescription: string;
 }
 
-const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, onCommit }) => {
+const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, onCommit, commitmentDescription }) => {
   const [date, setDate] = useState<Dayjs | null>(null);
   const [time, setTime] = useState<Dayjs | null>(null);
 
@@ -40,7 +41,7 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
         sx: {
           borderRadius: 3,
           p: 3,
-          maxWidth: '450px',
+          maxWidth: '500px',
         },
       }}
     >
@@ -58,19 +59,33 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
       <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
       <DialogContent sx={{ p: 0 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: '#333', fontSize: '18px' }}>
+        <Box 
+          sx={{ 
+            mb: 3,
+            bgcolor: '#f8f9fa',
+            p: 2,
+            borderRadius: 2,
+            border: '1px solid #e9ecef'
+          }}
+        >
+          <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+            {commitmentDescription}
+          </Typography>
+        </Box>
+
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '18px' }}>
           When do you plan to complete this?
         </Typography>
 
         <Stack spacing={2.5} sx={{ mb: 4 }}>
           <DatePicker
-            label="Select a date"
+            label="Completion Date"
             value={date}
             onChange={(newDate) => setDate(newDate)}
             sx={{ width: '100%' }}
           />
           <TimePicker
-            label="Select a time"
+            label="Completion Time"
             value={time}
             onChange={(newTime) => setTime(newTime)}
             sx={{ width: '100%' }}
