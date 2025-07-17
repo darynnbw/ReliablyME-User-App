@@ -35,6 +35,7 @@ import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
 import BulkRequestBadgeModal from './BulkRequestBadgeModal';
 import MyBadgeDetailsModal from './MyBadgeDetailsModal';
+import AcceptRequestModal from './AcceptRequestModal';
 
 dayjs.extend(isBetween);
 
@@ -86,6 +87,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [currentPage, setCurrentPage] = useState(1);
   const [badgeDetailsModalOpen, setBadgeDetailsModalOpen] = useState(false);
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
+  const [acceptModalOpen, setAcceptModalOpen] = useState(false);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -215,12 +217,26 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setPopoverAnchor(event.currentTarget);
   };
 
+  const handleAcceptClick = () => {
+    setAcceptModalOpen(true);
+  };
+
+  const handleDeclineClick = () => {
+    console.log('Decline clicked');
+  };
+
+  const handleCommit = (date: Dayjs | null, time: Dayjs | null) => {
+    console.log('Committed with date:', date?.format(), 'and time:', time?.format());
+    setAcceptModalOpen(false);
+  };
+
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
   const isMyCommitments = title === 'My Commitments';
+  const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
 
   let itemColor = '#ff7043'; // Default for 'My Promises'
   let buttonText = 'Request Badge';
@@ -232,9 +248,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     onButtonClick = handleClarifyClick;
   } else if (isUnkeptTab) {
     itemColor = '#4F4F4F'; // Grey for unkept promises
+  } else if (isRequestsToCommitTab) {
+    itemColor = '#4caf50'; // Green for requests
   }
 
-  const showActionButton = !isUnkeptTab && !isBadgesTab;
+  const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab;
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
 
   const itemsPerPage = 15;
@@ -448,7 +466,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   />
                 ))
               ) : (
-                paginatedItems.map((item, index) => <CommitmentListItem key={item.id} {...item} ref={index === 0 ? firstItemRef : null} color={itemColor} showCheckbox={!isUnkeptTab} showActionButton={showActionButton} buttonText={buttonText} onViewDetails={handleViewCommitmentDetails} onActionButtonClick={onButtonClick} onToggleSelect={handleToggleSelectItem} />)
+                paginatedItems.map((item, index) => (
+                  <CommitmentListItem
+                    key={item.id}
+                    {...item}
+                    ref={index === 0 ? firstItemRef : null}
+                    color={itemColor}
+                    showCheckbox={!isUnkeptTab}
+                    showActionButton={showActionButton}
+                    buttonText={buttonText}
+                    onViewDetails={handleViewCommitmentDetails}
+                    onActionButtonClick={onButtonClick}
+                    onToggleSelect={handleToggleSelectItem}
+                    showAcceptDeclineButtons={isRequestsToCommitTab}
+                    onAccept={handleAcceptClick}
+                    onDecline={handleDeclineClick}
+                  />
+                ))
               )
             ) : (
               <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>No items found.</Typography>
@@ -485,6 +519,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           recipient: selectedBadge.assignee,
           committedDate: selectedBadge.committedDate,
         } : null}
+      />
+      <AcceptRequestModal
+        open={acceptModalOpen}
+        onClose={() => setAcceptModalOpen(false)}
+        onCommit={handleCommit}
       />
     </>
   );

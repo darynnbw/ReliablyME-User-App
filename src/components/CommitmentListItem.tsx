@@ -11,7 +11,7 @@ import {
   Stack,
   alpha,
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Shield } from '@mui/icons-material';
+import { CalendarToday, Person, MoreHoriz, Shield, Check, Close } from '@mui/icons-material';
 
 interface CommitmentListItemProps {
   id: number;
@@ -28,6 +28,9 @@ interface CommitmentListItemProps {
   onActionButtonClick: () => void;
   onToggleSelect: (id: number, checked: boolean) => void;
   showBadgePlaceholder?: boolean;
+  showAcceptDeclineButtons?: boolean;
+  onAccept?: () => void;
+  onDecline?: () => void;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -45,6 +48,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onActionButtonClick,
   onToggleSelect,
   showBadgePlaceholder = false,
+  showAcceptDeclineButtons = false,
+  onAccept,
+  onDecline,
 }, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
@@ -129,25 +135,58 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 </Typography>
               </Stack>
 
-              {/* Button */}
-              <Button
-                variant="contained"
-                onClick={onActionButtonClick}
-                sx={{
-                  bgcolor: color,
-                  color: 'white',
-                  textTransform: 'none',
-                  fontWeight: 'bold',
-                  px: 3,
-                  py: 1,
-                  borderRadius: 1,
-                  flexShrink: 0,
-                  '&:hover': { bgcolor: alpha(color, 0.8) },
-                  visibility: showActionButton ? 'visible' : 'hidden',
-                }}
-              >
-                {buttonText}
-              </Button>
+              {/* Action Buttons */}
+              <Box sx={{ minWidth: 130, textAlign: 'right' }}>
+                {showActionButton && (
+                  <Button
+                    variant="contained"
+                    onClick={onActionButtonClick}
+                    sx={{
+                      bgcolor: color,
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                      px: 3,
+                      py: 1,
+                      borderRadius: 1,
+                      flexShrink: 0,
+                      '&:hover': { bgcolor: alpha(color, 0.8) },
+                    }}
+                  >
+                    {buttonText}
+                  </Button>
+                )}
+                {showAcceptDeclineButtons && (
+                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                    <Tooltip title="Accept" placement="top" arrow>
+                      <IconButton
+                        size="small"
+                        onClick={onAccept}
+                        sx={{
+                          bgcolor: '#e8f5e8',
+                          color: '#4caf50',
+                          '&:hover': { bgcolor: '#d4edda' },
+                        }}
+                      >
+                        <Check fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Decline" placement="top" arrow>
+                      <IconButton
+                        size="small"
+                        onClick={onDecline}
+                        sx={{
+                          bgcolor: '#fde8e8',
+                          color: '#f44336',
+                          '&:hover': { bgcolor: '#f8d7da' },
+                        }}
+                      >
+                        <Close fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                )}
+              </Box>
             </Box>
           </Stack>
         </Box>
