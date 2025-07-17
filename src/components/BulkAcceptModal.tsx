@@ -9,11 +9,11 @@ import {
   Button,
   Divider,
   Stack,
+  Chip,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { PickersActionBar, PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import dayjs, { Dayjs } from 'dayjs';
 
 const presetTimes = [
@@ -68,21 +68,6 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
   const currentCommitment = commitments[currentIndex];
   const isLastItem = currentIndex === commitments.length - 1;
 
-  const CustomTimePickerActionBar = (props: PickersActionBarProps) => {
-    return (
-      <Box>
-        <PickersActionBar {...props} />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, p: 1.5, borderTop: '1px solid', borderColor: 'divider' }}>
-          {presetTimes.map(({ label, value }) => (
-            <Button key={label} size="small" variant="outlined" onClick={() => setTime(value)}>
-              {label}
-            </Button>
-          ))}
-        </Box>
-      </Box>
-    );
-  };
-
   return (
     <Dialog
       open={open}
@@ -129,7 +114,7 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
           When do you plan to complete this?
         </Typography>
 
-        <Stack spacing={2.5} sx={{ mb: 4 }}>
+        <Stack spacing={2}>
           <DatePicker
             label="Completion Date"
             value={date}
@@ -151,9 +136,6 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
             value={time}
             onChange={(newTime) => setTime(newTime)}
             sx={{ width: '100%' }}
-            slots={{
-              actionBar: CustomTimePickerActionBar,
-            }}
             slotProps={{
               textField: {
                 InputLabelProps: {
@@ -162,9 +144,20 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
               },
             }}
           />
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, pt: 0.5 }}>
+            {presetTimes.map(({ label, value }) => (
+              <Chip
+                key={label}
+                label={label}
+                onClick={() => setTime(value)}
+                variant="outlined"
+                clickable
+              />
+            ))}
+          </Box>
         </Stack>
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
           <Button
             variant="contained"
             onClick={handleNext}
