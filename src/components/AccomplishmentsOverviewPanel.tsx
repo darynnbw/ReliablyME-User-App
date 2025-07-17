@@ -12,6 +12,7 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'center', // Center content vertically
         bgcolor: '#ffffff',
         borderRadius: 3,
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
@@ -24,59 +25,47 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           fontWeight: 600,
           color: 'primary.main',
           fontSize: '1.25rem',
+          textAlign: 'center',
+          mb: 3, // Space between title and chart
         }}
       >
         Accomplishments Overview
       </Typography>
 
-      {/* This Box will take the remaining space and center its content */}
-      <Box
-        sx={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {/* The content to be centered */}
-        <Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-            <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
-          </Box>
-
-          <Grid container spacing={5} justifyContent="center">
-            <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-              <MetricCard
-                icon={MyLocation}
-                value={1247}
-                label="Total Points"
-                iconColor="#1976d2"
-                avatarBgColor="#e3f2fd"
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-              <MetricCard
-                icon={AccessTime}
-                value="94.4"
-                unit="%"
-                label="Punctuality Rate"
-                iconColor="#1976d2"
-                avatarBgColor="#e3f2fd"
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-              <MetricCard
-                icon={TrendingUp}
-                value={2.3}
-                label="Confidence Score"
-                iconColor="#2e7d32"
-                avatarBgColor="#e8f5e9"
-              />
-            </Grid>
-          </Grid>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}> {/* Space between chart and stats */}
+        <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
       </Box>
+
+      <Grid container spacing={5} justifyContent="center">
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <MetricCard
+            icon={MyLocation}
+            value={1247}
+            label="Total Points"
+            iconColor="#1976d2"
+            avatarBgColor="#e3f2fd"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <MetricCard
+            icon={AccessTime}
+            value="94.4"
+            unit="%"
+            label="Punctuality Rate"
+            iconColor="#1976d2"
+            avatarBgColor="#e3f2fd"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <MetricCard
+            icon={TrendingUp}
+            value={2.3}
+            label="Confidence Score"
+            iconColor="#2e7d32"
+            avatarBgColor="#e8f5e9"
+          />
+        </Grid>
+      </Grid>
     </Paper>
   );
 };
