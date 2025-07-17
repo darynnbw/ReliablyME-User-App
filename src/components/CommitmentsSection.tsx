@@ -39,6 +39,7 @@ import BulkRequestBadgeModal from './BulkRequestBadgeModal';
 import MyBadgeDetailsModal from './MyBadgeDetailsModal';
 import AcceptRequestModal from './AcceptRequestModal';
 import DeclineModal from './DeclineModal';
+import BulkAcceptModal from './BulkAcceptModal';
 
 dayjs.extend(isBetween);
 
@@ -94,6 +95,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
   const [bulkDeclineModalOpen, setBulkDeclineModalOpen] = useState(false);
+  const [bulkAcceptModalOpen, setBulkAcceptModalOpen] = useState(false);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -267,9 +269,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   };
 
   const handleBulkAccept = () => {
-    console.log('Bulk accepting commitments:', selectedCommitments.map(c => c.id));
-    // This might open a modal for each, or a new kind of bulk accept modal.
-    // For now, just logging.
+    setBulkAcceptModalOpen(true);
   };
 
   const selectedCommitments = commitments.filter(item => item.selected);
@@ -470,7 +470,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     size="small"
                     startIcon={<Check />}
                     onClick={handleBulkAccept}
-                    sx={{ bgcolor: 'success.main', '&:hover': { bgcolor: 'success.dark' }, color: 'white', textTransform: 'none' }}
+                    sx={{ 
+                      bgcolor: '#E7F5E8',
+                      color: '#4CAF50',
+                      textTransform: 'none',
+                      '&:hover': { bgcolor: '#d4edda' }
+                    }}
                   >
                     Accept
                   </Button>
@@ -479,7 +484,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     size="small"
                     startIcon={<Close />}
                     onClick={() => setBulkDeclineModalOpen(true)}
-                    sx={{ bgcolor: 'error.main', '&:hover': { bgcolor: 'error.dark' }, color: 'white', textTransform: 'none' }}
+                    sx={{ 
+                      bgcolor: '#FCE8E8',
+                      color: '#F44336',
+                      textTransform: 'none',
+                      '&:hover': { bgcolor: '#f8d7da' }
+                    }}
                   >
                     Decline
                   </Button>
@@ -606,6 +616,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Typography>
         }
         onDecline={handleConfirmBulkDecline}
+      />
+      <BulkAcceptModal
+        open={bulkAcceptModalOpen}
+        onClose={() => setBulkAcceptModalOpen(false)}
+        commitments={selectedCommitments}
       />
     </>
   );

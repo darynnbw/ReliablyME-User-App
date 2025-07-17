@@ -126,29 +126,32 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
           <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
             <Button
               variant="contained"
-              color="error"
               onClick={onDeclineRequestClick}
               fullWidth
               sx={{
+                bgcolor: '#FCE8E8',
+                color: '#F44336',
                 textTransform: 'none',
                 py: 1.5,
                 fontSize: '16px',
                 fontWeight: 600,
+                '&:hover': { bgcolor: '#f8d7da' },
               }}
             >
               Decline
             </Button>
             <Button
               variant="contained"
-              color="success"
               onClick={onAcceptRequestClick}
               fullWidth
               sx={{
+                bgcolor: '#E7F5E8',
+                color: '#4CAF50',
                 textTransform: 'none',
                 py: 1.5,
                 fontSize: '16px',
                 fontWeight: 600,
-                color: 'white',
+                '&:hover': { bgcolor: '#d4edda' },
               }}
             >
               Accept

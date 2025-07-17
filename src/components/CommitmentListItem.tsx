@@ -170,14 +170,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       onClick={onDecline}
                       disabled={isBulkSelecting}
                       sx={{
-                        bgcolor: 'error.main',
-                        color: 'white',
+                        bgcolor: '#FCE8E8',
+                        color: '#F44336',
                         textTransform: 'none',
                         fontWeight: 'bold',
                         px: 2.5,
                         py: 0.75,
                         borderRadius: 1,
-                        '&:hover': { bgcolor: 'error.dark' },
+                        '&:hover': { bgcolor: '#f8d7da' },
                       }}
                     >
                       Decline
@@ -187,14 +187,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       onClick={onAccept}
                       disabled={isBulkSelecting}
                       sx={{
-                        bgcolor: 'success.main',
-                        color: 'white',
+                        bgcolor: '#E7F5E8',
+                        color: '#4CAF50',
                         textTransform: 'none',
                         fontWeight: 'bold',
                         px: 2.5,
                         py: 0.75,
                         borderRadius: 1,
-                        '&:hover': { bgcolor: 'success.dark' },
+                        '&:hover': { bgcolor: '#d4edda' },
                       }}
                     >
                       Accept
