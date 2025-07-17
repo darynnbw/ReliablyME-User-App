@@ -29,11 +29,8 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
         Accomplishments Overview
       </Typography>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
-      </Box>
-
-      <Grid container spacing={5} justifyContent="center">
+      {/* Stats row moved up */}
+      <Grid container spacing={5} justifyContent="center" sx={{ mt: 4, mb: 4 }}>
         <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <MetricCard
             icon={MyLocation}
@@ -63,6 +60,11 @@ const AccomplishmentsOverviewPanel: React.FC = () => {
           />
         </Grid>
       </Grid>
+
+      {/* Chart section now below stats */}
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <ReliabilityRatingChart value={85.7} commitments={24} days={90} />
+      </Box>
     </Paper>
   );
 };
