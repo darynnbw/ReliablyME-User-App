@@ -161,18 +161,16 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     <Button
                       variant="outlined"
                       color="error"
-                      size="small"
                       onClick={onDecline}
-                      sx={{ textTransform: 'none' }}
+                      sx={{ textTransform: 'none', px: 3, py: 0.5 }}
                     >
                       Decline
                     </Button>
                     <Button
                       variant="contained"
                       color="success"
-                      size="small"
                       onClick={onAccept}
-                      sx={{ textTransform: 'none', color: 'white' }}
+                      sx={{ textTransform: 'none', color: 'white', px: 3, py: 0.5 }}
                     >
                       Accept
                     </Button>

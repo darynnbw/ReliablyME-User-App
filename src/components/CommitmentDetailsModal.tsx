@@ -26,6 +26,7 @@ interface CommitmentDetailsModalProps {
   onRequestBadgeClick?: () => void;
   isRequest?: boolean;
   onAcceptRequestClick?: () => void;
+  onDeclineRequestClick?: () => void;
 }
 
 const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
@@ -35,6 +36,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
   onRequestBadgeClick,
   isRequest,
   onAcceptRequestClick,
+  onDeclineRequestClick,
 }) => {
   if (!commitment) return null;
 
@@ -121,12 +123,35 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
         <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
         {isRequest ? (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <Button variant="outlined" onClick={onClose} sx={{ textTransform: 'none' }}>
-              Cancel
+          <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={onDeclineRequestClick}
+              fullWidth
+              sx={{
+                textTransform: 'none',
+                py: 1.5,
+                fontSize: '16px',
+                fontWeight: 600,
+              }}
+            >
+              Decline
             </Button>
-            <Button variant="contained" onClick={onAcceptRequestClick} sx={{ textTransform: 'none' }}>
-              Commit
+            <Button
+              variant="contained"
+              color="success"
+              onClick={onAcceptRequestClick}
+              fullWidth
+              sx={{
+                textTransform: 'none',
+                py: 1.5,
+                fontSize: '16px',
+                fontWeight: 600,
+                color: 'white',
+              }}
+            >
+              Accept
             </Button>
           </Box>
         ) : (
