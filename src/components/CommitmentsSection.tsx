@@ -240,6 +240,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   };
 
+  const handleDeclineFromDetails = () => {
+    if (commitmentForDetails) {
+      handleDeclineClick(commitmentForDetails);
+    }
+    setModalOpen(false);
+  };
+
   const handleCommit = (date: Dayjs | null, time: Dayjs | null) => {
     console.log('Committed with date:', date?.format(), 'and time:', time?.format(), 'for commitment:', commitmentToAccept?.id);
     setAcceptModalOpen(false);
@@ -517,6 +524,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         commitment={commitmentForDetails}
         isRequest={isRequestsToCommitTab}
         onAcceptRequestClick={handleAcceptFromDetails}
+        onDeclineRequestClick={handleDeclineFromDetails}
         onRequestBadgeClick={handleRequestBadgeFromDetails} 
       />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />

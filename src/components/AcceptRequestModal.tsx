@@ -78,74 +78,52 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
         </Typography>
 
         <Stack spacing={2.5} sx={{ mb: 4 }}>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'text.secondary' }}>
-              Completion Date
-            </Typography>
-            <DatePicker
-              value={date}
-              onChange={(newDate) => setDate(newDate)}
-              sx={{ width: '100%' }}
-            />
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'text.secondary' }}>
-              Completion Time
-            </Typography>
-            <TimePicker
-              value={time}
-              onChange={(newTime) => setTime(newTime)}
-              sx={{ width: '100%' }}
-            />
-          </Box>
+          <DatePicker
+            label="Completion Date"
+            value={date}
+            onChange={(newDate) => setDate(newDate)}
+            sx={{ width: '100%' }}
+            slotProps={{
+              popper: {
+                placement: 'bottom-start'
+              }
+            }}
+          />
+          <TimePicker
+            label="Completion Time"
+            value={time}
+            onChange={(newTime) => setTime(newTime)}
+            sx={{ width: '100%' }}
+            slotProps={{
+              popper: {
+                placement: 'bottom-start'
+              }
+            }}
+          />
         </Stack>
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={onClose}
-            sx={{
-              color: '#666',
-              borderColor: '#ddd',
-              textTransform: 'none',
-              flex: 1,
-              height: '40px',
-              borderRadius: 1,
-              fontWeight: 500,
-              fontSize: '14px',
-              '&:hover': { 
-                borderColor: '#bbb',
-                bgcolor: '#f9f9f9'
-              },
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleCommit}
-            disabled={!date || !time}
-            sx={{
-              bgcolor: '#ff7043',
-              color: 'white',
-              textTransform: 'none',
-              flex: 1,
-              height: '40px',
-              borderRadius: 1,
-              fontWeight: 600,
-              fontSize: '14px',
-              '&:hover': { 
-                bgcolor: '#f4511e'
-              },
-              '&:disabled': { 
-                bgcolor: '#e0e0e0',
-                color: '#9e9e9e'
-              },
-            }}
-          >
-            Commit
-          </Button>
-        </Box>
+        <Button
+          variant="contained"
+          onClick={handleCommit}
+          disabled={!date || !time}
+          fullWidth
+          sx={{
+            bgcolor: '#FF7F41',
+            color: 'white',
+            textTransform: 'none',
+            fontWeight: 'bold',
+            py: 1.5,
+            borderRadius: 1,
+            fontSize: '16px',
+            '&:hover': { bgcolor: '#F4611A' },
+            '&:disabled': { 
+              bgcolor: '#e0e0e0',
+              color: '#9e9e9e'
+            },
+          }}
+        >
+          Commit
+        </Button>
       </DialogContent>
     </Dialog>
   );

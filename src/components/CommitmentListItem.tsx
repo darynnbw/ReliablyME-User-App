@@ -97,7 +97,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             onChange={handleCheckboxChange}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -111,7 +111,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Box>
 
           {/* Main content area with vertical stack */}
-          <Stack>
+          <Stack sx={{ flex: 1 }}>
             {/* Due Date */}
             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
               <CalendarToday sx={{ fontSize: 16, color: color }} />
@@ -121,13 +121,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5, flex: 1 }}>
               {description}
             </Typography>
 
             {/* Bottom row: Assignee and Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-              {/* Assignee */}
+            <Stack spacing={1.5} sx={{ mt: 'auto' }}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
@@ -135,9 +134,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 </Typography>
               </Stack>
 
-              {/* Action Buttons */}
-              <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-                {showActionButton && (
+              {showActionButton && (
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <Button
                     variant="contained"
                     onClick={onActionButtonClick}
@@ -155,31 +153,29 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   >
                     {buttonText}
                   </Button>
-                )}
-                {showAcceptDeclineButtons && (
-                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      onClick={onDecline}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      Decline
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      size="small"
-                      onClick={onAccept}
-                      sx={{ textTransform: 'none', color: 'white' }}
-                    >
-                      Accept
-                    </Button>
-                  </Box>
-                )}
-              </Box>
-            </Box>
+                </Box>
+              )}
+              {showAcceptDeclineButtons && (
+                <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={onAccept}
+                    sx={{ textTransform: 'none', color: 'white', flex: 1, py: 1, fontWeight: 600 }}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={onDecline}
+                    sx={{ textTransform: 'none', flex: 1, py: 1, fontWeight: 600 }}
+                  >
+                    Decline
+                  </Button>
+                </Box>
+              )}
+            </Stack>
           </Stack>
         </Box>
       </CardContent>
