@@ -46,7 +46,7 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
       setDate(null);
       setTime(null);
     }
-  }, [open]);
+  }, [open, commitments]);
 
   if (!open || commitments.length === 0) {
     return null;
@@ -67,6 +67,21 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
 
   const currentCommitment = commitments[currentIndex];
   const isLastItem = currentIndex === commitments.length - 1;
+
+  const today = dayjs();
+  const tomorrow = today.add(1, 'day');
+  let thisFriday = today.day(5);
+  if (thisFriday.isBefore(today, 'day')) {
+    thisFriday = thisFriday.add(7, 'day');
+  }
+  const inOneWeek = today.add(1, 'week');
+
+  const presetDates = [
+    { label: `Today (${today.format('MMM D')})`, value: today },
+    { label: `Tomorrow (${tomorrow.format('MMM D')})`, value: tomorrow },
+    { label: `This Friday (${thisFriday.format('MMM D')})`, value: thisFriday },
+    { label: `In 1 week (${inOneWeek.format('MMM D')})`, value: inOneWeek },
+  ];
 
   return (
     <Dialog
@@ -115,45 +130,60 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
         </Typography>
 
         <Stack spacing={2}>
-          <DatePicker
-            label="Completion Date"
-            value={date}
-            onChange={(newDate) => setDate(newDate)}
-            sx={{ width: '100%' }}
-            slotProps={{
-              popper: {
-                placement: 'bottom',
-              },
-              textField: {
-                InputLabelProps: {
-                  shrink: true,
+          <Box>
+            <DatePicker
+              label="Completion Date"
+              value={date}
+              onChange={(newDate) => setDate(newDate)}
+              sx={{ width: '100%' }}
+              slotProps={{
+                popper: {
+                  placement: 'bottom',
                 },
-              },
-            }}
-          />
-          <TimePicker
-            label="Completion Time"
-            value={time}
-            onChange={(newTime) => setTime(newTime)}
-            sx={{ width: '100%' }}
-            slotProps={{
-              textField: {
-                InputLabelProps: {
-                  shrink: true,
+                textField: {
+                  InputLabelProps: {
+                    shrink: true,
+                  },
                 },
-              },
-            }}
-          />
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, pt: 0.5 }}>
-            {presetTimes.map(({ label, value }) => (
-              <Chip
-                key={label}
-                label={label}
-                onClick={() => setTime(value)}
-                variant="outlined"
-                clickable
-              />
-            ))}
+              }}
+            />
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, pt: 1 }}>
+              {presetDates.map(({ label, value }) => (
+                <Chip
+                  key={label}
+                  label={label}
+                  onClick={() => setDate(value)}
+                  variant="outlined"
+                  clickable
+                />
+              ))}
+            </Box>
+          </Box>
+          <Box>
+            <TimePicker
+              label="Completion Time"
+              value={time}
+              onChange={(newTime) => setTime(newTime)}
+              sx={{ width: '100%' }}
+              slotProps={{
+                textField: {
+                  InputLabelProps: {
+                    shrink: true,
+                  },
+                },
+              }}
+            />
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, pt: 1 }}>
+              {presetTimes.map(({ label, value }) => (
+                <Chip
+                  key={label}
+                  label={label}
+                  onClick={() => setTime(value)}
+                  variant="outlined"
+                  clickable
+                />
+              ))}
+            </Box>
           </Box>
         </Stack>
 
