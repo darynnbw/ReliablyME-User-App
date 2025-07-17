@@ -129,13 +129,13 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
               onClick={onDeclineRequestClick}
               fullWidth
               sx={{
-                bgcolor: '#FCE8E8',
-                color: '#F44336',
+                bgcolor: '#F44336',
+                color: 'white',
                 textTransform: 'none',
                 py: 1.5,
                 fontSize: '16px',
                 fontWeight: 600,
-                '&:hover': { bgcolor: '#f8d7da' },
+                '&:hover': { bgcolor: '#d32f2f' },
               }}
             >
               Decline
@@ -145,13 +145,13 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
               onClick={onAcceptRequestClick}
               fullWidth
               sx={{
-                bgcolor: '#E7F5E8',
-                color: '#4CAF50',
+                bgcolor: '#4CAF50',
+                color: 'white',
                 textTransform: 'none',
                 py: 1.5,
                 fontSize: '16px',
                 fontWeight: 600,
-                '&:hover': { bgcolor: '#d4edda' },
+                '&:hover': { bgcolor: '#388e3c' },
               }}
             >
               Accept

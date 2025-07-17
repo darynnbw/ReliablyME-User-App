@@ -13,7 +13,15 @@ import {
 import { Close } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Dayjs } from 'dayjs';
+import { PickersActionBar, PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import dayjs, { Dayjs } from 'dayjs';
+
+const presetTimes = [
+  { label: '11:59 PM', value: dayjs().hour(23).minute(59) },
+  { label: '9:00 PM', value: dayjs().hour(21).minute(0) },
+  { label: '6:00 PM', value: dayjs().hour(18).minute(0) },
+  { label: '12:00 PM', value: dayjs().hour(12).minute(0) },
+];
 
 interface AcceptRequestModalProps {
   open: boolean;
@@ -29,6 +37,21 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
   const handleCommit = () => {
     onCommit(date, time);
     onClose();
+  };
+
+  const CustomTimePickerActionBar = (props: PickersActionBarProps) => {
+    return (
+      <Box>
+        <PickersActionBar {...props} />
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, p: 1.5, borderTop: '1px solid', borderColor: 'divider' }}>
+          {presetTimes.map(({ label, value }) => (
+            <Button key={label} size="small" variant="outlined" onClick={() => setTime(value)}>
+              {label}
+            </Button>
+          ))}
+        </Box>
+      </Box>
+    );
   };
 
   return (
@@ -99,6 +122,9 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
             value={time}
             onChange={(newTime) => setTime(newTime)}
             sx={{ width: '100%' }}
+            slots={{
+              actionBar: CustomTimePickerActionBar,
+            }}
             slotProps={{
               textField: {
                 InputLabelProps: {

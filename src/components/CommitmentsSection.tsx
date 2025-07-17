@@ -471,10 +471,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     startIcon={<Check />}
                     onClick={handleBulkAccept}
                     sx={{ 
-                      bgcolor: '#E7F5E8',
-                      color: '#4CAF50',
+                      bgcolor: '#4CAF50',
+                      color: 'white',
                       textTransform: 'none',
-                      '&:hover': { bgcolor: '#d4edda' }
+                      '&:hover': { bgcolor: '#388e3c' }
                     }}
                   >
                     Accept
@@ -485,10 +485,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     startIcon={<Close />}
                     onClick={() => setBulkDeclineModalOpen(true)}
                     sx={{ 
-                      bgcolor: '#FCE8E8',
-                      color: '#F44336',
+                      bgcolor: '#F44336',
+                      color: 'white',
                       textTransform: 'none',
-                      '&:hover': { bgcolor: '#f8d7da' }
+                      '&:hover': { bgcolor: '#d32f2f' }
                     }}
                   >
                     Decline
