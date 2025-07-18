@@ -180,8 +180,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     onClick={onActionButtonClick}
                     disabled={isBulkSelecting}
                     sx={{
-                      bgcolor: isNudge ? '#FFF3E0' : color,
-                      color: isNudge ? '#E36239' : 'white',
+                      bgcolor: isNudge ? 'primary.main' : color,
+                      color: 'white',
                       textTransform: 'none',
                       fontWeight: 'bold',
                       px: 3,
@@ -189,7 +189,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       borderRadius: 1,
                       flexShrink: 0,
                       '&:hover': { 
-                        bgcolor: isNudge ? alpha('#FFF3E0', 0.8) : alpha(color, 0.8) 
+                        bgcolor: isNudge ? 'primary.dark' : alpha(color, 0.8) 
                       },
                     }}
                   >

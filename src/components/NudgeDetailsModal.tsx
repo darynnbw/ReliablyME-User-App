@@ -8,8 +8,9 @@ import {
   IconButton,
   Button,
   Divider,
+  Stack,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Schedule, Repeat } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule, Numbers as NumbersIcon } from '@mui/icons-material';
 
 interface Commitment {
   title: string;
@@ -99,7 +100,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
           )}
           
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Repeat sx={{ fontSize: 20, color: '#666' }} />
+            <NumbersIcon sx={{ fontSize: 20, color: '#666' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               Number of Nudges:{' '}
               <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
@@ -110,9 +111,17 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
         </Box>
 
         <Box sx={{ mb: 3, bgcolor: '#f8f9fa', p: 2.5, borderRadius: 2, border: '1px solid #e9ecef' }}>
-          <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-            {commitment.description}
-          </Typography>
+          <Stack spacing={1}>
+            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+              What did you accomplish this week?
+            </Typography>
+            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+              Do you have any blockers that are slowing you down?
+            </Typography>
+            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+              How useful did you find the ReliablyME Accountability Agent this week?
+            </Typography>
+          </Stack>
         </Box>
 
         <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
@@ -122,7 +131,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
             variant="contained"
             onClick={onAnswerNudgeClick}
             sx={{
-              bgcolor: '#ff7043',
+              bgcolor: 'primary.main',
               color: 'white',
               textTransform: 'none',
               fontWeight: 'bold',
@@ -130,7 +139,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
               py: 1.5,
               borderRadius: 2,
               fontSize: '16px',
-              '&:hover': { bgcolor: '#f4511e' },
+              '&:hover': { bgcolor: 'primary.dark' },
             }}
           >
             Answer Nudge
