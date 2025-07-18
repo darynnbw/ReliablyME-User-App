@@ -265,7 +265,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const handleCommit = (date: Dayjs | null, time: Dayjs | null) => {
     console.log('Committed with date:', date?.format(), 'and time:', time?.format(), 'for commitment:', commitmentToAccept?.id);
-    setAcceptModalOpen(false);
+    // The modal will close itself after the success animation.
+    // We just need to clear the commitment state here.
     setCommitmentToAccept(null);
   };
 
