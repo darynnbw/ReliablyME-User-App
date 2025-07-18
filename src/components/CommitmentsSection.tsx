@@ -96,6 +96,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
   const [bulkDeclineModalOpen, setBulkDeclineModalOpen] = useState(false);
   const [bulkAcceptModalOpen, setBulkAcceptModalOpen] = useState(false);
+  const [individualDeclineModalOpen, setIndividualDeclineModalOpen] = useState(false);
+  const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -236,7 +238,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   };
 
   const handleDeclineClick = (item: Commitment) => {
-    console.log('Decline clicked for:', item.id);
+    setCommitmentToDecline(item);
+    setIndividualDeclineModalOpen(true);
+  };
+
+  const handleConfirmIndividualDecline = () => {
+    console.log('Declining commitment:', commitmentToDecline?.id);
+    // In a real app, you would add the logic to actually decline the commitment here
+    setIndividualDeclineModalOpen(false);
+    setCommitmentToDecline(null);
   };
 
   const handleAcceptFromDetails = () => {
@@ -616,6 +626,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Typography>
         }
         onDecline={handleConfirmBulkDecline}
+      />
+      <DeclineModal
+        open={individualDeclineModalOpen}
+        onClose={() => setIndividualDeclineModalOpen(false)}
+        title="Decline Invitation"
+        description={
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            Are you sure you want to decline this invitation? This action cannot be undone.
+          </Typography>
+        }
+        onDecline={handleConfirmIndividualDecline}
       />
       <BulkAcceptModal
         open={bulkAcceptModalOpen}

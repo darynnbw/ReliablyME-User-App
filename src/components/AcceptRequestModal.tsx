@@ -144,31 +144,30 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
               </svg>
             </Box>
             <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
-              Nice work! You’ll find your new promise(s) in the My Promises tab.
+              Nice work! You’ll find your new promise in the My Promises tab.
             </Typography>
           </Box>
         ) : (
           <>
-            <Box 
-              sx={{ 
-                mb: 3,
-                bgcolor: '#f8f9fa',
-                p: 2,
-                borderRadius: 2,
-                border: '1px solid #e9ecef'
-              }}
-            >
-              <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-                {commitmentDescription}
+            <Stack spacing={3}>
+              <Box 
+                sx={{ 
+                  bgcolor: '#f8f9fa',
+                  p: 2,
+                  borderRadius: 2,
+                  border: '1px solid #e9ecef'
+                }}
+              >
+                <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                  {commitmentDescription}
+                </Typography>
+              </Box>
+
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#333', fontSize: '18px', m: 0 }}>
+                When do you plan to complete this?
               </Typography>
-            </Box>
 
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '18px' }}>
-              When do you plan to complete this?
-            </Typography>
-
-            <Stack spacing={2}>
-              <Box>
+              <Stack spacing={1.5}>
                 <DatePicker
                   label="Completion Date"
                   value={date}
@@ -185,7 +184,7 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
                     },
                   }}
                 />
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, pt: 1 }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {presetDates.map(({ label, value }) => (
                     <Chip
                       key={label}
@@ -203,8 +202,9 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
                     />
                   ))}
                 </Box>
-              </Box>
-              <Box>
+              </Stack>
+
+              <Stack spacing={1.5}>
                 <TimePicker
                   label="Completion Time"
                   value={time}
@@ -218,7 +218,7 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
                     },
                   }}
                 />
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, pt: 1 }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {presetTimes.map(({ label, value }) => (
                     <Chip
                       key={label}
@@ -236,7 +236,7 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
                     />
                   ))}
                 </Box>
-              </Box>
+              </Stack>
             </Stack>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>

@@ -173,7 +173,7 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
               </svg>
             </Box>
             <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
-              Nice work! You’ll find your new promise(s) in the My Promises tab.
+              {`Nice work! You’ll find your new promise${commitments.length > 1 ? 's' : ''} in the My Promises tab.`}
             </Typography>
           </Box>
         ) : (
