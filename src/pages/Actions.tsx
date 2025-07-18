@@ -63,6 +63,26 @@ const Actions: React.FC = () => {
     },
   ];
 
+  const requestsToCommitItems = [
+    {
+      id: 200,
+      title: 'Mid-Week Progress',
+      dueDate: 'Today',
+      committedDate: 'Mar 27, 9:15 PM',
+      description: 'Answer the questions for your mid-week progress check-in.',
+      assignee: 'Alex Johnson',
+      type: 'nudge',
+    },
+    {
+      id: 201,
+      title: 'Teamwork',
+      dueDate: 'Mar 28, 12:00 AM',
+      committedDate: 'Mar 27, 9:15 PM',
+      description: 'Need feedback on the new product design mockups for client presentation.',
+      assignee: 'Riley Chen',
+    },
+  ];
+
   const myCommitmentsTabs = [
     {
       label: 'My Promises',
@@ -71,8 +91,8 @@ const Actions: React.FC = () => {
     },
     {
       label: 'Requests to Commit',
-      count: myPromisesItems.length,
-      items: myPromisesItems,
+      count: requestsToCommitItems.length,
+      items: requestsToCommitItems,
     },
   ];
 

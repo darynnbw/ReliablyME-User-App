@@ -42,6 +42,7 @@ import DeclineModal from './DeclineModal';
 import BulkAcceptModal from './BulkAcceptModal';
 import AnswerNudgeModal from './AnswerNudgeModal';
 import NudgeDetailsModal from './NudgeDetailsModal';
+import AcceptNudgeModal from './AcceptNudgeModal';
 
 dayjs.extend(isBetween);
 
@@ -97,6 +98,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [badgeDetailsModalOpen, setBadgeDetailsModalOpen] = useState(false);
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
+  const [acceptNudgeModalOpen, setAcceptNudgeModalOpen] = useState(false);
   const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
   const [bulkDeclineModalOpen, setBulkDeclineModalOpen] = useState(false);
@@ -170,8 +172,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   }, [currentItems, title]);
 
+  const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
+
   const handleViewCommitmentDetails = (item: Commitment) => {
-    if (item.type === 'nudge') {
+    if (item.type === 'nudge' && isMyPromisesTab) {
       setCommitmentForNudgeDetails(item);
       setNudgeDetailsModalOpen(true);
     } else {
@@ -247,7 +251,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const handleAcceptClick = (item: Commitment) => {
     setCommitmentToAccept(item);
-    setAcceptModalOpen(true);
+    if (item.type === 'nudge') {
+      setAcceptNudgeModalOpen(true);
+    } else {
+      setAcceptModalOpen(true);
+    }
   };
 
   const handleDeclineClick = (item: Commitment) => {
@@ -307,6 +315,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
+  const hasNudgeSelected = selectedCommitments.some(c => c.type === 'nudge');
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
@@ -496,7 +505,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox size="small" sx={{ p: 0 }} checked={selectAll} onChange={handleToggleSelectAll} indeterminate={selectedCount > 0 && selectedCount < currentItems.length} />
               <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} commitment{selectedCount !== 1 ? 's' : ''} selected</Typography>
-              {selectedCount > 0 && isRequestsToCommitTab && (
+              {selectedCount > 0 && isRequestsToCommitTab && !hasNudgeSelected && (
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Button
                     variant="contained"
@@ -582,7 +591,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       ref={index === 0 ? firstItemRef : null}
                       color={itemColor}
                       showCheckbox={!isUnkeptTab}
-                      showActionButton={showActionButton || isNudgeItem}
+                      showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
                       buttonText={isNudgeItem ? 'Answer Nudge' : buttonText}
                       onActionButtonClick={isNudgeItem ? handleAnswerNudge : onButtonClick}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
@@ -647,6 +656,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       <AcceptRequestModal
         open={acceptModalOpen}
         onClose={() => setAcceptModalOpen(false)}
+        onCommit={handleCommit}
+        commitmentDescription={commitmentToAccept?.description || ''}
+      />
+      <AcceptNudgeModal
+        open={acceptNudgeModalOpen}
+        onClose={() => setAcceptNudgeModalOpen(false)}
         onCommit={handleCommit}
         commitmentDescription={commitmentToAccept?.description || ''}
       />

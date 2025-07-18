@@ -142,7 +142,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   Due{' '}
                   {dueDate === 'Today' ? (
-                    <Typography component="span" sx={{ fontWeight: 'bold', color: 'error.main', fontSize: 'inherit' }}>
+                    <Typography component="span" sx={{ fontWeight: 400, color: 'error.main', fontSize: 'inherit' }}>
                       Today
                     </Typography>
                   ) : (
