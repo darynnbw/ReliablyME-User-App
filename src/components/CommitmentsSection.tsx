@@ -41,6 +41,7 @@ import AcceptRequestModal from './AcceptRequestModal';
 import DeclineModal from './DeclineModal';
 import BulkAcceptModal from './BulkAcceptModal';
 import AnswerNudgeModal from './AnswerNudgeModal';
+import NudgeDetailsModal from './NudgeDetailsModal';
 
 dayjs.extend(isBetween);
 
@@ -54,6 +55,7 @@ interface Commitment {
   committedDate?: string;
   type?: string;
   nudgesLeft?: number;
+  totalNudges?: number;
 }
 
 interface CommitmentsSectionProps {
@@ -102,6 +104,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [individualDeclineModalOpen, setIndividualDeclineModalOpen] = useState(false);
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
   const [answerNudgeModalOpen, setAnswerNudgeModalOpen] = useState(false);
+  const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
+  const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -167,8 +171,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   }, [currentItems, title]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
-    setCommitmentForDetails(item);
-    setModalOpen(true);
+    if (item.type === 'nudge') {
+      setCommitmentForNudgeDetails(item);
+      setNudgeDetailsModalOpen(true);
+    } else {
+      setCommitmentForDetails(item);
+      setModalOpen(true);
+    }
   };
 
   const handleRequestBadge = () => setRequestBadgeModalOpen(true);
@@ -288,6 +297,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   };
 
   const handleAnswerNudge = () => {
+    setAnswerNudgeModalOpen(true);
+  };
+
+  const handleAnswerNudgeFromDetails = () => {
+    setNudgeDetailsModalOpen(false);
     setAnswerNudgeModalOpen(true);
   };
 
@@ -569,7 +583,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       color={itemColor}
                       showCheckbox={!isUnkeptTab}
                       showActionButton={showActionButton || isNudgeItem}
-                      buttonText={isNudgeItem ? 'Answer' : buttonText}
+                      buttonText={isNudgeItem ? 'Answer Nudge' : buttonText}
                       onActionButtonClick={isNudgeItem ? handleAnswerNudge : onButtonClick}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
@@ -605,6 +619,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         onAcceptRequestClick={handleAcceptFromDetails}
         onDeclineRequestClick={handleDeclineFromDetails}
         onRequestBadgeClick={handleRequestBadgeFromDetails} 
+      />
+      <NudgeDetailsModal
+        open={nudgeDetailsModalOpen}
+        onClose={() => setNudgeDetailsModalOpen(false)}
+        commitment={commitmentForNudgeDetails}
+        onAnswerNudgeClick={handleAnswerNudgeFromDetails}
       />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />
       <BulkRequestBadgeModal

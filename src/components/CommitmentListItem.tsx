@@ -142,7 +142,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   Due{' '}
                   {dueDate === 'Today' ? (
-                    <Typography component="span" sx={{ fontWeight: 'bold', color: 'error.main' }}>
+                    <Typography component="span" sx={{ fontWeight: 'bold', color: 'error.main', fontSize: 'inherit' }}>
                       Today
                     </Typography>
                   ) : (
@@ -180,15 +180,17 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     onClick={onActionButtonClick}
                     disabled={isBulkSelecting}
                     sx={{
-                      bgcolor: color,
-                      color: 'white',
+                      bgcolor: isNudge ? '#FFF3E0' : color,
+                      color: isNudge ? '#E36239' : 'white',
                       textTransform: 'none',
                       fontWeight: 'bold',
                       px: 3,
                       py: 1,
                       borderRadius: 1,
                       flexShrink: 0,
-                      '&:hover': { bgcolor: alpha(color, 0.8) },
+                      '&:hover': { 
+                        bgcolor: isNudge ? alpha('#FFF3E0', 0.8) : alpha(color, 0.8) 
+                      },
                     }}
                   >
                     {buttonText}

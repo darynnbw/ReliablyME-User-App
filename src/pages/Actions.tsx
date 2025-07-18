@@ -19,6 +19,7 @@ const Actions: React.FC = () => {
       assignee: 'Alex Johnson',
       type: 'nudge',
       nudgesLeft: 2,
+      totalNudges: 10,
     },
     {
       id: 1,
