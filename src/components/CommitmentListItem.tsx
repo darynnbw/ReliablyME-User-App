@@ -10,6 +10,7 @@ import {
   Tooltip,
   Stack,
   alpha,
+  Chip,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Shield } from '@mui/icons-material';
 
@@ -33,6 +34,8 @@ interface CommitmentListItemProps {
   onDecline?: () => void;
   isBulkSelecting?: boolean;
   hideDueDate?: boolean;
+  isNudge?: boolean;
+  nudgesLeft?: number;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -55,6 +58,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onDecline,
   isBulkSelecting = false,
   hideDueDate = false,
+  isNudge = false,
+  nudgesLeft,
 }, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
@@ -104,9 +109,23 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              {title}
-            </Typography>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                {title}
+              </Typography>
+              {isNudge && (
+                <Chip
+                  label="Nudge"
+                  size="small"
+                  sx={{
+                    bgcolor: '#fff3e0',
+                    color: '#ff7043',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                  }}
+                />
+              )}
+            </Stack>
             <Tooltip title="View details" placement="top" arrow>
               <IconButton size="small" onClick={onViewDetails}>
                 <MoreHoriz />
@@ -121,8 +140,20 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
                 <CalendarToday sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
-                  Due {dueDate}
+                  Due{' '}
+                  {dueDate === 'Today' ? (
+                    <Typography component="span" sx={{ fontWeight: 'bold', color: 'error.main' }}>
+                      Today
+                    </Typography>
+                  ) : (
+                    dueDate
+                  )}
                 </Typography>
+                {isNudge && nudgesLeft !== undefined && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
+                    ({nudgesLeft} nudges left)
+                  </Typography>
+                )}
               </Stack>
             )}
 

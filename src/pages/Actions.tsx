@@ -11,6 +11,16 @@ import CommitmentsSection from '../components/CommitmentsSection';
 const Actions: React.FC = () => {
   const myPromisesItems = [
     {
+      id: 100,
+      title: 'Mid-Week Progress',
+      dueDate: 'Today',
+      committedDate: 'Mar 27, 9:15 PM',
+      description: 'Answer the questions for your mid-week progress check-in.',
+      assignee: 'Alex Johnson',
+      type: 'nudge',
+      nudgesLeft: 2,
+    },
+    {
       id: 1,
       title: 'Teamwork',
       dueDate: 'Mar 28, 12:00 AM',

@@ -40,6 +40,7 @@ import MyBadgeDetailsModal from './MyBadgeDetailsModal';
 import AcceptRequestModal from './AcceptRequestModal';
 import DeclineModal from './DeclineModal';
 import BulkAcceptModal from './BulkAcceptModal';
+import AnswerNudgeModal from './AnswerNudgeModal';
 
 dayjs.extend(isBetween);
 
@@ -51,6 +52,8 @@ interface Commitment {
   assignee: string;
   selected?: boolean;
   committedDate?: string;
+  type?: string;
+  nudgesLeft?: number;
 }
 
 interface CommitmentsSectionProps {
@@ -98,6 +101,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [bulkAcceptModalOpen, setBulkAcceptModalOpen] = useState(false);
   const [individualDeclineModalOpen, setIndividualDeclineModalOpen] = useState(false);
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
+  const [answerNudgeModalOpen, setAnswerNudgeModalOpen] = useState(false);
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -281,6 +285,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const handleBulkAccept = () => {
     setBulkAcceptModalOpen(true);
+  };
+
+  const handleAnswerNudge = () => {
+    setAnswerNudgeModalOpen(true);
   };
 
   const selectedCommitments = commitments.filter(item => item.selected);
@@ -551,25 +559,30 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   />
                 ))
               ) : (
-                paginatedItems.map((item, index) => (
-                  <CommitmentListItem
-                    key={item.id}
-                    {...item}
-                    ref={index === 0 ? firstItemRef : null}
-                    color={itemColor}
-                    showCheckbox={!isUnkeptTab}
-                    showActionButton={showActionButton}
-                    buttonText={buttonText}
-                    onViewDetails={() => handleViewCommitmentDetails(item)}
-                    onActionButtonClick={onButtonClick}
-                    onToggleSelect={handleToggleSelectItem}
-                    showAcceptDeclineButtons={isRequestsToCommitTab}
-                    onAccept={() => handleAcceptClick(item)}
-                    onDecline={() => handleDeclineClick(item)}
-                    isBulkSelecting={selectedCount > 0}
-                    hideDueDate={isRequestsToCommitTab}
-                  />
-                ))
+                paginatedItems.map((item, index) => {
+                  const isNudgeItem = item.type === 'nudge';
+                  return (
+                    <CommitmentListItem
+                      key={item.id}
+                      {...item}
+                      ref={index === 0 ? firstItemRef : null}
+                      color={itemColor}
+                      showCheckbox={!isUnkeptTab}
+                      showActionButton={showActionButton || isNudgeItem}
+                      buttonText={isNudgeItem ? 'Answer' : buttonText}
+                      onActionButtonClick={isNudgeItem ? handleAnswerNudge : onButtonClick}
+                      onViewDetails={() => handleViewCommitmentDetails(item)}
+                      onToggleSelect={handleToggleSelectItem}
+                      showAcceptDeclineButtons={isRequestsToCommitTab}
+                      onAccept={() => handleAcceptClick(item)}
+                      onDecline={() => handleDeclineClick(item)}
+                      isBulkSelecting={selectedCount > 0}
+                      hideDueDate={isRequestsToCommitTab}
+                      isNudge={isNudgeItem}
+                      nudgesLeft={item.nudgesLeft}
+                    />
+                  );
+                })
               )
             ) : (
               <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>No items found.</Typography>
@@ -643,6 +656,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         open={bulkAcceptModalOpen}
         onClose={() => setBulkAcceptModalOpen(false)}
         commitments={selectedCommitments}
+      />
+      <AnswerNudgeModal
+        open={answerNudgeModalOpen}
+        onClose={() => setAnswerNudgeModalOpen(false)}
       />
     </>
   );
