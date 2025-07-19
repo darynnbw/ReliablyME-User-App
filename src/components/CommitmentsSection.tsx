@@ -66,10 +66,11 @@ interface CommitmentsSectionProps {
 }
 
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
+  if (dateString === 'Today') return dayjs();
   try {
     const cleanDateString = dateString.replace('Due ', '');
     const fullDateString = `${cleanDateString} ${new Date().getFullYear()}`;
-    const date = dayjs(fullDateString);
+    const date = dayjs(fullDateString, "MMM D, hh:mm A YYYY", true);
     return date.isValid() ? date : null;
   } catch (error) {
     return null;
@@ -111,6 +112,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
 
   const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
+  const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -181,7 +183,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   }, [currentItems, title]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
-    if (item.type === 'nudge' && isMyPromisesTab) {
+    if (item.type === 'nudge') {
       setCommitmentForNudgeDetails(item);
       setNudgeDetailsModalOpen(true);
     } else {
@@ -329,7 +331,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
   const isMyCommitments = title === 'My Commitments';
-  const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
 
   let itemColor = '#ff7043'; // Default for 'My Promises'
   let buttonText = 'Request Badge';
@@ -606,6 +607,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   const isNudgeItem = item.type === 'nudge';
                   const showCheckboxes = !isUnkeptTab && !isBadgesTab;
                   const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
+                  const itemDate = parseCommitmentDate(item.dueDate);
+                  const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
 
                   return (
                     <CommitmentListItem
@@ -629,6 +632,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       nudgesLeft={item.nudgesLeft}
                       isMyPromisesTab={isMyPromisesTab}
                       isExternal={item.isExternal}
+                      isOverdue={isOverdue}
                     />
                   );
                 })
@@ -660,6 +664,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         onClose={() => setNudgeDetailsModalOpen(false)}
         commitment={commitmentForNudgeDetails}
         onAnswerNudgeClick={handleAnswerNudgeFromDetails}
+        isRequest={isRequestsToCommitTab && commitmentForNudgeDetails?.type === 'nudge'}
       />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />
       <BulkRequestBadgeModal

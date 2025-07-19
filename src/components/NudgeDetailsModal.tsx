@@ -27,6 +27,7 @@ interface NudgeDetailsModalProps {
   onClose: () => void;
   commitment: Commitment | null;
   onAnswerNudgeClick: () => void;
+  isRequest?: boolean;
 }
 
 const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
@@ -34,6 +35,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
   onClose,
   commitment,
   onAnswerNudgeClick,
+  isRequest = false,
 }) => {
   if (!commitment) return null;
 
@@ -77,37 +79,41 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
-            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Last Nudge Due:{' '}
-              <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
-                {commitment.dueDate}
-              </Typography>
-            </Typography>
-          </Box>
-
-          {commitment.committedDate && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
-              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Committed:{' '}
-                <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
-                  {commitment.committedDate}
+          {!isRequest && (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+                <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                  Last Nudge Due:{' '}
+                  <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
+                    {commitment.dueDate}
+                  </Typography>
                 </Typography>
-              </Typography>
-            </Box>
+              </Box>
+
+              {commitment.committedDate && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
+                  <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                    Committed:{' '}
+                    <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
+                      {commitment.committedDate}
+                    </Typography>
+                  </Typography>
+                </Box>
+              )}
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <NumbersIcon sx={{ fontSize: 20, color: '#666' }} />
+                <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                  Number of Nudges:{' '}
+                  <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
+                    {`${usedNudges}/${totalNudges}`}
+                  </Typography>
+                </Typography>
+              </Box>
+            </>
           )}
-          
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <NumbersIcon sx={{ fontSize: 20, color: '#666' }} />
-            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Number of Nudges:{' '}
-              <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
-                {`${usedNudges}/${totalNudges}`}
-              </Typography>
-            </Typography>
-          </Box>
         </Box>
 
         <Box sx={{ mb: 3, bgcolor: '#f8f9fa', p: 2.5, borderRadius: 2, border: '1px solid #e9ecef' }}>
@@ -124,28 +130,31 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
           </Stack>
         </Box>
 
-        <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
-
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="contained"
-            onClick={onAnswerNudgeClick}
-            startIcon={<Edit />}
-            sx={{
-              bgcolor: '#ff7043',
-              color: 'white',
-              textTransform: 'none',
-              fontWeight: 'bold',
-              width: '100%',
-              py: 1.5,
-              borderRadius: 2,
-              fontSize: '16px',
-              '&:hover': { bgcolor: '#f4511e' },
-            }}
-          >
-            Answer Nudge
-          </Button>
-        </Box>
+        {!isRequest && (
+          <>
+            <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                variant="contained"
+                onClick={onAnswerNudgeClick}
+                startIcon={<Edit />}
+                sx={{
+                  bgcolor: '#ff7043',
+                  color: 'white',
+                  textTransform: 'none',
+                  fontWeight: 'bold',
+                  width: '100%',
+                  py: 1.5,
+                  borderRadius: 2,
+                  fontSize: '16px',
+                  '&:hover': { bgcolor: '#f4511e' },
+                }}
+              >
+                Answer Nudge
+              </Button>
+            </Box>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

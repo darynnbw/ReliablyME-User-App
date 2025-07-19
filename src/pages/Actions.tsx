@@ -7,9 +7,18 @@ import {
 import Header from '../components/Header';
 import NavigationTabs from '../components/NavigationTabs';
 import CommitmentsSection from '../components/CommitmentsSection';
+import dayjs from 'dayjs';
 
 const Actions: React.FC = () => {
   const myPromisesItems = [
+    {
+      id: 999,
+      title: 'Quarterly Report',
+      dueDate: 'Jul 18, 12:00 AM',
+      committedDate: 'Jul 15, 9:15 PM',
+      description: 'I will submit the Q2 performance report to management.',
+      assignee: 'Alex Johnson',
+    },
     {
       id: 100,
       title: 'Mid-Week Progress',
@@ -24,7 +33,7 @@ const Actions: React.FC = () => {
     {
       id: 1,
       title: 'Teamwork',
-      dueDate: 'Mar 28, 12:00 AM',
+      dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
       description: 'I will provide feedback on the new product design mockups for client presentation.',
       assignee: 'Riley Chen',
@@ -32,7 +41,7 @@ const Actions: React.FC = () => {
     {
       id: 2,
       title: 'Attendance',
-      dueDate: 'Due Mar 28, 12:00 AM',
+      dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
       description: 'I will deliver the quarterly marketing report with all KPIs and campaign results.',
       assignee: 'Jamie Smith',
@@ -40,7 +49,7 @@ const Actions: React.FC = () => {
     {
       id: 6,
       title: 'Promise Kept General',
-      dueDate: 'Apr 02, 05:00 PM',
+      dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
       description: 'I will complete the code review for the new feature branch by end of day.',
       assignee: 'Alex Johnson',
@@ -48,7 +57,7 @@ const Actions: React.FC = () => {
     {
       id: 7,
       title: 'Teamwork',
-      dueDate: 'Apr 04, 10:00 AM',
+      dueDate: dayjs().add(5, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
       description: 'I will prepare and share the agenda for the upcoming sprint planning meeting.',
       assignee: 'Sarah Connor',
@@ -56,7 +65,7 @@ const Actions: React.FC = () => {
     {
       id: 8,
       title: 'Attendance',
-      dueDate: 'Apr 05, 09:00 AM',
+      dueDate: dayjs().add(6, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
       description: 'I will join the all-hands meeting on time and prepared to discuss Q2 goals.',
       assignee: 'Mike Miller',
@@ -76,7 +85,7 @@ const Actions: React.FC = () => {
     {
       id: 201,
       title: 'Teamwork',
-      dueDate: 'Mar 28, 12:00 AM',
+      dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
       description: 'I will provide feedback on the new product design mockups for client presentation.',
       assignee: 'Riley Chen',
@@ -84,7 +93,7 @@ const Actions: React.FC = () => {
     {
       id: 202,
       title: 'Promise Kept General',
-      dueDate: 'Apr 1, 12:00 AM',
+      dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 30, 10:00 AM',
       description: 'I will prepare the slides for the Q2 financial review meeting.',
       assignee: 'Sarah Wilson',
@@ -92,7 +101,7 @@ const Actions: React.FC = () => {
     {
       id: 203,
       title: 'Attendance',
-      dueDate: 'Apr 3, 09:00 AM',
+      dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Apr 1, 2:00 PM',
       description: 'I will attend the project retrospective for the Alpha launch.',
       assignee: 'Mike Johnson',
@@ -100,7 +109,7 @@ const Actions: React.FC = () => {
     {
       id: 204,
       title: 'Promise Kept General',
-      dueDate: 'Apr 5, 05:00 PM',
+      dueDate: dayjs().add(5, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Apr 4, 10:00 AM',
       description: 'I will provide the final invoice for the freelance design work.',
       assignee: '+1 555-123-4567',
@@ -129,7 +138,7 @@ const Actions: React.FC = () => {
         {
           id: 1,
           title: 'Teamwork',
-          dueDate: 'Mar 28, 12:00 AM',
+          dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'Need feedback on the new product design mockups for client presentation.',
           assignee: 'Riley Chen',
@@ -137,7 +146,7 @@ const Actions: React.FC = () => {
         {
           id: 2,
           title: 'Promise Kept General',
-          dueDate: 'Apr 15, 12:00 AM',
+          dueDate: dayjs().add(7, 'day').format('MMM D, hh:mm A'),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'Need the quarterly marketing report with all KPIs and campaign results.',
           assignee: 'Jamie Smith',

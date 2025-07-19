@@ -73,9 +73,9 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
         </>
       )}
 
-      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
         {isSubmitted ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
             <ConfettiAnimation />
             <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem', mt: 3 }}>
               Nudge answered! Consistency is key.
