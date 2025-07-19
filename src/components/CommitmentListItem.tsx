@@ -38,6 +38,7 @@ interface CommitmentListItemProps {
   isNudge?: boolean;
   nudgesLeft?: number;
   isMyPromisesTab?: boolean;
+  isExternal?: boolean;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -64,6 +65,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   isNudge = false,
   nudgesLeft,
   isMyPromisesTab = false,
+  isExternal = false,
 }, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
@@ -130,6 +132,18 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   }}
                 />
               )}
+              {isExternal && (
+                <Chip
+                  label="External"
+                  size="small"
+                  sx={{
+                    bgcolor: 'grey.300',
+                    color: 'text.secondary',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                  }}
+                />
+              )}
             </Stack>
             <Tooltip title="View details" placement="top" arrow>
               <IconButton size="small" onClick={onViewDetails}>
@@ -175,6 +189,11 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   To: {assignee}
                 </Typography>
+                {isExternal && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                    (Non-member)
+                  </Typography>
+                )}
               </Stack>
 
               {/* Action Buttons */}

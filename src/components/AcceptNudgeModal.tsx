@@ -192,7 +192,11 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
                 />
                 {date && (
                   <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-                    You’ll receive {nudgeCount} nudges between now and {date.format('MMMM D, YYYY')}.
+                    You’ll receive{' '}
+                    <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                      {nudgeCount} {nudgeCount === 1 ? 'nudge' : 'nudges'}
+                    </Typography>{' '}
+                    between now and {date.format('MMMM D, YYYY')}.
                   </Typography>
                 )}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>

@@ -57,6 +57,7 @@ interface Commitment {
   type?: string;
   nudgesLeft?: number;
   totalNudges?: number;
+  isExternal?: boolean;
 }
 
 interface CommitmentsSectionProps {
@@ -621,6 +622,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       isNudge={isNudgeItem}
                       nudgesLeft={item.nudgesLeft}
                       isMyPromisesTab={isMyPromisesTab}
+                      isExternal={item.isExternal}
                     />
                   );
                 })

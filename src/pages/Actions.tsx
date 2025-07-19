@@ -97,6 +97,15 @@ const Actions: React.FC = () => {
       description: 'Your presence is requested at the project retrospective for the Alpha launch.',
       assignee: 'Mike Johnson',
     },
+    {
+      id: 204,
+      title: 'Promise Kept General',
+      dueDate: 'Apr 5, 05:00 PM',
+      committedDate: 'Apr 4, 10:00 AM',
+      description: 'Please provide the final invoice for the freelance design work.',
+      assignee: '+1 555-123-4567',
+      isExternal: true,
+    },
   ];
 
   const myCommitmentsTabs = [
