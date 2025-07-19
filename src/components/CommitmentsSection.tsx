@@ -123,7 +123,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     console.log('Clarify button clicked');
   };
 
-  const uniquePeople = [...new Set(tabs.flatMap(tab => tab.items.map(item => item.assignee)))];
+  const uniquePeople = [...new Set(tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee)))];
+  const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
 
   const currentItems = commitments.filter(item => {
     const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -132,7 +133,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
     if (!searchMatch) return false;
 
-    const personMatch = !personFilter || item.assignee === personFilter;
+    const personMatch = (() => {
+      if (!personFilter) return true; // 'All' is selected
+      if (personFilter === 'External') return item.isExternal === true;
+      return item.assignee === personFilter;
+    })();
     if (!personMatch) return false;
 
     const itemDate = parseCommitmentDate(item.dueDate);
@@ -374,6 +379,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 {uniquePeople.map(person => (
                   <MenuItem key={person} value={person}>{person}</MenuItem>
                 ))}
+                {hasExternal && <MenuItem value="External">External</MenuItem>}
               </Select>
             </FormControl>
 

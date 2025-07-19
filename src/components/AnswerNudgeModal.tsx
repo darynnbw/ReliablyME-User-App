@@ -11,7 +11,7 @@ import {
   TextField,
 } from '@mui/material';
 import { Close, CalendarToday } from '@mui/icons-material';
-import MedalAnimation from './MedalAnimation';
+import ConfettiAnimation from './ConfettiAnimation';
 
 interface AnswerNudgeModalProps {
   open: boolean;
@@ -76,7 +76,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
       <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
         {isSubmitted ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
-            <MedalAnimation />
+            <ConfettiAnimation />
             <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem', mt: 3 }}>
               Nudge answered! Consistency is key.
             </Typography>
@@ -84,7 +84,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
         ) : (
           <>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>
-              Promise Kept General
+              Mid-Week Progress
             </Typography>
 
             <Typography variant="body1" sx={{ fontWeight: 400, mb: 2, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
