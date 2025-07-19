@@ -324,6 +324,20 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setAnswerNudgeModalOpen(true);
   };
 
+  const handleAcceptNudgeFromDetails = () => {
+    setNudgeDetailsModalOpen(false);
+    if (commitmentForNudgeDetails) {
+      handleAcceptClick(commitmentForNudgeDetails);
+    }
+  };
+
+  const handleDeclineNudgeFromDetails = () => {
+    setNudgeDetailsModalOpen(false);
+    if (commitmentForNudgeDetails) {
+      handleDeclineClick(commitmentForNudgeDetails);
+    }
+  };
+
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   const hasNudgeSelected = selectedCommitments.some(c => c.type === 'nudge');
@@ -361,7 +375,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         minHeight: isMyCommitments ? 'auto' : 500,
         display: 'flex',
         flexDirection: 'column',
-        bgcolor: '#fafbfc',
+        bgcolor: '#ffffff',
         borderRadius: 3,
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
         border: '1px solid #e8eaed',
@@ -665,6 +679,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         commitment={commitmentForNudgeDetails}
         onAnswerNudgeClick={handleAnswerNudgeFromDetails}
         isRequest={isRequestsToCommitTab}
+        onAcceptClick={handleAcceptNudgeFromDetails}
+        onDeclineClick={handleDeclineNudgeFromDetails}
       />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />
       <BulkRequestBadgeModal

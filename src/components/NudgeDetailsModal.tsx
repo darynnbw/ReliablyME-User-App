@@ -28,6 +28,8 @@ interface NudgeDetailsModalProps {
   commitment: Commitment | null;
   onAnswerNudgeClick: () => void;
   isRequest?: boolean;
+  onAcceptClick?: () => void;
+  onDeclineClick?: () => void;
 }
 
 const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
@@ -36,6 +38,8 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
   commitment,
   onAnswerNudgeClick,
   isRequest = false,
+  onAcceptClick,
+  onDeclineClick,
 }) => {
   if (!commitment) return null;
 
@@ -133,24 +137,61 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
         <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="contained"
-            onClick={onAnswerNudgeClick}
-            startIcon={<Edit />}
-            sx={{
-              bgcolor: '#ff7043',
-              color: 'white',
-              textTransform: 'none',
-              fontWeight: 'bold',
-              width: '100%',
-              py: 1.5,
-              borderRadius: 2,
-              fontSize: '16px',
-              '&:hover': { bgcolor: '#f4511e' },
-            }}
-          >
-            Answer Nudge
-          </Button>
+          {isRequest ? (
+            <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+              <Button
+                variant="contained"
+                onClick={onDeclineClick}
+                fullWidth
+                sx={{
+                  bgcolor: '#F44336',
+                  color: 'white',
+                  textTransform: 'none',
+                  py: 1.5,
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  '&:hover': { bgcolor: '#d32f2f' },
+                }}
+              >
+                Decline
+              </Button>
+              <Button
+                variant="contained"
+                onClick={onAcceptClick}
+                fullWidth
+                sx={{
+                  bgcolor: '#4CAF50',
+                  color: 'white',
+                  textTransform: 'none',
+                  py: 1.5,
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  '&:hover': { bgcolor: '#388e3c' },
+                }}
+              >
+                Accept
+              </Button>
+            </Box>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={onAnswerNudgeClick}
+              startIcon={<Edit />}
+              sx={{
+                bgcolor: '#ff7043',
+                color: 'white',
+                textTransform: 'none',
+                fontWeight: 'bold',
+                width: '100%',
+                py: 1.5,
+                borderRadius: 2,
+                fontSize: '16px',
+                '&:hover': { bgcolor: '#f4511e' },
+              }}
+            >
+              Answer Nudge
+            </Button>
+          )}
         </Box>
       </DialogContent>
     </Dialog>
