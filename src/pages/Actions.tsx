@@ -81,6 +81,22 @@ const Actions: React.FC = () => {
       description: 'Need feedback on the new product design mockups for client presentation.',
       assignee: 'Riley Chen',
     },
+    {
+      id: 202,
+      title: 'Promise Kept General',
+      dueDate: 'Apr 1, 12:00 AM',
+      committedDate: 'Mar 30, 10:00 AM',
+      description: 'Please prepare the slides for the Q2 financial review meeting.',
+      assignee: 'Sarah Wilson',
+    },
+    {
+      id: 203,
+      title: 'Attendance',
+      dueDate: 'Apr 3, 09:00 AM',
+      committedDate: 'Apr 1, 2:00 PM',
+      description: 'Your presence is requested at the project retrospective for the Alpha launch.',
+      assignee: 'Mike Johnson',
+    },
   ];
 
   const myCommitmentsTabs = [

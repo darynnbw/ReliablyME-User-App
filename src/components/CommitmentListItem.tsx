@@ -12,7 +12,7 @@ import {
   alpha,
   Chip,
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Shield } from '@mui/icons-material';
+import { CalendarToday, Person, MoreHoriz, Shield, Edit } from '@mui/icons-material';
 
 interface CommitmentListItemProps {
   id: number;
@@ -36,6 +36,7 @@ interface CommitmentListItemProps {
   hideDueDate?: boolean;
   isNudge?: boolean;
   nudgesLeft?: number;
+  isMyPromisesTab?: boolean;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -60,6 +61,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   hideDueDate = false,
   isNudge = false,
   nudgesLeft,
+  isMyPromisesTab = false,
 }, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
@@ -137,12 +139,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           <Stack>
             {/* Due Date */}
             {!hideDueDate && (
-              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
                 <CalendarToday sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   Due{' '}
                   {dueDate === 'Today' ? (
-                    <Typography component="span" sx={{ fontWeight: 400, color: 'error.main', fontSize: 'inherit' }}>
+                    <Typography component="span" sx={{ fontWeight: 600, color: 'error.main', fontSize: 'inherit' }}>
                       Today
                     </Typography>
                   ) : (
@@ -179,8 +181,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     variant="contained"
                     onClick={onActionButtonClick}
                     disabled={isBulkSelecting}
+                    startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
                     sx={{
-                      bgcolor: isNudge ? 'primary.main' : color,
+                      bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
                       color: 'white',
                       textTransform: 'none',
                       fontWeight: 'bold',
@@ -189,7 +192,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       borderRadius: 1,
                       flexShrink: 0,
                       '&:hover': { 
-                        bgcolor: isNudge ? 'primary.dark' : alpha(color, 0.8) 
+                        bgcolor: (isNudge && isMyPromisesTab) ? '#f4511e' : alpha(color, 0.8)
                       },
                     }}
                   >

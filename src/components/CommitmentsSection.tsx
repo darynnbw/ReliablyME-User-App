@@ -109,6 +109,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
 
+  const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
+
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
@@ -172,8 +174,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   }, [currentItems, title]);
 
-  const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
-
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (item.type === 'nudge' && isMyPromisesTab) {
       setCommitmentForNudgeDetails(item);
@@ -199,7 +199,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const handleToggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
     setSelectAll(checked);
-    setCommitments(prev => prev.map(item => ({ ...item, selected: checked })));
+    setCommitments(prev => prev.map(item => {
+      const isNudgeInMyPromises = isMyPromisesTab && item.type === 'nudge';
+      return { ...item, selected: isNudgeInMyPromises ? false : checked };
+    }));
   };
 
   const handleToggleSelectItem = (id: number, checked: boolean) => {
@@ -501,10 +504,34 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         </Box>
 
         {!isUnkeptTab && !isBadgesTab && (
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Checkbox size="small" sx={{ p: 0 }} checked={selectAll} onChange={handleToggleSelectAll} indeterminate={selectedCount > 0 && selectedCount < currentItems.length} />
+              <Checkbox
+                size="small"
+                sx={{ p: 0 }}
+                checked={selectAll}
+                onChange={handleToggleSelectAll}
+                indeterminate={selectedCount > 0 && selectedCount < currentItems.filter(i => !(isMyPromisesTab && i.type === 'nudge')).length}
+              />
               <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} commitment{selectedCount !== 1 ? 's' : ''} selected</Typography>
+              
+              {showBulkRequest && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => setBulkRequestModalOpen(true)}
+                  sx={{
+                    bgcolor: '#ff7043',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    '&:hover': { bgcolor: '#f4511e' },
+                  }}
+                >
+                  Bulk Request
+                </Button>
+              )}
+
               {selectedCount > 0 && isRequestsToCommitTab && !hasNudgeSelected && (
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Button
@@ -538,21 +565,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 </Box>
               )}
             </Box>
-            {showBulkRequest && (
-              <Button
-                variant="text"
-                onClick={() => setBulkRequestModalOpen(true)}
-                sx={{
-                  color: 'primary.main',
-                  fontWeight: 500,
-                  textTransform: 'none',
-                  p: 0,
-                  '&:hover': { textDecoration: 'underline', bgcolor: 'transparent' },
-                }}
-              >
-                Bulk Request
-              </Button>
-            )}
           </Box>
         )}
 
@@ -584,16 +596,18 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               ) : (
                 paginatedItems.map((item, index) => {
                   const isNudgeItem = item.type === 'nudge';
+                  const isSelectable = !(isMyPromisesTab && isNudgeItem);
+
                   return (
                     <CommitmentListItem
                       key={item.id}
                       {...item}
                       ref={index === 0 ? firstItemRef : null}
                       color={itemColor}
-                      showCheckbox={!isUnkeptTab}
+                      showCheckbox={!isUnkeptTab && isSelectable}
                       showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
-                      buttonText={isNudgeItem ? 'Answer Nudge' : buttonText}
-                      onActionButtonClick={isNudgeItem ? handleAnswerNudge : onButtonClick}
+                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : buttonText}
+                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? handleAnswerNudge : onButtonClick}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
                       showAcceptDeclineButtons={isRequestsToCommitTab}
@@ -603,6 +617,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       hideDueDate={isRequestsToCommitTab}
                       isNudge={isNudgeItem}
                       nudgesLeft={item.nudgesLeft}
+                      isMyPromisesTab={isMyPromisesTab}
                     />
                   );
                 })
