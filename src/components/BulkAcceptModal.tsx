@@ -60,6 +60,7 @@ interface Commitment {
   id: number;
   title: string;
   description: string;
+  type?: string;
 }
 
 interface BulkAcceptModalProps {
@@ -73,6 +74,7 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
   const [date, setDate] = useState<Dayjs | null>(null);
   const [time, setTime] = useState<Dayjs | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [nudgeCount, setNudgeCount] = useState<number>(0);
 
   const handleClose = () => {
     setIsSubmitted(false);
@@ -96,6 +98,15 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
     }
   }, [isSubmitted]);
 
+  useEffect(() => {
+    if (commitments[currentIndex]?.type === 'nudge' && date) {
+      const weeks = date.diff(dayjs(), 'week');
+      setNudgeCount(weeks > 0 ? weeks : 0);
+    } else {
+      setNudgeCount(0);
+    }
+  }, [date, currentIndex, commitments]);
+
   if (!open || commitments.length === 0) {
     return null;
   }
@@ -115,7 +126,9 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
 
   const currentCommitment = commitments[currentIndex];
   const isLastItem = currentIndex === commitments.length - 1;
+  const isNudge = currentCommitment.type === 'nudge';
 
+  // Standard presets
   const today = dayjs();
   const tomorrow = today.add(1, 'day');
   let thisFriday = today.day(5);
@@ -123,13 +136,25 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
     thisFriday = thisFriday.add(7, 'day');
   }
   const inOneWeek = today.add(1, 'week');
-
-  const presetDates = [
+  const standardPresetDates = [
     { label: `Today (${today.format('MMM D')})`, value: today },
     { label: `Tomorrow (${tomorrow.format('MMM D')})`, value: tomorrow },
     { label: `This Friday (${thisFriday.format('MMM D')})`, value: thisFriday },
     { label: `In 1 week (${inOneWeek.format('MMM D')})`, value: inOneWeek },
   ];
+
+  // Nudge presets
+  const now = dayjs();
+  const endOfJuly = now.month(6).endOf('month');
+  const endOfAugust = now.month(7).endOf('month');
+  const endOfSeptember = now.month(8).endOf('month');
+  const nudgePresetDates = [
+    { label: `End of July (${endOfJuly.format('MMM D')})`, value: endOfJuly },
+    { label: `End of August (${endOfAugust.format('MMM D')})`, value: endOfAugust },
+    { label: `End of September (${endOfSeptember.format('MMM D')})`, value: endOfSeptember },
+  ];
+
+  const presetDates = isNudge ? nudgePresetDates : standardPresetDates;
 
   return (
     <Dialog
@@ -213,6 +238,15 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
                     },
                   }}
                 />
+                {isNudge && date && (
+                  <Typography variant="body1" sx={{ color: 'text.secondary', mt: 1, fontSize: '15px' }}>
+                    By accepting, you’ll receive{' '}
+                    <Box component="span" sx={{ fontWeight: 'bold' }}>
+                      {nudgeCount} {nudgeCount === 1 ? 'nudge' : 'nudges'}
+                    </Box>{' '}
+                    between now and {date.format('MMMM D, YYYY')} to support your progress.
+                  </Typography>
+                )}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {presetDates.map(({ label, value }) => (
                     <Chip
@@ -289,7 +323,7 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
                   },
                 }}
               >
-                {isLastItem ? 'Commit' : 'Next Commitment'}
+                {isLastItem ? (isNudge ? 'Commit to Nudges' : 'Commit') : 'Next Commitment'}
               </Button>
             </Box>
           </>

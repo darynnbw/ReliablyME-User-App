@@ -76,9 +76,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   };
 
   const isDueToday = dueDate === 'Today';
-  const dueRowColor = (isOverdue || isDueToday) ? theme.palette.error.main : '#666';
+  const dueRowColor = isOverdue ? theme.palette.error.main : '#666';
   const dueRowWeight = (isOverdue || isDueToday) ? 600 : 'inherit';
-  const calendarIconColor = (isOverdue || isDueToday) ? theme.palette.error.main : color;
+  const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
   return (
     <Card
@@ -175,7 +175,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   sx={{
                     bgcolor: alpha(theme.palette.error.main, 0.1),
                     color: 'error.dark',
-                    fontSize: '10px',
+                    fontSize: '12px',
                     fontWeight: 700,
                     height: 20,
                   }}

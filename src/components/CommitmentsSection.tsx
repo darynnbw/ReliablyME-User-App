@@ -69,7 +69,7 @@ const parseCommitmentDate = (dateString: string): Dayjs | null => {
   try {
     if (dateString === 'Today') return dayjs().startOf('day');
     const cleanDateString = dateString.replace('Due ', '');
-    // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D"
+    // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D, YYYY"
     const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D'], true);
     return date.isValid() ? date : null;
   } catch (error) {
@@ -340,7 +340,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
-  const hasNudgeSelected = selectedCommitments.some(c => c.type === 'nudge');
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
@@ -511,7 +510,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
                 <MenuItem value="latest">Due Date (Latest)</MenuItem>
-                <MenuItem value="pastDue">Past Due</MenuItem>
+                <MenuItem value="pastDue">Overdue</MenuItem>
               </Select>
             </FormControl>
 
@@ -554,7 +553,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 </Button>
               )}
 
-              {selectedCount > 0 && isRequestsToCommitTab && !hasNudgeSelected && (
+              {selectedCount > 0 && isRequestsToCommitTab && (
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Button
                     variant="contained"
