@@ -23,7 +23,7 @@ interface CommitmentListItemProps {
   selected?: boolean;
   color: string;
   showCheckbox: boolean;
-  isSelectable?: boolean;
+  isCheckboxDisabled?: boolean;
   showActionButton: boolean;
   buttonText: string;
   onViewDetails: () => void;
@@ -49,7 +49,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   selected = false,
   color,
   showCheckbox,
-  isSelectable = true,
+  isCheckboxDisabled = false,
   showActionButton,
   buttonText,
   onViewDetails,
@@ -105,10 +105,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               p: 0,
               mt: 0.5,
               alignSelf: 'flex-start',
-              visibility: isSelectable ? 'visible' : 'hidden',
             }}
             checked={selected}
             onChange={handleCheckboxChange}
+            disabled={isCheckboxDisabled}
           />
         )}
         <Box sx={{ flex: 1, minWidth: 0 }}>

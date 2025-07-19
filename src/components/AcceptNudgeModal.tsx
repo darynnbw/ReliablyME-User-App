@@ -67,6 +67,7 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
   const [date, setDate] = useState<Dayjs | null>(null);
   const [time, setTime] = useState<Dayjs | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [nudgeCount, setNudgeCount] = useState<number>(0);
 
   const handleClose = () => {
     setIsSubmitted(false);
@@ -81,6 +82,15 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
       return () => clearTimeout(timerId);
     }
   }, [isSubmitted]);
+
+  useEffect(() => {
+    if (date) {
+      const weeks = date.diff(dayjs(), 'week');
+      setNudgeCount(weeks > 0 ? weeks : 0);
+    } else {
+      setNudgeCount(0);
+    }
+  }, [date]);
 
   const handleCommit = () => {
     onCommit(date, time);
@@ -180,6 +190,11 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
                     },
                   }}
                 />
+                {date && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+                    You’ll receive {nudgeCount} nudges between now and {date.format('MMMM D, YYYY')}.
+                  </Typography>
+                )}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {presetDates.map(({ label, value }) => (
                     <Chip

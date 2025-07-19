@@ -200,9 +200,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     const checked = event.target.checked;
     setSelectAll(checked);
     setCommitments(prev => prev.map(item => {
-      const isNudgeItem = item.type === 'nudge';
-      const isSelectable = !isNudgeItem;
-      return { ...item, selected: isSelectable ? checked : false };
+      const isNudgeInMyPromises = isMyPromisesTab && item.type === 'nudge';
+      return { ...item, selected: isNudgeInMyPromises ? false : checked };
     }));
   };
 
@@ -512,7 +511,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 sx={{ p: 0 }}
                 checked={selectAll}
                 onChange={handleToggleSelectAll}
-                indeterminate={selectedCount > 0 && selectedCount < currentItems.filter(i => i.type !== 'nudge').length}
+                indeterminate={selectedCount > 0 && selectedCount < currentItems.filter(i => !(isMyPromisesTab && i.type === 'nudge')).length}
               />
               <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} commitment{selectedCount !== 1 ? 's' : ''} selected</Typography>
               
@@ -586,7 +585,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     ref={index === 0 ? firstItemRef : null}
                     color="#4caf50"
                     showCheckbox={false}
-                    isSelectable={false}
+                    isCheckboxDisabled={true}
                     showActionButton={false}
                     buttonText=""
                     onActionButtonClick={() => {}}
@@ -599,7 +598,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 paginatedItems.map((item, index) => {
                   const isNudgeItem = item.type === 'nudge';
                   const showCheckboxes = !isUnkeptTab && !isBadgesTab;
-                  const isSelectable = !isNudgeItem;
+                  const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
 
                   return (
                     <CommitmentListItem
@@ -608,7 +607,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       ref={index === 0 ? firstItemRef : null}
                       color={itemColor}
                       showCheckbox={showCheckboxes}
-                      isSelectable={isSelectable}
+                      isCheckboxDisabled={isCheckboxDisabled}
                       showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
                       buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : buttonText}
                       onActionButtonClick={isNudgeItem && isMyPromisesTab ? handleAnswerNudge : onButtonClick}
