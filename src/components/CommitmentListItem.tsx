@@ -11,6 +11,7 @@ import {
   Stack,
   alpha,
   Chip,
+  useTheme,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Shield, Edit } from '@mui/icons-material';
 
@@ -39,6 +40,7 @@ interface CommitmentListItemProps {
   nudgesLeft?: number;
   isMyPromisesTab?: boolean;
   isExternal?: boolean;
+  isOverdue?: boolean;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -66,26 +68,48 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   nudgesLeft,
   isMyPromisesTab = false,
   isExternal = false,
+  isOverdue = false,
 }, ref) => {
+  const theme = useTheme();
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
+
+  const isDueToday = dueDate === 'Today';
+  const dueRowColor = isOverdue || isDueToday ? theme.palette.error.main : '#666';
+  const dueRowWeight = isOverdue || isDueToday ? 600 : 'inherit';
+  const calendarIconColor = isOverdue || isDueToday ? theme.palette.error.main : color;
 
   return (
     <Card
       ref={ref}
       sx={{
+        position: 'relative',
         minHeight: 140,
-        borderLeft: `4px solid ${color}`,
+        borderLeft: `4px solid ${isOverdue ? theme.palette.error.main : color}`,
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',
         flexShrink: 0,
+        overflow: 'hidden',
         '&:hover': {
           transform: 'translateY(-2px)',
           boxShadow: 3,
         },
       }}
     >
+      {isOverdue && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '24px',
+            height: '24px',
+            bgcolor: 'error.main',
+            clipPath: 'polygon(100% 0, 0 0, 100% 100%)',
+          }}
+        />
+      )}
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
@@ -144,6 +168,19 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   }}
                 />
               )}
+              {isOverdue && (
+                <Chip
+                  label="Overdue"
+                  size="small"
+                  sx={{
+                    bgcolor: alpha(theme.palette.error.main, 0.1),
+                    color: 'error.dark',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    height: 20,
+                  }}
+                />
+              )}
             </Stack>
             <Tooltip title="View details" placement="top" arrow>
               <IconButton size="small" onClick={onViewDetails}>
@@ -157,16 +194,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             {/* Due Date */}
             {!hideDueDate && (
               <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
-                <CalendarToday sx={{ fontSize: 16, color: color }} />
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  Due{' '}
-                  {dueDate === 'Today' ? (
-                    <Typography component="span" sx={{ fontWeight: 600, color: 'error.main', fontSize: 'inherit' }}>
-                      Today
-                    </Typography>
-                  ) : (
-                    dueDate
-                  )}
+                <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
+                <Typography variant="body2" sx={{ color: dueRowColor, fontWeight: dueRowWeight }}>
+                  Due {dueDate}
                 </Typography>
                 {isNudge && nudgesLeft !== undefined && (
                   <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
