@@ -23,7 +23,7 @@ const CommitmentPortfolio: React.FC = () => {
           title: 'Teamwork',
           dueDate: 'Mar 28, 12:00 AM',
           committedDate: 'Mar 27, 9:15 PM',
-          description: 'Need feedback on the new product design mockups for client presentation.',
+          description: 'I will provide feedback on the new product design mockups for client presentation.',
           assignee: 'Riley Chen',
         },
         {
@@ -31,7 +31,7 @@ const CommitmentPortfolio: React.FC = () => {
           title: 'Attendance',
           dueDate: 'Due Mar 28, 12:00 AM',
           committedDate: 'Mar 27, 9:15 PM',
-          description: 'Need the quarterly marketing report with all KPIs and campaign results.',
+          description: 'I will deliver the quarterly marketing report with all KPIs and campaign results.',
           assignee: 'Jamie Smith',
         },
         {
@@ -47,7 +47,7 @@ const CommitmentPortfolio: React.FC = () => {
           title: 'Teamwork',
           dueDate: 'Apr 04, 10:00 AM',
           committedDate: 'Mar 27, 9:15 PM',
-          description: 'Prepare and share the agenda for the upcoming sprint planning meeting.',
+          description: 'I will prepare and share the agenda for the upcoming sprint planning meeting.',
           assignee: 'Sarah Connor',
         },
         {
