@@ -191,12 +191,12 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
                   }}
                 />
                 {date && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-                    You’ll receive{' '}
-                    <Typography component="span" sx={{ fontWeight: 600 }}>
+                  <Typography variant="body1" sx={{ color: 'text.secondary', mt: 1, fontSize: '15px' }}>
+                    By accepting, you’ll receive{' '}
+                    <Box component="span" sx={{ fontWeight: 'bold' }}>
                       {nudgeCount} {nudgeCount === 1 ? 'nudge' : 'nudges'}
-                    </Typography>{' '}
-                    between now and {date.format('MMMM D, YYYY')}.
+                    </Box>{' '}
+                    between now and {date.format('MMMM D, YYYY')} to support your progress.
                   </Typography>
                 )}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -277,9 +277,6 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
               >
                 Commit to Nudges
               </Button>
-              <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', mt: 2, fontSize: '0.75rem' }}>
-                By accepting, you’ll receive regular nudges to support your progress.
-              </Typography>
             </Box>
           </>
         )}
