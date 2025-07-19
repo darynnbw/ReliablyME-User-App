@@ -4,6 +4,7 @@ import {
   Container,
   Grid,
 } from '@mui/material';
+import dayjs from 'dayjs';
 import Header from '../components/Header';
 import NavigationTabs from '../components/NavigationTabs';
 import UserProfileSection from '../components/UserProfileSection';
@@ -11,6 +12,8 @@ import BadgesOverviewPanel from '../components/BadgesOverviewPanel';
 import CommitmentsSection from '../components/CommitmentsSection';
 import AccomplishmentsOverviewPanel from '../components/AccomplishmentsOverviewPanel';
 import YourStatisticsPanel from '../components/YourStatisticsPanel';
+
+const futureDate = (days: number) => dayjs().add(days, 'day').format('MMM D, hh:mm A');
 
 const CommitmentPortfolio: React.FC = () => {
   const myCommitmentsTabs = [
@@ -21,7 +24,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 1,
           title: 'Teamwork',
-          dueDate: 'Mar 28, 12:00 AM',
+          dueDate: futureDate(2),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I will provide feedback on the new product design mockups for client presentation.',
           assignee: 'Riley Chen',
@@ -29,7 +32,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 2,
           title: 'Attendance',
-          dueDate: 'Due Mar 28, 12:00 AM',
+          dueDate: futureDate(3),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I will deliver the quarterly marketing report with all KPIs and campaign results.',
           assignee: 'Jamie Smith',
@@ -37,7 +40,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 6,
           title: 'Promise Kept General',
-          dueDate: 'Apr 02, 05:00 PM',
+          dueDate: futureDate(5),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I will complete the code review for the new feature branch by end of day.',
           assignee: 'Alex Johnson',
@@ -45,7 +48,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 7,
           title: 'Teamwork',
-          dueDate: 'Apr 04, 10:00 AM',
+          dueDate: futureDate(7),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I will prepare and share the agenda for the upcoming sprint planning meeting.',
           assignee: 'Sarah Connor',
@@ -53,7 +56,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 8,
           title: 'Attendance',
-          dueDate: 'Apr 05, 09:00 AM',
+          dueDate: futureDate(8),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I will join the all-hands meeting on time and prepared to discuss Q2 goals.',
           assignee: 'Mike Miller',
@@ -176,7 +179,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 1,
           title: 'Teamwork',
-          dueDate: 'Mar 28, 12:00 AM',
+          dueDate: futureDate(2),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'Need feedback on the new product design mockups for client presentation.',
           assignee: 'Riley Chen',
@@ -184,7 +187,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 2,
           title: 'Promise Kept General',
-          dueDate: 'Apr 15, 12:00 AM',
+          dueDate: futureDate(10),
           committedDate: 'Mar 27, 9:15 PM',
           description: 'Need the quarterly marketing report with all KPIs and campaign results.',
           assignee: 'Jamie Smith',
