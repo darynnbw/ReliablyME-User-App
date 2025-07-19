@@ -13,7 +13,6 @@ import {
   Chip,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Shield, Edit } from '@mui/icons-material';
-import dayjs from 'dayjs';
 
 interface CommitmentListItemProps {
   id: number;
@@ -41,17 +40,6 @@ interface CommitmentListItemProps {
   isMyPromisesTab?: boolean;
   isExternal?: boolean;
 }
-
-const parseDate = (dateString: string): dayjs.Dayjs | null => {
-  if (dateString === 'Today') return dayjs().startOf('day');
-  try {
-    const cleanDateString = dateString.replace('Due ', '');
-    const date = dayjs(cleanDateString);
-    return date.isValid() ? date : null;
-  } catch (error) {
-    return null;
-  }
-};
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
   id,
@@ -83,38 +71,21 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
     onToggleSelect(id, event.target.checked);
   };
 
-  const parsedDate = parseDate(dueDate);
-  const isOverdue = parsedDate ? parsedDate.isBefore(dayjs(), 'day') : false;
-  const isDueToday = dueDate === 'Today';
-
   return (
     <Card
       ref={ref}
       sx={{
-        position: 'relative',
         minHeight: 140,
-        borderLeft: `4px solid ${isOverdue ? '#d32f2f' : color}`,
+        borderLeft: `4px solid ${color}`,
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',
         flexShrink: 0,
-        overflow: 'hidden',
         '&:hover': {
           transform: 'translateY(-2px)',
           boxShadow: 3,
         },
       }}
     >
-      {isOverdue && (
-        <Box sx={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: 0,
-          height: 0,
-          borderLeft: '24px solid transparent',
-          borderTop: '24px solid #d32f2f',
-        }} />
-      )}
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
@@ -145,22 +116,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+            <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
               </Typography>
-              {isOverdue && (
-                <Chip
-                  label="OVERDUE"
-                  size="small"
-                  sx={{
-                    bgcolor: '#ffebee',
-                    color: '#d32f2f',
-                    fontSize: '10px',
-                    fontWeight: 700,
-                  }}
-                />
-              )}
               {isNudge && (
                 <Chip
                   label="Nudge"
@@ -197,22 +156,20 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           <Stack>
             {/* Due Date */}
             {!hideDueDate && (
-              <Stack 
-                direction="row" 
-                spacing={1} 
-                alignItems="center" 
-                sx={{ 
-                  mb: 1.5,
-                  color: isOverdue || isDueToday ? 'error.main' : color,
-                  fontWeight: isOverdue ? 'bold' : 'normal',
-                }}
-              >
-                <CalendarToday sx={{ fontSize: 16, color: 'inherit' }} />
-                <Typography variant="body2" sx={{ color: 'inherit', fontWeight: 'inherit' }}>
-                  Due: {dueDate}
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                <CalendarToday sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  Due{' '}
+                  {dueDate === 'Today' ? (
+                    <Typography component="span" sx={{ fontWeight: 600, color: 'error.main', fontSize: 'inherit' }}>
+                      Today
+                    </Typography>
+                  ) : (
+                    dueDate
+                  )}
                 </Typography>
                 {isNudge && nudgesLeft !== undefined && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem', fontWeight: 'normal' }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
                     ({nudgesLeft} nudges left)
                   </Typography>
                 )}
@@ -228,7 +185,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
               {/* Assignee */}
               <Stack direction="row" spacing={1} alignItems="center">
-                <Person sx={{ fontSize: 16, color: isOverdue ? 'error.main' : color }} />
+                <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   To: {assignee}
                 </Typography>
@@ -248,7 +205,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     disabled={isBulkSelecting}
                     startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
                     sx={{
-                      bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : (isOverdue ? '#d32f2f' : color),
+                      bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
                       color: 'white',
                       textTransform: 'none',
                       fontWeight: 'bold',
@@ -257,7 +214,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       borderRadius: 1,
                       flexShrink: 0,
                       '&:hover': { 
-                        bgcolor: (isNudge && isMyPromisesTab) ? '#f4511e' : alpha(isOverdue ? '#d32f2f' : color, 0.8)
+                        bgcolor: (isNudge && isMyPromisesTab) ? '#f4511e' : alpha(color, 0.8)
                       },
                     }}
                   >
