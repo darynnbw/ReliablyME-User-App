@@ -39,7 +39,6 @@ interface CommitmentListItemProps {
   nudgesLeft?: number;
   isMyPromisesTab?: boolean;
   isExternal?: boolean;
-  isOverdue?: boolean;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -67,42 +66,24 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   nudgesLeft,
   isMyPromisesTab = false,
   isExternal = false,
-  isOverdue = false,
 }, ref) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
-
-  const isDueToday = dueDate === 'Today';
 
   return (
     <Card
       ref={ref}
       sx={{
         minHeight: 140,
-        borderLeft: `4px solid ${isOverdue ? 'error.main' : color}`,
+        borderLeft: `4px solid ${color}`,
         boxShadow: 1,
         transition: 'all 0.2s ease-in-out',
         flexShrink: 0,
-        position: 'relative',
-        overflow: 'hidden',
         '&:hover': {
           transform: 'translateY(-2px)',
           boxShadow: 3,
         },
-        ...(isOverdue && {
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: 0,
-            height: 0,
-            borderStyle: 'solid',
-            borderWidth: '0 24px 24px 0',
-            borderColor: 'transparent #d32f2f transparent transparent',
-          },
-        }),
       }}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
@@ -163,18 +144,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   }}
                 />
               )}
-              {isOverdue && (
-                <Chip
-                  label="Overdue"
-                  size="small"
-                  sx={{
-                    bgcolor: 'error.light',
-                    color: 'error.dark',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                  }}
-                />
-              )}
             </Stack>
             <Tooltip title="View details" placement="top" arrow>
               <IconButton size="small" onClick={onViewDetails}>
@@ -187,22 +156,20 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           <Stack>
             {/* Due Date */}
             {!hideDueDate && (
-              <Stack 
-                direction="row" 
-                spacing={1} 
-                alignItems="center" 
-                sx={{ 
-                  mb: 1.5,
-                  color: isOverdue || isDueToday ? 'error.main' : 'inherit',
-                  fontWeight: isOverdue || isDueToday ? 700 : 'normal',
-                }}
-              >
-                <CalendarToday sx={{ fontSize: 16, color: 'inherit' }} />
-                <Typography variant="body2" sx={{ color: 'inherit', fontWeight: 'inherit' }}>
-                  Due {dueDate}
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                <CalendarToday sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  Due{' '}
+                  {dueDate === 'Today' ? (
+                    <Typography component="span" sx={{ fontWeight: 600, color: 'error.main', fontSize: 'inherit' }}>
+                      Today
+                    </Typography>
+                  ) : (
+                    dueDate
+                  )}
                 </Typography>
                 {isNudge && nudgesLeft !== undefined && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem', fontWeight: 400 }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
                     ({nudgesLeft} nudges left)
                   </Typography>
                 )}
@@ -218,7 +185,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
               {/* Assignee */}
               <Stack direction="row" spacing={1} alignItems="center">
-                <Person sx={{ fontSize: 16, color: isOverdue ? 'error.main' : color }} />
+                <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   To: {assignee}
                 </Typography>
