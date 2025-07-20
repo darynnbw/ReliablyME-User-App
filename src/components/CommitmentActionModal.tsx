@@ -156,7 +156,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           <DialogTitle sx={{ p: 0, mb: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
-                <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 0.5 }}>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 1 }}>
                   {currentTexts.title}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
