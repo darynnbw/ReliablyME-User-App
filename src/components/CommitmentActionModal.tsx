@@ -146,20 +146,20 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           transition: 'all 0.3s ease-in-out',
           ...(isSubmitted
             ? { p: 3, maxWidth: '450px', height: '250px', alignItems: 'center', justifyContent: 'center' }
-            : { p: 3, maxWidth: '700px' }
+            : { p: 2.5, maxWidth: '650px' }
           ),
         },
       }}
     >
       {!isSubmitted && (
         <>
-          <DialogTitle sx={{ p: 0, mb: 2 }}>
+          <DialogTitle sx={{ p: 0, mb: 1.5 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
-                <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 1 }}>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '22px', mb: 0.5 }}>
                   {currentTexts.title}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>
                   {currentTexts.subtitle}
                 </Typography>
               </Box>
@@ -168,7 +168,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </IconButton>
             </Box>
           </DialogTitle>
-          <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
+          <Divider sx={{ my: 2, borderColor: '#e0e0e0' }} />
         </>
       )}
 
@@ -189,28 +189,30 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           <>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
-                <FormControl fullWidth>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333', fontSize: '0.9rem' }}>Badge they'll earn</Typography>
+                <FormControl fullWidth size="small">
                   <Select value={badge} onChange={(e: SelectChangeEvent) => setBadge(e.target.value)} displayEmpty sx={{ borderRadius: 2, bgcolor: 'grey.50' }}>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Box>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
-                <TextField fullWidth multiline rows={2} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333', fontSize: '0.9rem' }}>{currentTexts.promiseLabel}</Typography>
+                <TextField fullWidth multiline rows={2} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} size="small" sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
               </Box>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Recipient(s)</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333', fontSize: '0.9rem' }}>Recipient(s)</Typography>
                 <Autocomplete
                   multiple
                   freeSolo
+                  size="small"
                   options={recipientOptions.map((option) => option.name)}
                   value={recipients}
                   onChange={handleRecipientsChange}
                   renderTags={(value: readonly string[], getTagProps) =>
                     value.map((option: string, index: number) => (
                       <Chip
+                        size="small"
                         variant="outlined"
                         label={!recipientOptions.some(user => user.name === option) ? `📱 Invite: ${option}` : option}
                         {...getTagProps({ index })}
@@ -224,26 +226,35 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       placeholder="Type a name or phone number"
                     />
                   )}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 0.5 } }}
                 />
-                {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 18 }} /><Typography variant="body2" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
+                {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 16 }} /><Typography variant="body2" sx={{ fontStyle: 'italic', fontSize: '0.8rem' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
               </Box>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Select Group</Typography>
-                <FormControl fullWidth>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333', fontSize: '0.9rem' }}>Select Group</Typography>
+                <FormControl fullWidth size="small">
                   <Select
                     value={group}
                     onChange={(e: SelectChangeEvent) => setGroup(e.target.value)}
                     displayEmpty
+                    renderValue={(selected) => {
+                      if (!selected) {
+                        return <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>None</Typography>;
+                      }
+                      return selected;
+                    }}
                     sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
                     {groupOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Box>
             </Box>
-            <Box sx={{ mt: 2.5 }}>
-              <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid} fullWidth sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '48px', borderRadius: 2, fontWeight: 600, fontSize: '16px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}>
+            <Box sx={{ mt: 2 }}>
+              <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid} fullWidth sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '44px', borderRadius: 2, fontWeight: 600, fontSize: '15px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}>
                 {currentTexts.buttonText}
               </Button>
             </Box>
