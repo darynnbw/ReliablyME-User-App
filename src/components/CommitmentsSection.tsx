@@ -192,7 +192,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       return dateB.valueOf() - dateA.valueOf();
     }
     // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
-    return dateA.valueOf() - b.valueOf();
+    return dateA.valueOf() - dateB.valueOf();
   });
 
   useEffect(() => {

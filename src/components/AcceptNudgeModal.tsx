@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -69,19 +69,19 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [nudgeCount, setNudgeCount] = useState<number>(0);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubmitted(false);
     setDate(null);
     setTime(null);
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (isSubmitted) {
       const timerId = setTimeout(handleClose, 3000);
       return () => clearTimeout(timerId);
     }
-  }, [isSubmitted]);
+  }, [isSubmitted, handleClose]);
 
   useEffect(() => {
     if (date) {

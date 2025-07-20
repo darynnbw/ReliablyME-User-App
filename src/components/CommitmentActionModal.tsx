@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -87,7 +87,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
 
   const isFormValid = !!(badge && promise.trim() && recipients.length > 0);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubmitted(false);
     setBadge('');
     setPromise('');
@@ -95,14 +95,14 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     setGroup('');
     setHasExternalRecipient(false);
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (isSubmitted) {
       const timerId = setTimeout(handleClose, 3000);
       return () => clearTimeout(timerId);
     }
-  }, [isSubmitted]);
+  }, [isSubmitted, handleClose]);
 
   const handleRecipientsChange = (_: any, newValue: string[]) => {
     setRecipients(newValue);

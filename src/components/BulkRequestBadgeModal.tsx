@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -34,11 +34,11 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
   const [explanation, setExplanation] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubmitted(false);
     setExplanation('');
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (open) {
@@ -53,7 +53,7 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
       const timerId = setTimeout(handleClose, 3500);
       return () => clearTimeout(timerId);
     }
-  }, [isSubmitted]);
+  }, [isSubmitted, handleClose]);
 
   if (!open || commitments.length === 0) {
     return null;

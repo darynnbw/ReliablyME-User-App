@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -33,15 +33,14 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
 }) => {
   const [message, setMessage] = useState('');
 
+  const handleClose = useCallback(() => {
+    setMessage('');
+    onClose();
+  }, [onClose]);
+
   const handleSend = () => {
     onSend(message);
-    setMessage('');
-    onClose();
-  };
-
-  const handleClose = () => {
-    setMessage('');
-    onClose();
+    handleClose();
   };
 
   if (!notification) return null;

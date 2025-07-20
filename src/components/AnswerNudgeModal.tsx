@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -22,18 +22,18 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
   const [answer, setAnswer] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubmitted(false);
     setAnswer('');
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (isSubmitted) {
       const timerId = setTimeout(handleClose, 3500);
       return () => clearTimeout(timerId);
     }
-  }, [isSubmitted]);
+  }, [isSubmitted, handleClose]);
 
   const handleSubmit = () => {
     console.log('Submitted answer:', answer);

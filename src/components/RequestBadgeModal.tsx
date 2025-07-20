@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -22,18 +22,18 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
   const [explanation, setExplanation] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubmitted(false);
     setExplanation('');
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (isSubmitted) {
       const timerId = setTimeout(handleClose, 3500);
       return () => clearTimeout(timerId);
     }
-  }, [isSubmitted]);
+  }, [isSubmitted, handleClose]);
 
   const handleRequestBadge = () => {
     console.log('Badge requested with explanation:', explanation);
