@@ -285,22 +285,21 @@ const ActionNotifications: React.FC = () => {
                     </Typography>
 
                     {notification.type === 'Badge Request' && (notification as any).explanation && (
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary', mb: 0.5 }}>
-                          Explanation
-                        </Typography>
-                        <Box
-                          sx={{
-                            bgcolor: '#f8f9fa',
-                            p: 2,
-                            borderRadius: 2,
-                            border: '1px solid #e9ecef'
-                          }}
-                        >
-                          <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                            {(notification as any).explanation}
+                      <Box
+                        sx={{
+                          bgcolor: '#f8f9fa',
+                          p: 2,
+                          borderRadius: 2,
+                          border: '1px solid #e9ecef',
+                          mb: 2,
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                          <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                            Explanation:{' '}
                           </Typography>
-                        </Box>
+                          {(notification as any).explanation}
+                        </Typography>
                       </Box>
                     )}
 
