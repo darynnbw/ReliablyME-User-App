@@ -112,8 +112,11 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
         {isSubmitted ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
             <ConfettiAnimation />
-            <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem', mt: 3 }}>
-              {`You’re all set! ${commitments.length} badge requests will be confirmed, rejected, or sent back for more info.`}
+            <Typography variant="h5" sx={{ fontWeight: 700, mt: 3, mb: 1 }}>
+              You’re all set!
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {`${commitments.length} badge request${commitments.length > 1 ? 's' : ''} will be confirmed, rejected, or sent back for more info.`}
             </Typography>
           </Box>
         ) : (
