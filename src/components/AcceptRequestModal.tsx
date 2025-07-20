@@ -10,44 +10,12 @@ import {
   Divider,
   Stack,
   Chip,
-  keyframes,
-  styled,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs, { Dayjs } from 'dayjs';
-
-// Keyframes for the SVG animation
-const drawCircle = keyframes`
-  to { stroke-dashoffset: 0; }
-`;
-
-const drawCheck = keyframes`
-  to { stroke-dashoffset: 0; }
-`;
-
-// Styled components for the animated SVG parts
-const AnimatedCircle = styled('circle')(({ theme }) => ({
-  fill: 'none',
-  stroke: theme.palette.success.main,
-  strokeWidth: 6,
-  strokeMiterlimit: 10,
-  strokeDasharray: 390,
-  strokeDashoffset: 390,
-  animation: `${drawCircle} 0.6s ease-out forwards`,
-}));
-
-const AnimatedCheck = styled('path')(({ theme }) => ({
-  fill: 'none',
-  stroke: theme.palette.success.main,
-  strokeWidth: 6,
-  strokeLinecap: 'round',
-  strokeMiterlimit: 10,
-  strokeDasharray: 100,
-  strokeDashoffset: 100,
-  animation: `${drawCheck} 0.4s 0.4s ease-out forwards`,
-}));
+import ConfettiAnimation from './ConfettiAnimation';
 
 const presetTimes = [
   { label: '11:59 PM', value: dayjs().hour(23).minute(59) },
@@ -77,7 +45,7 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
 
   useEffect(() => {
     if (isSubmitted) {
-      const timerId = setTimeout(handleClose, 3000);
+      const timerId = setTimeout(handleClose, 3500);
       return () => clearTimeout(timerId);
     }
   }, [isSubmitted]);
@@ -137,14 +105,12 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
       <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
         {isSubmitted ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
-            <Box sx={{ width: 80, height: 80, mb: 3 }}>
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
-                <AnimatedCircle cx="65.1" cy="65.1" r="62.1" />
-                <AnimatedCheck d="M100.2,40.2L51.5,88.8L29.8,67.5" />
-              </svg>
-            </Box>
-            <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
-              Nice work! You’ll find your new promise in the My Promises tab.
+            <ConfettiAnimation />
+            <Typography variant="h6" sx={{ fontWeight: 700, mt: 3, mb: 1 }}>
+              You’re all set!
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              You'll find your new promise in the My Promises tab.
             </Typography>
           </Box>
         ) : (
