@@ -86,7 +86,7 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
           borderRadius: 3,
           transition: 'all 0.3s ease-in-out',
           ...(isSubmitted
-            ? { p: 3, maxWidth: '450px', height: '250px', alignItems: 'center', justifyContent: 'center' }
+            ? { p: 3, maxWidth: '450px', alignItems: 'center', justifyContent: 'center' }
             : { p: 3, maxWidth: '600px' }
           ),
         },
@@ -112,7 +112,7 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
         {isSubmitted ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
             <ConfettiAnimation />
-            <Typography variant="h4" sx={{ fontWeight: 700, mt: 3, mb: 1.5 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, mt: 3, mb: 1.5 }}>
               You’re all set!
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
