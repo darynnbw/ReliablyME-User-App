@@ -25,6 +25,8 @@ import ConfirmationModal from './ConfirmationModal';
 import DeclineModal from './DeclineModal';
 import ContactTooltip from './ContactTooltip';
 import RequestClarificationModal from './RequestClarificationModal';
+import ApproveBadgeModal from './ApproveBadgeModal';
+import DeclineBadgeRequestModal from './DeclineBadgeRequestModal';
 
 const ActionNotifications: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -32,6 +34,8 @@ const ActionNotifications: React.FC = () => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [declineModalOpen, setDeclineModalOpen] = useState(false);
   const [requestClarificationModalOpen, setRequestClarificationModalOpen] = useState(false);
+  const [approveBadgeModalOpen, setApproveBadgeModalOpen] = useState(false);
+  const [declineBadgeModalOpen, setDeclineBadgeModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
@@ -113,9 +117,17 @@ const ActionNotifications: React.FC = () => {
     setSelectedNotification(notification);
     
     if (action === 'accept') {
-      setConfirmationModalOpen(true);
+      if (notification.type === 'Badge Request') {
+        setApproveBadgeModalOpen(true);
+      } else {
+        setConfirmationModalOpen(true);
+      }
     } else if (action === 'decline') {
-      setDeclineModalOpen(true);
+      if (notification.type === 'Badge Request') {
+        setDeclineBadgeModalOpen(true);
+      } else {
+        setDeclineModalOpen(true);
+      }
     } else if (action === 'edit' && notification.type === 'Nudge') {
       setAnswerNudgeModalOpen(true);
     }
@@ -132,6 +144,10 @@ const ActionNotifications: React.FC = () => {
 
   const handleDecline = () => {
     console.log('Declined invitation:', selectedNotification?.title);
+  };
+
+  const handleDeclineBadgeRequest = (reason: string) => {
+    console.log(`Declined badge for ${selectedNotification?.assignee} with reason: ${reason}`);
   };
 
   const handleViewDetails = (notification: any) => {
@@ -382,6 +398,19 @@ const ActionNotifications: React.FC = () => {
         onClose={() => setRequestClarificationModalOpen(false)}
         notification={selectedNotification}
         onSend={handleSendClarification}
+      />
+
+      <ApproveBadgeModal
+        open={approveBadgeModalOpen}
+        onClose={() => setApproveBadgeModalOpen(false)}
+        assigneeName={selectedNotification?.assignee || ''}
+      />
+
+      <DeclineBadgeRequestModal
+        open={declineBadgeModalOpen}
+        onClose={() => setDeclineBadgeModalOpen(false)}
+        notification={selectedNotification}
+        onDecline={handleDeclineBadgeRequest}
       />
     </>
   );
