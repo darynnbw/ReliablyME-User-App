@@ -58,6 +58,7 @@ interface Commitment {
   nudgesLeft?: number;
   totalNudges?: number;
   isExternal?: boolean;
+  questions?: string[];
 }
 
 interface CommitmentsSectionProps {
@@ -99,6 +100,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
+  const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
@@ -337,13 +339,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setBulkAcceptModalOpen(true);
   };
 
-  const handleAnswerNudge = () => {
+  const handleAnswerNudge = (item: Commitment) => {
+    setCommitmentForAnswerNudge(item);
     setAnswerNudgeModalOpen(true);
   };
 
   const handleAnswerNudgeFromDetails = () => {
     setNudgeDetailsModalOpen(false);
-    setAnswerNudgeModalOpen(true);
+    if (commitmentForNudgeDetails) {
+      handleAnswerNudge(commitmentForNudgeDetails);
+    }
   };
 
   const handleAcceptNudgeFromDetails = () => {
@@ -655,7 +660,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       isCheckboxDisabled={isCheckboxDisabled}
                       showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
                       buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : buttonText}
-                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? handleAnswerNudge : onButtonClick}
+                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : onButtonClick}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
                       showAcceptDeclineButtons={isRequestsToCommitTab}
@@ -763,6 +768,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       <AnswerNudgeModal
         open={answerNudgeModalOpen}
         onClose={handleCloseAnswerNudgeModal}
+        commitment={commitmentForAnswerNudge}
       />
     </>
   );

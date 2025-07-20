@@ -16,9 +16,14 @@ import ConfettiAnimation from './ConfettiAnimation';
 interface AnswerNudgeModalProps {
   open: boolean;
   onClose: () => void;
+  commitment: {
+    title: string;
+    questions?: string[];
+    dueDate?: string;
+  } | null;
 }
 
-const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) => {
+const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, commitment }) => {
   const [answer, setAnswer] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -39,6 +44,14 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
     console.log('Submitted answer:', answer);
     setIsSubmitted(true);
   };
+
+  const defaultQuestions = [
+    '1. What have you accomplished so far this week?',
+    '2. What do you plan to accomplish/complete by the end of the week?',
+    '3. What are you concerned about that might hinder your progress?',
+  ];
+
+  const questionsToRender = commitment?.questions?.map((q, i) => `${i + 1}. ${q}`) ?? defaultQuestions;
 
   return (
     <Dialog
@@ -87,7 +100,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
         ) : (
           <>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>
-              Mid-Week Progress
+              {commitment?.title || 'Mid-Week Progress'}
             </Typography>
 
             <Typography variant="body1" sx={{ fontWeight: 400, mb: 2, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
@@ -95,15 +108,11 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
             </Typography>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="body1" sx={{ mb: 0.5, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-                1. What have you accomplished so far this week?
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 0.5, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-                2. What do you plan to accomplish/complete by the end of the week?
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-                3. What are you concerned about that might hinder your progress?
-              </Typography>
+              {questionsToRender.map((question, index) => (
+                <Typography key={index} variant="body1" sx={{ mb: 0.5, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
+                  {question}
+                </Typography>
+              ))}
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
@@ -111,7 +120,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
                 Due:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                  Apr 4, 9:30 PM
+                  {commitment?.dueDate || 'Apr 4, 9:30 PM'}
                 </Typography>
               </Typography>
             </Box>

@@ -26,6 +26,7 @@ import ContactTooltip from './ContactTooltip';
 import RequestClarificationModal from './RequestClarificationModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
 import AcceptRequestModal from './AcceptRequestModal';
+import NudgeDetailsModal from './NudgeDetailsModal';
 
 const initialNotifications = [
   {
@@ -39,12 +40,13 @@ const initialNotifications = [
   },
   {
     id: 2,
-    title: 'Promise Kept General',
+    title: 'On Track Daily',
     type: 'Nudge',
-    description: 'Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text.',
+    description: 'I will provide a daily update on my task progress.',
     assignee: 'Chris Parker',
     actions: ['edit'],
     dueDate: 'Apr 11, 9:00 AM',
+    questions: ['Did you complete all your planned tasks today?'],
   },
   {
     id: 3,
@@ -66,12 +68,13 @@ const initialNotifications = [
   },
   {
     id: 5,
-    title: 'Promise Kept General',
+    title: 'PR Feedback Nudge',
     type: 'Nudge',
     description: 'Your input is needed on the latest pull request for the authentication system updates.',
     assignee: 'Mike Johnson',
     actions: ['edit'],
     dueDate: 'Apr 14, 4:00 PM',
+    questions: ['Have you had a chance to review the pull request?'],
   },
 ];
 
@@ -83,6 +86,7 @@ const ActionNotifications: React.FC = () => {
   const [requestClarificationModalOpen, setRequestClarificationModalOpen] = useState(false);
   const [approvalModalOpen, setApprovalModalOpen] = useState(false);
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
+  const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
@@ -91,6 +95,7 @@ const ActionNotifications: React.FC = () => {
   const handleCloseDeclineModal = useCallback(() => setDeclineModalOpen(false), []);
   const handleCloseClarificationModal = useCallback(() => setRequestClarificationModalOpen(false), []);
   const handleCloseAcceptModal = useCallback(() => setAcceptModalOpen(false), []);
+  const handleCloseNudgeDetailsModal = useCallback(() => setNudgeDetailsModalOpen(false), []);
   const handleCloseApprovalModal = useCallback(() => {
     setApprovalModalOpen(false);
     setSelectedNotification(null);
@@ -163,12 +168,22 @@ const ActionNotifications: React.FC = () => {
   };
 
   const handleViewDetails = (notification: any) => {
-    setCommitmentForDetails(notification);
-    setModalOpen(true);
+    setSelectedNotification(notification);
+    if (notification.type === 'Nudge') {
+      setNudgeDetailsModalOpen(true);
+    } else {
+      setCommitmentForDetails(notification);
+      setModalOpen(true);
+    }
   };
 
   const handleSendClarification = (message: string) => {
     console.log(`Clarification request sent for notification ${selectedNotification?.id}: ${message}`);
+  };
+
+  const handleAnswerNudgeFromDetails = () => {
+    setNudgeDetailsModalOpen(false);
+    setAnswerNudgeModalOpen(true);
   };
 
   return (
@@ -394,9 +409,17 @@ const ActionNotifications: React.FC = () => {
         commitment={commitmentForDetails}
       />
 
+      <NudgeDetailsModal
+        open={nudgeDetailsModalOpen}
+        onClose={handleCloseNudgeDetailsModal}
+        commitment={selectedNotification}
+        onAnswerNudgeClick={handleAnswerNudgeFromDetails}
+      />
+
       <AnswerNudgeModal
         open={answerNudgeModalOpen}
         onClose={handleCloseAnswerNudgeModal}
+        commitment={selectedNotification}
       />
 
       <DeclineModal

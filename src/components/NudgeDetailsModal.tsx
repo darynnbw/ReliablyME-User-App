@@ -20,6 +20,7 @@ interface Commitment {
   committedDate?: string;
   nudgesLeft?: number;
   totalNudges?: number;
+  questions?: string[];
 }
 
 interface NudgeDetailsModalProps {
@@ -121,17 +122,23 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
         </Box>
 
         <Box sx={{ mb: 3, bgcolor: '#f8f9fa', p: 2.5, borderRadius: 2, border: '1px solid #e9ecef' }}>
-          <Stack spacing={1}>
-            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-              1. What did you accomplish this week?
-            </Typography>
-            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-              2. Do you have any blockers that are slowing you down?
-            </Typography>
-            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-              3. How useful did you find the ReliablyME Accountability Agent this week?
-            </Typography>
-          </Stack>
+          <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Original Commitment</Typography>
+          <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400, mb: 2 }}>
+            {commitment.description}
+          </Typography>
+          {commitment.questions && commitment.questions.length > 0 && (
+            <>
+              <Divider sx={{ my: 2 }}/>
+              <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Nudge Questions</Typography>
+              <Stack spacing={1}>
+                {commitment.questions.map((q, i) => (
+                  <Typography key={i} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                    {i + 1}. {q}
+                  </Typography>
+                ))}
+              </Stack>
+            </>
+          )}
         </Box>
 
         <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
