@@ -11,6 +11,7 @@ import {
   TextField,
 } from '@mui/material';
 import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
+import ConfettiAnimation from './ConfettiAnimation';
 
 interface Commitment {
   id: number;
@@ -31,13 +32,28 @@ interface BulkRequestBadgeModalProps {
 const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onClose, commitments, isOwedToMe }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [explanation, setExplanation] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleClose = () => {
+    setIsSubmitted(false);
+    setExplanation('');
+    onClose();
+  };
 
   useEffect(() => {
     if (open) {
       setCurrentIndex(0);
       setExplanation('');
+      setIsSubmitted(false);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (isSubmitted) {
+      const timerId = setTimeout(handleClose, 3000);
+      return () => clearTimeout(timerId);
+    }
+  }, [isSubmitted]);
 
   if (!open || commitments.length === 0) {
     return null;
@@ -48,7 +64,7 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
     
     const isLast = currentIndex === commitments.length - 1;
     if (isLast) {
-      onClose();
+      setIsSubmitted(true);
     } else {
       setCurrentIndex(prev => prev + 1);
       setExplanation('');
@@ -62,157 +78,174 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
         sx: {
           borderRadius: 3,
-          p: 3,
-          maxWidth: '600px',
+          transition: 'all 0.3s ease-in-out',
+          ...(isSubmitted
+            ? { p: 3, maxWidth: '450px', height: '250px', alignItems: 'center', justifyContent: 'center' }
+            : { p: 3, maxWidth: '600px' }
+          ),
         },
       }}
     >
-      <DialogTitle sx={{ p: 0, mb: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
-            Bulk Request ({currentIndex + 1} of {commitments.length})
-          </Typography>
-          <IconButton onClick={onClose} sx={{ color: '#666' }}>
-            <Close />
-          </IconButton>
-        </Box>
-      </DialogTitle>
-
-      <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
-
-      <DialogContent sx={{ p: 0 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>
-          {currentCommitment.title}
-        </Typography>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2.5 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
-            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              {personLabel}{' '}
-              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {currentCommitment.assignee}
+      {!isSubmitted && (
+        <>
+          <DialogTitle sx={{ p: 0, mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
+                Bulk Request ({currentIndex + 1} of {commitments.length})
               </Typography>
+              <IconButton onClick={handleClose} sx={{ color: '#666' }}>
+                <Close />
+              </IconButton>
+            </Box>
+          </DialogTitle>
+          <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
+        </>
+      )}
+
+      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
+        {isSubmitted ? (
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
+            <ConfettiAnimation />
+            <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem', mt: 3 }}>
+              {`You’re all set! ${commitments.length} badge requests will be confirmed, rejected, or sent back for more info.`}
             </Typography>
           </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
-            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Due:{' '}
-              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {currentCommitment.dueDate.replace('Due ', '')}
-              </Typography>
+        ) : (
+          <>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>
+              {currentCommitment.title}
             </Typography>
-          </Box>
 
-          {currentCommitment.committedDate && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
-              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Committed:{' '}
-                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                  {currentCommitment.committedDate}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
+                <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                  {personLabel}{' '}
+                  <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                    {currentCommitment.assignee}
+                  </Typography>
                 </Typography>
+              </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+                <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                  Due:{' '}
+                  <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                    {currentCommitment.dueDate.replace('Due ', '')}
+                  </Typography>
+                </Typography>
+              </Box>
+
+              {currentCommitment.committedDate && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
+                  <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                    Committed:{' '}
+                    <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                      {currentCommitment.committedDate}
+                    </Typography>
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
+              Original Commitment
+            </Typography>
+
+            <Box 
+              sx={{ 
+                mb: 2.5,
+                bgcolor: '#f8f9fa',
+                p: 2,
+                borderRadius: 2,
+                border: '1px solid #e9ecef'
+              }}
+            >
+              <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                {currentCommitment.description}
               </Typography>
             </Box>
-          )}
-        </Box>
 
-        <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
-          Original Commitment
-        </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 1, color: '#333', fontSize: '16px' }}>
+              Explanation
+            </Typography>
 
-        <Box 
-          sx={{ 
-            mb: 2.5,
-            bgcolor: '#f8f9fa',
-            p: 2,
-            borderRadius: 2,
-            border: '1px solid #e9ecef'
-          }}
-        >
-          <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-            {currentCommitment.description}
-          </Typography>
-        </Box>
-
-        <Typography variant="body1" sx={{ fontWeight: 600, mb: 1, color: '#333', fontSize: '16px' }}>
-          Explanation
-        </Typography>
-
-        <TextField
-          multiline
-          rows={4}
-          fullWidth
-          value={explanation}
-          onChange={(e) => setExplanation(e.target.value)}
-          placeholder="Please explain how you completed this commitment..."
-          variant="outlined"
-          sx={{
-            mb: 2,
-            '& .MuiOutlinedInput-root': {
-              borderRadius: 2,
-              backgroundColor: 'white',
-              border: '1px solid #e9ecef',
-              '& fieldset': {
-                border: 'none',
-              },
-              '&:hover': {
-                backgroundColor: 'white',
-              },
-              '&.Mui-focused': {
-                backgroundColor: 'white',
-                '& fieldset': {
-                  border: '2px solid #1976d2',
+            <TextField
+              multiline
+              rows={4}
+              fullWidth
+              value={explanation}
+              onChange={(e) => setExplanation(e.target.value)}
+              placeholder="Please explain how you completed this commitment..."
+              variant="outlined"
+              sx={{
+                mb: 2,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  backgroundColor: 'white',
+                  border: '1px solid #e9ecef',
+                  '& fieldset': {
+                    border: 'none',
+                  },
+                  '&:hover': {
+                    backgroundColor: 'white',
+                  },
+                  '&.Mui-focused': {
+                    backgroundColor: 'white',
+                    '& fieldset': {
+                      border: '2px solid #1976d2',
+                    },
+                  },
                 },
-              },
-            },
-            '& .MuiInputBase-input': {
-              fontSize: '16px',
-              lineHeight: 1.6,
-              color: '#333',
-              fontWeight: 400,
-              padding: '12px',
-            },
-            '& .MuiInputBase-inputMultiline': {
-              padding: '12px',
-            },
-          }}
-        />
+                '& .MuiInputBase-input': {
+                  fontSize: '16px',
+                  lineHeight: 1.6,
+                  color: '#333',
+                  fontWeight: 400,
+                  padding: '12px',
+                },
+                '& .MuiInputBase-inputMultiline': {
+                  padding: '12px',
+                },
+              }}
+            />
 
-        <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
+            <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
 
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="contained"
-            onClick={handleNext}
-            disabled={!explanation.trim()}
-            sx={{
-              bgcolor: '#FF7F41',
-              color: 'white',
-              textTransform: 'none',
-              fontWeight: 'bold',
-              width: '100%',
-              py: 1.5,
-              borderRadius: 2,
-              fontSize: '16px',
-              '&:hover': { bgcolor: '#F4611A' },
-              '&:disabled': { 
-                bgcolor: '#e0e0e0',
-                color: '#9e9e9e'
-              },
-            }}
-          >
-            {isLastItem ? 'Submit' : 'Next Badge Request'}
-          </Button>
-        </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                variant="contained"
+                onClick={handleNext}
+                disabled={!explanation.trim()}
+                sx={{
+                  bgcolor: '#FF7F41',
+                  color: 'white',
+                  textTransform: 'none',
+                  fontWeight: 'bold',
+                  width: '100%',
+                  py: 1.5,
+                  borderRadius: 2,
+                  fontSize: '16px',
+                  '&:hover': { bgcolor: '#F4611A' },
+                  '&:disabled': { 
+                    bgcolor: '#e0e0e0',
+                    color: '#9e9e9e'
+                  },
+                }}
+              >
+                {isLastItem ? 'Submit' : 'Next Badge Request'}
+              </Button>
+            </Box>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
