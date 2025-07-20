@@ -6,7 +6,6 @@ import {
   Tabs,
   Tab,
   Stack,
-  useTheme,
 } from '@mui/material';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
@@ -17,7 +16,6 @@ const DueSoonOverdue: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
-  const theme = useTheme();
 
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
   const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
@@ -151,7 +149,7 @@ const DueSoonOverdue: React.FC = () => {
                 dueDate={item.dueDate}
                 description={item.description}
                 assignee={item.assignee}
-                color={isOverdue ? theme.palette.error.main : '#ff7043'}
+                color={'#ff7043'}
                 showCheckbox={false}
                 showActionButton={true}
                 buttonText="Request Badge"
