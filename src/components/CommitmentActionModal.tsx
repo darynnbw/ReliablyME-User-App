@@ -70,18 +70,10 @@ const recipientOptions = [
   { name: 'Riley Chen' },
 ];
 
-const groupOptions = [
-  'Development team',
-  'Customer facing team',
-  'Official co-op',
-  'Part-timers',
-];
-
 const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onClose, type }) => {
   const [badge, setBadge] = useState('');
   const [promise, setPromise] = useState('');
   const [recipients, setRecipients] = useState<string[]>([]);
-  const [group, setGroup] = useState('');
   const [hasExternalRecipient, setHasExternalRecipient] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -92,7 +84,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     setBadge('');
     setPromise('');
     setRecipients([]);
-    setGroup('');
     setHasExternalRecipient(false);
     onClose();
   };
@@ -111,7 +102,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
   };
 
   const handleSubmit = () => {
-    console.log(`${type} sent!`, { badge, promise, recipients, group });
+    console.log(`${type} sent!`, { badge, promise, recipients });
     setIsSubmitted(true);
   };
 
@@ -145,8 +136,8 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           borderRadius: 3,
           transition: 'all 0.3s ease-in-out',
           ...(isSubmitted
-            ? { p: 2.5, maxWidth: '450px', height: '250px', alignItems: 'center', justifyContent: 'center' }
-            : { p: 2.5, maxWidth: '700px' }
+            ? { p: 3, maxWidth: '450px', height: '250px', alignItems: 'center', justifyContent: 'center' }
+            : { p: 3, maxWidth: '600px' }
           ),
         },
       }}
@@ -156,10 +147,10 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           <DialogTitle sx={{ p: 0, mb: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: '#333', fontSize: '22px', mb: 0.5 }}>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: '#333' }}>
                   {currentTexts.title}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '13px' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
                   {currentTexts.subtitle}
                 </Typography>
               </Box>
@@ -168,7 +159,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </IconButton>
             </Box>
           </DialogTitle>
-          <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
+          <Divider sx={{ my: 2.5, borderColor: '#e0e0e0' }} />
         </>
       )}
 
@@ -187,25 +178,36 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, flex: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, flex: 1 }}>
               <Box>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>Badge they'll earn</Typography>
-                <FormControl fullWidth size="small">
-                  <Select value={badge} onChange={(e: SelectChangeEvent) => setBadge(e.target.value)} displayEmpty sx={{ borderRadius: 2, bgcolor: 'grey.50' }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
+                <FormControl fullWidth>
+                  <Select
+                    value={badge}
+                    onChange={(e: SelectChangeEvent) => setBadge(e.target.value)}
+                    displayEmpty
+                  >
+                    <MenuItem value="" disabled>Select a badge</MenuItem>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Box>
               <Box>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
-                <TextField size="small" fullWidth multiline rows={2} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  placeholder={currentTexts.promisePlaceholder}
+                  value={promise}
+                  onChange={(e) => setPromise(e.target.value)}
+                />
               </Box>
               <Box>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>Recipient(s)</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Recipient(s)</Typography>
                 <Autocomplete
                   multiple
                   freeSolo
-                  size="small"
                   options={recipientOptions.map((option) => option.name)}
                   value={recipients}
                   onChange={handleRecipientsChange}
@@ -213,7 +215,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     value.map((option: string, index: number) => (
                       <Chip
                         variant="outlined"
-                        size="small"
                         label={!recipientOptions.some(user => user.name === option) ? `📱 Invite: ${option}` : option}
                         {...getTagProps({ index })}
                       />
@@ -226,26 +227,35 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       placeholder="Type a name or phone number"
                     />
                   )}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: '2px 6px' } }}
                 />
-                {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 16 }} /><Typography variant="caption" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
-              </Box>
-              <Box>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>Select Group</Typography>
-                <FormControl fullWidth size="small">
-                  <Select
-                    value={group}
-                    onChange={(e: SelectChangeEvent) => setGroup(e.target.value)}
-                    displayEmpty
-                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
-                  >
-                    {groupOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
-                  </Select>
-                </FormControl>
+                {hasExternalRecipient && (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1, color: 'warning.dark' }}>
+                    <WarningAmber sx={{ fontSize: 16 }} />
+                    <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
+                      This person isn’t in the system. They’ll receive your promise via text message.
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             </Box>
-            <Box sx={{ mt: 'auto', pt: 2 }}>
-              <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid} fullWidth sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '44px', borderRadius: 2, fontWeight: 600, fontSize: '15px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}>
+            <Box sx={{ mt: 'auto', pt: 3 }}>
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={!isFormValid}
+                fullWidth
+                sx={{
+                  bgcolor: '#ff7043',
+                  color: 'white',
+                  textTransform: 'none',
+                  height: '48px',
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  '&:hover': { bgcolor: '#f4511e' },
+                  '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' },
+                }}
+              >
                 {currentTexts.buttonText}
               </Button>
             </Box>
