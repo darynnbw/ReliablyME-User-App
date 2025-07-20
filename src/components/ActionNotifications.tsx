@@ -146,7 +146,8 @@ const ActionNotifications: React.FC = () => {
   const handleAcceptCommit = () => {
     if (selectedNotification) {
       setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
-      setAcceptModalOpen(false);
+      // The modal will close itself after the animation.
+      // We just need to clear the selected notification here.
       setSelectedNotification(null);
     }
   };
