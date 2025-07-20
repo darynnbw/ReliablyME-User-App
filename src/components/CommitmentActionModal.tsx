@@ -168,7 +168,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </IconButton>
             </Box>
           </DialogTitle>
-          <Divider sx={{ mb: 2.5, borderColor: '#e0e0e0' }} />
+          <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
         </>
       )}
 
@@ -187,7 +187,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
                 <FormControl fullWidth>
@@ -198,7 +198,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </Box>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
-                <TextField fullWidth multiline rows={4} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
+                <TextField fullWidth multiline rows={2} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
               </Box>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Recipient(s)</Typography>
@@ -242,7 +242,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 </FormControl>
               </Box>
             </Box>
-            <Box sx={{ mt: 3 }}>
+            <Box sx={{ mt: 2.5 }}>
               <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid} fullWidth sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '48px', borderRadius: 2, fontWeight: 600, fontSize: '16px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}>
                 {currentTexts.buttonText}
               </Button>
