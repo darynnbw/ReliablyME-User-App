@@ -52,7 +52,8 @@ const initialNotifications = [
     id: 3,
     title: 'Promise Kept General',
     type: 'Badge Request',
-    description: 'Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text.',
+    description: 'I am going to complete the mandatory HR compliance training course.',
+    explanation: 'I have submitted the form and answered all the questions.',
     assignee: 'Chris Parker',
     actions: ['accept', 'decline', 'undo'],
     dueDate: 'Apr 12, 12:00 PM',
@@ -61,7 +62,7 @@ const initialNotifications = [
     id: 4,
     title: 'Promise Kept General',
     type: 'Invitation',
-    description: 'Please review the weekly progress report and provide feedback on the team performance metrics.',
+    description: 'I promise to review the weekly progress report and provide feedback on the team performance metrics.',
     assignee: 'Sarah Wilson',
     actions: ['accept', 'decline'],
     dueDate: 'Apr 13, 2:00 PM',
@@ -70,7 +71,7 @@ const initialNotifications = [
     id: 5,
     title: 'PR Feedback Nudge',
     type: 'Nudge',
-    description: 'Your input is needed on the latest pull request for the authentication system updates.',
+    description: 'I will review the latest pull request for the authentication system updates and provide my feedback.',
     assignee: 'Mike Johnson',
     actions: ['edit'],
     dueDate: 'Apr 14, 4:00 PM',
@@ -282,6 +283,26 @@ const ActionNotifications: React.FC = () => {
                     >
                       {notification.description}
                     </Typography>
+
+                    {notification.type === 'Badge Request' && (notification as any).explanation && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary', mb: 0.5 }}>
+                          Explanation
+                        </Typography>
+                        <Box
+                          sx={{
+                            bgcolor: '#f8f9fa',
+                            p: 2,
+                            borderRadius: 2,
+                            border: '1px solid #e9ecef'
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                            {(notification as any).explanation}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    )}
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
