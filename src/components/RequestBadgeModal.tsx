@@ -30,7 +30,7 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
 
   useEffect(() => {
     if (isSubmitted) {
-      const timerId = setTimeout(handleClose, 3000);
+      const timerId = setTimeout(handleClose, 3500);
       return () => clearTimeout(timerId);
     }
   }, [isSubmitted]);
@@ -77,7 +77,7 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
         {isSubmitted ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
             <ConfettiAnimation />
-            <Typography variant="h5" sx={{ fontWeight: 700, mt: 3, mb: 1.5 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, mt: 3, mb: 1 }}>
               You’re all set!
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
