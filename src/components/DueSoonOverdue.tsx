@@ -1,31 +1,23 @@
 import React, { useState, useCallback } from 'react';
 import {
   Paper,
-  Typography,
   Box,
-  Card,
-  CardContent,
-  IconButton,
-  Chip,
   Button,
   Tabs,
   Tab,
-  Tooltip,
   Stack,
+  useTheme,
 } from '@mui/material';
-import {
-  MoreHoriz,
-  Person,
-  CalendarToday,
-} from '@mui/icons-material';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
+import CommitmentListItem from './CommitmentListItem';
 
 const DueSoonOverdue: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
+  const theme = useTheme();
 
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
   const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
@@ -152,129 +144,22 @@ const DueSoonOverdue: React.FC = () => {
         }}>
           <Stack spacing={1}>
             {currentItems.map((item) => (
-              <Card
+              <CommitmentListItem
                 key={item.id}
-                sx={{
-                  minHeight: 140,
-                  borderLeft: '4px solid #ff7043',
-                  boxShadow: 1,
-                  transition: 'all 0.2s ease-in-out',
-                  flexShrink: 0,
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow: 3,
-                  },
-                }}
-              >
-                <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                        {item.title}
-                      </Typography>
-                      <Chip
-                        label={item.type}
-                        size="small"
-                        sx={{
-                          bgcolor: '#fff3e0',
-                          color: '#ff7043',
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          height: 28,
-                          px: 1,
-                        }}
-                      />
-                      {isOverdue && (
-                        <Chip
-                          label="OVERDUE"
-                          size="small"
-                          sx={{
-                            bgcolor: '#ffebee',
-                            color: '#d32f2f',
-                            fontSize: '10px',
-                            fontWeight: 700,
-                            height: 24,
-                            px: 1,
-                            '& .MuiChip-label': {
-                              px: 1,
-                            },
-                          }}
-                        />
-                      )}
-                    </Box>
-                    <Tooltip title="View details" placement="top" arrow>
-                      <IconButton size="small" onClick={() => handleViewDetails(item)}>
-                        <MoreHoriz />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-
-                  <Typography
-                    variant="body2"
-                    sx={{ color: '#666', mb: 2, lineHeight: 1.5 }}
-                  >
-                    {item.description}
-                  </Typography>
-
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center', 
-                    flexWrap: 'wrap', 
-                    gap: 2 
-                  }}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: 3, 
-                      flexWrap: 'wrap',
-                      flex: 1,
-                      minWidth: 0
-                    }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Person sx={{ 
-                          fontSize: 16, 
-                          color: '#ff7043'
-                        }} />
-                        <Typography variant="body2" sx={{ color: '#666' }}>
-                          To: {item.assignee}
-                        </Typography>
-                      </Box>
-
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <CalendarToday sx={{ 
-                          fontSize: 16, 
-                          color: isOverdue ? '#d32f2f' : '#ff7043'
-                        }} />
-                        <Typography variant="body2" sx={{ 
-                          color: isOverdue ? '#d32f2f' : '#666',
-                          fontWeight: isOverdue ? 700 : 400
-                        }}>
-                          Due: {item.dueDate}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    <Button
-                      variant="contained"
-                      onClick={() => setRequestBadgeModalOpen(true)}
-                      sx={{
-                        bgcolor: '#FF7F41',
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: 2.5,
-                        py: 0.75,
-                        borderRadius: 1,
-                        flexShrink: 0,
-                        '&:hover': { bgcolor: '#F4611A' },
-                      }}
-                    >
-                      Request Badge
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
+                id={item.id}
+                title={item.title}
+                dueDate={item.dueDate}
+                description={item.description}
+                assignee={item.assignee}
+                color={isOverdue ? theme.palette.error.main : '#ff7043'}
+                showCheckbox={false}
+                showActionButton={true}
+                buttonText="Request Badge"
+                onViewDetails={() => handleViewDetails(item)}
+                onActionButtonClick={() => setRequestBadgeModalOpen(true)}
+                onToggleSelect={() => {}}
+                isOverdue={isOverdue}
+              />
             ))}
           </Stack>
         </Box>
