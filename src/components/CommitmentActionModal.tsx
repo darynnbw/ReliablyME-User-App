@@ -17,8 +17,6 @@ import {
   Chip,
   styled,
   keyframes,
-  InputLabel,
-  FormHelperText,
 } from '@mui/material';
 import { Close, WarningAmber } from '@mui/icons-material';
 
@@ -72,18 +70,10 @@ const recipientOptions = [
   { name: 'Riley Chen' },
 ];
 
-const groupOptions = [
-  'Development team',
-  'Customer facing team',
-  'Official co-op',
-  'Part-timers',
-];
-
 const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onClose, type }) => {
   const [badge, setBadge] = useState('');
   const [promise, setPromise] = useState('');
   const [recipients, setRecipients] = useState<string[]>([]);
-  const [group, setGroup] = useState('');
   const [hasExternalRecipient, setHasExternalRecipient] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -94,7 +84,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     setBadge('');
     setPromise('');
     setRecipients([]);
-    setGroup('');
     setHasExternalRecipient(false);
     onClose();
   };
@@ -113,7 +102,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
   };
 
   const handleSubmit = () => {
-    console.log(`${type} sent!`, { badge, promise, recipients, group });
+    console.log(`${type} sent!`, { badge, promise, recipients });
     setIsSubmitted(true);
   };
 
@@ -229,23 +218,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                   sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
                 />
                 {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1.5, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 18 }} /><Typography variant="body2" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
-              </Box>
-              <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Select Group</Typography>
-                <FormControl fullWidth>
-                  <InputLabel id="group-select-label" sx={{ transform: 'translate(14px, -9px) scale(0.75)' }}>Group</InputLabel>
-                  <Select
-                    labelId="group-select-label"
-                    value={group}
-                    onChange={(e: SelectChangeEvent) => setGroup(e.target.value)}
-                    displayEmpty
-                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
-                  >
-                    <MenuItem value=""><em>None</em></MenuItem>
-                    {groupOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
-                  </Select>
-                  <FormHelperText>Choose the group to which you want to send the invitation.</FormHelperText>
-                </FormControl>
               </Box>
             </Box>
             <Box sx={{ mt: 'auto', pt: 3 }}>

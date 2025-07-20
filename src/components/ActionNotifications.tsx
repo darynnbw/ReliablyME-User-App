@@ -26,7 +26,6 @@ import DeclineModal from './DeclineModal';
 import ContactTooltip from './ContactTooltip';
 import RequestClarificationModal from './RequestClarificationModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
-import AcceptRequestModal from './AcceptRequestModal';
 
 const initialNotifications = [
   {
@@ -84,7 +83,6 @@ const ActionNotifications: React.FC = () => {
   const [declineModalOpen, setDeclineModalOpen] = useState(false);
   const [requestClarificationModalOpen, setRequestClarificationModalOpen] = useState(false);
   const [approvalModalOpen, setApprovalModalOpen] = useState(false);
-  const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
@@ -118,11 +116,7 @@ const ActionNotifications: React.FC = () => {
     setSelectedNotification(notification);
     
     if (action === 'accept') {
-      if (notification.type === 'Invitation') {
-        setAcceptModalOpen(true);
-      } else { // This handles 'Badge Request'
-        setConfirmationModalOpen(true);
-      }
+      setConfirmationModalOpen(true);
     } else if (action === 'decline') {
       setDeclineModalOpen(true);
     } else if (action === 'edit' && notification.type === 'Nudge') {
@@ -135,7 +129,7 @@ const ActionNotifications: React.FC = () => {
     setRequestClarificationModalOpen(true);
   };
 
-  const handleConfirmBadgeApproval = () => {
+  const handleConfirm = () => {
     if (selectedNotification) {
       setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
       setConfirmationModalOpen(false);
@@ -148,14 +142,6 @@ const ActionNotifications: React.FC = () => {
       console.log('Declined invitation:', selectedNotification.title);
       setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
       setDeclineModalOpen(false);
-      setSelectedNotification(null);
-    }
-  };
-
-  const handleAcceptCommit = () => {
-    if (selectedNotification) {
-      setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
-      setAcceptModalOpen(false);
       setSelectedNotification(null);
     }
   };
@@ -402,7 +388,7 @@ const ActionNotifications: React.FC = () => {
         onClose={() => setConfirmationModalOpen(false)}
         title="Confirm Your Commitment"
         commitmentTitle={selectedNotification?.title || ''}
-        onConfirm={handleConfirmBadgeApproval}
+        onConfirm={handleConfirm}
       />
 
       <DeclineModal
@@ -426,13 +412,6 @@ const ActionNotifications: React.FC = () => {
           setSelectedNotification(null);
         }}
         requesterName={selectedNotification?.assignee || ''}
-      />
-
-      <AcceptRequestModal
-        open={acceptModalOpen}
-        onClose={() => setAcceptModalOpen(false)}
-        onCommit={handleAcceptCommit}
-        commitmentDescription={selectedNotification?.description || ''}
       />
     </>
   );
