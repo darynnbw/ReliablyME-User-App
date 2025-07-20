@@ -8,7 +8,6 @@ const confettiFly = (x: number, y: number) => keyframes`
   }
   100% {
     transform: translate(${x}px, ${y}px) rotate(720deg);
-    opacity: 0;
   }
 `;
 
