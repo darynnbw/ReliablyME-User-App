@@ -17,8 +17,6 @@ import {
   Chip,
   styled,
   keyframes,
-  InputLabel,
-  FormHelperText,
 } from '@mui/material';
 import { Close, WarningAmber } from '@mui/icons-material';
 
@@ -189,7 +187,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, flex: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, flex: 1 }}>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Badge they'll earn</Typography>
                 <FormControl fullWidth>
@@ -200,7 +198,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </Box>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
-                <TextField fullWidth multiline rows={3} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
+                <TextField fullWidth multiline rows={2} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
               </Box>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Recipient(s)</Typography>
@@ -233,18 +231,13 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5, color: '#333' }}>Select Group</Typography>
                 <FormControl fullWidth>
-                  <InputLabel id="group-select-label" sx={{ transform: 'translate(14px, -9px) scale(0.75)' }}>Group</InputLabel>
                   <Select
-                    labelId="group-select-label"
                     value={group}
                     onChange={(e: SelectChangeEvent) => setGroup(e.target.value)}
-                    displayEmpty
                     sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
-                    <MenuItem value=""><em>None</em></MenuItem>
                     {groupOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
-                  <FormHelperText>Choose the group to which you want to send the invitation.</FormHelperText>
                 </FormControl>
               </Box>
             </Box>
