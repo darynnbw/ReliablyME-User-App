@@ -112,7 +112,7 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
         {isSubmitted ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
             <ConfettiAnimation />
-            <Typography variant="h5" sx={{ fontWeight: 700, mt: 3, mb: 1 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, mt: 3, mb: 1.5 }}>
               You’re all set!
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
