@@ -21,7 +21,6 @@ import {
 } from '@mui/icons-material';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import AnswerNudgeModal from './AnswerNudgeModal';
-import ConfirmationModal from './ConfirmationModal';
 import DeclineModal from './DeclineModal';
 import ContactTooltip from './ContactTooltip';
 import RequestClarificationModal from './RequestClarificationModal';
@@ -80,7 +79,6 @@ const ActionNotifications: React.FC = () => {
   const [notifications, setNotifications] = useState(initialNotifications);
   const [modalOpen, setModalOpen] = useState(false);
   const [answerNudgeModalOpen, setAnswerNudgeModalOpen] = useState(false);
-  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [declineModalOpen, setDeclineModalOpen] = useState(false);
   const [requestClarificationModalOpen, setRequestClarificationModalOpen] = useState(false);
   const [approvalModalOpen, setApprovalModalOpen] = useState(false);
@@ -121,7 +119,8 @@ const ActionNotifications: React.FC = () => {
       if (notification.type === 'Invitation') {
         setAcceptModalOpen(true);
       } else { // This handles 'Badge Request'
-        setConfirmationModalOpen(true);
+        setNotifications(prev => prev.filter(n => n.id !== notification.id));
+        setApprovalModalOpen(true);
       }
     } else if (action === 'decline') {
       setDeclineModalOpen(true);
@@ -133,14 +132,6 @@ const ActionNotifications: React.FC = () => {
   const handleClarificationClick = (notification: any) => {
     setSelectedNotification(notification);
     setRequestClarificationModalOpen(true);
-  };
-
-  const handleConfirmBadgeApproval = () => {
-    if (selectedNotification) {
-      setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
-      setConfirmationModalOpen(false);
-      setApprovalModalOpen(true);
-    }
   };
 
   const handleDecline = () => {
@@ -395,14 +386,6 @@ const ActionNotifications: React.FC = () => {
       <AnswerNudgeModal
         open={answerNudgeModalOpen}
         onClose={() => setAnswerNudgeModalOpen(false)}
-      />
-
-      <ConfirmationModal
-        open={confirmationModalOpen}
-        onClose={() => setConfirmationModalOpen(false)}
-        title="Confirm Your Commitment"
-        commitmentTitle={selectedNotification?.title || ''}
-        onConfirm={handleConfirmBadgeApproval}
       />
 
       <DeclineModal
