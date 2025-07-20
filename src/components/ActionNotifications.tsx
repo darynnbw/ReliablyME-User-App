@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Paper,
   Typography,
@@ -85,6 +85,16 @@ const ActionNotifications: React.FC = () => {
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
+
+  const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
+  const handleCloseAnswerNudgeModal = useCallback(() => setAnswerNudgeModalOpen(false), []);
+  const handleCloseDeclineModal = useCallback(() => setDeclineModalOpen(false), []);
+  const handleCloseClarificationModal = useCallback(() => setRequestClarificationModalOpen(false), []);
+  const handleCloseAcceptModal = useCallback(() => setAcceptModalOpen(false), []);
+  const handleCloseApprovalModal = useCallback(() => {
+    setApprovalModalOpen(false);
+    setSelectedNotification(null);
+  }, []);
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -380,41 +390,38 @@ const ActionNotifications: React.FC = () => {
 
       <CommitmentDetailsModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleCloseDetailsModal}
         commitment={commitmentForDetails}
       />
 
       <AnswerNudgeModal
         open={answerNudgeModalOpen}
-        onClose={() => setAnswerNudgeModalOpen(false)}
+        onClose={handleCloseAnswerNudgeModal}
       />
 
       <DeclineModal
         open={declineModalOpen}
-        onClose={() => setDeclineModalOpen(false)}
+        onClose={handleCloseDeclineModal}
         title="Decline Invitation"
         onDecline={handleDecline}
       />
 
       <RequestClarificationModal
         open={requestClarificationModalOpen}
-        onClose={() => setRequestClarificationModalOpen(false)}
+        onClose={handleCloseClarificationModal}
         notification={selectedNotification}
         onSend={handleSendClarification}
       />
 
       <ApprovalConfirmationModal
         open={approvalModalOpen}
-        onClose={() => {
-          setApprovalModalOpen(false);
-          setSelectedNotification(null);
-        }}
+        onClose={handleCloseApprovalModal}
         requesterName={selectedNotification?.assignee || ''}
       />
 
       <AcceptRequestModal
         open={acceptModalOpen}
-        onClose={() => setAcceptModalOpen(false)}
+        onClose={handleCloseAcceptModal}
         onCommit={handleAcceptCommit}
         commitmentDescription={selectedNotification?.description || ''}
       />

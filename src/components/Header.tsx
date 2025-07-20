@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -21,6 +21,8 @@ const Header: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'promise' | 'request'>('promise');
   const open = Boolean(anchorEl);
+
+  const handleCloseModal = useCallback(() => setModalOpen(false), []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -200,7 +202,7 @@ const Header: React.FC = () => {
       </AppBar>
       <CommitmentActionModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleCloseModal}
         type={modalType}
       />
     </>

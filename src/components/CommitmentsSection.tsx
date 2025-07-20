@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Paper,
   Typography,
@@ -83,9 +83,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [dateFilter, setDateFilter] = useState('All');
   const [filterBy, setFilterBy] = useState('soonest');
   const [searchTerm, setSearchTerm] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
-  const [bulkRequestModalOpen, setBulkRequestModalOpen] = useState(false);
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   
@@ -97,19 +94,44 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const firstItemRef = useRef<HTMLDivElement>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [badgeDetailsModalOpen, setBadgeDetailsModalOpen] = useState(false);
-  const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
-  const [acceptModalOpen, setAcceptModalOpen] = useState(false);
-  const [acceptNudgeModalOpen, setAcceptNudgeModalOpen] = useState(false);
-  const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
-  const [bulkDeclineModalOpen, setBulkDeclineModalOpen] = useState(false);
-  const [bulkAcceptModalOpen, setBulkAcceptModalOpen] = useState(false);
-  const [individualDeclineModalOpen, setIndividualDeclineModalOpen] = useState(false);
+  const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
-  const [answerNudgeModalOpen, setAnswerNudgeModalOpen] = useState(false);
-  const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
+  const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
+
+  const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
+  const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
+
+  const [bulkRequestModalOpen, setBulkRequestModalOpen] = useState(false);
+  const handleCloseBulkRequestModal = useCallback(() => setBulkRequestModalOpen(false), []);
+
+  const [badgeDetailsModalOpen, setBadgeDetailsModalOpen] = useState(false);
+  const handleCloseBadgeDetailsModal = useCallback(() => setBadgeDetailsModalOpen(false), []);
+
+  const [acceptModalOpen, setAcceptModalOpen] = useState(false);
+  const handleCloseAcceptModal = useCallback(() => setAcceptModalOpen(false), []);
+
+  const [acceptNudgeModalOpen, setAcceptNudgeModalOpen] = useState(false);
+  const handleCloseAcceptNudgeModal = useCallback(() => setAcceptNudgeModalOpen(false), []);
+
+  const [bulkDeclineModalOpen, setBulkDeclineModalOpen] = useState(false);
+  const handleCloseBulkDeclineModal = useCallback(() => setBulkDeclineModalOpen(false), []);
+
+  const [individualDeclineModalOpen, setIndividualDeclineModalOpen] = useState(false);
+  const handleCloseIndividualDeclineModal = useCallback(() => setIndividualDeclineModalOpen(false), []);
+
+  const [bulkAcceptModalOpen, setBulkAcceptModalOpen] = useState(false);
+  const handleCloseBulkAcceptModal = useCallback(() => setBulkAcceptModalOpen(false), []);
+
+  const [answerNudgeModalOpen, setAnswerNudgeModalOpen] = useState(false);
+  const handleCloseAnswerNudgeModal = useCallback(() => setAnswerNudgeModalOpen(false), []);
+
+  const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
+  const handleCloseNudgeDetailsModal = useCallback(() => setNudgeDetailsModalOpen(false), []);
 
   const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
   const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
@@ -170,7 +192,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       return dateB.valueOf() - dateA.valueOf();
     }
     // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
-    return dateA.valueOf() - dateB.valueOf();
+    return dateA.valueOf() - b.valueOf();
   });
 
   useEffect(() => {
@@ -665,7 +687,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
       <CommitmentDetailsModal 
         open={modalOpen} 
-        onClose={() => setModalOpen(false)} 
+        onClose={handleCloseDetailsModal} 
         commitment={commitmentForDetails}
         isRequest={isRequestsToCommitTab}
         onAcceptRequestClick={handleAcceptFromDetails}
@@ -674,23 +696,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       />
       <NudgeDetailsModal
         open={nudgeDetailsModalOpen}
-        onClose={() => setNudgeDetailsModalOpen(false)}
+        onClose={handleCloseNudgeDetailsModal}
         commitment={commitmentForNudgeDetails}
         onAnswerNudgeClick={handleAnswerNudgeFromDetails}
         isRequest={isRequestsToCommitTab}
         onAcceptClick={handleAcceptNudgeFromDetails}
         onDeclineClick={handleDeclineNudgeFromDetails}
       />
-      <RequestBadgeModal open={requestBadgeModalOpen} onClose={() => setRequestBadgeModalOpen(false)} />
+      <RequestBadgeModal open={requestBadgeModalOpen} onClose={handleCloseRequestBadgeModal} />
       <BulkRequestBadgeModal
         open={bulkRequestModalOpen}
-        onClose={() => setBulkRequestModalOpen(false)}
+        onClose={handleCloseBulkRequestModal}
         commitments={selectedCommitments}
         isOwedToMe={isOwedToMe}
       />
       <MyBadgeDetailsModal
         open={badgeDetailsModalOpen}
-        onClose={() => setBadgeDetailsModalOpen(false)}
+        onClose={handleCloseBadgeDetailsModal}
         badge={selectedBadge ? {
           title: selectedBadge.title,
           approvalDate: selectedBadge.dueDate,
@@ -701,19 +723,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       />
       <AcceptRequestModal
         open={acceptModalOpen}
-        onClose={() => setAcceptModalOpen(false)}
+        onClose={handleCloseAcceptModal}
         onCommit={handleCommit}
         commitmentDescription={commitmentToAccept?.description || ''}
       />
       <AcceptNudgeModal
         open={acceptNudgeModalOpen}
-        onClose={() => setAcceptNudgeModalOpen(false)}
+        onClose={handleCloseAcceptNudgeModal}
         onCommit={handleCommit}
         commitmentDescription={commitmentToAccept?.description || ''}
       />
       <DeclineModal
         open={bulkDeclineModalOpen}
-        onClose={() => setBulkDeclineModalOpen(false)}
+        onClose={handleCloseBulkDeclineModal}
         title="Decline Invitations"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
@@ -724,7 +746,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       />
       <DeclineModal
         open={individualDeclineModalOpen}
-        onClose={() => setIndividualDeclineModalOpen(false)}
+        onClose={handleCloseIndividualDeclineModal}
         title="Decline Invitation"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
@@ -735,12 +757,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       />
       <BulkAcceptModal
         open={bulkAcceptModalOpen}
-        onClose={() => setBulkAcceptModalOpen(false)}
+        onClose={handleCloseBulkAcceptModal}
         commitments={selectedCommitments}
       />
       <AnswerNudgeModal
         open={answerNudgeModalOpen}
-        onClose={() => setAnswerNudgeModalOpen(false)}
+        onClose={handleCloseAnswerNudgeModal}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Paper,
   Typography,
@@ -26,6 +26,9 @@ const DueSoonOverdue: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
+
+  const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
+  const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
 
   const dueSoonItems = [
     {
@@ -295,13 +298,13 @@ const DueSoonOverdue: React.FC = () => {
 
       <CommitmentDetailsModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleCloseDetailsModal}
         commitment={commitmentForDetails}
       />
 
       <RequestBadgeModal
         open={requestBadgeModalOpen}
-        onClose={() => setRequestBadgeModalOpen(false)}
+        onClose={handleCloseRequestBadgeModal}
       />
     </>
   );
