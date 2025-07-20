@@ -237,6 +237,9 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     displayEmpty
                     sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
+                    <MenuItem value="">
+                      None
+                    </MenuItem>
                     {groupOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
                 </FormControl>
