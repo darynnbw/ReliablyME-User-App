@@ -24,12 +24,14 @@ import AnswerNudgeModal from './AnswerNudgeModal';
 import ConfirmationModal from './ConfirmationModal';
 import DeclineModal from './DeclineModal';
 import ContactTooltip from './ContactTooltip';
+import RequestClarificationModal from './RequestClarificationModal';
 
 const ActionNotifications: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [answerNudgeModalOpen, setAnswerNudgeModalOpen] = useState(false);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [declineModalOpen, setDeclineModalOpen] = useState(false);
+  const [requestClarificationModalOpen, setRequestClarificationModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
@@ -119,6 +121,11 @@ const ActionNotifications: React.FC = () => {
     }
   };
 
+  const handleClarificationClick = (notification: any) => {
+    setSelectedNotification(notification);
+    setRequestClarificationModalOpen(true);
+  };
+
   const handleConfirm = () => {
     console.log('Confirmed commitment:', selectedNotification?.title);
   };
@@ -130,6 +137,10 @@ const ActionNotifications: React.FC = () => {
   const handleViewDetails = (notification: any) => {
     setCommitmentForDetails(notification);
     setModalOpen(true);
+  };
+
+  const handleSendClarification = (message: string) => {
+    console.log(`Clarification request sent for notification ${selectedNotification?.id}: ${message}`);
   };
 
   return (
@@ -304,6 +315,7 @@ const ActionNotifications: React.FC = () => {
                         <Tooltip title="Request Clarification" placement="top" arrow>
                           <IconButton
                             size="small"
+                            onClick={() => handleClarificationClick(notification)}
                             sx={{
                               bgcolor: '#fff8e1',
                               color: '#ff9800',
@@ -363,6 +375,13 @@ const ActionNotifications: React.FC = () => {
         onClose={() => setDeclineModalOpen(false)}
         title="Decline Invitation"
         onDecline={handleDecline}
+      />
+
+      <RequestClarificationModal
+        open={requestClarificationModalOpen}
+        onClose={() => setRequestClarificationModalOpen(false)}
+        notification={selectedNotification}
+        onSend={handleSendClarification}
       />
     </>
   );
