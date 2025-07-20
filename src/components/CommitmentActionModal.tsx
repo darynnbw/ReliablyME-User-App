@@ -168,7 +168,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </IconButton>
             </Box>
           </DialogTitle>
-          <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
+          <Divider sx={{ mb: 2.5, borderColor: '#e0e0e0' }} />
         </>
       )}
 
@@ -187,9 +187,9 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, flex: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>Badge they'll earn</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
                 <FormControl fullWidth>
                   <Select value={badge} onChange={(e: SelectChangeEvent) => setBadge(e.target.value)} displayEmpty sx={{ borderRadius: 2, bgcolor: 'grey.50' }}>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
@@ -197,11 +197,11 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 </FormControl>
               </Box>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
-                <TextField fullWidth multiline rows={2} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
+                <TextField fullWidth multiline rows={3} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
               </Box>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>Recipient(s)</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Recipient(s)</Typography>
                 <Autocomplete
                   multiple
                   freeSolo
@@ -229,7 +229,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 18 }} /><Typography variant="body2" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
               </Box>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5, color: '#333' }}>Select Group</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Select Group</Typography>
                 <FormControl fullWidth>
                   <Select
                     value={group}
@@ -242,7 +242,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 </FormControl>
               </Box>
             </Box>
-            <Box sx={{ mt: 'auto', pt: 2 }}>
+            <Box sx={{ mt: 'auto', pt: 2.5 }}>
               <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid} fullWidth sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '48px', borderRadius: 2, fontWeight: 600, fontSize: '16px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}>
                 {currentTexts.buttonText}
               </Button>
