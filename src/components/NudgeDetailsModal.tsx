@@ -30,6 +30,7 @@ interface NudgeDetailsModalProps {
   isRequest?: boolean;
   onAcceptClick?: () => void;
   onDeclineClick?: () => void;
+  questions?: string[];
 }
 
 const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
@@ -40,11 +41,20 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
   isRequest = false,
   onAcceptClick,
   onDeclineClick,
+  questions,
 }) => {
   if (!commitment) return null;
 
   const totalNudges = commitment.totalNudges || 10;
   const usedNudges = totalNudges - (commitment.nudgesLeft || 0);
+
+  const defaultQuestions = [
+    '1. What did you accomplish this week?',
+    '2. Do you have any blockers that are slowing you down?',
+    '3. How useful did you find the ReliablyME Accountability Agent this week?',
+  ];
+
+  const displayQuestions = questions || defaultQuestions;
 
   return (
     <Dialog
@@ -122,15 +132,11 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
 
         <Box sx={{ mb: 3, bgcolor: '#f8f9fa', p: 2.5, borderRadius: 2, border: '1px solid #e9ecef' }}>
           <Stack spacing={1}>
-            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-              1. What did you accomplish this week?
-            </Typography>
-            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-              2. Do you have any blockers that are slowing you down?
-            </Typography>
-            <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-              3. How useful did you find the ReliablyME Accountability Agent this week?
-            </Typography>
+            {displayQuestions.map((q, index) => (
+              <Typography key={index} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                {q}
+              </Typography>
+            ))}
           </Stack>
         </Box>
 

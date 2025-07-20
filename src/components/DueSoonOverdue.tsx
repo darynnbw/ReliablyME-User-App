@@ -12,6 +12,8 @@ import {
   Tab,
   Tooltip,
   Stack,
+  alpha,
+  useTheme,
 } from '@mui/material';
 import {
   MoreHoriz,
@@ -20,24 +22,33 @@ import {
 } from '@mui/icons-material';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
+import NudgeDetailsModal from './NudgeDetailsModal';
+import AnswerNudgeModal from './AnswerNudgeModal';
 
 const DueSoonOverdue: React.FC = () => {
+  const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
+  const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
+  const [answerNudgeModalOpen, setAnswerNudgeModalOpen] = useState(false);
+  const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<any>(null);
 
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
   const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
+  const handleCloseNudgeDetailsModal = useCallback(() => setNudgeDetailsModalOpen(false), []);
+  const handleCloseAnswerNudgeModal = useCallback(() => setAnswerNudgeModalOpen(false), []);
 
   const dueSoonItems = [
     {
       id: 1,
-      title: 'Promise Kept General',
-      type: 'Offer',
-      description: 'Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text. Here goes sample text.',
+      title: 'On Track Daily',
+      type: 'nudge',
+      description: 'A daily check-in to track your progress.',
       assignee: 'Alex Todd',
-      dueDate: '15th June, 18:35',
+      dueDate: 'Today',
+      questions: ['Did you complete all your planned tasks today?'],
     },
     {
       id: 2,
@@ -93,8 +104,18 @@ const DueSoonOverdue: React.FC = () => {
   ];
 
   const handleViewDetails = (item: any) => {
-    setCommitmentForDetails(item);
-    setModalOpen(true);
+    if (item.type === 'nudge') {
+      setCommitmentForNudgeDetails(item);
+      setNudgeDetailsModalOpen(true);
+    } else {
+      setCommitmentForDetails(item);
+      setModalOpen(true);
+    }
+  };
+
+  const handleAnswerNudgeClick = () => {
+    setNudgeDetailsModalOpen(false);
+    setAnswerNudgeModalOpen(true);
   };
 
   const currentItems = activeTab === 0 ? dueSoonItems : overdueItems;
@@ -156,7 +177,7 @@ const DueSoonOverdue: React.FC = () => {
                 key={item.id}
                 sx={{
                   minHeight: 140,
-                  borderLeft: '4px solid #ff7043',
+                  borderLeft: `4px solid ${item.type === 'nudge' ? '#ff7043' : '#ff7043'}`,
                   boxShadow: 1,
                   transition: 'all 0.2s ease-in-out',
                   flexShrink: 0,
@@ -189,8 +210,8 @@ const DueSoonOverdue: React.FC = () => {
                           label="OVERDUE"
                           size="small"
                           sx={{
-                            bgcolor: '#ffebee',
-                            color: '#d32f2f',
+                            bgcolor: alpha(theme.palette.error.main, 0.1),
+                            color: 'error.dark',
                             fontSize: '10px',
                             fontWeight: 700,
                             height: 24,
@@ -244,10 +265,10 @@ const DueSoonOverdue: React.FC = () => {
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <CalendarToday sx={{ 
                           fontSize: 16, 
-                          color: isOverdue ? '#d32f2f' : '#ff7043'
+                          color: isOverdue ? theme.palette.error.main : '#ff7043'
                         }} />
                         <Typography variant="body2" sx={{ 
-                          color: isOverdue ? '#d32f2f' : '#666',
+                          color: isOverdue ? theme.palette.error.main : '#666',
                           fontWeight: isOverdue ? 700 : 400
                         }}>
                           Due: {item.dueDate}
@@ -257,7 +278,7 @@ const DueSoonOverdue: React.FC = () => {
 
                     <Button
                       variant="contained"
-                      onClick={() => setRequestBadgeModalOpen(true)}
+                      onClick={() => item.type === 'nudge' ? handleAnswerNudgeClick() : setRequestBadgeModalOpen(true)}
                       sx={{
                         bgcolor: '#FF7F41',
                         color: 'white',
@@ -270,7 +291,7 @@ const DueSoonOverdue: React.FC = () => {
                         '&:hover': { bgcolor: '#F4611A' },
                       }}
                     >
-                      Request Badge
+                      {item.type === 'nudge' ? 'Answer Nudge' : 'Request Badge'}
                     </Button>
                   </Box>
                 </CardContent>
@@ -305,6 +326,21 @@ const DueSoonOverdue: React.FC = () => {
       <RequestBadgeModal
         open={requestBadgeModalOpen}
         onClose={handleCloseRequestBadgeModal}
+      />
+
+      <NudgeDetailsModal
+        open={nudgeDetailsModalOpen}
+        onClose={handleCloseNudgeDetailsModal}
+        commitment={commitmentForNudgeDetails}
+        onAnswerNudgeClick={handleAnswerNudgeClick}
+        questions={commitmentForNudgeDetails?.questions}
+      />
+
+      <AnswerNudgeModal
+        open={answerNudgeModalOpen}
+        onClose={handleCloseAnswerNudgeModal}
+        title={commitmentForNudgeDetails?.title}
+        questions={commitmentForNudgeDetails?.questions}
       />
     </>
   );

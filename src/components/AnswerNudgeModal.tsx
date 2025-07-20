@@ -16,9 +16,11 @@ import ConfettiAnimation from './ConfettiAnimation';
 interface AnswerNudgeModalProps {
   open: boolean;
   onClose: () => void;
+  title?: string;
+  questions?: string[];
 }
 
-const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) => {
+const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, title, questions }) => {
   const [answer, setAnswer] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -39,6 +41,16 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
     console.log('Submitted answer:', answer);
     setIsSubmitted(true);
   };
+
+  const defaultTitle = 'Mid-Week Progress';
+  const defaultQuestions = [
+    '1. What have you accomplished so far this week?',
+    '2. What do you plan to accomplish/complete by the end of the week?',
+    '3. What are you concerned about that might hinder your progress?',
+  ];
+
+  const displayTitle = title || defaultTitle;
+  const displayQuestions = questions || defaultQuestions;
 
   return (
     <Dialog
@@ -87,7 +99,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
         ) : (
           <>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>
-              Mid-Week Progress
+              {displayTitle}
             </Typography>
 
             <Typography variant="body1" sx={{ fontWeight: 400, mb: 2, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
@@ -95,15 +107,11 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose }) =>
             </Typography>
 
             <Box sx={{ mb: 2 }}>
-              <Typography variant="body1" sx={{ mb: 0.5, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-                1. What have you accomplished so far this week?
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 0.5, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-                2. What do you plan to accomplish/complete by the end of the week?
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-                3. What are you concerned about that might hinder your progress?
-              </Typography>
+              {displayQuestions.map((q, index) => (
+                <Typography key={index} variant="body1" sx={{ mb: index === displayQuestions.length - 1 ? 2 : 0.5, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
+                  {q}
+                </Typography>
+              ))}
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
