@@ -10,12 +10,13 @@ import {
   Divider,
   TextField,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, CalendarToday } from '@mui/icons-material';
 
 interface Notification {
   title: string;
   description: string;
   assignee: string;
+  dueDate?: string;
 }
 
 interface RequestClarificationModalProps {
@@ -49,13 +50,13 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       PaperProps={{
         sx: {
           borderRadius: 3,
           p: 3,
-          maxWidth: '550px',
+          maxWidth: '600px',
         },
       }}
     >
@@ -72,33 +73,36 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
 
       <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
 
-      <DialogContent sx={{ p: 0 }}>
-        <Typography variant="body1" sx={{ 
-          fontWeight: 400, 
-          mb: 2, 
-          color: '#333', 
-          fontSize: '16px', 
-          lineHeight: 1.6
-        }}>
-          You are requesting clarification for the following commitment from{' '}
-          <Typography component="span" sx={{ fontWeight: 600 }}>{notification.assignee}</Typography>:
+      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: '#333', fontSize: '20px' }}>
+          {notification.title}
         </Typography>
 
+        {notification.dueDate && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2, mb: 3 }}>
+            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+              Due:{' '}
+              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                {notification.dueDate}
+              </Typography>
+            </Typography>
+          </Box>
+        )}
+
+        <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
+          Original Commitment
+        </Typography>
         <Box 
           sx={{ 
             mb: 3,
             bgcolor: '#f8f9fa',
-            p: 2,
+            p: 2.5,
             borderRadius: 2,
             border: '1px solid #e9ecef'
           }}
         >
-          <Typography variant="body1" sx={{ 
-            lineHeight: 1.6, 
-            color: '#333', 
-            fontSize: '16px', 
-            fontWeight: 400 
-          }}>
+          <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
             {notification.description}
           </Typography>
         </Box>
@@ -109,38 +113,33 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
           fullWidth
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="What information do you need to approve this badge?"
+          placeholder="Describe what details or documents you need to approve this badge"
           variant="outlined"
           sx={{
             mb: 3,
             '& .MuiOutlinedInput-root': {
               borderRadius: 2,
               backgroundColor: '#fafafa',
+              '& fieldset': {
+                borderColor: '#e0e0e0',
+              },
+              '&:hover fieldset': {
+                borderColor: '#bdbdbd',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#1976d2',
+              },
+            },
+            '& .MuiInputBase-input': {
+              fontSize: '16px',
+              lineHeight: 1.5,
             },
           }}
         />
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={handleClose}
-            sx={{
-              color: '#666',
-              borderColor: '#ddd',
-              textTransform: 'none',
-              flex: 1,
-              height: '40px',
-              borderRadius: 1,
-              fontWeight: 500,
-              fontSize: '14px',
-              '&:hover': { 
-                borderColor: '#bbb',
-                bgcolor: '#f9f9f9'
-              },
-            }}
-          >
-            Cancel
-          </Button>
+        <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
+
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Button
             variant="contained"
             onClick={handleSend}
@@ -149,11 +148,12 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
               bgcolor: '#ff9800',
               color: 'white',
               textTransform: 'none',
-              flex: 1,
-              height: '40px',
-              borderRadius: 1,
+              width: '100%',
+              minHeight: '48px',
+              py: 1.5,
+              borderRadius: 2,
               fontWeight: 600,
-              fontSize: '14px',
+              fontSize: '16px',
               '&:hover': { 
                 bgcolor: '#fb8c00'
               },
