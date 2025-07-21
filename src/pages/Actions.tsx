@@ -140,43 +140,88 @@ const Actions: React.FC = () => {
     },
   ];
 
+  const promisesOwedToMeItems = [
+    {
+      id: 1,
+      title: 'Teamwork',
+      dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Mar 27, 9:15 PM',
+      description: 'Need feedback on the new product design mockups for client presentation.',
+      assignee: 'Riley Chen',
+    },
+    {
+      id: 2,
+      title: 'Promise Kept General',
+      dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Mar 27, 9:15 PM',
+      description: 'Need the quarterly marketing report with all KPIs and campaign results.',
+      assignee: 'Jamie Smith',
+    },
+    {
+      id: 301,
+      title: 'Promise Kept General',
+      dueDate: dayjs().add(1, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Jul 18, 10:00 AM',
+      description: 'Please provide the final invoice for the freelance design work.',
+      assignee: '+1 555-987-6543',
+      isExternal: true,
+    },
+    {
+      id: 302,
+      title: 'Attendance',
+      dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Jul 17, 3:30 PM',
+      description: 'Confirming you will join the client demo call on Friday.',
+      assignee: 'Chris Parker',
+    },
+    {
+      id: 303,
+      title: 'Teamwork',
+      dueDate: dayjs().add(5, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Jul 16, 11:00 AM',
+      description: 'I need your section of the presentation slides by EOD Tuesday.',
+      assignee: 'Sarah Wilson',
+    }
+  ];
+
+  const awaitingResponseItems = [
+    {
+      id: 401,
+      title: 'Promise Kept General',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 19, 2:00 PM',
+      description: 'Could you please handle the deployment for the new feature release this weekend?',
+      assignee: 'Mike Johnson',
+    },
+    {
+      id: 402,
+      title: 'Teamwork',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 18, 4:30 PM',
+      description: 'Request to collaborate on the Q4 roadmap document.',
+      assignee: 'Riley Chen',
+    },
+    {
+      id: 403,
+      title: 'Promise Kept General',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 17, 9:00 AM',
+      description: 'Request for you to approve the budget for the new marketing campaign.',
+      assignee: '+1 555-555-1212',
+      isExternal: true,
+    }
+  ];
+
   const commitmentsReceivedTabs = [
     {
       label: 'Promises Owed to Me',
-      count: 2,
-      items: [
-        {
-          id: 1,
-          title: 'Teamwork',
-          dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
-          committedDate: 'Mar 27, 9:15 PM',
-          description: 'Need feedback on the new product design mockups for client presentation.',
-          assignee: 'Riley Chen',
-        },
-        {
-          id: 2,
-          title: 'Promise Kept General',
-          dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
-          committedDate: 'Mar 27, 9:15 PM',
-          description: 'Need the quarterly marketing report with all KPIs and campaign results.',
-          assignee: 'Jamie Smith',
-        },
-      ],
+      count: promisesOwedToMeItems.length,
+      items: promisesOwedToMeItems,
     },
     {
-      label: 'Badges Issued',
-      count: 120,
-      items: [],
-    },
-    {
-      label: 'Unkept Promises to Me',
-      count: 31,
-      items: [],
-    },
-    {
-      label: 'Nudges History',
-      count: 4,
-      items: [],
+      label: 'Awaiting Response',
+      count: awaitingResponseItems.length,
+      items: awaitingResponseItems,
     },
   ];
 
