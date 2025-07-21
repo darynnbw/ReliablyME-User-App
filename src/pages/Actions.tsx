@@ -190,7 +190,8 @@ const Actions: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: 'Completed Jul 18',
       committedDate: 'Requested on Jul 19, 2:00 PM',
-      description: 'I have submitted the form and answered all the questions.',
+      description: 'I will complete the mandatory HR compliance training course.',
+      explanation: 'I have submitted the form and answered all the questions.',
       assignee: 'Chris Parker',
     },
     {
@@ -198,7 +199,8 @@ const Actions: React.FC = () => {
       title: 'Teamwork',
       dueDate: 'Completed Jul 17',
       committedDate: 'Requested on Jul 18, 10:00 AM',
-      description: 'Collaborated with the design team to finalize the new UI mockups.',
+      description: 'I will collaborate with the design team on the new UI mockups.',
+      explanation: 'We held a final review session and all stakeholders have signed off on the mockups.',
       assignee: 'Riley Chen',
     },
   ];
@@ -261,9 +263,9 @@ const Actions: React.FC = () => {
             <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} />
           </Grid>
 
-          {/* Commitments to Others */}
+          {/* Commitments from Others */}
           <Grid item xs={12}>
-            <CommitmentsSection title="Commitments to Others" tabs={commitmentsReceivedTabs} />
+            <CommitmentsSection title="Commitments from Others" tabs={commitmentsReceivedTabs} />
           </Grid>
         </Grid>
       </Container>

@@ -46,6 +46,7 @@ import AcceptNudgeModal from './AcceptNudgeModal';
 import RequestClarificationModal from './RequestClarificationModal';
 import BulkClarifyModal from './BulkClarifyModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
+import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
 
 dayjs.extend(isBetween);
 
@@ -62,6 +63,7 @@ interface Commitment {
   totalNudges?: number;
   isExternal?: boolean;
   questions?: string[];
+  explanation?: string;
 }
 
 interface CommitmentsSectionProps {
@@ -107,6 +109,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
   const [commitmentToReject, setCommitmentToReject] = useState<Commitment | null>(null);
+  const [commitmentForBadgeRequest, setCommitmentForBadgeRequest] = useState<Commitment | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
@@ -119,6 +122,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const [badgeDetailsModalOpen, setBadgeDetailsModalOpen] = useState(false);
   const handleCloseBadgeDetailsModal = useCallback(() => setBadgeDetailsModalOpen(false), []);
+
+  const [badgeRequestDetailsModalOpen, setBadgeRequestDetailsModalOpen] = useState(false);
+  const handleCloseBadgeRequestDetailsModal = useCallback(() => setBadgeRequestDetailsModalOpen(false), []);
 
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const handleCloseAcceptModal = useCallback(() => setAcceptModalOpen(false), []);
@@ -258,7 +264,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   }, [currentItems]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
-    if (item.type === 'nudge' && (isMyPromisesTab || isRequestsToCommitTab)) {
+    if (isBadgeRequestsTab) {
+      setCommitmentForBadgeRequest(item);
+      setBadgeRequestDetailsModalOpen(true);
+    } else if (item.type === 'nudge' && (isMyPromisesTab || isRequestsToCommitTab)) {
       setCommitmentForNudgeDetails(item);
       setNudgeDetailsModalOpen(true);
     } else {
@@ -804,6 +813,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       showRevokeButton={showRevokeButton}
                       onRevoke={() => handleRevokeClick(item)}
                       showFromLabel={showFromLabel}
+                      explanation={item.explanation}
                     />
                   );
                 })
@@ -842,6 +852,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         isRequest={isRequestsToCommitTab}
         onAcceptClick={handleAcceptNudgeFromDetails}
         onDeclineClick={handleDeclineNudgeFromDetails}
+      />
+      <BadgeRequestDetailsModal
+        open={badgeRequestDetailsModalOpen}
+        onClose={handleCloseBadgeRequestDetailsModal}
+        commitment={commitmentForBadgeRequest}
+        onApprove={() => {
+          if (commitmentForBadgeRequest) handleApproveBadgeRequest(commitmentForBadgeRequest);
+          handleCloseBadgeRequestDetailsModal();
+        }}
+        onReject={() => {
+          if (commitmentForBadgeRequest) handleRejectBadgeRequest(commitmentForBadgeRequest);
+          handleCloseBadgeRequestDetailsModal();
+        }}
       />
       <RequestBadgeModal open={requestBadgeModalOpen} onClose={handleCloseRequestBadgeModal} />
       <BulkRequestBadgeModal

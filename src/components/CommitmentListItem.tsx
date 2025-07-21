@@ -20,6 +20,7 @@ interface CommitmentListItemProps {
   title: string;
   dueDate: string;
   description: string;
+  explanation?: string;
   assignee: string;
   selected?: boolean;
   color: string;
@@ -53,6 +54,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   title,
   dueDate,
   description,
+  explanation,
   assignee,
   selected = false,
   color,
@@ -220,6 +222,26 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
               {description}
             </Typography>
+
+            {/* Explanation */}
+            {explanation && (
+              <Box
+                sx={{
+                  bgcolor: '#f8f9fa',
+                  p: 1.5,
+                  borderRadius: 2,
+                  border: '1px solid #e9ecef',
+                  my: 1,
+                }}
+              >
+                <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                    Explanation:{' '}
+                  </Typography>
+                  {explanation}
+                </Typography>
+              </Box>
+            )}
 
             {/* Bottom row: Assignee and Button */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
