@@ -992,6 +992,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Typography>
         }
         onDecline={handleConfirmBulkRevoke}
+        declineText="Revoke"
       />
       <RequestClarificationModal
         open={clarifyModalOpen}

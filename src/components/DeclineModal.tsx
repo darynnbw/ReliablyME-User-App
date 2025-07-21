@@ -17,6 +17,7 @@ interface DeclineModalProps {
   title: string;
   description?: React.ReactNode;
   onDecline: () => void;
+  declineText?: string;
 }
 
 const DeclineModal: React.FC<DeclineModalProps> = ({ 
@@ -24,7 +25,8 @@ const DeclineModal: React.FC<DeclineModalProps> = ({
   onClose, 
   title,
   description,
-  onDecline 
+  onDecline,
+  declineText = 'Decline'
 }) => {
   const handleDecline = () => {
     onDecline();
@@ -122,7 +124,7 @@ const DeclineModal: React.FC<DeclineModalProps> = ({
               },
             }}
           >
-            Decline
+            {declineText}
           </Button>
         </Box>
       </DialogContent>

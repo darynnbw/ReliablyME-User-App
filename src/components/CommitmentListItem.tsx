@@ -233,8 +233,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
                   mt: 1,
-                  mb: 2,
-                  alignSelf: 'flex-start',
+                  mb: 3,
                   maxWidth: '100%',
                 }}
               >

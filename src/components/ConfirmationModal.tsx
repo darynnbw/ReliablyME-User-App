@@ -99,6 +99,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             onClick={handleConfirm}
             color={confirmColor}
             sx={{
+              color: 'white',
               textTransform: 'none',
               flex: 1,
               height: '40px',

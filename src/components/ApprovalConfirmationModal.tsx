@@ -26,7 +26,6 @@ const ApprovalConfirmationModal: React.FC<ApprovalConfirmationModalProps> = ({ o
         sx: {
           p: 3,
           maxWidth: '450px',
-          height: '250px',
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: 3,
