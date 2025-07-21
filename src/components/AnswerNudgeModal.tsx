@@ -101,17 +101,9 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#333', fontSize: '20px' }}>
-                {commitment?.title || 'Mid-Week Progress'}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <CalendarToday sx={{ fontSize: 18, color: 'text.secondary' }} />
-                <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                  Due: {commitment?.dueDate || 'Today'}
-                </Typography>
-              </Box>
-            </Box>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>
+              {commitment?.title || 'Mid-Week Progress'}
+            </Typography>
 
             <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
               Today's Questions
@@ -132,6 +124,16 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
                   </Typography>
                 ))}
               </Stack>
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                Due:{' '}
+                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                  {commitment?.dueDate || 'Apr 4, 9:30 PM'}
+                </Typography>
+              </Typography>
             </Box>
 
             <TextField
