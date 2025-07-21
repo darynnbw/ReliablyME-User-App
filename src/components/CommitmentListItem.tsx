@@ -229,7 +229,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 sx={{
                   bgcolor: '#f8f9fa',
                   px: 2,
-                  py: 1,
+                  py: 1.5,
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
                   mt: 1,
