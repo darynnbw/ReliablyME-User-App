@@ -43,6 +43,7 @@ interface CommitmentListItemProps {
   isOverdue?: boolean;
   showRevokeButton?: boolean;
   onRevoke?: () => void;
+  showFromLabel?: boolean;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -73,6 +74,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   isOverdue = false,
   showRevokeButton = false,
   onRevoke,
+  showFromLabel = false,
 }, ref) => {
   const theme = useTheme();
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,7 +223,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Stack direction="row" spacing={1} alignItems="center">
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
-                  To: {assignee}
+                  {showFromLabel ? 'From:' : 'To:'} {assignee}
                 </Typography>
                 {isExternal && (
                   <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
@@ -243,7 +245,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       color: 'white',
                       textTransform: 'none',
                       fontWeight: 'bold',
-                      px: 3,
+                      px: buttonText === 'Clarify' ? 6 : 3,
                       py: 1,
                       borderRadius: 1,
                       flexShrink: 0,

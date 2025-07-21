@@ -688,6 +688,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab;
                   const showRevokeButton = isAwaitingResponseTab;
                   const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab;
+                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isAwaitingResponseTab;
 
                   return (
                     <CommitmentListItem
@@ -714,6 +715,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       isOverdue={isOverdue}
                       showRevokeButton={showRevokeButton}
                       onRevoke={() => handleRevokeClick(item)}
+                      showFromLabel={showFromLabel}
                     />
                   );
                 })
