@@ -106,6 +106,9 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
           )}
         </Box>
 
+        <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
+          Original Commitment
+        </Typography>
         <Box 
           sx={{ 
             mb: 3,

@@ -92,6 +92,9 @@ const MyBadgeDetailsModal: React.FC<MyBadgeDetailsModalProps> = ({ open, onClose
           )}
         </Box>
 
+        <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
+          Original Commitment
+        </Typography>
         <Box 
           sx={{ 
             bgcolor: '#f8f9fa',
