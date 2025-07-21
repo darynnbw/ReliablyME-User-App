@@ -21,6 +21,11 @@ const Actions: React.FC = () => {
       type: 'nudge',
       nudgesLeft: 2,
       totalNudges: 10,
+      questions: [
+        'What have you accomplished so far this week?',
+        'What do you plan to accomplish/complete by the end of the week?',
+        'What are you concerned about that might hinder your progress?',
+      ],
     },
     {
       id: 99,
@@ -81,6 +86,11 @@ const Actions: React.FC = () => {
       description: 'I will respond to a nudge every Thursday to report on my mid-week progress through the end of June.',
       assignee: 'Alex Johnson',
       type: 'nudge',
+      questions: [
+        'What have you accomplished so far this week?',
+        'What do you plan to accomplish/complete by the end of the week?',
+        'What are you concerned about that might hinder your progress?',
+      ],
     },
     {
       id: 201,
