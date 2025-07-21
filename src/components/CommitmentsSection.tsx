@@ -770,7 +770,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   <Button
                     variant="contained"
                     size="small"
-                    startIcon={<Close />}
                     onClick={() => setBulkRejectModalOpen(true)}
                     sx={{ 
                       bgcolor: '#F44336',
@@ -779,12 +778,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       '&:hover': { bgcolor: '#d32f2f' }
                     }}
                   >
-                    Reject All
+                    Reject
                   </Button>
                   <Button
                     variant="contained"
                     size="small"
-                    startIcon={<Check />}
                     onClick={() => setBulkApproveModalOpen(true)}
                     sx={{ 
                       bgcolor: '#4CAF50',
@@ -793,7 +791,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       '&:hover': { bgcolor: '#388e3c' }
                     }}
                   >
-                    Approve All
+                    Approve
                   </Button>
                 </Box>
               )}
@@ -1034,18 +1032,26 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         open={bulkApproveModalOpen}
         onClose={() => setBulkApproveModalOpen(false)}
         title="Bulk Approve Requests"
-        description={`Are you sure you want to approve ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
+        description={
+          <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
+            Are you sure you want to approve {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
+          </Typography>
+        }
         onConfirm={handleConfirmBulkApprove}
-        confirmText="Approve All"
+        confirmText="Approve"
         confirmColor="success"
       />
       <ConfirmationModal
         open={bulkRejectModalOpen}
         onClose={() => setBulkRejectModalOpen(false)}
         title="Bulk Reject Requests"
-        description={`Are you sure you want to reject ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
+        description={
+          <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
+            Are you sure you want to reject {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
+          </Typography>
+        }
         onConfirm={handleConfirmBulkReject}
-        confirmText="Reject All"
+        confirmText="Reject"
         confirmColor="error"
       />
     </>

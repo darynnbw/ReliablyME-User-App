@@ -36,8 +36,11 @@ const ApprovalConfirmationModal: React.FC<ApprovalConfirmationModalProps> = ({ o
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
         <ConfettiAnimation />
-        <Typography variant="body1" sx={{ fontWeight: 600, fontSize: '1.1rem', mt: 3 }}>
-          Badge Approved! {requesterName} has been notified.
+        <Typography variant="h6" sx={{ fontWeight: 700, mt: 3, mb: 1 }}>
+          Badge Approved!
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {requesterName} has been notified.
         </Typography>
       </Box>
     </Dialog>
