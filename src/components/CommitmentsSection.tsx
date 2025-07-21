@@ -166,6 +166,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const [bulkApproveModalOpen, setBulkApproveModalOpen] = useState(false);
   const [bulkRejectModalOpen, setBulkRejectModalOpen] = useState(false);
+  const [bulkApprovalSuccessOpen, setBulkApprovalSuccessOpen] = useState(false);
 
   const handleCloseApprovalModal = useCallback(() => {
     setApprovalModalOpen(false);
@@ -473,10 +474,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   };
 
   const handleConfirmBulkApprove = () => {
-    console.log('Bulk approving commitments:', selectedCommitments.map(c => c.id));
     const selectedIds = selectedCommitments.map(c => c.id);
+    console.log('Bulk approving commitments:', selectedIds);
     setCommitments(prev => prev.filter(c => !selectedIds.includes(c.id)));
     setBulkApproveModalOpen(false);
+    setBulkApprovalSuccessOpen(true);
     setSelectAll(false);
   };
   
@@ -981,6 +983,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Typography>
         }
         onDecline={handleConfirmRevoke}
+        declineText="Revoke"
       />
       <DeclineModal
         open={bulkRevokeModalOpen}
@@ -1019,6 +1022,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         open={approvalModalOpen}
         onClose={handleCloseApprovalModal}
         requesterName={requesterForApproval}
+      />
+      <ApprovalConfirmationModal
+        open={bulkApprovalSuccessOpen}
+        onClose={() => setBulkApprovalSuccessOpen(false)}
+        count={selectedCount}
       />
       <DeclineModal
         open={rejectBadgeModalOpen}
