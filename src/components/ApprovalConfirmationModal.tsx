@@ -24,22 +24,21 @@ const ApprovalConfirmationModal: React.FC<ApprovalConfirmationModalProps> = ({ o
       onClose={onClose}
       PaperProps={{
         sx: {
-          p: 4,
-          maxWidth: '480px',
-          minHeight: '280px',
+          p: 3,
+          maxWidth: '450px',
           alignItems: 'center',
           justifyContent: 'center',
-          borderRadius: 4,
+          borderRadius: 3,
           boxShadow: '0 8px 30px rgba(0,0,0,0.15)',
         },
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
         <ConfettiAnimation />
-        <Typography variant="h5" sx={{ fontWeight: 700, mt: 3, mb: 1 }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, mt: 3, mb: 1 }}>
           Badge Approved!
         </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {requesterName} has been notified.
         </Typography>
       </Box>
