@@ -146,7 +146,7 @@ const Actions: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
-      description: 'Need feedback on the new product design mockups for client presentation.',
+      description: 'I promise to provide feedback on the new product design mockups for client presentation.',
       assignee: 'Riley Chen',
     },
     {
@@ -154,7 +154,7 @@ const Actions: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
-      description: 'Need the quarterly marketing report with all KPIs and campaign results.',
+      description: 'I am going to deliver the quarterly marketing report with all KPIs and campaign results.',
       assignee: 'Jamie Smith',
     },
     {
@@ -162,7 +162,7 @@ const Actions: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(1, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Jul 18, 10:00 AM',
-      description: 'Please provide the final invoice for the freelance design work.',
+      description: 'I will provide the final invoice for the freelance design work.',
       assignee: '+1 555-987-6543',
       isExternal: true,
     },
@@ -171,7 +171,7 @@ const Actions: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Jul 17, 3:30 PM',
-      description: 'Confirming you will join the client demo call on Friday.',
+      description: 'I commit to joining the client demo call on Friday.',
       assignee: 'Chris Parker',
     },
     {
@@ -179,7 +179,7 @@ const Actions: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(5, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Jul 16, 11:00 AM',
-      description: 'I need your section of the presentation slides by EOD Tuesday.',
+      description: 'I plan to provide my section of the presentation slides by EOD Tuesday.',
       assignee: 'Sarah Wilson',
     }
   ];
@@ -203,6 +203,33 @@ const Actions: React.FC = () => {
       explanation: 'We held a final review session and all stakeholders have signed off on the mockups.',
       assignee: 'Riley Chen',
     },
+    {
+      id: 503,
+      title: 'Leadership',
+      dueDate: 'Completed Jul 16',
+      committedDate: 'Requested on Jul 17, 11:00 AM',
+      description: 'I promise to lead the weekly sync meeting and ensure all action items are captured.',
+      explanation: 'I led the meeting, and the minutes with action items have been circulated.',
+      assignee: 'Sarah Wilson',
+    },
+    {
+      id: 504,
+      title: 'Attendance',
+      dueDate: 'Completed Jul 15',
+      committedDate: 'Requested on Jul 16, 9:00 AM',
+      description: 'I commit to attending the full-day workshop on new project management tools.',
+      explanation: 'I attended the entire workshop and have shared my notes with the team.',
+      assignee: 'Mike Johnson',
+    },
+    {
+      id: 505,
+      title: 'Promise Kept General',
+      dueDate: 'Completed Jul 14',
+      committedDate: 'Requested on Jul 15, 3:00 PM',
+      description: 'I am going to update the shared documentation with the latest API specifications.',
+      explanation: 'The documentation is now up-to-date on Confluence, link has been shared in the channel.',
+      assignee: 'Jamie Smith',
+    },
   ];
 
   const awaitingResponseItems = [
@@ -211,7 +238,7 @@ const Actions: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: 'Pending',
       committedDate: 'Requested on Jul 19, 2:00 PM',
-      description: 'Could you please handle the deployment for the new feature release this weekend?',
+      description: 'I plan to handle the deployment for the new feature release this weekend.',
       assignee: 'Mike Johnson',
     },
     {
@@ -219,7 +246,7 @@ const Actions: React.FC = () => {
       title: 'Teamwork',
       dueDate: 'Pending',
       committedDate: 'Requested on Jul 18, 4:30 PM',
-      description: 'Request to collaborate on the Q4 roadmap document.',
+      description: 'I will collaborate on the Q4 roadmap document.',
       assignee: 'Riley Chen',
     },
     {
@@ -227,7 +254,7 @@ const Actions: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: 'Pending',
       committedDate: 'Requested on Jul 17, 9:00 AM',
-      description: 'Request for you to approve the budget for the new marketing campaign.',
+      description: 'I will approve the budget for the new marketing campaign.',
       assignee: '+1 555-555-1212',
       isExternal: true,
     }

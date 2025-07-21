@@ -60,7 +60,7 @@ const DueSoonOverdue: React.FC = () => {
       id: 5,
       title: 'Promise Kept General',
       type: 'Offer',
-      description: 'I was supposed to submit the weekly analytics report, but I will get it done by tomorrow morning.',
+      description: 'I promise to submit the weekly analytics report.',
       assignee: 'Alex Todd',
       dueDate: '15th June, 18:35',
     },
