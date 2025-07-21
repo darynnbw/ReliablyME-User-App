@@ -461,7 +461,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
-  const isBadgesTab = tabs[activeTab].label.includes('Badge');
+  const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
 
   let itemColor = '#ff7043'; // Default for 'My Promises'
@@ -479,8 +479,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
 
   const itemsPerPage = 15;
-  const paginatedItems = isBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
-  const totalPages = isBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
+  const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
+  const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
 
   return (
     <>
@@ -640,7 +640,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Tabs>
         </Box>
 
-        {!isUnkeptTab && !isBadgesTab && (
+        {!isUnkeptTab && !isMyBadgesTab && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox
@@ -747,7 +747,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         }}>
           <Stack spacing={1}>
             {paginatedItems.length > 0 ? (
-              isBadgesTab ? (
+              isMyBadgesTab ? (
                 paginatedItems.map((item, index) => (
                   <CommitmentListItem
                     key={item.id}
@@ -767,13 +767,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               ) : (
                 paginatedItems.map((item, index) => {
                   const isNudgeItem = item.type === 'nudge';
-                  const showCheckboxes = !isUnkeptTab && !isBadgesTab;
+                  const showCheckboxes = !isUnkeptTab && !isMyBadgesTab;
                   const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
                   const itemDate = parseCommitmentDate(item.dueDate);
                   const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
-                  const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
+                  const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
                   const showFromLabel = isRequestsToCommitTab || isOwedToMe || isAwaitingResponseTab || isBadgeRequestsTab;
 
                   return (
@@ -814,7 +814,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Stack>
         </Box>
         
-        {currentItems.length > 0 && isBadgesTab && (
+        {currentItems.length > 0 && isMyBadgesTab && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
             <Pagination count={totalPages} page={currentPage} onChange={(_, page) => setCurrentPage(page)} color="primary" />
           </Box>
