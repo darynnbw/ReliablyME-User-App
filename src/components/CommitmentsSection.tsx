@@ -770,19 +770,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   <Button
                     variant="contained"
                     size="small"
-                    onClick={() => setBulkRejectModalOpen(true)}
-                    sx={{ 
-                      bgcolor: '#F44336',
-                      color: 'white',
-                      textTransform: 'none',
-                      '&:hover': { bgcolor: '#d32f2f' }
-                    }}
-                  >
-                    Reject
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="small"
+                    startIcon={<Check />}
                     onClick={() => setBulkApproveModalOpen(true)}
                     sx={{ 
                       bgcolor: '#4CAF50',
@@ -792,6 +780,20 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     }}
                   >
                     Approve
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Close />}
+                    onClick={() => setBulkRejectModalOpen(true)}
+                    sx={{ 
+                      bgcolor: '#F44336',
+                      color: 'white',
+                      textTransform: 'none',
+                      '&:hover': { bgcolor: '#d32f2f' }
+                    }}
+                  >
+                    Reject
                   </Button>
                 </Box>
               )}
