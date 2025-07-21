@@ -145,7 +145,7 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
             onClick={handleSend}
             disabled={!message.trim()}
             sx={{
-              bgcolor: '#ff9800',
+              bgcolor: 'primary.main',
               color: 'white',
               textTransform: 'none',
               width: '100%',
@@ -155,7 +155,7 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
               fontWeight: 600,
               fontSize: '16px',
               '&:hover': { 
-                bgcolor: '#fb8c00'
+                bgcolor: 'primary.dark'
               },
               '&:disabled': { 
                 bgcolor: '#e0e0e0',
