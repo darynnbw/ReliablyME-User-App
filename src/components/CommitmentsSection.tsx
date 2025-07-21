@@ -43,6 +43,7 @@ import BulkAcceptModal from './BulkAcceptModal';
 import AnswerNudgeModal from './AnswerNudgeModal';
 import NudgeDetailsModal from './NudgeDetailsModal';
 import AcceptNudgeModal from './AcceptNudgeModal';
+import RequestClarificationModal from './RequestClarificationModal';
 
 dayjs.extend(isBetween);
 
@@ -98,6 +99,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
   const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
+  const [commitmentToRevoke, setCommitmentToRevoke] = useState<Commitment | null>(null);
+  const [commitmentToClarify, setCommitmentToClarify] = useState<Commitment | null>(null);
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
@@ -126,6 +129,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [individualDeclineModalOpen, setIndividualDeclineModalOpen] = useState(false);
   const handleCloseIndividualDeclineModal = useCallback(() => setIndividualDeclineModalOpen(false), []);
 
+  const [revokeModalOpen, setRevokeModalOpen] = useState(false);
+  const handleCloseRevokeModal = useCallback(() => setRevokeModalOpen(false), []);
+
+  const [clarifyModalOpen, setClarifyModalOpen] = useState(false);
+  const handleCloseClarifyModal = useCallback(() => setClarifyModalOpen(false), []);
+
   const [bulkAcceptModalOpen, setBulkAcceptModalOpen] = useState(false);
   const handleCloseBulkAcceptModal = useCallback(() => setBulkAcceptModalOpen(false), []);
 
@@ -137,17 +146,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
   const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
+  const isAwaitingResponseTab = tabs[activeTab].label === 'Awaiting Response';
+  const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
     setCurrentPage(1);
   }, [activeTab, tabs]);
-
-  const handleClarifyClick = () => {
-    // Placeholder for future functionality
-    console.log('Clarify button clicked');
-  };
 
   const uniquePeople = [...new Set(tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee)))];
   const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
@@ -367,27 +373,57 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   };
 
+  const handleRevokeClick = (item: Commitment) => {
+    setCommitmentToRevoke(item);
+    setRevokeModalOpen(true);
+  };
+
+  const handleConfirmRevoke = () => {
+    console.log('Revoking commitment:', commitmentToRevoke?.id);
+    setRevokeModalOpen(false);
+    setCommitmentToRevoke(null);
+  };
+
+  const handleClarifyClick = (item: Commitment) => {
+    setCommitmentToClarify(item);
+    setClarifyModalOpen(true);
+  };
+
+  const handleSendClarification = (message: string) => {
+    console.log(`Clarification request for ${commitmentToClarify?.id}: ${message}`);
+    setClarifyModalOpen(false);
+    setCommitmentToClarify(null);
+  };
+
+  const handleRevokeFromDetails = () => {
+    setModalOpen(false);
+    if (commitmentForDetails) {
+      handleRevokeClick(commitmentForDetails);
+    }
+  };
+
+  const handleClarifyFromDetails = () => {
+    setModalOpen(false);
+    if (commitmentForDetails) {
+      handleClarifyClick(commitmentForDetails);
+    }
+  };
+
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
-  const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
 
   let itemColor = '#ff7043'; // Default for 'My Promises'
-  let buttonText = 'Request Badge';
-  let onButtonClick: () => void = handleRequestBadge;
 
-  if (isOwedToMe) {
-    itemColor = '#1976d2'; // Blue for 'Promises Owed to Me'
-    buttonText = 'Clarify';
-    onButtonClick = handleClarifyClick;
+  if (isOwedToMe || isAwaitingResponseTab) {
+    itemColor = '#1976d2'; // Blue for 'Promises Owed to Me' & 'Awaiting Response'
   } else if (isUnkeptTab) {
     itemColor = '#4F4F4F'; // Grey for unkept promises
   } else if (isRequestsToCommitTab) {
     itemColor = '#ff7043'; // Orange for requests to match 'My Promises'
   }
 
-  const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab;
   const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
 
   const itemsPerPage = 15;
@@ -649,6 +685,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
                   const itemDate = parseCommitmentDate(item.dueDate);
                   const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
+                  const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab;
+                  const showRevokeButton = isAwaitingResponseTab;
+                  const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab;
 
                   return (
                     <CommitmentListItem
@@ -659,20 +698,22 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
                       showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
-                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : buttonText}
-                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : onButtonClick}
+                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
+                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
                       showAcceptDeclineButtons={isRequestsToCommitTab}
                       onAccept={() => handleAcceptClick(item)}
                       onDecline={() => handleDeclineClick(item)}
                       isBulkSelecting={selectedCount > 0}
-                      hideDueDate={isRequestsToCommitTab}
+                      hideDueDate={hideDueDate}
                       isNudge={isNudgeItem}
                       nudgesLeft={item.nudgesLeft}
                       isMyPromisesTab={isMyPromisesTab}
                       isExternal={item.isExternal}
                       isOverdue={isOverdue}
+                      showRevokeButton={showRevokeButton}
+                      onRevoke={() => handleRevokeClick(item)}
                     />
                   );
                 })
@@ -697,7 +738,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         isRequest={isRequestsToCommitTab}
         onAcceptRequestClick={handleAcceptFromDetails}
         onDeclineRequestClick={handleDeclineFromDetails}
-        onRequestBadgeClick={handleRequestBadgeFromDetails} 
+        onRequestBadgeClick={handleRequestBadgeFromDetails}
+        isAwaitingResponse={isAwaitingResponseTab}
+        isOwedToMe={isOwedToMe}
+        onRevokeClick={handleRevokeFromDetails}
+        onClarifyClick={handleClarifyFromDetails}
       />
       <NudgeDetailsModal
         open={nudgeDetailsModalOpen}
@@ -759,6 +804,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Typography>
         }
         onDecline={handleConfirmIndividualDecline}
+      />
+      <DeclineModal
+        open={revokeModalOpen}
+        onClose={handleCloseRevokeModal}
+        title="Revoke Request"
+        description={
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            Are you sure you want to revoke this commitment request? This action cannot be undone.
+          </Typography>
+        }
+        onDecline={handleConfirmRevoke}
+      />
+      <RequestClarificationModal
+        open={clarifyModalOpen}
+        onClose={handleCloseClarifyModal}
+        notification={commitmentToClarify}
+        onSend={handleSendClarification}
       />
       <BulkAcceptModal
         open={bulkAcceptModalOpen}

@@ -41,6 +41,8 @@ interface CommitmentListItemProps {
   isMyPromisesTab?: boolean;
   isExternal?: boolean;
   isOverdue?: boolean;
+  showRevokeButton?: boolean;
+  onRevoke?: () => void;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -69,6 +71,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   isMyPromisesTab = false,
   isExternal = false,
   isOverdue = false,
+  showRevokeButton = false,
+  onRevoke,
 }, ref) => {
   const theme = useTheme();
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -288,6 +292,25 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       Accept
                     </Button>
                   </Box>
+                )}
+                {showRevokeButton && (
+                  <Button
+                    variant="contained"
+                    onClick={onRevoke}
+                    disabled={isBulkSelecting}
+                    sx={{
+                      bgcolor: '#F44336',
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                      px: 4,
+                      py: 0.75,
+                      borderRadius: 1,
+                      '&:hover': { bgcolor: '#d32f2f' },
+                    }}
+                  >
+                    Revoke
+                  </Button>
                 )}
               </Box>
             </Box>

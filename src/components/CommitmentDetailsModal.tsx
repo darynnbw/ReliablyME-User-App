@@ -27,6 +27,10 @@ interface CommitmentDetailsModalProps {
   isRequest?: boolean;
   onAcceptRequestClick?: () => void;
   onDeclineRequestClick?: () => void;
+  isAwaitingResponse?: boolean;
+  isOwedToMe?: boolean;
+  onRevokeClick?: () => void;
+  onClarifyClick?: () => void;
 }
 
 const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
@@ -37,8 +41,113 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
   isRequest,
   onAcceptRequestClick,
   onDeclineRequestClick,
+  isAwaitingResponse,
+  isOwedToMe,
+  onRevokeClick,
+  onClarifyClick,
 }) => {
   if (!commitment) return null;
+
+  const renderActionButtons = () => {
+    if (isAwaitingResponse) {
+      return (
+        <Button
+          variant="contained"
+          onClick={onRevokeClick}
+          fullWidth
+          sx={{
+            bgcolor: '#F44336',
+            color: 'white',
+            textTransform: 'none',
+            py: 1.5,
+            fontSize: '16px',
+            fontWeight: 600,
+            '&:hover': { bgcolor: '#d32f2f' },
+          }}
+        >
+          Revoke
+        </Button>
+      );
+    }
+    if (isOwedToMe) {
+      return (
+        <Button
+          variant="contained"
+          onClick={onClarifyClick}
+          fullWidth
+          sx={{
+            bgcolor: 'warning.main',
+            color: 'white',
+            textTransform: 'none',
+            py: 1.5,
+            fontSize: '16px',
+            fontWeight: 600,
+            '&:hover': { bgcolor: 'warning.dark' },
+          }}
+        >
+          Clarify
+        </Button>
+      );
+    }
+    if (isRequest) {
+      return (
+        <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+          <Button
+            variant="contained"
+            onClick={onDeclineRequestClick}
+            fullWidth
+            sx={{
+              bgcolor: '#F44336',
+              color: 'white',
+              textTransform: 'none',
+              py: 1.5,
+              fontSize: '16px',
+              fontWeight: 600,
+              '&:hover': { bgcolor: '#d32f2f' },
+            }}
+          >
+            Decline
+          </Button>
+          <Button
+            variant="contained"
+            onClick={onAcceptRequestClick}
+            fullWidth
+            sx={{
+              bgcolor: '#4CAF50',
+              color: 'white',
+              textTransform: 'none',
+              py: 1.5,
+              fontSize: '16px',
+              fontWeight: 600,
+              '&:hover': { bgcolor: '#388e3c' },
+            }}
+          >
+            Accept
+          </Button>
+        </Box>
+      );
+    }
+    // Default button
+    return (
+      <Button
+        variant="contained"
+        onClick={onRequestBadgeClick}
+        fullWidth
+        sx={{
+          bgcolor: '#FF7F41',
+          color: 'white',
+          textTransform: 'none',
+          fontWeight: 'bold',
+          py: 1.5,
+          borderRadius: 1,
+          fontSize: '16px',
+          '&:hover': { bgcolor: '#F4611A' },
+        }}
+      >
+        Request Badge
+      </Button>
+    );
+  };
 
   return (
     <Dialog
@@ -83,15 +192,17 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
-            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Due:{' '}
-              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {commitment.dueDate}
+          {!isAwaitingResponse && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                Due:{' '}
+                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                  {commitment.dueDate}
+                </Typography>
               </Typography>
-            </Typography>
-          </Box>
+            </Box>
+          )}
 
           {commitment.committedDate && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -125,62 +236,9 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
 
         <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
 
-        {isRequest ? (
-          <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
-            <Button
-              variant="contained"
-              onClick={onDeclineRequestClick}
-              fullWidth
-              sx={{
-                bgcolor: '#F44336',
-                color: 'white',
-                textTransform: 'none',
-                py: 1.5,
-                fontSize: '16px',
-                fontWeight: 600,
-                '&:hover': { bgcolor: '#d32f2f' },
-              }}
-            >
-              Decline
-            </Button>
-            <Button
-              variant="contained"
-              onClick={onAcceptRequestClick}
-              fullWidth
-              sx={{
-                bgcolor: '#4CAF50',
-                color: 'white',
-                textTransform: 'none',
-                py: 1.5,
-                fontSize: '16px',
-                fontWeight: 600,
-                '&:hover': { bgcolor: '#388e3c' },
-              }}
-            >
-              Accept
-            </Button>
-          </Box>
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              variant="contained"
-              onClick={onRequestBadgeClick}
-              sx={{
-                bgcolor: '#FF7F41',
-                color: 'white',
-                textTransform: 'none',
-                fontWeight: 'bold',
-                width: '100%',
-                py: 1,
-                borderRadius: 1,
-                fontSize: '16px',
-                '&:hover': { bgcolor: '#F4611A' },
-              }}
-            >
-              Request Badge
-            </Button>
-          </Box>
-        )}
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          {renderActionButtons()}
+        </Box>
       </DialogContent>
     </Dialog>
   );
