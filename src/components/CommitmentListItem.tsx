@@ -228,10 +228,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Box
                 sx={{
                   bgcolor: '#f8f9fa',
-                  p: 1.5,
+                  px: 2,
+                  py: 1,
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
                   my: 1,
+                  alignSelf: 'flex-start',
+                  maxWidth: '100%',
                 }}
               >
                 <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
