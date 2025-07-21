@@ -19,11 +19,13 @@ const ApprovalConfirmationModal: React.FC<ApprovalConfirmationModalProps> = ({ o
 
   if (!open) return null;
 
-  const isBulk = count && count > 1;
+  const isBulk = count !== undefined && count > 0;
+  
   const title = isBulk ? 'Badges Approved!' : 'Badge Approved!';
+  
   const message = isBulk
-    ? `${count} badge requests have been approved.`
-    : `${requesterName} has been notified.`;
+    ? `${count} ${count === 1 ? 'person has' : 'people have'} been notified.`
+    : `${requesterName || 'The user'} has been notified.`;
 
   return (
     <Dialog
