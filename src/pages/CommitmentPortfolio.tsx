@@ -246,9 +246,9 @@ const CommitmentPortfolio: React.FC = () => {
             <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} />
           </Grid>
 
-          {/* Commitments Received & Badges Issued */}
+          {/* Commitments to Others */}
           <Grid item xs={12}>
-            <CommitmentsSection title="Commitments Received & Badges Issued" tabs={commitmentsReceivedTabs} />
+            <CommitmentsSection title="Commitments to Others" tabs={commitmentsReceivedTabs} />
           </Grid>
         </Grid>
       </Container>

@@ -44,6 +44,7 @@ import AnswerNudgeModal from './AnswerNudgeModal';
 import NudgeDetailsModal from './NudgeDetailsModal';
 import AcceptNudgeModal from './AcceptNudgeModal';
 import RequestClarificationModal from './RequestClarificationModal';
+import BulkClarifyModal from './BulkClarifyModal';
 
 dayjs.extend(isBetween);
 
@@ -143,6 +144,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
   const handleCloseNudgeDetailsModal = useCallback(() => setNudgeDetailsModalOpen(false), []);
+
+  const [bulkClarifyModalOpen, setBulkClarifyModalOpen] = useState(false);
+  const handleCloseBulkClarifyModal = useCallback(() => setBulkClarifyModalOpen(false), []);
+
+  const [bulkRevokeModalOpen, setBulkRevokeModalOpen] = useState(false);
+  const handleCloseBulkRevokeModal = useCallback(() => setBulkRevokeModalOpen(false), []);
 
   const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
   const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
@@ -409,9 +416,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     }
   };
 
+  const handleConfirmBulkRevoke = () => {
+    console.log('Bulk revoking commitments:', selectedCommitments.map(c => c.id));
+    setBulkRevokeModalOpen(false);
+    setCommitments(prev => prev.map(item => ({ ...item, selected: false })));
+    setSelectAll(false);
+  };
+
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
-  const isBadgesTab = tabs[activeTab].label.includes('Badges');
+  const isBadgesTab = tabs[activeTab].label.includes('Badge');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
 
   let itemColor = '#ff7043'; // Default for 'My Promises'
@@ -424,7 +438,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     itemColor = '#ff7043'; // Orange for requests to match 'My Promises'
   }
 
-  const showBulkRequest = selectedCount > 0 && (tabs[activeTab].label === 'My Promises' || tabs[activeTab].label === 'Promises Owed to Me');
+  const showBulkRequest = selectedCount > 0 && isMyPromisesTab;
+  const showBulkClarify = selectedCount > 0 && isOwedToMe;
+  const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
 
   const itemsPerPage = 15;
   const paginatedItems = isBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
@@ -614,6 +630,40 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   }}
                 >
                   Bulk Request
+                </Button>
+              )}
+
+              {showBulkClarify && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => setBulkClarifyModalOpen(true)}
+                  sx={{
+                    bgcolor: '#1976d2',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    '&:hover': { bgcolor: '#1565c0' },
+                  }}
+                >
+                  Clarify
+                </Button>
+              )}
+
+              {showBulkRevoke && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => setBulkRevokeModalOpen(true)}
+                  sx={{
+                    bgcolor: '#F44336',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    '&:hover': { bgcolor: '#d32f2f' },
+                  }}
+                >
+                  Revoke
                 </Button>
               )}
 
@@ -818,11 +868,27 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         }
         onDecline={handleConfirmRevoke}
       />
+      <DeclineModal
+        open={bulkRevokeModalOpen}
+        onClose={handleCloseBulkRevokeModal}
+        title="Bulk Revoke Requests"
+        description={
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            Are you sure you want to revoke {selectedCount} selected request{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+          </Typography>
+        }
+        onDecline={handleConfirmBulkRevoke}
+      />
       <RequestClarificationModal
         open={clarifyModalOpen}
         onClose={handleCloseClarifyModal}
         notification={commitmentToClarify}
         onSend={handleSendClarification}
+      />
+      <BulkClarifyModal
+        open={bulkClarifyModalOpen}
+        onClose={handleCloseBulkClarifyModal}
+        commitments={selectedCommitments}
       />
       <BulkAcceptModal
         open={bulkAcceptModalOpen}

@@ -184,6 +184,25 @@ const Actions: React.FC = () => {
     }
   ];
 
+  const badgeRequestItems = [
+    {
+      id: 501,
+      title: 'Promise Kept General',
+      dueDate: 'Completed Jul 18',
+      committedDate: 'Requested on Jul 19, 2:00 PM',
+      description: 'I have submitted the form and answered all the questions.',
+      assignee: 'Chris Parker',
+    },
+    {
+      id: 502,
+      title: 'Teamwork',
+      dueDate: 'Completed Jul 17',
+      committedDate: 'Requested on Jul 18, 10:00 AM',
+      description: 'Collaborated with the design team to finalize the new UI mockups.',
+      assignee: 'Riley Chen',
+    },
+  ];
+
   const awaitingResponseItems = [
     {
       id: 401,
@@ -219,6 +238,11 @@ const Actions: React.FC = () => {
       items: promisesOwedToMeItems,
     },
     {
+      label: 'Badge Requests',
+      count: badgeRequestItems.length,
+      items: badgeRequestItems,
+    },
+    {
       label: 'Awaiting Response',
       count: awaitingResponseItems.length,
       items: awaitingResponseItems,
@@ -237,9 +261,9 @@ const Actions: React.FC = () => {
             <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} />
           </Grid>
 
-          {/* Commitments Received & Badges Issued */}
+          {/* Commitments to Others */}
           <Grid item xs={12}>
-            <CommitmentsSection title="Commitments Received & Badges Issued" tabs={commitmentsReceivedTabs} />
+            <CommitmentsSection title="Commitments to Others" tabs={commitmentsReceivedTabs} />
           </Grid>
         </Grid>
       </Container>
