@@ -44,6 +44,8 @@ interface CommitmentListItemProps {
   showRevokeButton?: boolean;
   onRevoke?: () => void;
   showFromLabel?: boolean;
+  acceptButtonText?: string;
+  declineButtonText?: string;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -75,6 +77,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showRevokeButton = false,
   onRevoke,
   showFromLabel = false,
+  acceptButtonText,
+  declineButtonText,
 }, ref) => {
   const theme = useTheme();
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -274,7 +278,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         '&:hover': { bgcolor: '#d32f2f' },
                       }}
                     >
-                      Decline
+                      {declineButtonText || 'Decline'}
                     </Button>
                     <Button
                       variant="contained"
@@ -291,7 +295,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         '&:hover': { bgcolor: '#388e3c' },
                       }}
                     >
-                      Accept
+                      {acceptButtonText || 'Accept'}
                     </Button>
                   </Box>
                 )}

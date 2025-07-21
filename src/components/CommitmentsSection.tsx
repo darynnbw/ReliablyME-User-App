@@ -45,6 +45,7 @@ import NudgeDetailsModal from './NudgeDetailsModal';
 import AcceptNudgeModal from './AcceptNudgeModal';
 import RequestClarificationModal from './RequestClarificationModal';
 import BulkClarifyModal from './BulkClarifyModal';
+import ApprovalConfirmationModal from './ApprovalConfirmationModal';
 
 dayjs.extend(isBetween);
 
@@ -105,6 +106,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
+  const [commitmentToReject, setCommitmentToReject] = useState<Commitment | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
@@ -151,10 +153,44 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [bulkRevokeModalOpen, setBulkRevokeModalOpen] = useState(false);
   const handleCloseBulkRevokeModal = useCallback(() => setBulkRevokeModalOpen(false), []);
 
+  const [approvalModalOpen, setApprovalModalOpen] = useState(false);
+  const [requesterForApproval, setRequesterForApproval] = useState('');
+  const [rejectBadgeModalOpen, setRejectBadgeModalOpen] = useState(false);
+
+  const handleCloseApprovalModal = useCallback(() => {
+    setApprovalModalOpen(false);
+    setRequesterForApproval('');
+  }, []);
+
+  const handleCloseRejectBadgeModal = useCallback(() => {
+    setRejectBadgeModalOpen(false);
+    setCommitmentToReject(null);
+  }, []);
+
+  const handleApproveBadgeRequest = (item: Commitment) => {
+    setRequesterForApproval(item.assignee);
+    setCommitments(prev => prev.filter(c => c.id !== item.id));
+    setApprovalModalOpen(true);
+  };
+
+  const handleRejectBadgeRequest = (item: Commitment) => {
+    setCommitmentToReject(item);
+    setRejectBadgeModalOpen(true);
+  };
+
+  const handleConfirmRejectBadge = () => {
+    if (commitmentToReject) {
+      console.log('Rejecting badge for:', commitmentToReject.id);
+      setCommitments(prev => prev.filter(c => c.id !== commitmentToReject.id));
+      handleCloseRejectBadgeModal();
+    }
+  };
+
   const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
   const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
   const isAwaitingResponseTab = tabs[activeTab].label === 'Awaiting Response';
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
+  const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
 
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
@@ -430,7 +466,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   let itemColor = '#ff7043'; // Default for 'My Promises'
 
-  if (isOwedToMe || isAwaitingResponseTab) {
+  if (isOwedToMe || isAwaitingResponseTab || isBadgeRequestsTab) {
     itemColor = '#1976d2'; // Blue for 'Promises Owed to Me' & 'Awaiting Response'
   } else if (isUnkeptTab) {
     itemColor = '#4F4F4F'; // Grey for unkept promises
@@ -735,10 +771,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
                   const itemDate = parseCommitmentDate(item.dueDate);
                   const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
-                  const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab;
+                  const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
-                  const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab;
-                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isAwaitingResponseTab;
+                  const showActionButton = !isUnkeptTab && !isBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
+                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isAwaitingResponseTab || isBadgeRequestsTab;
 
                   return (
                     <CommitmentListItem
@@ -753,9 +789,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
-                      showAcceptDeclineButtons={isRequestsToCommitTab}
-                      onAccept={() => handleAcceptClick(item)}
-                      onDecline={() => handleDeclineClick(item)}
+                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
+                      onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
+                      onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
+                      acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
+                      declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
                       isBulkSelecting={selectedCount > 0}
                       hideDueDate={hideDueDate}
                       isNudge={isNudgeItem}
@@ -899,6 +937,22 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         open={answerNudgeModalOpen}
         onClose={handleCloseAnswerNudgeModal}
         commitment={commitmentForAnswerNudge}
+      />
+      <ApprovalConfirmationModal
+        open={approvalModalOpen}
+        onClose={handleCloseApprovalModal}
+        requesterName={requesterForApproval}
+      />
+      <DeclineModal
+        open={rejectBadgeModalOpen}
+        onClose={handleCloseRejectBadgeModal}
+        title="Reject Badge Request"
+        description={
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            Are you sure you want to reject this badge request? The sender will be notified.
+          </Typography>
+        }
+        onDecline={handleConfirmRejectBadge}
       />
     </>
   );
