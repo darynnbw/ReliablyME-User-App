@@ -710,6 +710,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     color: 'white',
                     textTransform: 'none',
                     fontWeight: 'bold',
+                    px: 3,
                     '&:hover': { bgcolor: '#1565c0' },
                   }}
                 >
