@@ -76,13 +76,14 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
           onClick={onClarifyClick}
           fullWidth
           sx={{
-            bgcolor: 'warning.main',
+            bgcolor: 'primary.main',
             color: 'white',
             textTransform: 'none',
             py: 1.5,
             fontSize: '16px',
-            fontWeight: 600,
-            '&:hover': { bgcolor: 'warning.dark' },
+            fontWeight: 'bold',
+            borderRadius: 1,
+            '&:hover': { bgcolor: 'primary.dark' },
           }}
         >
           Clarify
