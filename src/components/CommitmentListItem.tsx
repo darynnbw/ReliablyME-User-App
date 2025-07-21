@@ -46,6 +46,7 @@ interface CommitmentListItemProps {
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
+  dueDateLabel?: string;
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -79,6 +80,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showFromLabel = false,
   acceptButtonText,
   declineButtonText,
+  dueDateLabel,
 }, ref) => {
   const theme = useTheme();
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,7 +208,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
                 <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
                 <Typography variant="body2" sx={{ color: dueRowColor, fontWeight: dueRowWeight }}>
-                  Due {dueDate}
+                  {`${dueDateLabel === undefined ? 'Due' : dueDateLabel}${dueDateLabel ? ' ' : ''}${dueDate}`}
                 </Typography>
                 {isNudge && nudgesLeft !== undefined && (
                   <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
