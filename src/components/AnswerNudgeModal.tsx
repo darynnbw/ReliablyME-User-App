@@ -105,27 +105,6 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
               {commitment?.title || 'Mid-Week Progress'}
             </Typography>
 
-            {commitment?.description && (
-              <>
-                <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
-                  Original Commitment
-                </Typography>
-                <Box 
-                  sx={{ 
-                    mb: 3,
-                    bgcolor: '#f8f9fa',
-                    p: 2.5,
-                    borderRadius: 2,
-                    border: '1px solid #e9ecef'
-                  }}
-                >
-                  <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-                    {commitment.description}
-                  </Typography>
-                </Box>
-              </>
-            )}
-
             <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
               Today's Questions
             </Typography>
