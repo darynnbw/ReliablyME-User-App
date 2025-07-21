@@ -53,17 +53,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 3,
-          p: 3,
-          maxWidth: '600px',
-          transition: 'transform 0.2s ease-in-out',
-          '@media (max-height: 820px)': {
-            transform: 'scale(0.9)',
-          },
-        },
-      }}
+      PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '600px' } }}
     >
       <DialogTitle sx={{ p: 0, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
