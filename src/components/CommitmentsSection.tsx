@@ -47,6 +47,7 @@ import RequestClarificationModal from './RequestClarificationModal';
 import BulkClarifyModal from './BulkClarifyModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
 import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
+import ConfirmationModal from './ConfirmationModal';
 
 dayjs.extend(isBetween);
 
@@ -162,6 +163,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [approvalModalOpen, setApprovalModalOpen] = useState(false);
   const [requesterForApproval, setRequesterForApproval] = useState('');
   const [rejectBadgeModalOpen, setRejectBadgeModalOpen] = useState(false);
+
+  const [bulkApproveModalOpen, setBulkApproveModalOpen] = useState(false);
+  const [bulkRejectModalOpen, setBulkRejectModalOpen] = useState(false);
 
   const handleCloseApprovalModal = useCallback(() => {
     setApprovalModalOpen(false);
@@ -468,6 +472,22 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setSelectAll(false);
   };
 
+  const handleConfirmBulkApprove = () => {
+    console.log('Bulk approving commitments:', selectedCommitments.map(c => c.id));
+    const selectedIds = selectedCommitments.map(c => c.id);
+    setCommitments(prev => prev.filter(c => !selectedIds.includes(c.id)));
+    setBulkApproveModalOpen(false);
+    setSelectAll(false);
+  };
+  
+  const handleConfirmBulkReject = () => {
+    console.log('Bulk rejecting commitments:', selectedCommitments.map(c => c.id));
+    const selectedIds = selectedCommitments.map(c => c.id);
+    setCommitments(prev => prev.filter(c => !selectedIds.includes(c.id)));
+    setBulkRejectModalOpen(false);
+    setSelectAll(false);
+  };
+
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
@@ -744,6 +764,39 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   </Button>
                 </Box>
               )}
+
+              {selectedCount > 0 && isBadgeRequestsTab && (
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Close />}
+                    onClick={() => setBulkRejectModalOpen(true)}
+                    sx={{ 
+                      bgcolor: '#F44336',
+                      color: 'white',
+                      textTransform: 'none',
+                      '&:hover': { bgcolor: '#d32f2f' }
+                    }}
+                  >
+                    Reject All
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Check />}
+                    onClick={() => setBulkApproveModalOpen(true)}
+                    sx={{ 
+                      bgcolor: '#4CAF50',
+                      color: 'white',
+                      textTransform: 'none',
+                      '&:hover': { bgcolor: '#388e3c' }
+                    }}
+                  >
+                    Approve All
+                  </Button>
+                </Box>
+              )}
             </Box>
           </Box>
         )}
@@ -976,6 +1029,24 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Typography>
         }
         onDecline={handleConfirmRejectBadge}
+      />
+      <ConfirmationModal
+        open={bulkApproveModalOpen}
+        onClose={() => setBulkApproveModalOpen(false)}
+        title="Bulk Approve Requests"
+        description={`Are you sure you want to approve ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
+        onConfirm={handleConfirmBulkApprove}
+        confirmText="Approve All"
+        confirmColor="success"
+      />
+      <ConfirmationModal
+        open={bulkRejectModalOpen}
+        onClose={() => setBulkRejectModalOpen(false)}
+        title="Bulk Reject Requests"
+        description={`Are you sure you want to reject ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
+        onConfirm={handleConfirmBulkReject}
+        confirmText="Reject All"
+        confirmColor="error"
       />
     </>
   );
