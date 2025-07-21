@@ -9,6 +9,7 @@ import {
   Button,
   Divider,
   TextField,
+  Stack,
 } from '@mui/material';
 import { Close, CalendarToday } from '@mui/icons-material';
 import ConfettiAnimation from './ConfettiAnimation';
@@ -18,6 +19,7 @@ interface AnswerNudgeModalProps {
   onClose: () => void;
   commitment: {
     title: string;
+    description?: string;
     questions?: string[];
     dueDate?: string;
   } | null;
@@ -103,16 +105,46 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
               {commitment?.title || 'Mid-Week Progress'}
             </Typography>
 
-            <Typography variant="body1" sx={{ fontWeight: 400, mb: 2, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-              Please type in your answer for:
-            </Typography>
-
-            <Box sx={{ mb: 2 }}>
-              {questionsToRender.map((question, index) => (
-                <Typography key={index} variant="body1" sx={{ mb: 0.5, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-                  {question}
+            {commitment?.description && (
+              <>
+                <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
+                  Original Commitment
                 </Typography>
-              ))}
+                <Box 
+                  sx={{ 
+                    mb: 3,
+                    bgcolor: '#f8f9fa',
+                    p: 2.5,
+                    borderRadius: 2,
+                    border: '1px solid #e9ecef'
+                  }}
+                >
+                  <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                    {commitment.description}
+                  </Typography>
+                </Box>
+              </>
+            )}
+
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
+              Today's Questions
+            </Typography>
+            <Box 
+              sx={{ 
+                mb: 3,
+                bgcolor: '#f8f9fa',
+                p: 2.5,
+                borderRadius: 2,
+                border: '1px solid #e9ecef'
+              }}
+            >
+              <Stack spacing={1}>
+                {questionsToRender.map((question, index) => (
+                  <Typography key={index} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                    {question}
+                  </Typography>
+                ))}
+              </Stack>
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
