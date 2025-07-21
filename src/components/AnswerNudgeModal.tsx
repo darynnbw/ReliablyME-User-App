@@ -77,7 +77,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
           <DialogTitle sx={{ p: 0, mb: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
-                Answer nudge
+                Answer Nudge
               </Typography>
               <IconButton onClick={onClose} sx={{ color: '#666' }}>
                 <Close />
@@ -138,7 +138,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
 
             <TextField
               multiline
-              rows={8}
+              rows={4}
               fullWidth
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
