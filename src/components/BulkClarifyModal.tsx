@@ -144,9 +144,22 @@ const BulkClarifyModal: React.FC<BulkClarifyModalProps> = ({ open, onClose, comm
               </Box>
             </Box>
 
-            <Typography variant="body1" sx={{ fontWeight: 600, mb: 1, color: '#333', fontSize: '16px' }}>
-              Clarification Request
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
+              Original Commitment
             </Typography>
+            <Box 
+              sx={{ 
+                mb: 3,
+                bgcolor: '#f8f9fa',
+                p: 2.5,
+                borderRadius: 2,
+                border: '1px solid #e9ecef'
+              }}
+            >
+              <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                {currentCommitment.description}
+              </Typography>
+            </Box>
 
             <TextField
               multiline
@@ -154,14 +167,26 @@ const BulkClarifyModal: React.FC<BulkClarifyModalProps> = ({ open, onClose, comm
               fullWidth
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Describe what details or documents you need..."
+              placeholder="Describe what details or documents you need to approve this badge"
               variant="outlined"
               sx={{
-                mb: 2,
+                mb: 3,
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
-                  backgroundColor: 'white',
-                  border: '1px solid #e9ecef',
+                  backgroundColor: '#fafafa',
+                  '& fieldset': {
+                    borderColor: '#e0e0e0',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#bdbdbd',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#1976d2',
+                  },
+                },
+                '& .MuiInputBase-input': {
+                  fontSize: '16px',
+                  lineHeight: 1.5,
                 },
               }}
             />
