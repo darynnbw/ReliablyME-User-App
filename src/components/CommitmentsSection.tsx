@@ -198,13 +198,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   });
 
   useEffect(() => {
-    if (title === 'My Commitments' && firstItemRef.current) {
+    // The height calculation is based on showing 2 items.
+    // This logic is now applied to both commitment sections.
+    if (firstItemRef.current) {
       const cardHeight = firstItemRef.current.offsetHeight;
       const spacing = 8; // From <Stack spacing={1}>
       const calculatedHeight = (cardHeight * 2) + spacing;
       setContainerHeight(calculatedHeight);
     }
-  }, [currentItems, title]);
+  }, [currentItems]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (item.type === 'nudge' && (isMyPromisesTab || isRequestsToCommitTab)) {
@@ -370,7 +372,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const isBadgesTab = tabs[activeTab].label.includes('Badges');
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
-  const isMyCommitments = title === 'My Commitments';
 
   let itemColor = '#ff7043'; // Default for 'My Promises'
   let buttonText = 'Request Badge';
@@ -398,7 +399,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       <Paper sx={{
         p: 3,
         height: 'auto',
-        minHeight: isMyCommitments ? 'auto' : 500,
+        minHeight: 'auto',
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#ffffff',
@@ -617,8 +618,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         )}
 
         <Box sx={{ 
-          flex: isMyCommitments ? undefined : 1, 
-          height: isMyCommitments ? containerHeight : undefined, 
+          height: containerHeight, 
           minHeight: 0, 
           overflowY: 'scroll', 
           pr: 1 
