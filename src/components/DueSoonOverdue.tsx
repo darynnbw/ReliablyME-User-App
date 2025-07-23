@@ -7,6 +7,7 @@ import {
   Tab,
   Stack,
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
 import CommitmentListItem from './CommitmentListItem';
@@ -168,6 +169,8 @@ const DueSoonOverdue: React.FC = () => {
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto', pt: 2 }}>
           <Button
+            component={Link}
+            to="/actions"
             variant="contained"
             sx={{
               bgcolor: '#607d8b',

@@ -5,6 +5,7 @@ import {
   Box,
   Button,
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const BadgesPanel: React.FC = () => {
   const badges = [
@@ -223,6 +224,8 @@ const BadgesPanel: React.FC = () => {
       {/* See All Button - Styled to match other dashboard buttons and aligned right */}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
         <Button
+          component={Link}
+          to="/commitment-portfolio"
           variant="contained"
           sx={{
             bgcolor: '#607d8b',
