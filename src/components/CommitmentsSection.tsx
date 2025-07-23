@@ -504,7 +504,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const showBulkRequest = selectedCount > 0 && isMyPromisesTab;
   const showBulkClarify = selectedCount > 0 && isOwedToMe;
-  const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab && title !== 'My Commitments';
+  const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
 
   const itemsPerPage = 15;
   const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
