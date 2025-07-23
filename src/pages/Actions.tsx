@@ -127,6 +127,34 @@ const Actions: React.FC = () => {
     },
   ];
 
+  const myAwaitingResponseItems = [
+    {
+      id: 601,
+      title: 'Promise Kept General',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 20, 11:00 AM',
+      description: 'I will set up the new project repository and initial file structure.',
+      assignee: 'Dev Team Lead',
+    },
+    {
+      id: 602,
+      title: 'Teamwork',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 19, 3:00 PM',
+      description: 'I will send you the draft for the client presentation for your review.',
+      assignee: 'Sarah Wilson',
+    },
+    {
+      id: 603,
+      title: 'Promise Kept General',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 21, 9:00 AM',
+      description: 'I will send the new marketing assets for approval.',
+      assignee: '+1 555-555-1212',
+      isExternal: true,
+    }
+  ];
+
   const myCommitmentsTabs = [
     {
       label: 'My Promises',
@@ -137,6 +165,11 @@ const Actions: React.FC = () => {
       label: 'Requests to Commit',
       count: requestsToCommitItems.length,
       items: requestsToCommitItems,
+    },
+    {
+      label: 'Awaiting Response',
+      count: myAwaitingResponseItems.length,
+      items: myAwaitingResponseItems,
     },
   ];
 

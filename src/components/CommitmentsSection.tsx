@@ -495,19 +495,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
 
-  let itemColor = '#ff7043'; // Default for 'My Promises'
-
-  if (isOwedToMe || isAwaitingResponseTab || isBadgeRequestsTab) {
-    itemColor = '#1976d2'; // Blue for 'Promises Owed to Me' & 'Awaiting Response'
+  let itemColor = '#ff7043'; // Default orange
+  if (isOwedToMe || isBadgeRequestsTab || (isAwaitingResponseTab && title !== 'My Commitments')) {
+    itemColor = '#1976d2'; // Blue
   } else if (isUnkeptTab) {
-    itemColor = '#4F4F4F'; // Grey for unkept promises
-  } else if (isRequestsToCommitTab) {
-    itemColor = '#ff7043'; // Orange for requests to match 'My Promises'
+    itemColor = '#4F4F4F'; // Grey
   }
 
   const showBulkRequest = selectedCount > 0 && isMyPromisesTab;
   const showBulkClarify = selectedCount > 0 && isOwedToMe;
-  const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
+  const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab && title !== 'My Commitments';
 
   const itemsPerPage = 15;
   const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;

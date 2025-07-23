@@ -97,7 +97,11 @@ const DueSoonOverdue: React.FC = () => {
         height: { xs: 'auto', md: 450 },
         minHeight: { xs: 350, md: 450 },
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        bgcolor: '#ffffff',
+        borderRadius: 3,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+        border: '1px solid #e8eaed',
       }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
           <Tabs
