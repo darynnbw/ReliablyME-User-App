@@ -14,7 +14,6 @@ import {
   useTheme,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Shield, Edit } from '@mui/icons-material';
-import ContactTooltip from './ContactTooltip';
 
 interface CommitmentListItemProps {
   id: number;
@@ -253,24 +252,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Stack direction="row" spacing={1} alignItems="center">
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
-                  {showFromLabel ? 'From:' : 'To:'}{' '}
-                  {assignee === 'Chris Parker' ? (
-                    <ContactTooltip>
-                      <span 
-                        style={{ 
-                          color: '#666',
-                          cursor: 'pointer',
-                          fontSize: 'inherit',
-                          fontFamily: 'inherit',
-                          fontWeight: 'inherit'
-                        }}
-                      >
-                        {assignee}
-                      </span>
-                    </ContactTooltip>
-                  ) : (
-                    assignee
-                  )}
+                  {showFromLabel ? 'From:' : 'To:'} {assignee}
                 </Typography>
                 {isExternal && (
                   <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>

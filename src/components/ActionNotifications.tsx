@@ -18,7 +18,6 @@ import {
   Undo,
   MoreHoriz,
   Person,
-  Stars,
 } from '@mui/icons-material';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import AnswerNudgeModal from './AnswerNudgeModal';
@@ -28,7 +27,6 @@ import RequestClarificationModal from './RequestClarificationModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
 import AcceptRequestModal from './AcceptRequestModal';
 import NudgeDetailsModal from './NudgeDetailsModal';
-import RequestBadgeModal from './RequestBadgeModal';
 
 const initialNotifications = [
   {
@@ -79,15 +77,6 @@ const initialNotifications = [
     dueDate: 'Apr 14, 4:00 PM',
     questions: ['Have you had a chance to review the pull request?'],
   },
-  {
-    id: 6,
-    title: 'Teamwork',
-    type: 'Completed',
-    description: 'You helped onboard the new team member. Great job! Now you can request your badge.',
-    assignee: 'Riley Chen',
-    actions: ['request_badge'],
-    dueDate: 'Apr 15, 11:00 AM',
-  },
 ];
 
 const ActionNotifications: React.FC = () => {
@@ -99,7 +88,6 @@ const ActionNotifications: React.FC = () => {
   const [approvalModalOpen, setApprovalModalOpen] = useState(false);
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
-  const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
@@ -109,7 +97,6 @@ const ActionNotifications: React.FC = () => {
   const handleCloseClarificationModal = useCallback(() => setRequestClarificationModalOpen(false), []);
   const handleCloseAcceptModal = useCallback(() => setAcceptModalOpen(false), []);
   const handleCloseNudgeDetailsModal = useCallback(() => setNudgeDetailsModalOpen(false), []);
-  const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
   const handleCloseApprovalModal = useCallback(() => {
     setApprovalModalOpen(false);
     setSelectedNotification(null);
@@ -123,8 +110,6 @@ const ActionNotifications: React.FC = () => {
         return '#ff7043';
       case 'Badge Request':
         return '#1976d2';
-      case 'Completed':
-        return '#4caf50';
       default:
         return '#666';
     }
@@ -138,8 +123,6 @@ const ActionNotifications: React.FC = () => {
         return '#fff3e0';
       case 'Badge Request':
         return '#e3f2fd';
-      case 'Completed':
-        return '#e8f5e9';
       default:
         return '#f5f5f5';
     }
@@ -159,8 +142,6 @@ const ActionNotifications: React.FC = () => {
       setDeclineModalOpen(true);
     } else if (action === 'edit' && notification.type === 'Nudge') {
       setAnswerNudgeModalOpen(true);
-    } else if (action === 'request_badge') {
-      setRequestBadgeModalOpen(true);
     }
   };
 
@@ -400,21 +381,6 @@ const ActionNotifications: React.FC = () => {
                             </IconButton>
                           </Tooltip>
                         )}
-                        {notification.actions.includes('request_badge') && (
-                          <Tooltip title="Request Badge" placement="top" arrow>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleActionClick('request_badge', notification)}
-                              sx={{
-                                bgcolor: '#e8f5e9',
-                                color: '#4caf50',
-                                '&:hover': { bgcolor: '#d4edda' },
-                              }}
-                            >
-                              <Stars fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        )}
                         {notification.actions.includes('undo') && (
                           <Tooltip title="Request Clarification" placement="top" arrow>
                             <IconButton
@@ -505,11 +471,6 @@ const ActionNotifications: React.FC = () => {
         onClose={handleCloseAcceptModal}
         onCommit={handleAcceptCommit}
         commitmentDescription={selectedNotification?.description || ''}
-      />
-
-      <RequestBadgeModal
-        open={requestBadgeModalOpen}
-        onClose={handleCloseRequestBadgeModal}
       />
     </>
   );
