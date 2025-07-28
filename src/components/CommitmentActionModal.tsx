@@ -240,13 +240,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setBadgeError(false); // Clear error on change
                     }}
                     displayEmpty
-                    variant="outlined" // Added variant
-                    sx={{ 
-                      borderRadius: 2, 
-                      bgcolor: 'grey.50',
-                      '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, // Remove default border
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } // Add focus border
-                    }}
+                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
                     <MenuItem value="">
                       <em>Select a badge</em>
@@ -315,13 +309,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setRecipientError(false); // Clear recipient error if group is selected
                     }}
                     displayEmpty
-                    variant="outlined" // Added variant
-                    sx={{ 
-                      borderRadius: 2, 
-                      bgcolor: 'grey.50',
-                      '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, // Remove default border
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } // Add focus border
-                    }}
+                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
                     <MenuItem value="">
                       None
