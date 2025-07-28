@@ -172,7 +172,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 1 }}>
                   {currentTexts.title}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}> {/* Increased mb from 1 to 2 */}
+                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}> {/* Reduced mb from 2 to 1 */}
                   {currentTexts.subtitle}
                 </Typography>
               </Box>
@@ -312,7 +312,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 )}
               </Box>
             </Box>
-            <Box sx={{ mt: 2.5 }}> {/* Increased mt from 1.5 to 2.5 */}
+            <Box sx={{ mt: 2.5 }}>
               <Button
                 variant="contained"
                 onClick={handleSubmit}
