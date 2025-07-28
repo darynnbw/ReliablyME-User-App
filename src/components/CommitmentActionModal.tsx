@@ -257,8 +257,8 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       },
                     }}
                   >
-                    <MenuItem value="" sx={{ color: 'text.secondary', fontStyle: 'normal', fontWeight: 'normal' }}>
-                      Select a badge
+                    <MenuItem value="">
+                      <em>Select a badge</em>
                     </MenuItem>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
