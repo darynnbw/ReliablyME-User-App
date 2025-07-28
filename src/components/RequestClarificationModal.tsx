@@ -163,7 +163,7 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
               },
             }}
           >
-            Send Request
+            Request Clarification
           </Button>
         </Box>
       </DialogContent>
