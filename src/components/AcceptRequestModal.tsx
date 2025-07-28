@@ -147,6 +147,16 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
                       InputLabelProps: {
                         shrink: true,
                       },
+                      sx: {
+                        '& .MuiOutlinedInput-root': {
+                          '&:hover fieldset': {
+                            borderColor: '#bdbdbd', // Changed hover border to gray
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#1976d2', // Keep blue on focus
+                          },
+                        },
+                      },
                     },
                   }}
                 />
@@ -180,6 +190,16 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
                     textField: {
                       InputLabelProps: {
                         shrink: true,
+                      },
+                      sx: {
+                        '& .MuiOutlinedInput-root': {
+                          '&:hover fieldset': {
+                            borderColor: '#bdbdbd', // Changed hover border to gray
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#1976d2', // Keep blue on focus
+                          },
+                        },
                       },
                     },
                   }}

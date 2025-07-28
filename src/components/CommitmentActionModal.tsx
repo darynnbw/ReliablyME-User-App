@@ -229,7 +229,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                           border: 'none',
                         },
                         '&:hover fieldset': {
-                          border: 'none',
+                          border: '1px solid #bdbdbd', // Changed hover border to gray
                         },
                         '&.Mui-focused fieldset': {
                           border: '2px solid #1976d2',
@@ -252,7 +252,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                   onChange={(e) => {
                     setPromise(e.target.value);
                   }}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&:hover .MuiOutlinedInput-notchedOutline': { border: '1px solid #bdbdbd' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }}
                 />
               </Box>
               <Box>
@@ -278,6 +278,16 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                         {...params}
                         variant="outlined"
                         placeholder="Type a name or phone number"
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '&:hover fieldset': {
+                              borderColor: '#bdbdbd', // Changed hover border to gray
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: '#1976d2', // Keep blue on focus
+                            },
+                          },
+                        }}
                       />
                     )}
                     sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
@@ -294,7 +304,18 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setGroup(e.target.value);
                     }}
                     displayEmpty
-                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
+                    sx={{ 
+                      borderRadius: 2, 
+                      bgcolor: 'grey.50',
+                      '& .MuiOutlinedInput-root': {
+                        '&:hover fieldset': {
+                          borderColor: '#bdbdbd', // Changed hover border to gray
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#1976d2', // Keep blue on focus
+                        },
+                      },
+                    }}
                   >
                     <MenuItem value="">
                       None

@@ -187,6 +187,16 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
                       InputLabelProps: {
                         shrink: true,
                       },
+                      sx: {
+                        '& .MuiOutlinedInput-root': {
+                          '&:hover fieldset': {
+                            borderColor: '#bdbdbd', // Changed hover border to gray
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#1976d2', // Keep blue on focus
+                          },
+                        },
+                      },
                     },
                   }}
                 />
@@ -229,6 +239,16 @@ const AcceptNudgeModal: React.FC<AcceptNudgeModalProps> = ({ open, onClose, onCo
                     textField: {
                       InputLabelProps: {
                         shrink: true,
+                      },
+                      sx: {
+                        '& .MuiOutlinedInput-root': {
+                          '&:hover fieldset': {
+                            borderColor: '#bdbdbd', // Changed hover border to gray
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#1976d2', // Keep blue on focus
+                          },
+                        },
                       },
                     },
                   }}

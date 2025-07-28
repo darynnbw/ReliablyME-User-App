@@ -235,6 +235,16 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
                       InputLabelProps: {
                         shrink: true,
                       },
+                      sx: {
+                        '& .MuiOutlinedInput-root': {
+                          '&:hover fieldset': {
+                            borderColor: '#bdbdbd', // Changed hover border to gray
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#1976d2', // Keep blue on focus
+                          },
+                        },
+                      },
                     },
                   }}
                 />
@@ -277,6 +287,16 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
                     textField: {
                       InputLabelProps: {
                         shrink: true,
+                      },
+                      sx: {
+                        '& .MuiOutlinedInput-root': {
+                          '&:hover fieldset': {
+                            borderColor: '#bdbdbd', // Changed hover border to gray
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#1976d2', // Keep blue on focus
+                          },
+                        },
                       },
                     },
                   }}

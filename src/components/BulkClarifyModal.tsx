@@ -178,7 +178,7 @@ const BulkClarifyModal: React.FC<BulkClarifyModalProps> = ({ open, onClose, comm
                     borderColor: '#e0e0e0',
                   },
                   '&:hover fieldset': {
-                    borderColor: '#bdbdbd',
+                    borderColor: '#bdbdbd', // Changed hover border to gray
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: '#1976d2',

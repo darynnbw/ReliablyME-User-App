@@ -200,6 +200,9 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
                   },
                   '&:hover': {
                     backgroundColor: 'white',
+                    '& fieldset': {
+                      borderColor: '#bdbdbd', // Changed hover border to gray
+                    },
                   },
                   '&.Mui-focused': {
                     backgroundColor: 'white',

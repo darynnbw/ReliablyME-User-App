@@ -195,12 +195,36 @@ const YourStatisticsPanel: React.FC = () => {
               : 'All Time'
           }
           onClick={handleCustomRangeClick}
-          InputProps={{ readOnly: true }}
+          InputProps={{ 
+            readOnly: true,
+            sx: {
+              '&:hover fieldset': {
+                borderColor: '#bdbdbd', // Changed hover border to gray
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#1976d2', // Keep blue on focus
+              },
+            },
+          }}
           sx={{ flex: 1, cursor: 'pointer' }}
         />
         <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel>Group By</InputLabel>
-          <Select value={groupBy} label="Group By" onChange={handleGroupByChange}>
+          <Select 
+            value={groupBy} 
+            label="Group By" 
+            onChange={handleGroupByChange}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&:hover fieldset': {
+                  borderColor: '#bdbdbd', // Changed hover border to gray
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#1976d2', // Keep blue on focus
+                },
+              },
+            }}
+          >
             <MenuItem value="day">Day</MenuItem>
             <MenuItem value="week">Week</MenuItem>
             <MenuItem value="month">Month</MenuItem>
