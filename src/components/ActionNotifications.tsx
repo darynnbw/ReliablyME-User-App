@@ -27,6 +27,7 @@ import RequestClarificationModal from './RequestClarificationModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
 import AcceptRequestModal from './AcceptRequestModal';
 import NudgeDetailsModal from './NudgeDetailsModal';
+import RequestBadgeModal from './RequestBadgeModal';
 
 const initialNotifications = [
   {
@@ -77,6 +78,15 @@ const initialNotifications = [
     dueDate: 'Apr 14, 4:00 PM',
     questions: ['Have you had a chance to review the pull request?'],
   },
+  {
+    id: 6,
+    title: 'Promise Kept General',
+    type: 'Promise Due',
+    description: 'I will submit the project proposal for the Q3 initiatives.',
+    assignee: 'Alex Johnson',
+    actions: ['request_badge'],
+    dueDate: 'Apr 15, 5:00 PM',
+  },
 ];
 
 const ActionNotifications: React.FC = () => {
@@ -88,6 +98,7 @@ const ActionNotifications: React.FC = () => {
   const [approvalModalOpen, setApprovalModalOpen] = useState(false);
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
+  const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
@@ -97,6 +108,7 @@ const ActionNotifications: React.FC = () => {
   const handleCloseClarificationModal = useCallback(() => setRequestClarificationModalOpen(false), []);
   const handleCloseAcceptModal = useCallback(() => setAcceptModalOpen(false), []);
   const handleCloseNudgeDetailsModal = useCallback(() => setNudgeDetailsModalOpen(false), []);
+  const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
   const handleCloseApprovalModal = useCallback(() => {
     setApprovalModalOpen(false);
     setSelectedNotification(null);
@@ -110,6 +122,8 @@ const ActionNotifications: React.FC = () => {
         return '#ff7043';
       case 'Badge Request':
         return '#1976d2';
+      case 'Promise Due':
+        return '#4caf50';
       default:
         return '#666';
     }
@@ -123,6 +137,8 @@ const ActionNotifications: React.FC = () => {
         return '#fff3e0';
       case 'Badge Request':
         return '#e3f2fd';
+      case 'Promise Due':
+        return '#e8f5e9';
       default:
         return '#f5f5f5';
     }
@@ -142,6 +158,8 @@ const ActionNotifications: React.FC = () => {
       setDeclineModalOpen(true);
     } else if (action === 'edit' && notification.type === 'Nudge') {
       setAnswerNudgeModalOpen(true);
+    } else if (action === 'request_badge') {
+      setRequestBadgeModalOpen(true);
     }
   };
 
@@ -336,6 +354,22 @@ const ActionNotifications: React.FC = () => {
                       </Box>
 
                       <Box sx={{ display: 'flex', gap: 1 }}>
+                        {notification.actions.includes('request_badge') && (
+                          <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => handleActionClick('request_badge', notification)}
+                            sx={{
+                              bgcolor: getTypeColor('Promise Due'),
+                              color: 'white',
+                              textTransform: 'none',
+                              fontWeight: 'bold',
+                              '&:hover': { bgcolor: '#388e3c' },
+                            }}
+                          >
+                            Request Badge
+                          </Button>
+                        )}
                         {notification.actions.includes('accept') && (
                           <Tooltip title="Accept" placement="top" arrow>
                             <IconButton
@@ -471,6 +505,10 @@ const ActionNotifications: React.FC = () => {
         onClose={handleCloseAcceptModal}
         onCommit={handleAcceptCommit}
         commitmentDescription={selectedNotification?.description || ''}
+      />
+      <RequestBadgeModal
+        open={requestBadgeModalOpen}
+        onClose={handleCloseRequestBadgeModal}
       />
     </>
   );
