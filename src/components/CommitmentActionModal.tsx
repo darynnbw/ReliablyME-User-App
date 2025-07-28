@@ -134,7 +134,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
       subtitle: 'Promise to do something & earn a badge when you follow through.',
       promiseLabel: 'What do you promise to do?',
       promisePlaceholder: 'Write your promise...',
-      buttonText: 'Make Promise',
+      buttonText: 'Make a Promise',
       confirmationText: "You're all set! Earn your badge by following through.",
     },
     request: {
