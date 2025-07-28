@@ -77,6 +77,13 @@ const groupOptions = [
   'Part-timers',
 ];
 
+const groupMembers: { [key: string]: string[] } = {
+  'Development team': ['Alex Johnson', 'Chris Parker'],
+  'Customer facing team': ['Riley Chen'],
+  'Official co-op': ['Alex Johnson', 'Chris Parker', 'Riley Chen'],
+  'Part-timers': ['Chris Parker'],
+};
+
 const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onClose, type }) => {
   const [badge, setBadge] = useState('');
   const [promise, setPromise] = useState('');
@@ -85,7 +92,8 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
   const [hasExternalRecipient, setHasExternalRecipient] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const isFormValid = !!(badge && promise.trim() && recipients.length > 0);
+  // Form is valid if badge, promise, and either recipients or a group are selected
+  const isFormValid = !!(badge && promise.trim() && (recipients.length > 0 || group));
 
   const handleClose = useCallback(() => {
     setIsSubmitted(false);
@@ -243,6 +251,14 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     {groupOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
                 </FormControl>
+                {group && group !== '' && groupMembers[group] && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+                    {group} includes:{' '}
+                    <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                      {groupMembers[group].join(', ')}
+                    </Typography>
+                  </Typography>
+                )}
               </Box>
             </Box>
             <Box sx={{ mt: 2.5 }}>
