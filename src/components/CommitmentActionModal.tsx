@@ -166,13 +166,13 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     >
       {!isSubmitted && (
         <>
-          <DialogTitle sx={{ p: 0, mb: 1 }}> {/* Reduced mb from 2 to 1 */}
+          <DialogTitle sx={{ p: 0, mb: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
                 <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 1 }}>
                   {currentTexts.title}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}> {/* Increased mb from 1 to 2 */}
                   {currentTexts.subtitle}
                 </Typography>
               </Box>
@@ -181,7 +181,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </IconButton>
             </Box>
           </DialogTitle>
-          <Divider sx={{ mb: 1, borderColor: '#e0e0e0' }} /> {/* Reduced mb from 2 to 1 */}
+          <Divider sx={{ mb: 1, borderColor: '#e0e0e0' }} />
         </>
       )}
 
@@ -200,7 +200,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}> {/* Reduced gap from 1.5 to 1 */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
                 <FormControl fullWidth>
@@ -312,7 +312,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 )}
               </Box>
             </Box>
-            <Box sx={{ mt: 1.5 }}> {/* Reduced mt from 2.5 to 1.5 */}
+            <Box sx={{ mt: 2.5 }}> {/* Increased mt from 1.5 to 2.5 */}
               <Button
                 variant="contained"
                 onClick={handleSubmit}
