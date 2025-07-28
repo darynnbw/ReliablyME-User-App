@@ -249,9 +249,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
     setCurrentPage(1);
-    // Reset filters when tab changes to a disabled filter tab
+    // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     if (disableFilters) {
-      setPersonFilter('');
       setDateFilter('All');
       setFilterBy('soonest');
       setSearchTerm('');
