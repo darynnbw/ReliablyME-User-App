@@ -66,6 +66,7 @@ interface Commitment {
   isExternal?: boolean;
   questions?: string[];
   explanation?: string;
+  isOverdue?: boolean; // Added isOverdue to the interface
 }
 
 interface CommitmentsSectionProps {
@@ -76,7 +77,7 @@ interface CommitmentsSectionProps {
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
   try {
     if (dateString === 'Today') return dayjs().startOf('day');
-    const cleanDateString = dateString.replace('Due ', '');
+    const cleanDateString = dateString.replace('Due ', '').replace('Completed ', ''); // Handle "Completed " prefix
     // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D, YYYY"
     const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D'], true);
     return date.isValid() ? date : null;
@@ -239,7 +240,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
 
   useEffect(() => {
-    setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
+    setCommitments(tabs[activeTab].items.map(item => {
+      const itemDate = parseCommitmentDate(item.dueDate);
+      const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
+      return { ...item, selected: false, isOverdue };
+    }));
     setSelectAll(false);
     setCurrentPage(1);
     // Reset filters when tab changes to a disabled filter tab
