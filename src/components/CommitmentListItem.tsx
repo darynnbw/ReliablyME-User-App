@@ -239,7 +239,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
                   mt: 1,
-                  mb: 2, // Reverted to original value
+                  mb: 3, // Increased margin-bottom for spacing before buttons
                   maxWidth: '100%',
                 }}
               >
@@ -253,7 +253,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
 
             {/* Bottom row: Assignee and Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: 2 }}> {/* Reverted to original value */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: explanation ? 0 : 2 }}> {/* Adjust mt if explanation is present */}
               {/* Assignee */}
               <Stack direction="row" spacing={1} alignItems="center">
                 {isGroup ? (

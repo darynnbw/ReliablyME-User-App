@@ -12,7 +12,7 @@ import BadgesOverviewPanel from '../components/BadgesOverviewPanel';
 import CommitmentsSection from '../components/CommitmentsSection';
 import AccomplishmentsOverviewPanel from '../components/AccomplishmentsOverviewPanel';
 import YourStatisticsPanel from '../components/YourStatisticsPanel';
-// Removed unused import: import { groupMembersMap } from '../utils/constants'; 
+import { groupMembersMap } from '../utils/constants'; // Import groupMembersMap
 
 const CommitmentPortfolio: React.FC = () => {
   const myCommitmentsTabs = [
