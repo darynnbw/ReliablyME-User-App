@@ -808,15 +808,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           height: containerHeight, 
           minHeight: 0, 
           overflowY: 'scroll', 
-          pr: 1,
-          display: 'flex', // Make this a flex container
-          flexDirection: 'column', // Arrange children in a column
-          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start', // Center vertically only when empty
-          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch', // Center horizontally only when empty
+          pr: 1 
         }}>
-          {paginatedItems.length > 0 ? (
-            <Stack spacing={1} sx={{ width: '100%' }}> {/* Ensure Stack takes full width */}
-              {isMyBadgesTab ? (
+          <Stack spacing={1}>
+            {paginatedItems.length > 0 ? (
+              isMyBadgesTab ? (
                 paginatedItems.map((item, index) => (
                   <CommitmentListItem
                     key={item.id}
@@ -882,15 +878,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <Box sx={{ 
                 textAlign: 'center', 
                 color: 'text.secondary', 
-                maxWidth: '80%', 
+                mt: 8,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                height: '100%', 
+                flexGrow: 1, // Allow it to grow and take available space
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
+                <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
                 <Button
                   variant="contained"
                   sx={{
