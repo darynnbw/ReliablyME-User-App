@@ -116,10 +116,17 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
   };
 
   const handleSubmit = () => {
-    // Removed validation logic as requested
+    // This function will only be called if the button is enabled,
+    // meaning all validation checks have passed.
     console.log(`${type} sent!`, { badge, promise, recipients, group });
     setIsSubmitted(true);
   };
+
+  // Determine if the submit button should be disabled
+  const isFormValid =
+    badge !== '' &&
+    promise.trim() !== '' &&
+    (recipients.length > 0 || group !== '');
 
   const modalTexts = {
     promise: {
@@ -310,6 +317,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 variant="contained"
                 onClick={handleSubmit}
                 fullWidth
+                disabled={!isFormValid}
                 sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '48px', borderRadius: 2, fontWeight: 600, fontSize: '16px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}
               >
                 {currentTexts.buttonText}
