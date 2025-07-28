@@ -180,6 +180,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [bulkRejectModalOpen, setBulkRejectModalOpen] = useState(false);
   const [bulkApprovalSuccessOpen, setBulkApprovalSuccessOpen] = useState(false);
 
+  // New state for clarification success modal
+  const [showClarificationSuccessModal, setShowClarificationSuccessModal] = useState(false);
+
   // State for "Make a Promise" modal from empty state
   const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
@@ -201,6 +204,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const handleCloseRejectBadgeModal = useCallback(() => {
     setRejectBadgeModalOpen(false);
     setCommitmentToReject(null);
+  }, []);
+
+  const handleCloseClarificationSuccessModal = useCallback(() => {
+    setShowClarificationSuccessModal(false);
   }, []);
 
   const handleApproveBadgeRequest = (item: Commitment) => {
@@ -481,6 +488,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     console.log(`Clarification request for ${commitmentToClarify?.id}: ${message}`);
     setClarifyModalOpen(false);
     setCommitmentToClarify(null);
+    setShowClarificationSuccessModal(true); // Trigger success modal here
   };
 
   const handleRevokeFromDetails = () => {
@@ -1094,6 +1102,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         onClose={() => setBulkApprovalSuccessOpen(false)}
         title="Badges Approved!"
         message={`${selectedCount} ${selectedCount === 1 ? 'person has' : 'people have'} been notified.`}
+      />
+      <SuccessConfirmationModal
+        open={showClarificationSuccessModal} // Controlled by new state
+        onClose={handleCloseClarificationSuccessModal}
+        title="Request Sent!"
+        message="The clarification request has been sent."
       />
       <DeclineModal
         open={rejectBadgeModalOpen}

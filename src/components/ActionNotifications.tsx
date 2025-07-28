@@ -91,6 +91,9 @@ const ActionNotifications: React.FC = () => {
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
 
+  // New state for clarification success modal
+  const [showClarificationSuccessModal, setShowClarificationSuccessModal] = useState(false);
+
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
   const handleCloseAnswerNudgeModal = useCallback(() => setAnswerNudgeModalOpen(false), []);
   const handleCloseDeclineModal = useCallback(() => setDeclineModalOpen(false), []);
@@ -100,6 +103,9 @@ const ActionNotifications: React.FC = () => {
   const handleCloseApprovalModal = useCallback(() => {
     setApprovalModalOpen(false);
     setSelectedNotification(null);
+  }, []);
+  const handleCloseClarificationSuccessModal = useCallback(() => {
+    setShowClarificationSuccessModal(false);
   }, []);
 
   const getTypeColor = (type: string) => {
@@ -180,8 +186,8 @@ const ActionNotifications: React.FC = () => {
 
   const handleSendClarification = (message: string) => {
     console.log(`Clarification request sent for notification ${selectedNotification?.id}: ${message}`);
-    // RequestClarificationModal now handles its own success modal, so we just remove the notification.
     setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
+    setShowClarificationSuccessModal(true); // Trigger success modal here
   };
 
   const handleAnswerNudgeFromDetails = () => {
@@ -467,6 +473,13 @@ const ActionNotifications: React.FC = () => {
         onClose={handleCloseApprovalModal}
         title="Badge Approved!"
         message={`${selectedNotification?.assignee || 'The user'} has been notified.`}
+      />
+
+      <SuccessConfirmationModal
+        open={showClarificationSuccessModal} // Controlled by new state
+        onClose={handleCloseClarificationSuccessModal}
+        title="Request Sent!"
+        message="The clarification request has been sent."
       />
 
       <AcceptRequestModal
