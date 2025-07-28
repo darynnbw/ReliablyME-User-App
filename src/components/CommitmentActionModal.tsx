@@ -240,32 +240,10 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setBadgeError(false); // Clear error on change
                     }}
                     displayEmpty
-                    inputProps={{ 'aria-label': 'Select a badge' }} // Added for accessibility
-                    sx={{
-                      borderRadius: 2,
-                      bgcolor: 'grey.50',
-                      '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' },
-                      '& .MuiSelect-select': {
-                        padding: '12px', // Match TextField's input padding
-                        fontSize: '16px', // Match TextField's input font size
-                        lineHeight: 1.5, // Match TextField's input line height
-                        color: '#333', // Default text color
-                        fontWeight: 400, // Default font weight
-                      },
-                    }}
+                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
-                    <MenuItem
-                      value=""
-                      disabled
-                      sx={{
-                        color: 'text.secondary', // Lighter color for placeholder
-                        fontStyle: 'italic', // Italic for placeholder
-                        fontSize: '16px',
-                        fontWeight: 400,
-                      }}
-                    >
-                      Select a badge
+                    <MenuItem value="">
+                      <em>Select a badge</em>
                     </MenuItem>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
