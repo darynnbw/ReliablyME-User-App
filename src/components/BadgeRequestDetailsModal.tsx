@@ -9,15 +9,15 @@ import {
   Button,
   Divider,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Shield } from '@mui/icons-material'; // Import Shield icon
+import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 
 interface Commitment {
   title: string;
   description: string;
   explanation?: string;
   assignee: string;
-  dueDate: string; // This is the original commitment completion date for badge requests
-  committedDate?: string; // This is the badge request date for badge requests
+  dueDate: string;
+  committedDate?: string;
 }
 
 interface BadgeRequestDetailsModalProps {
@@ -83,7 +83,7 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Due:{' '}
+              Status:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                 {commitment.dueDate}
               </Typography>
@@ -92,9 +92,9 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
 
           {commitment.committedDate && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Shield sx={{ fontSize: 20, color: '#83B114' }} /> {/* Using Shield icon for Badge Requested */}
+              <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Badge Requested:{' '}
+                Requested:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                   {commitment.committedDate}
                 </Typography>
