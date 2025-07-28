@@ -100,7 +100,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
 
-  const [containerHeight, setContainerHeight] = useState<number | string>(140); // Initialize to 1 item height
+  const [containerHeight, setContainerHeight] = useState<number | string>(360);
   const firstItemRef = useRef<HTMLDivElement>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -261,26 +261,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   });
 
   useEffect(() => {
-    if (currentItems.length === 0) {
-      setContainerHeight(140); // Set to height of one card when empty
-    } else if (currentItems.length === 1) {
-      // If there's exactly one item, set height to its actual height
-      if (firstItemRef.current) {
-        setContainerHeight(firstItemRef.current.offsetHeight);
-      } else {
-        setContainerHeight(140); // Fallback if ref not ready
-      }
-    } else { // currentItems.length >= 2
-      // If there are two or more items, set height to two items + spacing
-      if (firstItemRef.current) {
-        const cardHeight = firstItemRef.current.offsetHeight;
-        const spacing = 8; // From <Stack spacing={1}>
-        setContainerHeight((cardHeight * 2) + spacing);
-      } else {
-        setContainerHeight(360); // Fallback to initial 2-item height if ref not ready
-      }
+    // The height calculation is based on showing 2 items.
+    // This logic is now applied to both commitment sections.
+    if (firstItemRef.current) {
+      const cardHeight = firstItemRef.current.offsetHeight;
+      const spacing = 8; // From <Stack spacing={1}>
+      const calculatedHeight = (cardHeight * 2) + spacing;
+      setContainerHeight(calculatedHeight);
     }
-  }, [currentItems.length, firstItemRef.current?.offsetHeight]);
+  }, [currentItems]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -886,29 +875,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 })
               )
             ) : (
-              <Box sx={{ textAlign: 'center', mt: 8, py: 2 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>Nothing here yet.</Typography>
-                <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
-                {isMyPromisesTab && (
-                  <Button
-                    variant="contained"
-                    onClick={() => console.log('Make a Promise button clicked')} // Placeholder for now
-                    sx={{
-                      bgcolor: '#ff7043',
-                      color: 'white',
-                      textTransform: 'none',
-                      fontWeight: 'bold',
-                      px: 4,
-                      py: 1.5,
-                      borderRadius: 2,
-                      fontSize: '16px',
-                      '&:hover': { bgcolor: '#f4511e' },
-                    }}
-                  >
-                    Make a Promise
-                  </Button>
-                )}
-              </Box>
+              <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>No items found.</Typography>
             )}
           </Stack>
         </Box>
