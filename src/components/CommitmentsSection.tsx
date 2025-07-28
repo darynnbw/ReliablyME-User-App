@@ -737,7 +737,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           </Tabs>
         </Box>
 
-        {!isUnkeptTab && !isMyBadgesTab && (
+        {paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox
