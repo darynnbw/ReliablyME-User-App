@@ -159,20 +159,20 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           transition: 'all 0.3s ease-in-out',
           ...(isSubmitted
             ? { p: 3, maxWidth: '450px', height: '250px', alignItems: 'center', justifyContent: 'center' }
-            : { p: 3, maxWidth: '700px' }
+            : { p: 3, maxWidth: '550px' } // Adjusted maxWidth
           ),
         },
       }}
     >
       {!isSubmitted && (
         <>
-          <DialogTitle sx={{ p: 0, mb: 1 }}>
+          <DialogTitle sx={{ p: 0, mb: 2 }}> {/* Adjusted mb to 2 */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
                 <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 1 }}>
                   {currentTexts.title}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}> {/* Increased mb from 1 to 2 */}
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   {currentTexts.subtitle}
                 </Typography>
               </Box>
@@ -181,7 +181,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </IconButton>
             </Box>
           </DialogTitle>
-          <Divider sx={{ mb: 1, borderColor: '#e0e0e0' }} />
+          <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} /> {/* Adjusted mb to 2 */}
         </>
       )}
 
@@ -200,7 +200,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           </Box>
         ) : (
           <>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}> {/* Adjusted gap to 2 */}
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
                 <FormControl fullWidth>
@@ -223,16 +223,16 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     sx={{ 
                       borderRadius: 2, 
                       bgcolor: 'grey.50',
-                      '& .MuiOutlinedInput-root': { // Target the internal OutlinedInput
-                        p: 1, // Add padding here
+                      '& .MuiOutlinedInput-root': {
+                        height: 56, // Set explicit height
                         '& fieldset': {
-                          border: 'none', // Remove default border
+                          border: 'none',
                         },
                         '&:hover fieldset': {
-                          border: 'none', // Remove hover border
+                          border: 'none',
                         },
                         '&.Mui-focused fieldset': {
-                          border: '2px solid #1976d2', // Apply focus border
+                          border: '2px solid #1976d2',
                         },
                       },
                     }}
@@ -252,7 +252,17 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                   onChange={(e) => {
                     setPromise(e.target.value);
                   }}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }}
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': { 
+                      borderRadius: 2, 
+                      bgcolor: 'grey.50', 
+                      '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, 
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' },
+                      '& .MuiInputBase-inputMultiline': {
+                        padding: '16.5px 14px', // Standard MUI padding for multiline medium TextField
+                      },
+                    } 
+                  }}
                 />
               </Box>
               <Box>
@@ -280,7 +290,15 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                         placeholder="Type a name or phone number"
                       />
                     )}
-                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
+                    sx={{ 
+                      '& .MuiOutlinedInput-root': { 
+                        borderRadius: 2, 
+                        bgcolor: 'grey.50', 
+                        minHeight: 56, // Use minHeight for Autocomplete
+                        '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' },
+                      } 
+                    }}
                   />
                 </FormControl>
                 {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 18 }} /><Typography variant="body2" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
@@ -294,7 +312,22 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setGroup(e.target.value);
                     }}
                     displayEmpty
-                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
+                    sx={{ 
+                      borderRadius: 2, 
+                      bgcolor: 'grey.50',
+                      '& .MuiOutlinedInput-root': {
+                        height: 56, // Set explicit height
+                        '& fieldset': {
+                          border: 'none',
+                        },
+                        '&:hover fieldset': {
+                          border: 'none',
+                        },
+                        '&.Mui-focused fieldset': {
+                          border: '2px solid #1976d2',
+                        },
+                      },
+                    }}
                   >
                     <MenuItem value="">
                       None
@@ -312,7 +345,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 )}
               </Box>
             </Box>
-            <Box sx={{ mt: 2.5 }}> {/* Increased mt from 1.5 to 2.5 */}
+            <Box sx={{ mt: 2 }}> {/* Adjusted mt to 2 */}
               <Button
                 variant="contained"
                 onClick={handleSubmit}
