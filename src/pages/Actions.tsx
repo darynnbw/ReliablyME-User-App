@@ -334,7 +334,7 @@ const Actions: React.FC = () => {
 
           {/* Commitments from Others */}
           <Grid item xs={12}>
-            <CommitmentsSection title="Commitments from Others" tabs={commitmentsReceivedTabs} />
+            <CommitmentsSection title="Others' Commitments" tabs={commitmentsReceivedTabs} />
           </Grid>
         </Grid>
       </Container>
