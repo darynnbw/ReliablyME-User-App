@@ -8,19 +8,16 @@ import {
   IconButton,
   Button,
   Divider,
-  Chip,
 } from '@mui/material';
 import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
-import dayjs from 'dayjs';
 
 interface Commitment {
   title: string;
   description: string;
   explanation?: string;
   assignee: string;
-  dueDate: string; // This is the completion date string, e.g., "Completed Jul 18" or "Jul 10, 2024"
-  committedDate?: string; // This is the badge request date, e.g., "Requested on Jul 19, 2:00 PM"
-  isOverdue?: boolean; // Indicates if the original commitment was overdue
+  dueDate: string;
+  committedDate?: string;
 }
 
 interface BadgeRequestDetailsModalProps {
@@ -39,29 +36,6 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
   onReject,
 }) => {
   if (!commitment) return null;
-
-  // Helper to parse and format the completion/due date
-  const getStatusAndFormattedDate = (dueDateStr: string, isOverdue: boolean | undefined) => {
-    let statusText = 'Completed';
-    let dateToParse = dueDateStr;
-
-    if (dueDateStr.startsWith('Completed ')) {
-      dateToParse = dueDateStr.replace('Completed ', '');
-    } else if (isOverdue) {
-      statusText = 'Overdue';
-    } else {
-      statusText = 'Due'; // Fallback for cases not explicitly 'Completed' or 'Overdue'
-    }
-
-    // Attempt to parse with multiple formats, including with time
-    const parsedDate = dayjs(dateToParse, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D'], true);
-    const formattedDate = parsedDate.isValid() ? parsedDate.format('MMM D, hh:mm A') : dateToParse;
-
-    return { statusText, formattedDate };
-  };
-
-  const { statusText, formattedDate } = getStatusAndFormattedDate(commitment.dueDate, commitment.isOverdue);
-  const committedDateFormatted = commitment.committedDate?.replace('Requested on ', '');
 
   return (
     <Dialog
@@ -111,32 +85,18 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               Status:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {statusText} {formattedDate}
+                {commitment.dueDate}
               </Typography>
-              {commitment.isOverdue && (
-                <Chip
-                  label="Overdue"
-                  size="small"
-                  sx={{
-                    ml: 1,
-                    bgcolor: (theme) => theme.palette.error.light,
-                    color: (theme) => theme.palette.error.dark,
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    height: 20,
-                  }}
-                />
-              )}
             </Typography>
           </Box>
 
-          {committedDateFormatted && (
+          {commitment.committedDate && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Committed:{' '}
+                Requested:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                  {committedDateFormatted}
+                  {commitment.committedDate}
                 </Typography>
               </Typography>
             </Box>
