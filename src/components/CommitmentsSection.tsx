@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Paper,
   Typography,
@@ -99,6 +99,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
+
+  const [containerHeight, setContainerHeight] = useState<number | string>(360);
+  const firstItemRef = useRef<HTMLDivElement>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
@@ -256,6 +259,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
     return dateA.valueOf() - dateB.valueOf();
   });
+
+  useEffect(() => {
+    // The height calculation is based on showing 2 items.
+    // This logic is now applied to both commitment sections.
+    if (firstItemRef.current) {
+      const cardHeight = firstItemRef.current.offsetHeight;
+      const spacing = 8; // From <Stack spacing={1}>
+      const calculatedHeight = (cardHeight * 2) + spacing;
+      setContainerHeight(calculatedHeight);
+    }
+  }, [currentItems]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -791,21 +805,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         )}
 
         <Box sx={{ 
-          flexGrow: 1, // Allow this box to grow and take available space
-          overflowY: paginatedItems.length > 0 ? 'scroll' : 'hidden', 
-          pr: 1,
-          display: 'flex', 
-          flexDirection: 'column', 
-          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start',
-          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch',
+          height: containerHeight, 
+          minHeight: 0, 
+          overflowY: 'scroll', 
+          pr: 1 
         }}>
-          {paginatedItems.length > 0 ? (
-            <Stack spacing={1} sx={{ width: '100%' }}>
-              {isMyBadgesTab ? (
-                paginatedItems.map((item, _) => (
+          <Stack spacing={1}>
+            {paginatedItems.length > 0 ? (
+              isMyBadgesTab ? (
+                paginatedItems.map((item, index) => (
                   <CommitmentListItem
                     key={item.id}
                     {...item}
+                    ref={index === 0 ? firstItemRef : null}
                     color="#4caf50"
                     showCheckbox={false}
                     isCheckboxDisabled={true}
@@ -818,7 +830,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   />
                 ))
               ) : (
-                paginatedItems.map((item, _) => {
+                paginatedItems.map((item, index) => {
                   const isNudgeItem = item.type === 'nudge';
                   const showCheckboxes = !isUnkeptTab && !isMyBadgesTab;
                   const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
@@ -833,6 +845,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     <CommitmentListItem
                       key={item.id}
                       {...item}
+                      ref={index === 0 ? firstItemRef : null}
                       color={itemColor}
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
@@ -865,12 +878,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <Box sx={{ 
                 textAlign: 'center', 
                 color: 'text.secondary', 
+                mt: 8,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexGrow: 1, 
-                width: '100%', // Ensure it takes full width for centering
+                flexGrow: 1, // Allow it to grow and take available space
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
                 <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
