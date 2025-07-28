@@ -989,7 +989,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
       <DeclineModal
         open={bulkRevokeModalOpen}
         onClose={handleCloseBulkRevokeModal}
-        title="Bulk Revoke Requests"
+        title="Bulk Revoke"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
             Are you sure you want to revoke {selectedCount} selected request{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
