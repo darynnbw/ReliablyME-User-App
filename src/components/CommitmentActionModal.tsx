@@ -267,9 +267,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       },
                     }}
                   >
-                    <MenuItem value="" disabled>
-                      Select a badge
-                    </MenuItem>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
                   {badgeError && <FormHelperText>Please select a badge to earn.</FormHelperText>}
