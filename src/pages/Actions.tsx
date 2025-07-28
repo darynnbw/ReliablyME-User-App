@@ -263,6 +263,15 @@ const Actions: React.FC = () => {
       explanation: 'The documentation is now up-to-date on Confluence, link has been shared in the channel.',
       assignee: 'Jamie Smith',
     },
+    {
+      id: 506, // New overdue item
+      title: 'Teamwork',
+      dueDate: 'Completed Jul 10', // A past date to make it overdue
+      committedDate: 'Requested on Jul 11, 9:00 AM',
+      description: 'I will assist the new intern with setting up their development environment.',
+      explanation: 'I spent two hours with the intern, and they are now fully set up and ready to start coding.',
+      assignee: 'Alex Johnson',
+    },
   ];
 
   const awaitingResponseItems = [
