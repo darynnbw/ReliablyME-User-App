@@ -235,21 +235,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
   const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
 
-  // Determine if the current tab should hide date and filter by options
-  const hideDateAndFilterBy = isRequestsToCommitTab || isAwaitingResponseTab;
-
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
     setCurrentPage(1);
-    // Reset filters when switching to a tab that hides them
-    if (hideDateAndFilterBy) {
-      setDateFilter('All');
-      setFilterBy('soonest');
-      setDateRange([null, null]);
-      setTempDateRange([null, null]);
-    }
-  }, [activeTab, tabs, hideDateAndFilterBy]);
+  }, [activeTab, tabs]);
 
   // Generate unique people and add group options
   const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
@@ -277,27 +267,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     const itemDate = parseCommitmentDate(item.dueDate);
     let dateMatch = true;
 
-    if (!hideDateAndFilterBy) { // Only apply date filter if not hidden
-      if (dateFilter === 'Custom Range' && dateRange[0] && dateRange[1] && itemDate) {
-        dateMatch = !itemDate.isBefore(dateRange[0], 'day') && !itemDate.isAfter(dateRange[1], 'day');
-      } else if (dateFilter === 'Today') {
-        dateMatch = itemDate ? itemDate.isSame(dayjs(), 'day') : false;
-      } else if (dateFilter === 'This Week') {
-        dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
-      }
+    if (dateFilter === 'Custom Range' && dateRange[0] && dateRange[1] && itemDate) {
+      dateMatch = !itemDate.isBefore(dateRange[0], 'day') && !itemDate.isAfter(dateRange[1], 'day');
+    } else if (dateFilter === 'Today') {
+      dateMatch = itemDate ? itemDate.isSame(dayjs(), 'day') : false;
+    } else if (dateFilter === 'This Week') {
+      dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
     }
     
     if (!dateMatch) return false;
 
-    if (!hideDateAndFilterBy && filterBy === 'pastDue') { // Only apply pastDue filter if not hidden
+    if (filterBy === 'pastDue') {
       if (!itemDate) return false;
       return itemDate.isBefore(dayjs(), 'day');
     }
 
     return true;
   }).sort((a, b) => {
-    if (hideDateAndFilterBy) return 0; // No sorting if filters are hidden
-
     const dateA = parseCommitmentDate(a.dueDate);
     const dateB = parseCommitmentDate(b.dueDate);
     if (!dateA || !dateB) return 0;
@@ -594,126 +580,122 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               </Select>
             </FormControl>
 
-            {!hideDateAndFilterBy && (
-              <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-                  <InputLabel>Due Date</InputLabel>
-                  <Select
-                    value={dateFilter}
-                    onChange={handleDateFilterChange}
-                    label="Due Date"
-                    startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}
-                  >
-                    <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="Today">Today</MenuItem>
-                    <MenuItem value="This Week">This Week</MenuItem>
-                    <MenuItem value="Custom Range">Custom Range</MenuItem>
-                  </Select>
-                </FormControl>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+              <InputLabel>Due Date</InputLabel>
+              <Select
+                value={dateFilter}
+                onChange={handleDateFilterChange}
+                label="Due Date"
+                startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}
+              >
+                <MenuItem value="All">All</MenuItem>
+                <MenuItem value="Today">Today</MenuItem>
+                <MenuItem value="This Week">This Week</MenuItem>
+                <MenuItem value="Custom Range">Custom Range</MenuItem>
+              </Select>
+            </FormControl>
 
-                {dateFilter === 'Custom Range' && (
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={
-                      dateRange[0] && dateRange[1]
-                        ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
-                        : 'Select Range'
-                    }
-                    onClick={handleCustomRangeClick}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    sx={{ minWidth: 180, cursor: 'pointer' }}
-                  />
-                )}
-
-                <Popover
-                  open={Boolean(popoverAnchor)}
-                  anchorEl={popoverAnchor}
-                  onClose={handleClosePopover}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                >
-                  <DateCalendar
-                    value={tempDateRange[0]}
-                    onChange={handleDateChange}
-                    slotProps={{
-                      day: (ownerState) => {
-                        const { day, outsideCurrentMonth } = ownerState as any;
-                        const [start, end] = tempDateRange;
-
-                        const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
-                        const isEndDate = end?.isSame(day as Dayjs, 'day') ?? false;
-                        const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
-                        const isRangeBoundary = isStartDate || isEndDate;
-
-                        const sx: SxProps<Theme> = {
-                          borderRadius: '50%',
-                          ...(isRangeBoundary && !outsideCurrentMonth && {
-                            backgroundColor: 'primary.main',
-                            color: 'common.white',
-                            '&:hover, &:focus, &.Mui-selected': {
-                              backgroundColor: 'primary.main',
-                              color: 'common.white',
-                            },
-                          }),
-                          ...(isInRange && !outsideCurrentMonth && {
-                            backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
-                            color: 'primary.dark',
-                            borderRadius: '50%',
-                          }),
-                        };
-                        
-                        return { sx } as any;
-                      },
-                    }}
-                    sx={{ mb: -2 }}
-                  />
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'flex-end', 
-                    gap: 1,
-                    px: 2,
-                    pb: 1.5,
-                    pt: 0,
-                  }}>
-                    <Button 
-                      onClick={handleClearDateRange} 
-                      variant="text" 
-                      sx={{ 
-                        py: 0.75, 
-                        px: 2,
-                        color: 'text.secondary' 
-                      }}
-                    >
-                      Clear
-                    </Button>
-                    <Button 
-                      onClick={handleApplyDateRange} 
-                      variant="contained" 
-                      color="primary"
-                      sx={{
-                        py: 0.75,
-                        px: 6,
-                        fontWeight: 600,
-                      }}
-                    >
-                      Apply
-                    </Button>
-                  </Box>
-                </Popover>
-
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
-                  <InputLabel>Filter By</InputLabel>
-                  <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
-                    <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
-                    <MenuItem value="latest">Due Date (Latest)</MenuItem>
-                    <MenuItem value="pastDue">Overdue</MenuItem>
-                  </Select>
-                </FormControl>
-              </>
+            {dateFilter === 'Custom Range' && (
+              <TextField
+                variant="outlined"
+                size="small"
+                value={
+                  dateRange[0] && dateRange[1]
+                    ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
+                    : 'Select Range'
+                }
+                onClick={handleCustomRangeClick}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ minWidth: 180, cursor: 'pointer' }}
+              />
             )}
+
+            <Popover
+              open={Boolean(popoverAnchor)}
+              anchorEl={popoverAnchor}
+              onClose={handleClosePopover}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+              <DateCalendar
+                value={tempDateRange[0]}
+                onChange={handleDateChange}
+                slotProps={{
+                  day: (ownerState) => {
+                    const { day, outsideCurrentMonth } = ownerState as any;
+                    const [start, end] = tempDateRange;
+
+                    const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
+                    const isEndDate = end?.isSame(day as Dayjs, 'day') ?? false;
+                    const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
+                    const isRangeBoundary = isStartDate || isEndDate;
+
+                    const sx: SxProps<Theme> = {
+                      borderRadius: '50%',
+                      ...(isRangeBoundary && !outsideCurrentMonth && {
+                        backgroundColor: 'primary.main',
+                        color: 'common.white',
+                        '&:hover, &:focus, &.Mui-selected': {
+                          backgroundColor: 'primary.main',
+                          color: 'common.white',
+                        },
+                      }),
+                      ...(isInRange && !outsideCurrentMonth && {
+                        backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
+                        color: 'primary.dark',
+                        borderRadius: '50%',
+                      }),
+                    };
+                    
+                    return { sx } as any;
+                  },
+                }}
+                sx={{ mb: -2 }}
+              />
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'flex-end', 
+                gap: 1,
+                px: 2,
+                pb: 1.5,
+                pt: 0,
+              }}>
+                <Button 
+                  onClick={handleClearDateRange} 
+                  variant="text" 
+                  sx={{ 
+                    py: 0.75, 
+                    px: 2,
+                    color: 'text.secondary' 
+                  }}
+                >
+                  Clear
+                </Button>
+                <Button 
+                  onClick={handleApplyDateRange} 
+                  variant="contained" 
+                  color="primary"
+                  sx={{
+                    py: 0.75,
+                    px: 6,
+                    fontWeight: 600,
+                  }}
+                >
+                  Apply
+                </Button>
+              </Box>
+            </Popover>
+
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
+              <InputLabel>Filter By</InputLabel>
+              <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
+                <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
+                <MenuItem value="latest">Due Date (Latest)</MenuItem>
+                <MenuItem value="pastDue">Overdue</MenuItem>
+              </Select>
+            </FormControl>
 
             <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
           </Box>
