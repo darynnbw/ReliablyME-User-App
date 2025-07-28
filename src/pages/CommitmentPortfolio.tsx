@@ -12,6 +12,7 @@ import BadgesOverviewPanel from '../components/BadgesOverviewPanel';
 import CommitmentsSection from '../components/CommitmentsSection';
 import AccomplishmentsOverviewPanel from '../components/AccomplishmentsOverviewPanel';
 import YourStatisticsPanel from '../components/YourStatisticsPanel';
+import { groupMembersMap } from '../utils/constants'; // Import groupMembersMap
 
 const CommitmentPortfolio: React.FC = () => {
   const myCommitmentsTabs = [
@@ -110,7 +111,7 @@ const CommitmentPortfolio: React.FC = () => {
         { id: 135, title: 'Attendance', dueDate: 'Apr 24, 10:00 AM', committedDate: 'Apr 23, 9:15 PM', description: 'I am going to be on time for the client demo.', assignee: 'John Doe' },
         { id: 136, title: 'Promise Kept General', dueDate: 'Apr 23, 03:00 PM', committedDate: 'Apr 22, 9:15 PM', description: 'I will complete the mandatory security training.', assignee: 'Jane Smith' },
         { id: 137, title: 'Teamwork', dueDate: 'Apr 22, 01:00 PM', committedDate: 'Apr 21, 9:15 PM', description: 'I plan to welcome a new hire and help them feel comfortable.', assignee: 'Peter Jones' },
-        { id: 138, title: 'Attendance', dueDate: 'Apr 21, 09:30 AM', committedDate: 'Apr 20, 9:15 PM', description: 'I promise to attend the cross-functional team meeting.', assignee: 'Riley Chen' },
+        { id: 138, title: 'Attendance', dueDate: 'Apr 21, 09:30 AM', committedDate: 'Apr 20, 9:15 PM', description: 'I promise to be punctual for the sprint retrospective meeting.', assignee: 'Riley Chen' },
         { id: 139, title: 'Promise Kept General', dueDate: 'Apr 20, 05:00 PM', committedDate: 'Apr 19, 9:15 PM', description: 'I will review and approve the pull request in a timely manner.', assignee: 'Chris Parker' },
         { id: 140, title: 'Leadership', dueDate: 'Apr 19, 02:00 PM', committedDate: 'Apr 18, 9:15 PM', description: 'I commit to identifying a potential risk and proposing a mitigation plan.', assignee: 'Alex Johnson' },
         { id: 141, title: 'Teamwork', dueDate: 'Apr 18, 11:00 AM', committedDate: 'Apr 17, 9:15 PM', description: 'I am going to participate actively in the retrospective.', assignee: 'Sarah Connor' },
@@ -177,43 +178,141 @@ const CommitmentPortfolio: React.FC = () => {
     },
   ];
 
+  const promisesOwedToMeItems = [
+    {
+      id: 1,
+      title: 'Teamwork',
+      dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Mar 27, 9:15 PM',
+      description: 'I will provide feedback on the new product design mockups for client presentation.',
+      assignee: 'Riley Chen',
+    },
+    {
+      id: 2,
+      title: 'Promise Kept General',
+      dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Mar 27, 9:15 PM',
+      description: 'I am going to deliver the quarterly marketing report with all KPIs and campaign results.',
+      assignee: 'Jamie Smith',
+    },
+    {
+      id: 301,
+      title: 'Promise Kept General',
+      dueDate: dayjs().add(1, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Jul 18, 10:00 AM',
+      description: 'I will provide the final invoice for the freelance design work.',
+      assignee: '+1 555-987-6543',
+      isExternal: true,
+    },
+    {
+      id: 302,
+      title: 'Attendance',
+      dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Jul 17, 3:30 PM',
+      description: 'I commit to joining the client demo call on Friday.',
+      assignee: 'Chris Parker',
+    },
+    {
+      id: 303,
+      title: 'Teamwork',
+      dueDate: dayjs().add(5, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'Jul 16, 11:00 AM',
+      description: 'I plan to provide my section of the presentation slides by EOD Tuesday.',
+      assignee: 'Sarah Wilson',
+    }
+  ];
+
+  const badgeRequestItems = [
+    {
+      id: 501,
+      title: 'Promise Kept General',
+      dueDate: 'Completed Jul 18',
+      committedDate: 'Requested on Jul 19, 2:00 PM',
+      description: 'I will complete the mandatory HR compliance training course.',
+      explanation: 'I have submitted the form and answered all the questions.',
+      assignee: 'Chris Parker',
+    },
+    {
+      id: 502,
+      title: 'Teamwork',
+      dueDate: 'Completed Jul 17',
+      committedDate: 'Requested on Jul 18, 10:00 AM',
+      description: 'I will collaborate with the design team on the new UI mockups.',
+      explanation: 'We held a final review session and all stakeholders have signed off on the mockups.',
+      assignee: 'Riley Chen',
+    },
+    {
+      id: 503,
+      title: 'Leadership',
+      dueDate: 'Completed Jul 16',
+      committedDate: 'Requested on Jul 17, 11:00 AM',
+      description: 'I promise to lead the weekly sync meeting and ensure all action items are captured.',
+      explanation: 'I led the meeting, and the minutes with action items have been circulated.',
+      assignee: 'Sarah Wilson',
+    },
+    {
+      id: 504,
+      title: 'Attendance',
+      dueDate: 'Completed Jul 15',
+      committedDate: 'Requested on Jul 16, 9:00 AM',
+      description: 'I commit to attending the full-day workshop on new project management tools.',
+      explanation: 'I attended the entire workshop and have shared my notes with the team.',
+      assignee: 'Mike Johnson',
+    },
+    {
+      id: 505,
+      title: 'Promise Kept General',
+      dueDate: 'Completed Jul 14',
+      committedDate: 'Requested on Jul 15, 3:00 PM',
+      description: 'I am going to update the shared documentation with the latest API specifications.',
+      explanation: 'The documentation is now up-to-date on Confluence, link has been shared in the channel.',
+      assignee: 'Jamie Smith',
+    },
+  ];
+
+  const awaitingResponseItems = [
+    {
+      id: 401,
+      title: 'Promise Kept General',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 19, 2:00 PM',
+      description: 'I plan to handle the deployment for the new feature release this weekend.',
+      assignee: 'Mike Johnson',
+    },
+    {
+      id: 402,
+      title: 'Teamwork',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 18, 4:30 PM',
+      description: 'I will collaborate on the Q4 roadmap document.',
+      assignee: 'Riley Chen',
+    },
+    {
+      id: 403,
+      title: 'Promise Kept General',
+      dueDate: 'Pending',
+      committedDate: 'Requested on Jul 17, 9:00 AM',
+      description: 'I will approve the budget for the new marketing campaign.',
+      assignee: '+1 555-555-1212',
+      isExternal: true,
+    }
+  ];
+
   const commitmentsReceivedTabs = [
     {
       label: 'Promises Owed to Me',
-      count: 2,
-      items: [
-        {
-          id: 1,
-          title: 'Teamwork',
-          dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
-          committedDate: 'Mar 27, 9:15 PM',
-          description: 'I will provide feedback on the new product design mockups for client presentation.',
-          assignee: 'Riley Chen',
-        },
-        {
-          id: 2,
-          title: 'Promise Kept General',
-          dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
-          committedDate: 'Mar 27, 9:15 PM',
-          description: 'I am going to deliver the quarterly marketing report with all KPIs and campaign results.',
-          assignee: 'Jamie Smith',
-        },
-      ],
+      count: promisesOwedToMeItems.length,
+      items: promisesOwedToMeItems,
     },
     {
-      label: 'Badges Issued',
-      count: 120,
-      items: [],
+      label: 'Badge Requests',
+      count: badgeRequestItems.length,
+      items: badgeRequestItems,
     },
     {
-      label: 'Unkept Promises to Me',
-      count: 31,
-      items: [],
-    },
-    {
-      label: 'Nudges History',
-      count: 4,
-      items: [],
+      label: 'Awaiting Response',
+      count: awaitingResponseItems.length,
+      items: awaitingResponseItems,
     },
   ];
 

@@ -10,7 +10,7 @@ import {
   Divider,
   TextField,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule, Group as GroupIcon } from '@mui/icons-material';
 import ConfettiAnimation from './ConfettiAnimation';
 
 interface Commitment {
@@ -20,6 +20,8 @@ interface Commitment {
   description: string;
   assignee: string;
   committedDate?: string;
+  isGroup?: boolean;
+  groupMembers?: string[];
 }
 
 interface BulkRequestBadgeModalProps {
@@ -127,11 +129,18 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2.5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
+                {currentCommitment.isGroup ? (
+                  <GroupIcon sx={{ fontSize: 20, color: '#FF7F41' }} />
+                ) : (
+                  <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
+                )}
                 <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
                   {personLabel}{' '}
                   <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                     {currentCommitment.assignee}
+                    {currentCommitment.isGroup && currentCommitment.groupMembers && currentCommitment.groupMembers.length > 0 && (
+                      ` (${currentCommitment.groupMembers.join(', ')})`
+                    )}
                   </Typography>
                 </Typography>
               </Box>
@@ -232,7 +241,7 @@ const BulkRequestBadgeModal: React.FC<BulkRequestBadgeModalProps> = ({ open, onC
                   bgcolor: '#FF7F41',
                   color: 'white',
                   textTransform: 'none',
-                  fontWeight: 'bold',
+                  fontWeight: 600, // Consistent font weight
                   width: '100%',
                   py: 1.5,
                   borderRadius: 2,

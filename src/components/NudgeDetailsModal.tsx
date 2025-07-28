@@ -10,7 +10,7 @@ import {
   Divider,
   Stack,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Schedule, Numbers as NumbersIcon, Edit } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule, Numbers as NumbersIcon, Edit, Group as GroupIcon } from '@mui/icons-material';
 
 interface Commitment {
   title: string;
@@ -21,6 +21,8 @@ interface Commitment {
   nudgesLeft?: number;
   totalNudges?: number;
   questions?: string[];
+  isGroup?: boolean;
+  groupMembers?: string[];
 }
 
 interface NudgeDetailsModalProps {
@@ -75,11 +77,18 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
+            {commitment.isGroup ? (
+              <GroupIcon sx={{ fontSize: 20, color: '#FF7F41' }} />
+            ) : (
+              <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
+            )}
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               To:{' '}
               <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
                 {commitment.assignee}
+                {commitment.isGroup && commitment.groupMembers && commitment.groupMembers.length > 0 && (
+                  ` (${commitment.groupMembers.join(', ')})`
+                )}
               </Typography>
             </Typography>
           </Box>
@@ -161,7 +170,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
                   textTransform: 'none',
                   py: 1.5,
                   fontSize: '16px',
-                  fontWeight: 600,
+                  fontWeight: 600, // Consistent font weight
                   '&:hover': { bgcolor: '#d32f2f' },
                 }}
               >
@@ -177,7 +186,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
                   textTransform: 'none',
                   py: 1.5,
                   fontSize: '16px',
-                  fontWeight: 600,
+                  fontWeight: 600, // Consistent font weight
                   '&:hover': { bgcolor: '#388e3c' },
                 }}
               >
@@ -193,7 +202,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
                 bgcolor: '#ff7043',
                 color: 'white',
                 textTransform: 'none',
-                fontWeight: 'bold',
+                fontWeight: 600, // Consistent font weight
                 width: '100%',
                 py: 1.5,
                 borderRadius: 2,

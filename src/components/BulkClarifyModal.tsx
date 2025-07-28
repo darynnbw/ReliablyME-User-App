@@ -10,7 +10,7 @@ import {
   Divider,
   TextField,
 } from '@mui/material';
-import { Close, Person, CalendarToday } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Group as GroupIcon } from '@mui/icons-material';
 import ConfettiAnimation from './ConfettiAnimation';
 
 interface Commitment {
@@ -19,6 +19,8 @@ interface Commitment {
   dueDate: string;
   description: string;
   assignee: string;
+  isGroup?: boolean;
+  groupMembers?: string[];
 }
 
 interface BulkClarifyModalProps {
@@ -124,11 +126,18 @@ const BulkClarifyModal: React.FC<BulkClarifyModalProps> = ({ open, onClose, comm
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2.5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Person sx={{ fontSize: 20, color: '#1976d2' }} />
+                {currentCommitment.isGroup ? (
+                  <GroupIcon sx={{ fontSize: 20, color: '#1976d2' }} />
+                ) : (
+                  <Person sx={{ fontSize: 20, color: '#1976d2' }} />
+                )}
                 <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
                   To:{' '}
                   <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                     {currentCommitment.assignee}
+                    {currentCommitment.isGroup && currentCommitment.groupMembers && currentCommitment.groupMembers.length > 0 && (
+                      ` (${currentCommitment.groupMembers.join(', ')})`
+                    )}
                   </Typography>
                 </Typography>
               </Box>
@@ -202,7 +211,7 @@ const BulkClarifyModal: React.FC<BulkClarifyModalProps> = ({ open, onClose, comm
                   bgcolor: 'primary.main',
                   color: 'white',
                   textTransform: 'none',
-                  fontWeight: 'bold',
+                  fontWeight: 600, // Consistent font weight
                   width: '100%',
                   py: 1.5,
                   borderRadius: 2,

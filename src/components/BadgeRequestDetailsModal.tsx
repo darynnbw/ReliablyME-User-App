@@ -9,7 +9,7 @@ import {
   Button,
   Divider,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule, Group as GroupIcon } from '@mui/icons-material';
 
 interface Commitment {
   title: string;
@@ -18,6 +18,8 @@ interface Commitment {
   assignee: string;
   dueDate: string;
   committedDate?: string;
+  isGroup?: boolean;
+  groupMembers?: string[];
 }
 
 interface BadgeRequestDetailsModalProps {
@@ -71,11 +73,18 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
+            {commitment.isGroup ? (
+              <GroupIcon sx={{ fontSize: 20, color: '#FF7F41' }} />
+            ) : (
+              <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
+            )}
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               From:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                 {commitment.assignee}
+                {commitment.isGroup && commitment.groupMembers && commitment.groupMembers.length > 0 && (
+                  ` (${commitment.groupMembers.join(', ')})`
+                )}
               </Typography>
             </Typography>
           </Box>
@@ -154,7 +163,7 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
               textTransform: 'none',
               py: 1.5,
               fontSize: '16px',
-              fontWeight: 600,
+              fontWeight: 600, // Consistent font weight
               '&:hover': { bgcolor: '#d32f2f' },
             }}
           >
@@ -170,7 +179,7 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
               textTransform: 'none',
               py: 1.5,
               fontSize: '16px',
-              fontWeight: 600,
+              fontWeight: 600, // Consistent font weight
               '&:hover': { bgcolor: '#388e3c' },
             }}
           >

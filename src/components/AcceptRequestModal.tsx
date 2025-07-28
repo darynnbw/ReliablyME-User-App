@@ -214,7 +214,7 @@ const AcceptRequestModal: React.FC<AcceptRequestModalProps> = ({ open, onClose, 
                   bgcolor: '#FF7F41',
                   color: 'white',
                   textTransform: 'none',
-                  fontWeight: 'bold',
+                  fontWeight: 600, // Consistent font weight
                   width: '100%',
                   py: 1.5,
                   borderRadius: 2,

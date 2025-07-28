@@ -17,8 +17,10 @@ import {
   Chip,
   styled,
   keyframes,
+  InputAdornment,
 } from '@mui/material';
-import { Close, WarningAmber } from '@mui/icons-material';
+import { Close, WarningAmber, Group as GroupIcon } from '@mui/icons-material';
+import { groupOptions, GroupOption } from '../utils/constants'; // Import groupOptions and GroupOption
 
 // Keyframes for the SVG animation
 const drawCircle = keyframes`
@@ -70,13 +72,6 @@ const recipientOptions = [
   { name: 'Riley Chen' },
 ];
 
-const groupOptions = [
-  'Development team',
-  'Customer facing team',
-  'Official co-op',
-  'Part-timers',
-];
-
 const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onClose, type }) => {
   const [badge, setBadge] = useState('');
   const [promise, setPromise] = useState('');
@@ -85,7 +80,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
   const [hasExternalRecipient, setHasExternalRecipient] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const isFormValid = !!(badge && promise.trim() && recipients.length > 0);
+  const isFormValid = !!(badge && promise.trim() && (recipients.length > 0 || group));
 
   const handleClose = useCallback(() => {
     setIsSubmitted(false);
@@ -104,7 +99,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     }
   }, [isSubmitted, handleClose]);
 
-  const handleRecipientsChange = (_: any, newValue: string[]) => {
+  const handleRecipientsChange = (_: React.SyntheticEvent, newValue: string[]) => {
     setRecipients(newValue);
     const external = newValue.some(val => !recipientOptions.find(opt => opt.name === val));
     setHasExternalRecipient(external);
@@ -134,6 +129,8 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     },
   };
   const currentTexts = modalTexts[type];
+
+  const selectedGroupMembers = group ? groupOptions.find((g: GroupOption) => g.name === group)?.members : [];
 
   return (
     <Dialog
@@ -235,14 +232,37 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     value={group}
                     onChange={(e: SelectChangeEvent) => setGroup(e.target.value)}
                     displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                    startAdornment={
+                      group ? (
+                        <InputAdornment position="start">
+                          <GroupIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                        </InputAdornment>
+                      ) : null
+                    }
                     sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
                     <MenuItem value="">
                       None
                     </MenuItem>
-                    {groupOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
+                    {groupOptions.map((option: GroupOption) => (
+                      <MenuItem key={option.name} value={option.name}>
+                        <GroupIcon sx={{ mr: 1, color: 'text.secondary' }} />
+                        {option.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
+                {group && selectedGroupMembers && selectedGroupMembers.length > 0 && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1, fontStyle: 'italic' }}>
+                    {group} includes:{' '}
+                    {selectedGroupMembers.map((member: string, index: number) => (
+                      <Typography component="span" key={member} sx={{ fontWeight: 'bold', fontSize: 'inherit', fontStyle: 'normal' }}>
+                        {member}{index < selectedGroupMembers.length - 1 ? ', ' : ''}
+                      </Typography>
+                    ))}
+                  </Typography>
+                )}
               </Box>
             </Box>
             <Box sx={{ mt: 2.5 }}>
