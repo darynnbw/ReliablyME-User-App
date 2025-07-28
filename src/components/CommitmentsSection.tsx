@@ -85,6 +85,9 @@ const parseCommitmentDate = (dateString: string): Dayjs | null => {
 };
 
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) => {
+  console.log('CommitmentsSection title received:', `"${title}"`, 'Length:', title.length);
+  console.log('Comparison result (title.trim() === "My Commitments"):', title.trim() === 'My Commitments');
+
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -525,7 +528,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         mb: 4,
       }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2', fontSize: '1.25rem' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: title.trim() === 'My Commitments' ? '#CC5500' : '#1976d2', fontSize: '1.25rem' }}>
             {title}
           </Typography>
 
