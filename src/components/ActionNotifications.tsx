@@ -24,7 +24,7 @@ import AnswerNudgeModal from './AnswerNudgeModal';
 import DeclineModal from './DeclineModal';
 import ContactTooltip from './ContactTooltip';
 import RequestClarificationModal from './RequestClarificationModal';
-import ApprovalConfirmationModal from './ApprovalConfirmationModal';
+import SuccessConfirmationModal from './SuccessConfirmationModal';
 import AcceptRequestModal from './AcceptRequestModal';
 import NudgeDetailsModal from './NudgeDetailsModal';
 
@@ -180,6 +180,8 @@ const ActionNotifications: React.FC = () => {
 
   const handleSendClarification = (message: string) => {
     console.log(`Clarification request sent for notification ${selectedNotification?.id}: ${message}`);
+    // RequestClarificationModal now handles its own success modal, so we just remove the notification.
+    setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
   };
 
   const handleAnswerNudgeFromDetails = () => {
@@ -460,10 +462,11 @@ const ActionNotifications: React.FC = () => {
         onSend={handleSendClarification}
       />
 
-      <ApprovalConfirmationModal
+      <SuccessConfirmationModal
         open={approvalModalOpen}
         onClose={handleCloseApprovalModal}
-        requesterName={selectedNotification?.assignee || ''}
+        title="Badge Approved!"
+        message={`${selectedNotification?.assignee || 'The user'} has been notified.`}
       />
 
       <AcceptRequestModal

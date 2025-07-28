@@ -45,10 +45,10 @@ import NudgeDetailsModal from './NudgeDetailsModal';
 import AcceptNudgeModal from './AcceptNudgeModal';
 import RequestClarificationModal from './RequestClarificationModal';
 import BulkClarifyModal from './BulkClarifyModal';
-import ApprovalConfirmationModal from './ApprovalConfirmationModal';
+import SuccessConfirmationModal from './SuccessConfirmationModal';
 import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
 import ConfirmationModal from './ConfirmationModal';
-import CommitmentActionModal from './CommitmentActionModal'; // Import CommitmentActionModal
+import CommitmentActionModal from './CommitmentActionModal';
 
 dayjs.extend(isBetween);
 
@@ -1083,15 +1083,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         onClose={handleCloseAnswerNudgeModal}
         commitment={commitmentForAnswerNudge}
       />
-      <ApprovalConfirmationModal
+      <SuccessConfirmationModal
         open={approvalModalOpen}
         onClose={handleCloseApprovalModal}
-        requesterName={requesterForApproval}
+        title="Badge Approved!"
+        message={requesterForApproval ? `${requesterForApproval} has been notified.` : 'The user has been notified.'}
       />
-      <ApprovalConfirmationModal
+      <SuccessConfirmationModal
         open={bulkApprovalSuccessOpen}
         onClose={() => setBulkApprovalSuccessOpen(false)}
-        count={selectedCount}
+        title="Badges Approved!"
+        message={`${selectedCount} ${selectedCount === 1 ? 'person has' : 'people have'} been notified.`}
       />
       <DeclineModal
         open={rejectBadgeModalOpen}

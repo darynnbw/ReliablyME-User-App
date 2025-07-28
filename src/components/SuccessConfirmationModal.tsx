@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import { Dialog, Box, Typography } from '@mui/material';
 import ConfettiAnimation from './ConfettiAnimation';
 
-interface ApprovalConfirmationModalProps {
+interface SuccessConfirmationModalProps {
   open: boolean;
   onClose: () => void;
-  requesterName?: string;
-  count?: number;
+  title: string;
+  message: string;
 }
 
-const ApprovalConfirmationModal: React.FC<ApprovalConfirmationModalProps> = ({ open, onClose, requesterName, count }) => {
+const SuccessConfirmationModal: React.FC<SuccessConfirmationModalProps> = ({ open, onClose, title, message }) => {
   useEffect(() => {
     if (open) {
       const timerId = setTimeout(onClose, 3500); // A bit longer to enjoy the confetti
@@ -18,14 +18,6 @@ const ApprovalConfirmationModal: React.FC<ApprovalConfirmationModalProps> = ({ o
   }, [open, onClose]);
 
   if (!open) return null;
-
-  const isBulk = count !== undefined && count > 0;
-  
-  const title = isBulk ? 'Badges Approved!' : 'Badge Approved!';
-  
-  const message = isBulk
-    ? `${count} ${count === 1 ? 'person has' : 'people have'} been notified.`
-    : `${requesterName || 'The user'} has been notified.`;
 
   return (
     <Dialog
@@ -56,4 +48,4 @@ const ApprovalConfirmationModal: React.FC<ApprovalConfirmationModalProps> = ({ o
   );
 };
 
-export default ApprovalConfirmationModal;
+export default SuccessConfirmationModal;
