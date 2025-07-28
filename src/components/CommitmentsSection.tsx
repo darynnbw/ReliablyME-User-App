@@ -800,6 +800,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           alignItems: paginatedItems.length === 0 ? 'center' : 'stretch',
         }}>
           {paginatedItems.length > 0 ? (
+            // Render Stack only when there are items
             <Stack spacing={1} sx={{ width: '100%' }}>
               {isMyBadgesTab ? (
                 paginatedItems.map((item, _) => (
@@ -860,40 +861,41 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     />
                   );
                 })
-              )
-            ) : (
-              <Box sx={{ 
-                textAlign: 'center', 
-                color: 'text.secondary', 
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexGrow: 1, 
-                width: '100%', // Ensure it takes full width for centering
-              }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
-                <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
-                <Button
-                  variant="contained"
-                  sx={{
-                    bgcolor: '#ff7043',
-                    color: 'white',
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    px: 4,
-                    py: 1.5,
-                    borderRadius: 2,
-                    fontSize: '16px',
-                    '&:hover': { bgcolor: '#f4511e' },
-                  }}
-                  onClick={() => console.log('Make a Promise button clicked from empty state')}
-                >
-                  Make a Promise
-                </Button>
-              </Box>
-            )}
-          </Stack>
+              )}
+            </Stack>
+          ) : (
+            // If no items, render the empty state Box directly
+            <Box sx={{ 
+              textAlign: 'center', 
+              color: 'text.secondary', 
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexGrow: 1, 
+              width: '100%', // Ensure it takes full width for centering
+            }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
+              <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: '#ff7043',
+                  color: 'white',
+                  textTransform: 'none',
+                  fontWeight: 'bold',
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 2,
+                  fontSize: '16px',
+                  '&:hover': { bgcolor: '#f4511e' },
+                }}
+                onClick={() => console.log('Make a Promise button clicked from empty state')}
+              >
+                Make a Promise
+              </Button>
+            </Box>
+          )}
         </Box>
         
         {currentItems.length > 0 && isMyBadgesTab && (
