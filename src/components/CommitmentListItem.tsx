@@ -220,7 +220,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
               {description}
             </Typography>
 
@@ -234,6 +234,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
                   mt: 1,
+                  mb: 3,
                   maxWidth: '100%',
                 }}
               >
@@ -247,7 +248,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
 
             {/* Bottom row: Assignee and Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: { xs: 2, sm: 3 } }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
               {/* Assignee */}
               <Stack direction="row" spacing={1} alignItems="center">
                 <Person sx={{ fontSize: 16, color: color }} />
