@@ -297,7 +297,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       borderRadius: 1,
                       flexShrink: 0,
                       '&:hover': { 
-                        bgcolor: (isNudge && isMyPromisesTab) ? '#f4511e' : alpha(color, 0.8)
+                        bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
+                          ? '#f4511e' // Orange hover for Answer Nudge and Request Badge
+                          : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8)) // Dark blue for Clarify, fallback for others (shouldn't be hit)
                       },
                     }}
                   >
