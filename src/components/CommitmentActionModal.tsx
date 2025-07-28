@@ -172,7 +172,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 1 }}>
                   {currentTexts.title}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}> {/* Reduced mb from 2 to 1 */}
+                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
                   {currentTexts.subtitle}
                 </Typography>
               </Box>
@@ -213,7 +213,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     renderValue={(selected) => {
                       if (selected === "") {
                         return (
-                          <Typography component="span" sx={{ color: 'text.secondary', fontWeight: 400 }}>
+                          <Typography component="span" sx={{ color: (theme) => theme.palette.action.active, fontWeight: 400 }}> {/* Changed color to match TextField placeholder */}
                             Select a badge
                           </Typography>
                         );
