@@ -76,7 +76,14 @@ interface CommitmentsSectionProps {
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
   try {
     if (dateString === 'Today') return dayjs().startOf('day');
-    const cleanDateString = dateString.replace('Due ', '');
+    // Handle "Completed Jul 18, 8:00 PM" or "Pending"
+    let cleanDateString = dateString;
+    if (dateString.startsWith('Completed ')) {
+      cleanDateString = dateString.substring('Completed '.length);
+    } else if (dateString === 'Pending') {
+      return null; // Or handle as a future/indefinite date
+    }
+    
     // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D, YYYY"
     const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D'], true);
     return date.isValid() ? date : null;

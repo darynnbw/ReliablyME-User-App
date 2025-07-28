@@ -8,16 +8,20 @@ import {
   IconButton,
   Button,
   Divider,
+  Chip,
+  alpha,
+  useTheme,
 } from '@mui/material';
 import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
+import dayjs, { Dayjs } from 'dayjs'; // Added Dayjs import
 
 interface Commitment {
   title: string;
   description: string;
   explanation?: string;
   assignee: string;
-  dueDate: string;
-  committedDate?: string;
+  dueDate: string; // e.g., "Completed Jul 18, 8:00 PM" or "Jul 10, 2024, 9:00 AM"
+  committedDate?: string; // e.g., "Jul 19, 2:00 PM"
 }
 
 interface BadgeRequestDetailsModalProps {
@@ -28,6 +32,15 @@ interface BadgeRequestDetailsModalProps {
   onReject: () => void;
 }
 
+const parseDateForOverdueCheck = (dateString: string): Dayjs | null => {
+  let cleanDateString = dateString;
+  if (dateString.startsWith('Completed ')) {
+    cleanDateString = dateString.substring('Completed '.length);
+  }
+  const date = dayjs(cleanDateString, ['MMM D, YYYY, hh:mm A', 'MMM D, hh:mm A', 'MMM D, YYYY'], true);
+  return date.isValid() ? date : null;
+};
+
 const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
   open,
   onClose,
@@ -35,7 +48,16 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
   onApprove,
   onReject,
 }) => {
+  const theme = useTheme();
   if (!commitment) return null;
+
+  const parsedDueDate = parseDateForOverdueCheck(commitment.dueDate);
+  const isOverdue = parsedDueDate ? parsedDueDate.isBefore(dayjs()) : false;
+
+  // Extract just the date part for display if it's a "Completed" status
+  const displayStatusDate = commitment.dueDate.startsWith('Completed ')
+    ? commitment.dueDate
+    : `Due ${commitment.dueDate}`; // Fallback for other statuses if any
 
   return (
     <Dialog
@@ -85,8 +107,22 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               Status:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {commitment.dueDate}
+                {displayStatusDate}
               </Typography>
+              {isOverdue && (
+                <Chip
+                  label="Overdue"
+                  size="small"
+                  sx={{
+                    ml: 1,
+                    bgcolor: alpha(theme.palette.error.main, 0.1),
+                    color: 'error.dark',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    height: 20,
+                  }}
+                />
+              )}
             </Typography>
           </Box>
 
@@ -94,7 +130,7 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Requested:{' '}
+                Committed:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                   {commitment.committedDate}
                 </Typography>

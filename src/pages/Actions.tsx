@@ -221,8 +221,8 @@ const Actions: React.FC = () => {
     {
       id: 501,
       title: 'Promise Kept General',
-      dueDate: 'Completed Jul 18',
-      committedDate: 'Requested on Jul 19, 2:00 PM',
+      dueDate: 'Completed Jul 18, 8:00 PM',
+      committedDate: 'Jul 19, 2:00 PM',
       description: 'I will complete the mandatory HR compliance training course.',
       explanation: 'I have submitted the form and answered all the questions.',
       assignee: 'Chris Parker',
@@ -230,8 +230,8 @@ const Actions: React.FC = () => {
     {
       id: 502,
       title: 'Teamwork',
-      dueDate: 'Completed Jul 17',
-      committedDate: 'Requested on Jul 18, 10:00 AM',
+      dueDate: 'Completed Jul 17, 4:30 PM',
+      committedDate: 'Jul 18, 10:00 AM',
       description: 'I will collaborate with the design team on the new UI mockups.',
       explanation: 'We held a final review session and all stakeholders have signed off on the mockups.',
       assignee: 'Riley Chen',
@@ -239,8 +239,8 @@ const Actions: React.FC = () => {
     {
       id: 503,
       title: 'Leadership',
-      dueDate: 'Completed Jul 16',
-      committedDate: 'Requested on Jul 17, 11:00 AM',
+      dueDate: 'Completed Jul 16, 11:00 AM',
+      committedDate: 'Jul 17, 11:00 AM',
       description: 'I promise to lead the weekly sync meeting and ensure all action items are captured.',
       explanation: 'I led the meeting, and the minutes with action items have been circulated.',
       assignee: 'Sarah Wilson',
@@ -248,8 +248,8 @@ const Actions: React.FC = () => {
     {
       id: 504,
       title: 'Attendance',
-      dueDate: 'Completed Jul 15',
-      committedDate: 'Requested on Jul 16, 9:00 AM',
+      dueDate: 'Completed Jul 15, 9:00 AM',
+      committedDate: 'Jul 16, 9:00 AM',
       description: 'I commit to attending the full-day workshop on new project management tools.',
       explanation: 'I attended the entire workshop and have shared my notes with the team.',
       assignee: 'Mike Johnson',
@@ -257,8 +257,8 @@ const Actions: React.FC = () => {
     {
       id: 505,
       title: 'Promise Kept General',
-      dueDate: 'Completed Jul 14',
-      committedDate: 'Requested on Jul 15, 3:00 PM',
+      dueDate: 'Completed Jul 14, 3:00 PM',
+      committedDate: 'Jul 15, 3:00 PM',
       description: 'I am going to update the shared documentation with the latest API specifications.',
       explanation: 'The documentation is now up-to-date on Confluence, link has been shared in the channel.',
       assignee: 'Jamie Smith',
@@ -266,8 +266,8 @@ const Actions: React.FC = () => {
     {
       id: 506, // New overdue item
       title: 'Teamwork',
-      dueDate: dayjs().subtract(7, 'day').format('MMM D, YYYY'), // Ensures it's a past date and parsable
-      committedDate: 'Requested on Jul 11, 9:00 AM',
+      dueDate: dayjs().subtract(7, 'day').format('MMM D, YYYY, hh:mm A'), // Ensures it's a past date and parsable
+      committedDate: dayjs().subtract(6, 'day').format('MMM D, hh:mm A'), // Example committed date
       description: 'I will assist the new intern with setting up their development environment.',
       explanation: 'I spent two hours with the intern, and they are now fully set up and ready to start coding.',
       assignee: 'Alex Johnson',
