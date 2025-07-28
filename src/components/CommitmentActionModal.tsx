@@ -17,11 +17,11 @@ import {
   Chip,
   styled,
   keyframes,
-  FormHelperText, // Import FormHelperText
+  FormHelperText,
 } from '@mui/material';
 import { Close, WarningAmber } from '@mui/icons-material';
 
-// Keyframes for the SVG animation
+// Keyframes for the SVG animation - Moved outside the component
 const drawCircle = keyframes`
   to { stroke-dashoffset: 0; }
 `;
@@ -30,7 +30,7 @@ const drawCheck = keyframes`
   to { stroke-dashoffset: 0; }
 `;
 
-// Styled components for the animated SVG parts
+// Styled components for the animated SVG parts - Moved outside the component
 const AnimatedCircle = styled('circle')(({ theme }) => ({
   fill: 'none',
   stroke: theme.palette.success.main,
@@ -240,7 +240,12 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setBadgeError(false); // Clear error on change
                     }}
                     displayEmpty
-                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
+                    sx={{ 
+                      borderRadius: 2, 
+                      bgcolor: 'grey.50',
+                      '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' }
+                    }}
                   >
                     <MenuItem value="">
                       <em>Select a badge</em>
