@@ -245,6 +245,15 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       bgcolor: 'grey.50',
                       '& .MuiOutlinedInput-root': { // Target the internal OutlinedInput
                         p: 1, // Add padding here
+                        '& fieldset': {
+                          border: 'none', // Remove default border
+                        },
+                        '&:hover fieldset': {
+                          border: 'none', // Remove hover border
+                        },
+                        '&.Mui-focused fieldset': {
+                          border: '2px solid #1976d2', // Apply focus border
+                        },
                       },
                     }}
                   >
