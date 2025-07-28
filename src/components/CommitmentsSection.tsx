@@ -907,7 +907,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
                   const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
-                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isAwaitingResponseTab || isBadgeRequestsTab;
+                  // Adjusted logic for showFromLabel
+                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
                   return (
                     <CommitmentListItem
