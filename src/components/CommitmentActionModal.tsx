@@ -17,6 +17,7 @@ import {
   Chip,
   styled,
   keyframes,
+  FormHelperText, // Import FormHelperText
 } from '@mui/material';
 import { Close, WarningAmber } from '@mui/icons-material';
 
@@ -92,8 +93,10 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
   const [hasExternalRecipient, setHasExternalRecipient] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Form is valid if badge, promise, and either recipients or a group are selected
-  const isFormValid = !!(badge && promise.trim() && (recipients.length > 0 || group));
+  // State for validation errors
+  const [badgeError, setBadgeError] = useState(false);
+  const [promiseError, setPromiseError] = useState(false);
+  const [recipientError, setRecipientError] = useState(false);
 
   const handleClose = useCallback(() => {
     setIsSubmitted(false);
@@ -102,6 +105,9 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     setRecipients([]);
     setGroup('');
     setHasExternalRecipient(false);
+    setBadgeError(false); // Reset errors
+    setPromiseError(false);
+    setRecipientError(false);
     onClose();
   }, [onClose]);
 
@@ -116,9 +122,37 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     setRecipients(newValue);
     const external = newValue.some(val => !recipientOptions.find(opt => opt.name === val));
     setHasExternalRecipient(external);
+    setRecipientError(false); // Clear error on change
   };
 
   const handleSubmit = () => {
+    let valid = true;
+
+    if (!badge) {
+      setBadgeError(true);
+      valid = false;
+    } else {
+      setBadgeError(false);
+    }
+
+    if (!promise.trim()) {
+      setPromiseError(true);
+      valid = false;
+    } else {
+      setPromiseError(false);
+    }
+
+    if (recipients.length === 0 && !group) {
+      setRecipientError(true);
+      valid = false;
+    } else {
+      setRecipientError(false);
+    }
+
+    if (!valid) {
+      return;
+    }
+
     console.log(`${type} sent!`, { badge, promise, recipients, group });
     setIsSubmitted(true);
   };
@@ -198,42 +232,71 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
-                <FormControl fullWidth>
-                  <Select value={badge} onChange={(e: SelectChangeEvent) => setBadge(e.target.value)} displayEmpty sx={{ borderRadius: 2, bgcolor: 'grey.50' }}>
+                <FormControl fullWidth error={badgeError}>
+                  <Select
+                    value={badge}
+                    onChange={(e: SelectChangeEvent) => {
+                      setBadge(e.target.value);
+                      setBadgeError(false); // Clear error on change
+                    }}
+                    displayEmpty
+                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
+                  >
+                    <MenuItem value="">
+                      <em>Select a badge</em>
+                    </MenuItem>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
+                  {badgeError && <FormHelperText>Please select a badge to earn.</FormHelperText>}
                 </FormControl>
               </Box>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>{currentTexts.promiseLabel}</Typography>
-                <TextField fullWidth multiline rows={2} placeholder={currentTexts.promisePlaceholder} value={promise} onChange={(e) => setPromise(e.target.value)} sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }} />
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={2}
+                  placeholder={currentTexts.promisePlaceholder}
+                  value={promise}
+                  onChange={(e) => {
+                    setPromise(e.target.value);
+                    setPromiseError(false); // Clear error on change
+                  }}
+                  error={promiseError}
+                  helperText={promiseError ? "Please enter a description for your promise." : ""}
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }}
+                />
               </Box>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Recipient(s)</Typography>
-                <Autocomplete
-                  multiple
-                  freeSolo
-                  options={recipientOptions.map((option) => option.name)}
-                  value={recipients}
-                  onChange={handleRecipientsChange}
-                  renderTags={(value: readonly string[], getTagProps) =>
-                    value.map((option: string, index: number) => (
-                      <Chip
+                <FormControl fullWidth error={recipientError}>
+                  <Autocomplete
+                    multiple
+                    freeSolo
+                    options={recipientOptions.map((option) => option.name)}
+                    value={recipients}
+                    onChange={handleRecipientsChange}
+                    renderTags={(value: readonly string[], getTagProps) =>
+                      value.map((option: string, index: number) => (
+                        <Chip
+                          variant="outlined"
+                          label={!recipientOptions.some(user => user.name === option) ? `📱 Invite: ${option}` : option}
+                          {...getTagProps({ index })}
+                        />
+                      ))
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
                         variant="outlined"
-                        label={!recipientOptions.some(user => user.name === option) ? `📱 Invite: ${option}` : option}
-                        {...getTagProps({ index })}
+                        placeholder="Type a name or phone number"
+                        error={recipientError} // Apply error prop to TextField
                       />
-                    ))
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      placeholder="Type a name or phone number"
-                    />
-                  )}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
-                />
+                    )}
+                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
+                  />
+                  {recipientError && <FormHelperText>Please add at least one recipient or group.</FormHelperText>}
+                </FormControl>
                 {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 18 }} /><Typography variant="body2" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
               </Box>
               <Box>
@@ -241,7 +304,10 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 <FormControl fullWidth>
                   <Select
                     value={group}
-                    onChange={(e: SelectChangeEvent) => setGroup(e.target.value)}
+                    onChange={(e: SelectChangeEvent) => {
+                      setGroup(e.target.value);
+                      setRecipientError(false); // Clear recipient error if group is selected
+                    }}
                     displayEmpty
                     sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
                   >
@@ -262,7 +328,12 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </Box>
             </Box>
             <Box sx={{ mt: 2.5 }}>
-              <Button variant="contained" onClick={handleSubmit} disabled={!isFormValid} fullWidth sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '48px', borderRadius: 2, fontWeight: 600, fontSize: '16px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}>
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                fullWidth
+                sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '48px', borderRadius: 2, fontWeight: 600, fontSize: '16px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}
+              >
                 {currentTexts.buttonText}
               </Button>
             </Box>
