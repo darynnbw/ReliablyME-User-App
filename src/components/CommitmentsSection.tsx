@@ -598,7 +598,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 value={dateFilter}
                 onChange={handleDateFilterChange}
                 label="Due Date"
-                startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                  </InputAdornment>
+                }
               >
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="Today">Today</MenuItem>
@@ -703,7 +707,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
               <InputLabel>Filter By</InputLabel>
-              <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
+              <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={
+                <InputAdornment position="start">
+                  <ArrowUpward fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                </InputAdornment>
+              }>
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
                 <MenuItem value="latest">Due Date (Latest)</MenuItem>
                 <MenuItem value="pastDue">Overdue</MenuItem>
