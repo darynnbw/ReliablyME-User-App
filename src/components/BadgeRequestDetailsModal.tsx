@@ -8,9 +8,6 @@ import {
   IconButton,
   Button,
   Divider,
-  Chip,
-  Stack,
-  alpha,
 } from '@mui/material';
 import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 
@@ -19,9 +16,8 @@ interface Commitment {
   description: string;
   explanation?: string;
   assignee: string;
-  dueDate: string; // This is the completion date of the original commitment
-  committedDate?: string; // This is the date the badge was requested
-  isOverdue?: boolean; // Added for badge request overdue status
+  dueDate: string;
+  committedDate?: string;
 }
 
 interface BadgeRequestDetailsModalProps {
@@ -84,34 +80,21 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
             </Typography>
           </Box>
 
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Completed:{' '}
+              Status:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                 {commitment.dueDate}
               </Typography>
             </Typography>
-            {commitment.isOverdue && (
-              <Chip
-                label="Overdue"
-                size="small"
-                sx={{
-                  bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
-                  color: 'error.dark',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  height: 20,
-                }}
-              />
-            )}
-          </Stack>
+          </Box>
 
           {commitment.committedDate && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Committed:{' '}
+                Requested:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                   {commitment.committedDate}
                 </Typography>
