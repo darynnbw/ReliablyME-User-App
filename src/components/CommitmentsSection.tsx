@@ -194,8 +194,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
 
-  const handleOpenMakePromiseModal = () => {
-    setMakePromiseModalType('promise');
+  const handleOpenMakePromiseModal = (type: 'promise' | 'request') => {
+    setMakePromiseModalType(type);
     setMakePromiseModalOpen(true);
   };
 
@@ -567,6 +567,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const itemsPerPage = 15;
   const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
   const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
+
+  const isOthersCommitmentsSection = title.trim() === "Others' Commitments";
 
   return (
     <>
@@ -954,15 +956,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <Box sx={{ 
                 textAlign: 'center', 
                 color: 'text.secondary', 
-                // Removed mt: 8 as parent Box now handles vertical centering
-                width: '100%', // Ensure it takes full width within the Stack
+                width: '100%',
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
-                <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%', mx: 'auto' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
+                <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%', mx: 'auto' }}>We couldn’t find any commitments that match your filters. Try changing them or create something new.</Typography>
                 <Button
                   variant="contained"
                   sx={{
-                    bgcolor: '#ff7043',
+                    bgcolor: isOthersCommitmentsSection ? 'primary.main' : '#ff7043',
                     color: 'white',
                     textTransform: 'none',
                     fontWeight: 'bold',
@@ -970,11 +971,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     py: 1.5,
                     borderRadius: 2,
                     fontSize: '16px',
-                    '&:hover': { bgcolor: '#f4511e' },
+                    '&:hover': { 
+                      bgcolor: isOthersCommitmentsSection ? 'primary.dark' : '#f4511e',
+                    },
                   }}
-                  onClick={handleOpenMakePromiseModal} // Updated onClick
+                  onClick={() => handleOpenMakePromiseModal(isOthersCommitmentsSection ? 'request' : 'promise')}
                 >
-                  Make a Promise
+                  {isOthersCommitmentsSection ? 'Request a Commitment' : 'Make a Promise'}
                 </Button>
               </Box>
             )}
