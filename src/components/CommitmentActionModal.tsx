@@ -254,9 +254,9 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 {group && group !== '' && groupMembers[group] && (
                   <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
                     {group} includes:{' '}
-                    <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                    <Box component="span" sx={{ fontWeight: 'bold' }}>
                       {groupMembers[group].join(', ')}
-                    </Typography>
+                    </Box>
                   </Typography>
                 )}
               </Box>
