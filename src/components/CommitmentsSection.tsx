@@ -235,11 +235,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
   const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
 
+  // Determine if filters should be disabled
+  const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
+
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
     setCurrentPage(1);
-  }, [activeTab, tabs]);
+    // Reset filters when tab changes to a disabled filter tab
+    if (disableFilters) {
+      setPersonFilter('');
+      setDateFilter('All');
+      setFilterBy('soonest');
+      setSearchTerm('');
+      setDateRange([null, null]);
+      setTempDateRange([null, null]);
+    }
+  }, [activeTab, tabs, disableFilters]);
 
   // Generate unique people and add group options
   const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
@@ -580,7 +592,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               </Select>
             </FormControl>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
               <InputLabel>Due Date</InputLabel>
               <Select
                 value={dateFilter}
@@ -609,6 +621,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                   readOnly: true,
                 }}
                 sx={{ minWidth: 180, cursor: 'pointer' }}
+                disabled={disableFilters}
               />
             )}
 
@@ -688,7 +701,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               </Box>
             </Popover>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
               <InputLabel>Filter By</InputLabel>
               <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
