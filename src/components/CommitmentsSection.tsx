@@ -875,7 +875,27 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 })
               )
             ) : (
-              <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mt: 4 }}>No items found.</Typography>
+              <Box sx={{ textAlign: 'center', color: 'text.secondary', mt: 8 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
+                <Button
+                  variant="contained"
+                  sx={{
+                    bgcolor: '#ff7043',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 2,
+                    fontSize: '16px',
+                    '&:hover': { bgcolor: '#f4511e' },
+                  }}
+                  onClick={() => console.log('Make a Promise button clicked from empty state')}
+                >
+                  Make a Promise
+                </Button>
+              </Box>
             )}
           </Stack>
         </Box>
