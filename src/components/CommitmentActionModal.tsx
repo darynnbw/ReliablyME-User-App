@@ -240,7 +240,13 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setBadgeError(false); // Clear error on change
                     }}
                     displayEmpty
-                    sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
+                    sx={{ 
+                      borderRadius: 2, 
+                      bgcolor: 'grey.50',
+                      '& .MuiOutlinedInput-root': { // Target the internal OutlinedInput
+                        p: 1, // Add padding here
+                      },
+                    }}
                   >
                     <MenuItem value="">
                       <em>Select a badge</em>
