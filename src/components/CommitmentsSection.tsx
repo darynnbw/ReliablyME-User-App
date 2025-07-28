@@ -875,9 +875,18 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 })
               )
             ) : (
-              <Box sx={{ textAlign: 'center', color: 'text.secondary', mt: 8 }}>
+              <Box sx={{ 
+                textAlign: 'center', 
+                color: 'text.secondary', 
+                mt: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexGrow: 1, // Allow it to grow and take available space
+              }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
+                <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
                 <Button
                   variant="contained"
                   sx={{
