@@ -807,10 +807,21 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         <Box sx={{ 
           height: containerHeight, 
           minHeight: 0, 
-          overflowY: 'scroll', 
-          pr: 1 
+          pr: 1,
+          // Conditional styles for centering when empty
+          ...(paginatedItems.length === 0 && {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflowY: 'hidden', // Hide scrollbar when empty and centered
+          }),
+          // Default scroll behavior when not empty
+          ...(paginatedItems.length > 0 && {
+            overflowY: 'scroll',
+          }),
         }}>
-          <Stack spacing={1}>
+          <Stack spacing={1} sx={{ width: '100%' }}>
             {paginatedItems.length > 0 ? (
               isMyBadgesTab ? (
                 paginatedItems.map((item, index) => (
@@ -878,15 +889,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <Box sx={{ 
                 textAlign: 'center', 
                 color: 'text.secondary', 
-                mt: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexGrow: 1, // Allow it to grow and take available space
+                // Removed mt: 8 as parent Box now handles vertical centering
+                width: '100%', // Ensure it takes full width within the Stack
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
-                <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
+                <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%', mx: 'auto' }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
                 <Button
                   variant="contained"
                   sx={{
