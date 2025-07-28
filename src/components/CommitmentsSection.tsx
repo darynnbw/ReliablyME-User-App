@@ -810,7 +810,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           overflowY: 'scroll', 
           pr: 1 
         }}>
-          <Stack spacing={1}>
+          <Stack spacing={1} sx={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
             {paginatedItems.length > 0 ? (
               isMyBadgesTab ? (
                 paginatedItems.map((item, index) => (
@@ -875,7 +875,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 })
               )
             ) : (
-              <Box sx={{ textAlign: 'center', color: 'text.secondary', mt: 8 }}>
+              <Box sx={{ textAlign: 'center', color: 'text.secondary' }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
                 <Typography variant="body1" sx={{ mb: 3 }}>We couldn’t find any commitments that match your filters. Try changing your filters, or create something new.</Typography>
                 <Button
