@@ -48,6 +48,7 @@ import BulkClarifyModal from './BulkClarifyModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
 import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
 import ConfirmationModal from './ConfirmationModal';
+import CommitmentActionModal from './CommitmentActionModal'; // Import CommitmentActionModal
 
 dayjs.extend(isBetween);
 
@@ -84,9 +85,17 @@ const parseCommitmentDate = (dateString: string): Dayjs | null => {
   }
 };
 
+// Define group members for filtering
+const groupMembers: { [key: string]: string[] } = {
+  'Development team': ['Alex Johnson', 'Chris Parker'],
+  'Customer facing team': ['Riley Chen'],
+  'Official co-op': ['Alex Johnson', 'Chris Parker', 'Riley Chen'],
+  'Part-timers': ['Chris Parker'],
+};
+
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) => {
   console.log('CommitmentsSection title received:', `"${title}"`, 'Length:', title.length);
-  console.log('Comparison result (title.trim() === "My Commitments"):', title.trim() === 'My Commitments');
+  console.log('Comparison result (title.trim() === "My Commitments"):', title.length > 0 && title.trim() === 'My Commitments');
 
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
@@ -171,6 +180,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const [bulkRejectModalOpen, setBulkRejectModalOpen] = useState(false);
   const [bulkApprovalSuccessOpen, setBulkApprovalSuccessOpen] = useState(false);
 
+  // State for "Make a Promise" modal from empty state
+  const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
+  const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
+
+  const handleOpenMakePromiseModal = () => {
+    setMakePromiseModalType('promise');
+    setMakePromiseModalOpen(true);
+  };
+
+  const handleCloseMakePromiseModal = useCallback(() => {
+    setMakePromiseModalOpen(false);
+  }, []);
+
   const handleCloseApprovalModal = useCallback(() => {
     setApprovalModalOpen(false);
     setRequesterForApproval('');
@@ -212,7 +234,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setCurrentPage(1);
   }, [activeTab, tabs]);
 
-  const uniquePeople = [...new Set(tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee)))];
+  // Generate unique people and add group options
+  const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
+  const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead'); // Filter out 'Dev Team Lead'
+  const filterOptions = [...uniquePeople, 'Development team']; // Add 'Development team' as an option
   const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
 
   const currentItems = commitments.filter(item => {
@@ -225,6 +250,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     const personMatch = (() => {
       if (!personFilter) return true; // 'All' is selected
       if (personFilter === 'External') return item.isExternal === true;
+      if (personFilter === 'Development team') {
+        return groupMembers['Development team'].includes(item.assignee);
+      }
       return item.assignee === personFilter;
     })();
     if (!personMatch) return false;
@@ -537,7 +565,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
               <InputLabel>Person</InputLabel>
               <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
                 <MenuItem value="">All</MenuItem>
-                {uniquePeople.map(person => (
+                {filterOptions.map(person => (
                   <MenuItem key={person} value={person}>{person}</MenuItem>
                 ))}
                 {hasExternal && <MenuItem value="External">External</MenuItem>}
@@ -907,7 +935,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     fontSize: '16px',
                     '&:hover': { bgcolor: '#f4511e' },
                   }}
-                  onClick={() => console.log('Make a Promise button clicked from empty state')}
+                  onClick={handleOpenMakePromiseModal} // Updated onClick
                 >
                   Make a Promise
                 </Button>
@@ -1101,6 +1129,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         onConfirm={handleConfirmBulkReject}
         confirmText="Reject"
         confirmColor="error"
+      />
+
+      {/* CommitmentActionModal for "Make a Promise" from empty state */}
+      <CommitmentActionModal
+        open={makePromiseModalOpen}
+        onClose={handleCloseMakePromiseModal}
+        type={makePromiseModalType}
       />
     </>
   );
