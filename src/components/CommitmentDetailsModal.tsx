@@ -61,7 +61,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             textTransform: 'none',
             py: 1.5,
             fontSize: '16px',
-            fontWeight: 600,
+            fontWeight: 'bold',
             '&:hover': { bgcolor: '#d32f2f' },
           }}
         >
@@ -103,7 +103,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
               textTransform: 'none',
               py: 1.5,
               fontSize: '16px',
-              fontWeight: 600,
+              fontWeight: 'bold',
               '&:hover': { bgcolor: '#d32f2f' },
             }}
           >
@@ -119,7 +119,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
               textTransform: 'none',
               py: 1.5,
               fontSize: '16px',
-              fontWeight: 600,
+              fontWeight: 'bold',
               '&:hover': { bgcolor: '#388e3c' },
             }}
           >
