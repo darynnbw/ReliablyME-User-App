@@ -17,7 +17,6 @@ import {
   Chip,
   styled,
   keyframes,
-  FormHelperText,
 } from '@mui/material';
 import { Close, WarningAmber } from '@mui/icons-material';
 
@@ -93,11 +92,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
   const [hasExternalRecipient, setHasExternalRecipient] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // State for validation errors
-  const [badgeError, setBadgeError] = useState(false);
-  const [promiseError, setPromiseError] = useState(false);
-  const [recipientError, setRecipientError] = useState(false);
-
   const handleClose = useCallback(() => {
     setIsSubmitted(false);
     setBadge('');
@@ -105,9 +99,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     setRecipients([]);
     setGroup('');
     setHasExternalRecipient(false);
-    setBadgeError(false); // Reset errors
-    setPromiseError(false);
-    setRecipientError(false);
     onClose();
   }, [onClose]);
 
@@ -122,37 +113,10 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     setRecipients(newValue);
     const external = newValue.some(val => !recipientOptions.find(opt => opt.name === val));
     setHasExternalRecipient(external);
-    setRecipientError(false); // Clear error on change
   };
 
   const handleSubmit = () => {
-    let valid = true;
-
-    if (!badge) {
-      setBadgeError(true);
-      valid = false;
-    } else {
-      setBadgeError(false);
-    }
-
-    if (!promise.trim()) {
-      setPromiseError(true);
-      valid = false;
-    } else {
-      setPromiseError(false);
-    }
-
-    if (recipients.length === 0 && !group) {
-      setRecipientError(true);
-      valid = false;
-    } else {
-      setRecipientError(false);
-    }
-
-    if (!valid) {
-      return;
-    }
-
+    // Removed validation logic as requested
     console.log(`${type} sent!`, { badge, promise, recipients, group });
     setIsSubmitted(true);
   };
@@ -232,12 +196,11 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
-                <FormControl fullWidth error={badgeError}>
+                <FormControl fullWidth>
                   <Select
                     value={badge}
                     onChange={(e: SelectChangeEvent) => {
                       setBadge(e.target.value);
-                      setBadgeError(false); // Clear error on change
                     }}
                     displayEmpty
                     renderValue={(selected) => {
@@ -269,7 +232,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                   >
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                   </Select>
-                  {badgeError && <FormHelperText>Please select a badge to earn.</FormHelperText>}
                 </FormControl>
               </Box>
               <Box>
@@ -282,16 +244,13 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                   value={promise}
                   onChange={(e) => {
                     setPromise(e.target.value);
-                    setPromiseError(false); // Clear error on change
                   }}
-                  error={promiseError}
-                  helperText={promiseError ? "Please enter a description for your promise." : ""}
                   sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: '2px solid #1976d2' } } }}
                 />
               </Box>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Recipient(s)</Typography>
-                <FormControl fullWidth error={recipientError}>
+                <FormControl fullWidth>
                   <Autocomplete
                     multiple
                     freeSolo
@@ -312,12 +271,10 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                         {...params}
                         variant="outlined"
                         placeholder="Type a name or phone number"
-                        error={recipientError} // Apply error prop to TextField
                       />
                     )}
                     sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2, bgcolor: 'grey.50', p: 1 } }}
                   />
-                  {recipientError && <FormHelperText>Please add at least one recipient or group.</FormHelperText>}
                 </FormControl>
                 {hasExternalRecipient && <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1, color: 'warning.dark' }}><WarningAmber sx={{ fontSize: 18 }} /><Typography variant="body2" sx={{ fontStyle: 'italic' }}>This person isn’t in the system. They’ll receive your promise via text message.</Typography></Box>}
               </Box>
@@ -328,7 +285,6 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     value={group}
                     onChange={(e: SelectChangeEvent) => {
                       setGroup(e.target.value);
-                      setRecipientError(false); // Clear recipient error if group is selected
                     }}
                     displayEmpty
                     sx={{ borderRadius: 2, bgcolor: 'grey.50' }}
