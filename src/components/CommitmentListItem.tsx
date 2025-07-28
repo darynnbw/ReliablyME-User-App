@@ -13,7 +13,7 @@ import {
   Chip,
   useTheme,
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Shield, Edit, Group as GroupIcon } from '@mui/icons-material';
+import { CalendarToday, Person, MoreHoriz, Shield, Edit } from '@mui/icons-material';
 import ContactTooltip from './ContactTooltip';
 
 interface CommitmentListItemProps {
@@ -48,9 +48,6 @@ interface CommitmentListItemProps {
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
-  isGroup?: boolean;
-  // Removed groupMembers from props as it's not directly used for rendering in this component
-  // groupMembers?: string[];
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -85,8 +82,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showFromLabel = false,
   acceptButtonText,
   declineButtonText,
-  isGroup = false,
-  // groupMembers, // Removed from destructuring
 }, ref) => {
   const theme = useTheme();
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -239,7 +234,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
                   mt: 1,
-                  mb: 3, // Increased margin-bottom for spacing before buttons
+                  mb: 3,
                   maxWidth: '100%',
                 }}
               >
@@ -253,14 +248,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
 
             {/* Bottom row: Assignee and Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: explanation ? 0 : 2 }}> {/* Adjust mt if explanation is present */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
               {/* Assignee */}
               <Stack direction="row" spacing={1} alignItems="center">
-                {isGroup ? (
-                  <GroupIcon sx={{ fontSize: 16, color: color }} />
-                ) : (
-                  <Person sx={{ fontSize: 16, color: color }} />
-                )}
+                <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
                   {!isExternal ? (

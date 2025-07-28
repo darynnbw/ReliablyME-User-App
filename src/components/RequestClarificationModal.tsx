@@ -10,15 +10,13 @@ import {
   Divider,
   TextField,
 } from '@mui/material';
-import { Close, CalendarToday, Person, Group as GroupIcon } from '@mui/icons-material';
+import { Close, CalendarToday } from '@mui/icons-material';
 
 interface Notification {
   title: string;
   description: string;
   assignee: string;
   dueDate?: string;
-  isGroup?: boolean;
-  groupMembers?: string[];
 }
 
 interface RequestClarificationModalProps {
@@ -67,7 +65,7 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
             Request Clarification
           </Typography>
-          <IconButton onClick={onClose} sx={{ color: '#666' }}>
+          <IconButton onClick={handleClose} sx={{ color: '#666' }}>
             <Close />
           </IconButton>
         </Box>
@@ -80,35 +78,17 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
           {notification.title}
         </Typography>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2, mb: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {notification.isGroup ? (
-              <GroupIcon sx={{ fontSize: 20, color: '#1976d2' }} />
-            ) : (
-              <Person sx={{ fontSize: 20, color: '#1976d2' }} />
-            )}
+        {notification.dueDate && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2, mb: 3 }}>
+            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              To:{' '}
+              Due:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {notification.assignee}
-                {notification.isGroup && notification.groupMembers && notification.groupMembers.length > 0 && (
-                  ` (${notification.groupMembers.join(', ')})`
-                )}
+                {notification.dueDate}
               </Typography>
             </Typography>
           </Box>
-          {notification.dueDate && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
-              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Due:{' '}
-                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                  {notification.dueDate}
-                </Typography>
-              </Typography>
-            </Box>
-          )}
-        </Box>
+        )}
 
         <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
           Original Commitment
@@ -172,7 +152,7 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
               minHeight: '48px',
               py: 1.5,
               borderRadius: 2,
-              fontWeight: 600, // Consistent font weight
+              fontWeight: 600,
               fontSize: '16px',
               '&:hover': { 
                 bgcolor: 'primary.dark'

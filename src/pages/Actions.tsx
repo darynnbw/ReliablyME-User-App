@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 import Header from '../components/Header';
 import NavigationTabs from '../components/NavigationTabs';
 import CommitmentsSection from '../components/CommitmentsSection';
-import { groupMembersMap } from '../utils/constants'; // Import groupMembersMap
 
 const Actions: React.FC = () => {
   const myPromisesItems = [
@@ -135,9 +134,7 @@ const Actions: React.FC = () => {
       dueDate: 'Pending',
       committedDate: 'Requested on Jul 20, 11:00 AM',
       description: 'I will set up the new project repository and initial file structure.',
-      assignee: 'Development Team',
-      isGroup: true,
-      groupMembers: groupMembersMap['Development Team'],
+      assignee: 'Dev Team Lead',
     },
     {
       id: 602,

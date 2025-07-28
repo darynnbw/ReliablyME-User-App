@@ -195,7 +195,7 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
                   bgcolor: '#FF7F41',
                   color: 'white',
                   textTransform: 'none',
-                  fontWeight: 600, // Consistent font weight
+                  fontWeight: 'bold',
                   width: '100%',
                   py: 1,
                   borderRadius: 1,

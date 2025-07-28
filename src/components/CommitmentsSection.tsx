@@ -28,7 +28,6 @@ import {
   ArrowUpward,
   Check,
   Close,
-  Group as GroupIcon,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import dayjs, { Dayjs } from 'dayjs';
@@ -49,7 +48,6 @@ import BulkClarifyModal from './BulkClarifyModal';
 import ApprovalConfirmationModal from './ApprovalConfirmationModal';
 import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
 import ConfirmationModal from './ConfirmationModal';
-import { groupMembersMap } from '../utils/constants'; // Import groupMembersMap
 
 dayjs.extend(isBetween);
 
@@ -67,8 +65,6 @@ interface Commitment {
   isExternal?: boolean;
   questions?: string[];
   explanation?: string;
-  isGroup?: boolean;
-  groupMembers?: string[];
 }
 
 interface CommitmentsSectionProps {
@@ -184,7 +180,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
   const handleApproveBadgeRequest = (item: Commitment) => {
     setRequesterForApproval(item.assignee);
-    setCommitments(prev => prev.filter(n => n.id !== item.id));
+    setCommitments(prev => prev.filter(c => c.id !== item.id));
     setApprovalModalOpen(true);
   };
 
@@ -196,7 +192,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const handleConfirmRejectBadge = () => {
     if (commitmentToReject) {
       console.log('Rejecting badge for:', commitmentToReject.id);
-      setCommitments(prev => prev.filter(n => n.id !== commitmentToReject.id));
+      setCommitments(prev => prev.filter(c => c.id !== commitmentToReject.id));
       handleCloseRejectBadgeModal();
     }
   };
@@ -213,10 +209,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     setCurrentPage(1);
   }, [activeTab, tabs]);
 
-  const allAssignees = tabs.flatMap(tab => tab.items.map(item => item.assignee));
-  const uniquePeople = [...new Set(allAssignees.filter(assignee => !Object.keys(groupMembersMap).includes(assignee) && assignee !== 'Dev Team Lead'))];
-  const uniqueGroups = Object.keys(groupMembersMap);
-  const hasExternal = allAssignees.some(item => item.startsWith('+1'));
+  const uniquePeople = [...new Set(tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee)))];
+  const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
 
   const currentItems = commitments.filter(item => {
     const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -228,9 +222,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
     const personMatch = (() => {
       if (!personFilter) return true; // 'All' is selected
       if (personFilter === 'External') return item.isExternal === true;
-      if (Object.keys(groupMembersMap).includes(personFilter)) {
-        return item.assignee === personFilter;
-      }
       return item.assignee === personFilter;
     })();
     if (!personMatch) return false;
@@ -485,7 +476,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const handleConfirmBulkApprove = () => {
     const selectedIds = selectedCommitments.map(c => c.id);
     console.log('Bulk approving commitments:', selectedIds);
-    setCommitments(prev => prev.filter(n => !selectedIds.includes(n.id)));
+    setCommitments(prev => prev.filter(c => !selectedIds.includes(c.id)));
     setBulkApproveModalOpen(false);
     setBulkApprovalSuccessOpen(true);
     setSelectAll(false);
@@ -494,7 +485,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
   const handleConfirmBulkReject = () => {
     console.log('Bulk rejecting commitments:', selectedCommitments.map(c => c.id));
     const selectedIds = selectedCommitments.map(c => c.id);
-    setCommitments(prev => prev.filter(n => !selectedIds.includes(n.id)));
+    setCommitments(prev => prev.filter(c => !selectedIds.includes(c.id)));
     setBulkRejectModalOpen(false);
     setSelectAll(false);
   };
@@ -534,7 +525,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
         mb: 4,
       }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, color: title === 'My Commitments' ? '#D84315' : '#1976d2', fontSize: '1.25rem' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2', fontSize: '1.25rem' }}>
             {title}
           </Typography>
 
@@ -545,12 +536,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 <MenuItem value="">All</MenuItem>
                 {uniquePeople.map(person => (
                   <MenuItem key={person} value={person}>{person}</MenuItem>
-                ))}
-                {uniqueGroups.map(groupName => (
-                  <MenuItem key={groupName} value={groupName}>
-                    <GroupIcon fontSize="small" sx={{ mr: 1 }} />
-                    {groupName}
-                  </MenuItem>
                 ))}
                 {hasExternal && <MenuItem value="External">External</MenuItem>}
               </Select>
@@ -839,8 +824,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                     showBadgePlaceholder={true}
                     onViewDetails={() => handleViewBadgeDetails(item)}
                     onToggleSelect={() => {}}
-                    isGroup={item.isGroup}
-                    // groupMembers={item.groupMembers} // Removed from here
                   />
                 ))
               ) : (
@@ -884,8 +867,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                       onRevoke={() => handleRevokeClick(item)}
                       showFromLabel={showFromLabel}
                       explanation={item.explanation}
-                      isGroup={item.isGroup}
-                      // groupMembers={item.groupMembers} // Removed from here
                     />
                   );
                 })

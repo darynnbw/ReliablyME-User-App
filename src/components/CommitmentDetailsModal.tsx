@@ -9,7 +9,7 @@ import {
   Button,
   Divider,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Schedule, Group as GroupIcon } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 
 interface Commitment {
   title: string;
@@ -17,8 +17,6 @@ interface Commitment {
   assignee: string;
   dueDate: string;
   committedDate?: string;
-  isGroup?: boolean;
-  groupMembers?: string[];
 }
 
 interface CommitmentDetailsModalProps {
@@ -63,7 +61,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             textTransform: 'none',
             py: 1.5,
             fontSize: '16px',
-            fontWeight: 600, // Consistent font weight
+            fontWeight: 600,
             '&:hover': { bgcolor: '#d32f2f' },
           }}
         >
@@ -83,7 +81,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             textTransform: 'none',
             py: 1.5,
             fontSize: '16px',
-            fontWeight: 600, // Consistent font weight
+            fontWeight: 'bold',
             borderRadius: 1,
             '&:hover': { bgcolor: 'primary.dark' },
           }}
@@ -105,7 +103,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
               textTransform: 'none',
               py: 1.5,
               fontSize: '16px',
-              fontWeight: 600, // Consistent font weight
+              fontWeight: 600,
               '&:hover': { bgcolor: '#d32f2f' },
             }}
           >
@@ -121,7 +119,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
               textTransform: 'none',
               py: 1.5,
               fontSize: '16px',
-              fontWeight: 600, // Consistent font weight
+              fontWeight: 600,
               '&:hover': { bgcolor: '#388e3c' },
             }}
           >
@@ -140,7 +138,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
           bgcolor: '#FF7F41',
           color: 'white',
           textTransform: 'none',
-          fontWeight: 600, // Consistent font weight
+          fontWeight: 'bold',
           py: 1.5,
           borderRadius: 1,
           fontSize: '16px',
@@ -186,18 +184,11 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {commitment.isGroup ? (
-              <GroupIcon sx={{ fontSize: 20, color: '#FF7F41' }} />
-            ) : (
-              <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
-            )}
+            <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               To:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                 {commitment.assignee}
-                {commitment.isGroup && commitment.groupMembers && commitment.groupMembers.length > 0 && (
-                  ` (${commitment.groupMembers.join(', ')})`
-                )}
               </Typography>
             </Typography>
           </Box>
