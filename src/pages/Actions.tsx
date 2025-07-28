@@ -266,7 +266,7 @@ const Actions: React.FC = () => {
     {
       id: 506, // New overdue item
       title: 'Teamwork',
-      dueDate: 'Completed Jul 10', // A past date to make it overdue
+      dueDate: dayjs().subtract(7, 'day').format('MMM D, YYYY'), // Ensures it's a past date and parsable
       committedDate: 'Requested on Jul 11, 9:00 AM',
       description: 'I will assist the new intern with setting up their development environment.',
       explanation: 'I spent two hours with the intern, and they are now fully set up and ready to start coding.',
