@@ -163,9 +163,6 @@ const RequestBadgeModal: React.FC<RequestBadgeModalProps> = ({ open, onClose }) 
                   },
                   '&:hover': {
                     backgroundColor: 'white',
-                    '& fieldset': {
-                      borderColor: '#bdbdbd', // Changed hover border to gray
-                    },
                   },
                   '&.Mui-focused': {
                     backgroundColor: 'white',

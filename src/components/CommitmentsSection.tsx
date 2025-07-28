@@ -535,22 +535,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
             <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
               <InputLabel>Person</InputLabel>
-              <Select 
-                value={personFilter} 
-                onChange={(e) => setPersonFilter(e.target.value as string)} 
-                label="Person" 
-                startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: '#bdbdbd', // Changed hover border to gray
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#1976d2', // Keep blue on focus
-                    },
-                  },
-                }}
-              >
+              <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
                 <MenuItem value="">All</MenuItem>
                 {uniquePeople.map(person => (
                   <MenuItem key={person} value={person}>{person}</MenuItem>
@@ -566,16 +551,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 onChange={handleDateFilterChange}
                 label="Due Date"
                 startAdornment={<InputAdornment position="start"><CalendarToday fontSize="small" /></InputAdornment>}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: '#bdbdbd', // Changed hover border to gray
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#1976d2', // Keep blue on focus
-                    },
-                  },
-                }}
               >
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="Today">Today</MenuItem>
@@ -597,18 +572,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
                 InputProps={{
                   readOnly: true,
                 }}
-                sx={{ 
-                  minWidth: 180, 
-                  cursor: 'pointer',
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: '#bdbdbd', // Changed hover border to gray
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#1976d2', // Keep blue on focus
-                    },
-                  },
-                }}
+                sx={{ minWidth: 180, cursor: 'pointer' }}
               />
             )}
 
@@ -690,46 +654,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs }) 
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
               <InputLabel>Filter By</InputLabel>
-              <Select 
-                value={filterBy} 
-                onChange={(e) => setFilterBy(e.target.value as string)} 
-                label="Filter By" 
-                startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: '#bdbdbd', // Changed hover border to gray
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#1976d2', // Keep blue on focus
-                    },
-                  },
-                }}
-              >
+              <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={<InputAdornment position="start"><ArrowUpward fontSize="small" /></InputAdornment>}>
                 <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
                 <MenuItem value="latest">Due Date (Latest)</MenuItem>
                 <MenuItem value="pastDue">Overdue</MenuItem>
               </Select>
             </FormControl>
 
-            <TextField 
-              variant="outlined" 
-              size="small" 
-              placeholder="Search..." 
-              value={searchTerm} 
-              onChange={(e) => setSearchTerm(e.target.value)} 
-              InputProps={{ 
-                startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment>,
-                sx: {
-                  '&:hover fieldset': {
-                    borderColor: '#bdbdbd', // Changed hover border to gray
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#1976d2', // Keep blue on focus
-                  },
-                },
-              }} 
-            />
+            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
           </Box>
         </Box>
 

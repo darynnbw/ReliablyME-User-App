@@ -124,7 +124,7 @@ const RequestClarificationModal: React.FC<RequestClarificationModalProps> = ({
                 borderColor: '#e0e0e0',
               },
               '&:hover fieldset': {
-                borderColor: '#bdbdbd', // Changed hover border to gray
+                borderColor: '#bdbdbd',
               },
               '&.Mui-focused fieldset': {
                 borderColor: '#1976d2',

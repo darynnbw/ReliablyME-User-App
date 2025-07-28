@@ -153,7 +153,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
                     borderColor: '#e0e0e0',
                   },
                   '&:hover fieldset': {
-                    borderColor: '#bdbdbd', // Changed hover border to gray
+                    borderColor: '#bdbdbd',
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: '#1976d2',
