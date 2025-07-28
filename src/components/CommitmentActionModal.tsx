@@ -17,7 +17,7 @@ import {
   Chip,
   styled,
   keyframes,
-  FormHelperText, // Import FormHelperText
+  FormHelperText,
 } from '@mui/material';
 import { Close, WarningAmber } from '@mui/icons-material';
 
@@ -240,6 +240,16 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       setBadgeError(false); // Clear error on change
                     }}
                     displayEmpty
+                    renderValue={(selected) => {
+                      if (selected === "") {
+                        return (
+                          <Typography component="span" sx={{ color: 'text.secondary', fontWeight: 400 }}>
+                            Select a badge
+                          </Typography>
+                        );
+                      }
+                      return selected;
+                    }}
                     sx={{ 
                       borderRadius: 2, 
                       bgcolor: 'grey.50',
@@ -257,7 +267,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                       },
                     }}
                   >
-                    <MenuItem value="" disabled sx={{ color: 'text.secondary', fontStyle: 'normal', fontWeight: 400 }}>
+                    <MenuItem value="" disabled>
                       Select a badge
                     </MenuItem>
                     {badgeOptions.map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
