@@ -213,7 +213,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     renderValue={(selected) => {
                       if (selected === "") {
                         return (
-                          <Typography component="span" sx={{ color: (theme) => theme.palette.action.active, fontWeight: 400 }}> {/* Changed color to match TextField placeholder */}
+                          <Typography component="span" sx={{ color: (theme) => theme.palette.action.active, fontWeight: 400 }}>
                             Select a badge
                           </Typography>
                         );
@@ -223,16 +223,16 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                     sx={{ 
                       borderRadius: 2, 
                       bgcolor: 'grey.50',
-                      '& .MuiOutlinedInput-root': { // Target the internal OutlinedInput
-                        p: 1, // Add padding here
+                      '& .MuiOutlinedInput-root': {
+                        p: 1,
                         '& fieldset': {
-                          border: 'none', // Remove default border
+                          border: 'none',
                         },
                         '&:hover fieldset': {
-                          border: 'none', // Remove hover border
+                          border: 'none',
                         },
                         '&.Mui-focused fieldset': {
-                          border: '2px solid #1976d2', // Apply focus border
+                          border: '2px solid #1976d2',
                         },
                       },
                     }}
@@ -318,7 +318,19 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                 onClick={handleSubmit}
                 fullWidth
                 disabled={!isFormValid}
-                sx={{ bgcolor: '#ff7043', color: 'white', textTransform: 'none', height: '48px', borderRadius: 2, fontWeight: 600, fontSize: '16px', '&:hover': { bgcolor: '#f4511e' }, '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' } }}
+                sx={{
+                  bgcolor: type === 'request' ? 'primary.main' : '#ff7043', // Apply primary.main for 'request' type
+                  color: 'white',
+                  textTransform: 'none',
+                  height: '48px',
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  '&:hover': {
+                    bgcolor: type === 'request' ? 'primary.dark' : '#f4511e', // Apply primary.dark for 'request' type hover
+                  },
+                  '&:disabled': { bgcolor: '#e0e0e0', color: '#9e9e9e' }
+                }}
               >
                 {currentTexts.buttonText}
               </Button>
