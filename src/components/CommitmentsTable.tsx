@@ -9,14 +9,16 @@ import {
   Paper,
   Typography,
   Box,
+  TextField,
   Select,
   MenuItem,
   InputAdornment,
   FormControl,
+  InputLabel,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import { CalendarToday } from '@mui/icons-material';
+import { Search, CalendarToday } from '@mui/icons-material';
 
 interface Commitment {
   id: number;
@@ -68,21 +70,21 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
-              Badge
-              <FormControl variant="outlined" size="small" sx={{ minWidth: 80 }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Badge</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Original Commitment</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Assignee</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Due Date</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Committed Date</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell sx={{ py: 1 }}>
+              <FormControl variant="outlined" size="small" fullWidth>
+                <InputLabel>Badge</InputLabel>
                 <Select
                   value={filters.badge}
                   onChange={(e) => onFilterChange('badge', e.target.value)}
-                  displayEmpty
-                  inputProps={{ 'aria-label': 'Select badge filter' }}
-                  sx={{
-                    height: 36, // Compact height
-                    '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, // Remove border
-                    '& .MuiSelect-select': { paddingRight: '24px !important' }, // Adjust padding for arrow
-                    '& .MuiSelect-icon': { right: 4 }, // Adjust icon position
-                    bgcolor: 'background.paper',
-                  }}
+                  label="Badge"
+                  sx={{ bgcolor: 'background.paper' }}
                 >
                   <MenuItem value="">All</MenuItem>
                   {badgeOptions.map((option) => (
@@ -91,25 +93,32 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Select>
               </FormControl>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-              Original Commitment
-              {/* No filter for Original Commitment as per request */}
+            <TableCell sx={{ py: 1 }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Search..."
+                value={filters.commitmentText}
+                onChange={(e) => onFilterChange('commitmentText', e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search fontSize="small" />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ bgcolor: 'background.paper' }}
+                fullWidth
+              />
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
-              Assignee
-              <FormControl variant="outlined" size="small" sx={{ minWidth: 80 }}>
+            <TableCell sx={{ py: 1 }}>
+              <FormControl variant="outlined" size="small" fullWidth>
+                <InputLabel>Assignee</InputLabel>
                 <Select
                   value={filters.assignee}
                   onChange={(e) => onFilterChange('assignee', e.target.value)}
-                  displayEmpty
-                  inputProps={{ 'aria-label': 'Select assignee filter' }}
-                  sx={{
-                    height: 36, // Compact height
-                    '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, // Remove border
-                    '& .MuiSelect-select': { paddingRight: '24px !important' }, // Adjust padding for arrow
-                    '& .MuiSelect-icon': { right: 4 }, // Adjust icon position
-                    bgcolor: 'background.paper',
-                  }}
+                  label="Assignee"
+                  sx={{ bgcolor: 'background.paper' }}
                 >
                   <MenuItem value="">All</MenuItem>
                   {assigneeOptions.map((option) => (
@@ -118,21 +127,16 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Select>
               </FormControl>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
-              Due Date
+            <TableCell sx={{ py: 1 }}>
               <DatePicker
+                label="Due Date"
                 value={filters.dueDate}
                 onChange={(newValue) => onFilterChange('dueDate', newValue)}
                 slotProps={{
                   textField: {
                     size: 'small',
-                    sx: {
-                      width: 'auto',
-                      minWidth: 0,
-                      '& .MuiInputBase-root': { height: 36, paddingRight: '8px !important' },
-                      '& .MuiInputBase-input': { display: 'none' }, // Hide the actual input text
-                      '& fieldset': { border: 'none' }, // Remove border
-                    },
+                    fullWidth: true,
+                    sx: { bgcolor: 'background.paper' },
                     InputProps: {
                       startAdornment: (
                         <InputAdornment position="start">
@@ -144,8 +148,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 }}
               />
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
-              Committed Date
+            <TableCell sx={{ py: 1 }}>
               <DatePicker
                 label="Committed Date"
                 value={filters.committedDate}
@@ -153,13 +156,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 slotProps={{
                   textField: {
                     size: 'small',
-                    sx: {
-                      width: 'auto',
-                      minWidth: 0,
-                      '& .MuiInputBase-root': { height: 36, paddingRight: '8px !important' },
-                      '& .MuiInputBase-input': { display: 'none' }, // Hide the actual input text
-                      '& fieldset': { border: 'none' }, // Remove border
-                    },
+                    fullWidth: true,
+                    sx: { bgcolor: 'background.paper' },
                     InputProps: {
                       startAdornment: (
                         <InputAdornment position="start">
