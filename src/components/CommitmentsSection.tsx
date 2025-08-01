@@ -103,9 +103,6 @@ const groupMembers: { [key: string]: string[] } = {
 };
 
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular' }) => {
-  console.log('CommitmentsSection title received:', `"${title}"`, 'Length:', title.length);
-  console.log('Comparison result (title.trim() === "My Commitments"):', title.length > 0 && title.trim() === 'My Commitments');
-
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -339,11 +336,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
   };
 
-  const handleRequestBadge = () => setRequestBadgeModalOpen(true);
+  const handleRequestBadge = (item: Commitment) => {
+    setCommitmentForBadgeRequest(item); // Set the specific commitment for the modal
+    setRequestBadgeModalOpen(true);
+  };
   
   const handleRequestBadgeFromDetails = () => {
     setModalOpen(false);
-    setRequestBadgeModalOpen(true);
+    if (commitmentForDetails) {
+      handleRequestBadge(commitmentForDetails);
+    }
   };
 
   const handleViewBadgeDetails = (badge: Commitment) => {
@@ -738,7 +740,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Tabs>
         </Box>
 
-        {paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && (
+        {paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && displayMode === 'regular' && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox
@@ -872,7 +874,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          height: containerHeight, 
+          height: displayMode === 'regular' ? containerHeight : 'auto', 
           minHeight: 0, 
           pr: 1,
           // Conditional styles for centering when empty
@@ -889,7 +891,25 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           }),
         }}>
           {displayMode === 'table' && title.trim() === 'My Commitments' ? (
-            <CommitmentsTable commitments={currentItems} />
+            <CommitmentsTable
+              commitments={currentItems}
+              isMyPromisesTab={isMyPromisesTab}
+              isRequestsToCommitTab={isRequestsToCommitTab}
+              isAwaitingResponseTab={isAwaitingResponseTab}
+              isBadgeRequestsTab={isBadgeRequestsTab}
+              isOwedToMe={isOwedToMe}
+              isUnkeptTab={isUnkeptTab}
+              isMyBadgesTab={isMyBadgesTab}
+              onViewDetails={handleViewCommitmentDetails}
+              onRequestBadge={handleRequestBadge}
+              onAccept={handleAcceptClick}
+              onDecline={handleDeclineClick}
+              onRevoke={handleRevokeClick}
+              onClarify={handleClarifyClick}
+              onAnswerNudge={handleAnswerNudge}
+              onApproveBadge={handleApproveBadgeRequest}
+              onRejectBadge={handleRejectBadgeRequest}
+            />
           ) : (
             <Stack spacing={1} sx={{ width: '100%' }}>
               {paginatedItems.length > 0 ? (
@@ -933,7 +953,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         isCheckboxDisabled={isCheckboxDisabled}
                         showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
                         buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
-                        onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
+                        onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : () => handleRequestBadge(item))}
                         onViewDetails={() => handleViewCommitmentDetails(item)}
                         onToggleSelect={handleToggleSelectItem}
                         showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
