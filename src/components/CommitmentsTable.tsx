@@ -12,7 +12,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  useTheme, // Import useTheme to access palette colors
+  useTheme,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
@@ -54,19 +54,17 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   badgeOptions,
   assigneeOptions,
 }) => {
-  const theme = useTheme(); // Access the theme
-  // State for dropdown/datepicker anchors
+  const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
   const [assigneeAnchorEl, setAssigneeAnchorEl] = useState<null | HTMLElement>(null);
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
 
-  // Refs for TableCells to use as anchors
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
   const assigneeCellRef = useRef<HTMLTableCellElement>(null);
 
   const handleBadgeMenuOpen = () => {
-    setBadgeAnchorEl(badgeCellRef.current); // Anchor to the TableCell
+    setBadgeAnchorEl(badgeCellRef.current);
   };
   const handleBadgeMenuClose = () => {
     setBadgeAnchorEl(null);
@@ -77,7 +75,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   };
 
   const handleAssigneeMenuOpen = () => {
-    setAssigneeAnchorEl(assigneeCellRef.current); // Anchor to the TableCell
+    setAssigneeAnchorEl(assigneeCellRef.current);
   };
   const handleAssigneeMenuClose = () => {
     setAssigneeAnchorEl(null);
@@ -89,28 +87,18 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
 
   const handleDueDateChange = (newValue: Dayjs | null) => {
     onFilterChange('dueDate', newValue);
-    setDueDateOpen(false); // Close after selection
+    setDueDateOpen(false);
   };
 
   const handleCommittedDateChange = (newValue: Dayjs | null) => {
     onFilterChange('committedDate', newValue);
-    setCommittedDateOpen(false); // Close after selection
+    setCommittedDateOpen(false);
   };
 
-  // Determine icon colors based on active filters
   const badgeIconColor = filters.badge ? theme.palette.primary.main : 'text.secondary';
   const assigneeIconColor = filters.assignee ? theme.palette.primary.main : 'text.secondary';
   const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
-
-  if (commitments.length === 0) {
-    return (
-      <Box sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
-        <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
-      </Box>
-    );
-  }
 
   return (
     <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3 }}>
@@ -144,7 +132,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
               Original Commitment
-              {/* No filter for this column as per request */}
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -185,7 +172,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   onChange={handleDueDateChange}
                   slotProps={{
                     textField: {
-                      style: { display: 'none' } // Hide the text field, only show icon button
+                      style: { display: 'none' }
                     },
                     popper: {
                       placement: 'bottom-start',
@@ -208,7 +195,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   onChange={handleCommittedDateChange}
                   slotProps={{
                     textField: {
-                      style: { display: 'none' } // Hide the text field, only show icon button
+                      style: { display: 'none' }
                     },
                     popper: {
                       placement: 'bottom-start',
@@ -220,23 +207,32 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {commitments.map((commitment, index) => (
-            <TableRow
-              key={commitment.id}
-              sx={{
-                '&:last-child td, &:last-child th': { border: 0 },
-                bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50', // Striped rows
-              }}
-            >
-              <TableCell component="th" scope="row">
-                {commitment.title}
+          {commitments.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
+                <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
               </TableCell>
-              <TableCell>{commitment.description}</TableCell>
-              <TableCell>{commitment.assignee}</TableCell>
-              <TableCell>{commitment.dueDate}</TableCell>
-              <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
             </TableRow>
-          ))}
+          ) : (
+            commitments.map((commitment, index) => (
+              <TableRow
+                key={commitment.id}
+                sx={{
+                  '&:last-child td, &:last-child th': { border: 0 },
+                  bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {commitment.title}
+                </TableCell>
+                <TableCell>{commitment.description}</TableCell>
+                <TableCell>{commitment.assignee}</TableCell>
+                <TableCell>{commitment.dueDate}</TableCell>
+                <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </TableContainer>
