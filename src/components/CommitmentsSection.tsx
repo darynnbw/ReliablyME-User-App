@@ -73,6 +73,7 @@ interface CommitmentsSectionProps {
   title:string;
   tabs: { label: string; count: number; items: Commitment[] }[];
   displayMode?: 'regular' | 'table'; // New prop for display mode
+  showClearAllFilters?: boolean; // New prop to control visibility of Clear All Filters button
 }
 
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
@@ -102,7 +103,7 @@ const groupMembers: { [key: string]: string[] } = {
   'Part-timers': ['Chris Parker'],
 };
 
-const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular' }) => {
+const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true }) => {
   console.log('CommitmentsSection title received:', `"${title}"`, 'Length:', title.length);
   console.log('Comparison result (title.trim() === "My Commitments"):', title.length > 0 && title.trim() === 'My Commitments');
 
@@ -807,24 +808,26 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
             <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
             
-            <Button
-              variant="outlined"
-              onClick={handleClearAllFilters}
-              sx={{
-                textTransform: 'none',
-                px: 2,
-                py: 1,
-                borderRadius: 1,
-                borderColor: 'grey.300',
-                color: 'text.secondary',
-                '&:hover': {
-                  borderColor: 'grey.500',
-                  bgcolor: 'grey.50',
-                },
-              }}
-            >
-              Clear All Filters
-            </Button>
+            {showClearAllFilters && (
+              <Button
+                variant="outlined"
+                onClick={handleClearAllFilters}
+                sx={{
+                  textTransform: 'none',
+                  px: 2,
+                  py: 1,
+                  borderRadius: 1,
+                  borderColor: 'grey.300',
+                  color: 'text.secondary',
+                  '&:hover': {
+                    borderColor: 'grey.500',
+                    bgcolor: 'grey.50',
+                  },
+                }}
+              >
+                Clear All Filters
+              </Button>
+            )}
           </Box>
         </Box>
 

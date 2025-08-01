@@ -329,12 +329,12 @@ const Actions: React.FC = () => {
         <Grid container spacing={3}>
           {/* My Commitments */}
           <Grid item xs={12}>
-            <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} />
+            <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} showClearAllFilters={false} />
           </Grid>
 
           {/* Commitments from Others */}
           <Grid item xs={12}>
-            <CommitmentsSection title="Others' Commitments" tabs={commitmentsReceivedTabs} />
+            <CommitmentsSection title="Others' Commitments" tabs={commitmentsReceivedTabs} showClearAllFilters={false} />
           </Grid>
         </Grid>
       </Container>
