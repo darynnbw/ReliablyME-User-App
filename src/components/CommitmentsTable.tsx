@@ -12,6 +12,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  useTheme, // Import useTheme to access palette colors
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
@@ -53,6 +54,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   badgeOptions,
   assigneeOptions,
 }) => {
+  const theme = useTheme(); // Access the theme
   // State for dropdown/datepicker anchors
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
   const [assigneeAnchorEl, setAssigneeAnchorEl] = useState<null | HTMLElement>(null);
@@ -95,6 +97,12 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     setCommittedDateOpen(false); // Close after selection
   };
 
+  // Determine icon colors based on active filters
+  const badgeIconColor = filters.badge ? theme.palette.primary.main : 'text.secondary';
+  const assigneeIconColor = filters.assignee ? theme.palette.primary.main : 'text.secondary';
+  const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
+  const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
+
   if (commitments.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
@@ -113,7 +121,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
-                  <ArrowDropDown fontSize="small" />
+                  <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
                 </IconButton>
                 <Menu
                   anchorEl={badgeAnchorEl}
@@ -142,7 +150,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
                 <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
-                  <ArrowDropDown fontSize="small" />
+                  <ArrowDropDown fontSize="small" sx={{ color: assigneeIconColor }} />
                 </IconButton>
                 <Menu
                   anchorEl={assigneeAnchorEl}
@@ -167,7 +175,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Due Date
                 <IconButton size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                  <CalendarToday fontSize="small" />
+                  <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
                 </IconButton>
                 <DatePicker
                   label="Due Date"
@@ -190,7 +198,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
                 <IconButton size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
-                  <CalendarToday fontSize="small" />
+                  <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
                 </IconButton>
                 <DatePicker
                   label="Committed Date"
