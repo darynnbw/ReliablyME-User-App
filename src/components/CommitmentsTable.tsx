@@ -62,6 +62,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
 
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
   const assigneeCellRef = useRef<HTMLTableCellElement>(null);
+  const dueDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Due Date icon button
+  const committedDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Committed Date icon button
 
   const handleBadgeMenuOpen = () => {
     setBadgeAnchorEl(badgeCellRef.current);
@@ -105,7 +107,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
@@ -130,10 +132,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               Original Commitment
             </TableCell>
-            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
                 <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
@@ -158,10 +160,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Due Date
-                <IconButton size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
                   <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
                 </IconButton>
                 <DatePicker
@@ -176,15 +178,16 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
+                      anchorEl: dueDateButtonRef.current, // Anchor to the icon button
                     }
                   }}
                 />
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
-                <IconButton size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
+                <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
                   <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
                 </IconButton>
                 <DatePicker
@@ -199,6 +202,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
+                      anchorEl: committedDateButtonRef.current, // Anchor to the icon button
                     }
                   }}
                 />
