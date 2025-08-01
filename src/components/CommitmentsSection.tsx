@@ -121,6 +121,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   // New state for table-specific filters
   const [badgeTableFilter, setBadgeTableFilter] = useState('');
+  const [commitmentTextTableFilter, setCommitmentTextTableFilter] = useState('');
+  const [assigneeTableFilter, setAssigneeTableFilter] = useState('');
+  const [dueDateTableFilter, setDueDateTableFilter] = useState<Dayjs | null>(null);
   const [committedDateTableFilter, setCommittedDateTableFilter] = useState<Dayjs | null>(null);
 
   const [containerHeight, setContainerHeight] = useState<number | string>(360);
@@ -257,6 +260,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
     // Reset table-specific filters when tab changes
     setBadgeTableFilter('');
+    setCommitmentTextTableFilter('');
+    setAssigneeTableFilter('');
+    setDueDateTableFilter(null);
     setCommittedDateTableFilter(null);
   }, [activeTab, tabs]); // Removed disableFilters from dependency array as it's derived from activeTab
 
@@ -317,7 +323,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
     if (displayMode === 'table' && title.trim() === 'My Commitments') {
       if (badgeTableFilter && item.title !== badgeTableFilter) return false;
+      if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
+      if (assigneeTableFilter && item.assignee !== assigneeTableFilter) return false;
       
+      const itemDueDate = parseCommitmentDate(item.dueDate);
+      if (dueDateTableFilter && itemDueDate && !itemDueDate.isSame(dueDateTableFilter, 'day')) return false;
+
       const itemCommittedDate = item.committedDate ? parseCommitmentDate(item.committedDate) : null;
       if (committedDateTableFilter && itemCommittedDate && !itemCommittedDate.isSame(committedDateTableFilter, 'day')) return false;
     }
@@ -602,6 +613,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       case 'badge':
         setBadgeTableFilter(value);
         break;
+      case 'commitmentText':
+        setCommitmentTextTableFilter(value);
+        break;
+      case 'assignee':
+        setAssigneeTableFilter(value);
+        break;
+      case 'dueDate':
+        setDueDateTableFilter(value);
+        break;
       case 'committedDate':
         setCommittedDateTableFilter(value);
         break;
@@ -618,13 +638,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setDateRange([null, null]);
     setTempDateRange([null, null]);
     setBadgeTableFilter('');
+    setCommitmentTextTableFilter('');
+    setAssigneeTableFilter('');
+    setDueDateTableFilter(null);
     setCommittedDateTableFilter(null);
     setCurrentPage(1);
   };
 
   // Options for table filters
   const tableBadgeOptions = [...new Set(commitments.map(item => item.title))];
-  // Removed tableAssigneeOptions as it's no longer used
+  const tableAssigneeOptions = [...new Set(commitments.map(item => item.assignee))];
 
   return (
     <>
@@ -969,10 +992,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               commitments={currentItems}
               filters={{
                 badge: badgeTableFilter,
+                commitmentText: commitmentTextTableFilter,
+                assignee: assigneeTableFilter,
+                dueDate: dueDateTableFilter,
                 committedDate: committedDateTableFilter,
               }}
               onFilterChange={handleTableFilterChange}
               badgeOptions={tableBadgeOptions}
+              assigneeOptions={tableAssigneeOptions}
             />
           ) : (
             <Stack spacing={1} sx={{ width: '100%' }}>
