@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Paper, Switch, FormControlLabel, Button, Menu, MenuItem } from '@mui/material';
-import { Phone, TableChart, ListAlt, Download } from '@mui/icons-material';
+import { Phone, Download } from '@mui/icons-material'; // Removed TableChart, ListAlt
 
 interface UserProfileSectionProps {
   name: string;
@@ -45,7 +45,8 @@ const UserProfileSection: React.FC<UserProfileSectionProps> = ({
   return (
     <Paper
       sx={{
-        p: { xs: 2, sm: 3 },
+        py: { xs: 2, sm: 3 }, // Keep vertical padding as is
+        px: { xs: 2, sm: 4 }, // Increased horizontal padding for better alignment
         display: 'flex',
         flexDirection: { xs: 'column', sm: 'row' },
         alignItems: { xs: 'flex-start', sm: 'center' },
@@ -76,14 +77,13 @@ const UserProfileSection: React.FC<UserProfileSectionProps> = ({
             <Switch
               checked={displayMode === 'table'}
               onChange={() => onToggleDisplayMode(displayMode === 'table' ? 'regular' : 'table')}
-              icon={<ListAlt />}
-              checkedIcon={<TableChart />}
+              // Removed icon and checkedIcon props for default circular thumb
               sx={{
                 '& .MuiSwitch-switchBase': {
-                  color: '#ff7043', // Regular mode icon color
+                  color: '#ff7043', // Regular mode thumb color
                 },
                 '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1976d2', // Table mode icon color
+                  color: '#1976d2', // Table mode thumb color
                 },
                 '& .MuiSwitch-track': {
                   backgroundColor: '#e0e0e0', // Track color
@@ -111,6 +111,7 @@ const UserProfileSection: React.FC<UserProfileSectionProps> = ({
               py: 1,
               borderRadius: 1,
               '&:hover': { bgcolor: '#546e7a' },
+              minWidth: anchorEl ? anchorEl.offsetWidth : 'auto', // Make button width match menu
             }}
           >
             Export
@@ -122,6 +123,11 @@ const UserProfileSection: React.FC<UserProfileSectionProps> = ({
           onClose={handleMenuClose}
           MenuListProps={{
             'aria-labelledby': 'export-button',
+          }}
+          PaperProps={{
+            sx: {
+              minWidth: anchorEl ? anchorEl.offsetWidth : 'auto', // Ensure menu matches button width
+            },
           }}
         >
           <MenuItem onClick={handleExportCsv}>Save as CSV</MenuItem>
