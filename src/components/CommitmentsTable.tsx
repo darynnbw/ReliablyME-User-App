@@ -50,15 +50,16 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ commitments }) => {
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Assignee</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Due Date</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Committed Date</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Type</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>External</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {commitments.map((commitment) => (
+          {commitments.map((commitment, index) => (
             <TableRow
               key={commitment.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              sx={{ 
+                '&:last-child td, &:last-child th': { border: 0 },
+                bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50', // Striped rows
+              }}
             >
               <TableCell component="th" scope="row">
                 {commitment.title}
@@ -67,8 +68,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ commitments }) => {
               <TableCell>{commitment.assignee}</TableCell>
               <TableCell>{commitment.dueDate}</TableCell>
               <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
-              <TableCell>{commitment.type || 'N/A'}</TableCell>
-              <TableCell>{commitment.isExternal ? 'Yes' : 'No'}</TableCell>
             </TableRow>
           ))}
         </TableBody>
