@@ -37,14 +37,10 @@ interface CommitmentsTableProps {
   commitments: Commitment[];
   filters: {
     badge: string;
-    commitmentText: string;
-    assignee: string;
-    dueDate: Dayjs | null;
     committedDate: Dayjs | null;
   };
   onFilterChange: (filterName: string, value: any) => void;
   badgeOptions: string[];
-  assigneeOptions: string[];
 }
 
 const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
@@ -52,18 +48,13 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   filters,
   onFilterChange,
   badgeOptions,
-  assigneeOptions,
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
-  const [assigneeAnchorEl, setAssigneeAnchorEl] = useState<null | HTMLElement>(null);
-  const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
 
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
-  const assigneeCellRef = useRef<HTMLTableCellElement>(null);
-  const dueDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Due Date icon button
-  const committedDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Committed Date icon button
+  const committedDateButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleBadgeMenuOpen = () => {
     setBadgeAnchorEl(badgeCellRef.current);
@@ -76,30 +67,12 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     handleBadgeMenuClose();
   };
 
-  const handleAssigneeMenuOpen = () => {
-    setAssigneeAnchorEl(assigneeCellRef.current);
-  };
-  const handleAssigneeMenuClose = () => {
-    setAssigneeAnchorEl(null);
-  };
-  const handleAssigneeSelect = (value: string) => {
-    onFilterChange('assignee', value);
-    handleAssigneeMenuClose();
-  };
-
-  const handleDueDateChange = (newValue: Dayjs | null) => {
-    onFilterChange('dueDate', newValue);
-    setDueDateOpen(false);
-  };
-
   const handleCommittedDateChange = (newValue: Dayjs | null) => {
     onFilterChange('committedDate', newValue);
     setCommittedDateOpen(false);
   };
 
   const badgeIconColor = filters.badge ? theme.palette.primary.main : 'text.secondary';
-  const assigneeIconColor = filters.assignee ? theme.palette.primary.main : 'text.secondary';
-  const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
@@ -135,55 +108,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               Original Commitment
             </TableCell>
-            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Assignee
-                <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
-                  <ArrowDropDown fontSize="small" sx={{ color: assigneeIconColor }} />
-                </IconButton>
-                <Menu
-                  anchorEl={assigneeAnchorEl}
-                  open={Boolean(assigneeAnchorEl)}
-                  onClose={handleAssigneeMenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: assigneeCellRef.current ? assigneeCellRef.current.offsetWidth : 'auto' }
-                  }}
-                >
-                  <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
-                  {assigneeOptions.map((option) => (
-                    <MenuItem key={option} onClick={() => handleAssigneeSelect(option)} selected={filters.assignee === option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Due Date
-                <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                  <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Due Date"
-                  open={dueDateOpen}
-                  onClose={() => setDueDateOpen(false)}
-                  value={filters.dueDate}
-                  onChange={handleDueDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current, // Anchor to the icon button
-                    }
-                  }}
-                />
-              </Box>
-            </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
@@ -202,7 +126,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
-                      anchorEl: committedDateButtonRef.current, // Anchor to the icon button
+                      anchorEl: committedDateButtonRef.current,
                     }
                   }}
                 />
@@ -213,7 +137,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableBody>
           {commitments.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
+              <TableCell colSpan={3} sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
               </TableCell>
@@ -231,8 +155,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   {commitment.title}
                 </TableCell>
                 <TableCell>{commitment.description}</TableCell>
-                <TableCell>{commitment.assignee}</TableCell>
-                <TableCell>{commitment.dueDate}</TableCell>
                 <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
               </TableRow>
             ))
