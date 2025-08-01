@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Table,
   TableBody,
@@ -59,8 +59,12 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
 
-  const handleBadgeMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setBadgeAnchorEl(event.currentTarget);
+  // Refs for TableCells to use as anchors
+  const badgeCellRef = useRef<HTMLTableCellElement>(null);
+  const assigneeCellRef = useRef<HTMLTableCellElement>(null);
+
+  const handleBadgeMenuOpen = () => {
+    setBadgeAnchorEl(badgeCellRef.current); // Anchor to the TableCell
   };
   const handleBadgeMenuClose = () => {
     setBadgeAnchorEl(null);
@@ -70,8 +74,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     handleBadgeMenuClose();
   };
 
-  const handleAssigneeMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAssigneeAnchorEl(event.currentTarget);
+  const handleAssigneeMenuOpen = () => {
+    setAssigneeAnchorEl(assigneeCellRef.current); // Anchor to the TableCell
   };
   const handleAssigneeMenuClose = () => {
     setAssigneeAnchorEl(null);
@@ -105,7 +109,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
@@ -115,8 +119,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   anchorEl={badgeAnchorEl}
                   open={Boolean(badgeAnchorEl)}
                   onClose={handleBadgeMenuClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                   PaperProps={{
-                    sx: { minWidth: badgeAnchorEl ? badgeAnchorEl.offsetWidth : 'auto' }
+                    sx: { minWidth: badgeCellRef.current ? badgeCellRef.current.offsetWidth : 'auto' }
                   }}
                 >
                   <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
@@ -132,7 +138,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               Original Commitment
               {/* No filter for this column as per request */}
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
                 <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
@@ -142,8 +148,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   anchorEl={assigneeAnchorEl}
                   open={Boolean(assigneeAnchorEl)}
                   onClose={handleAssigneeMenuClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                   PaperProps={{
-                    sx: { minWidth: assigneeAnchorEl ? assigneeAnchorEl.offsetWidth : 'auto' }
+                    sx: { minWidth: assigneeCellRef.current ? assigneeCellRef.current.offsetWidth : 'auto' }
                   }}
                 >
                   <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
