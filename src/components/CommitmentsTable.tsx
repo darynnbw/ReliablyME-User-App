@@ -45,8 +45,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ commitments }) => {
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Title</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Description</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Badge</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Original Commitment</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Assignee</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Due Date</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Committed Date</TableCell>
