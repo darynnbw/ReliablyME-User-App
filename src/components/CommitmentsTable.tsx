@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -9,16 +9,13 @@ import {
   Paper,
   Typography,
   Box,
-  TextField,
-  Select,
+  IconButton,
+  Menu,
   MenuItem,
-  InputAdornment,
-  FormControl,
-  InputLabel,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import { Search, CalendarToday } from '@mui/icons-material';
+import { CalendarToday, ArrowDropDown } from '@mui/icons-material';
 
 interface Commitment {
   id: number;
@@ -56,6 +53,44 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   badgeOptions,
   assigneeOptions,
 }) => {
+  // State for dropdown/datepicker anchors
+  const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
+  const [assigneeAnchorEl, setAssigneeAnchorEl] = useState<null | HTMLElement>(null);
+  const [dueDateOpen, setDueDateOpen] = useState(false);
+  const [committedDateOpen, setCommittedDateOpen] = useState(false);
+
+  const handleBadgeMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setBadgeAnchorEl(event.currentTarget);
+  };
+  const handleBadgeMenuClose = () => {
+    setBadgeAnchorEl(null);
+  };
+  const handleBadgeSelect = (value: string) => {
+    onFilterChange('badge', value);
+    handleBadgeMenuClose();
+  };
+
+  const handleAssigneeMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAssigneeAnchorEl(event.currentTarget);
+  };
+  const handleAssigneeMenuClose = () => {
+    setAssigneeAnchorEl(null);
+  };
+  const handleAssigneeSelect = (value: string) => {
+    onFilterChange('assignee', value);
+    handleAssigneeMenuClose();
+  };
+
+  const handleDueDateChange = (newValue: Dayjs | null) => {
+    onFilterChange('dueDate', newValue);
+    setDueDateOpen(false); // Close after selection
+  };
+
+  const handleCommittedDateChange = (newValue: Dayjs | null) => {
+    onFilterChange('committedDate', newValue);
+    setCommittedDateOpen(false); // Close after selection
+  };
+
   if (commitments.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
@@ -70,104 +105,101 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Badge</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Original Commitment</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Assignee</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Due Date</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>Committed Date</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell sx={{ py: 1 }}>
-              <FormControl variant="outlined" size="small" fullWidth>
-                <InputLabel>Badge</InputLabel>
-                <Select
-                  value={filters.badge}
-                  onChange={(e) => onFilterChange('badge', e.target.value)}
-                  label="Badge"
-                  sx={{ bgcolor: 'background.paper' }}
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                Badge
+                <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
+                  <ArrowDropDown fontSize="small" />
+                </IconButton>
+                <Menu
+                  anchorEl={badgeAnchorEl}
+                  open={Boolean(badgeAnchorEl)}
+                  onClose={handleBadgeMenuClose}
+                  PaperProps={{
+                    sx: { minWidth: badgeAnchorEl ? badgeAnchorEl.offsetWidth : 'auto' }
+                  }}
                 >
-                  <MenuItem value="">All</MenuItem>
+                  <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
                   {badgeOptions.map((option) => (
-                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                    <MenuItem key={option} onClick={() => handleBadgeSelect(option)} selected={filters.badge === option}>
+                      {option}
+                    </MenuItem>
                   ))}
-                </Select>
-              </FormControl>
+                </Menu>
+              </Box>
             </TableCell>
-            <TableCell sx={{ py: 1 }}>
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="Search..."
-                value={filters.commitmentText}
-                onChange={(e) => onFilterChange('commitmentText', e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search fontSize="small" />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{ bgcolor: 'background.paper' }}
-                fullWidth
-              />
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+              Original Commitment
+              {/* No filter for this column as per request */}
             </TableCell>
-            <TableCell sx={{ py: 1 }}>
-              <FormControl variant="outlined" size="small" fullWidth>
-                <InputLabel>Assignee</InputLabel>
-                <Select
-                  value={filters.assignee}
-                  onChange={(e) => onFilterChange('assignee', e.target.value)}
-                  label="Assignee"
-                  sx={{ bgcolor: 'background.paper' }}
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                Assignee
+                <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
+                  <ArrowDropDown fontSize="small" />
+                </IconButton>
+                <Menu
+                  anchorEl={assigneeAnchorEl}
+                  open={Boolean(assigneeAnchorEl)}
+                  onClose={handleAssigneeMenuClose}
+                  PaperProps={{
+                    sx: { minWidth: assigneeAnchorEl ? assigneeAnchorEl.offsetWidth : 'auto' }
+                  }}
                 >
-                  <MenuItem value="">All</MenuItem>
+                  <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
                   {assigneeOptions.map((option) => (
-                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                    <MenuItem key={option} onClick={() => handleAssigneeSelect(option)} selected={filters.assignee === option}>
+                      {option}
+                    </MenuItem>
                   ))}
-                </Select>
-              </FormControl>
+                </Menu>
+              </Box>
             </TableCell>
-            <TableCell sx={{ py: 1 }}>
-              <DatePicker
-                label="Due Date"
-                value={filters.dueDate}
-                onChange={(newValue) => onFilterChange('dueDate', newValue)}
-                slotProps={{
-                  textField: {
-                    size: 'small',
-                    fullWidth: true,
-                    sx: { bgcolor: 'background.paper' },
-                    InputProps: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <CalendarToday fontSize="small" />
-                        </InputAdornment>
-                      ),
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                Due Date
+                <IconButton size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                  <CalendarToday fontSize="small" />
+                </IconButton>
+                <DatePicker
+                  label="Due Date"
+                  open={dueDateOpen}
+                  onClose={() => setDueDateOpen(false)}
+                  value={filters.dueDate}
+                  onChange={handleDueDateChange}
+                  slotProps={{
+                    textField: {
+                      style: { display: 'none' } // Hide the text field, only show icon button
                     },
-                  },
-                }}
-              />
+                    popper: {
+                      placement: 'bottom-start',
+                    }
+                  }}
+                />
+              </Box>
             </TableCell>
-            <TableCell sx={{ py: 1 }}>
-              <DatePicker
-                label="Committed Date"
-                value={filters.committedDate}
-                onChange={(newValue) => onFilterChange('committedDate', newValue)}
-                slotProps={{
-                  textField: {
-                    size: 'small',
-                    fullWidth: true,
-                    sx: { bgcolor: 'background.paper' },
-                    InputProps: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <CalendarToday fontSize="small" />
-                        </InputAdornment>
-                      ),
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                Committed Date
+                <IconButton size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
+                  <CalendarToday fontSize="small" />
+                </IconButton>
+                <DatePicker
+                  label="Committed Date"
+                  open={committedDateOpen}
+                  onClose={() => setCommittedDateOpen(false)}
+                  value={filters.committedDate}
+                  onChange={handleCommittedDateChange}
+                  slotProps={{
+                    textField: {
+                      style: { display: 'none' } // Hide the text field, only show icon button
                     },
-                  },
-                }}
-              />
+                    popper: {
+                      placement: 'bottom-start',
+                    }
+                  }}
+                />
+              </Box>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -175,7 +207,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           {commitments.map((commitment, index) => (
             <TableRow
               key={commitment.id}
-              sx={{ 
+              sx={{
                 '&:last-child td, &:last-child th': { border: 0 },
                 bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50', // Striped rows
               }}
