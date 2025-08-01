@@ -238,15 +238,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
   };
 
-  const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
-  const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
-  const isAwaitingResponseTab = tabs[activeTab].label === 'Awaiting Response';
-  const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
-  const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
-
-  // Determine if filters should be disabled
-  const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
-
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
@@ -259,7 +250,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       setDateRange([null, null]);
       setTempDateRange([null, null]);
     }
-  }, [activeTab, tabs, disableFilters]);
+  }, [activeTab, tabs]); // Removed disableFilters from dependency array as it's derived from activeTab
+
+  // Define these boolean flags after activeTab is set in useEffect or directly from activeTab
+  const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
+  const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
+  const isAwaitingResponseTab = tabs[activeTab].label === 'Awaiting Response';
+  const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
+  const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
+  const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
+  const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
+
+  // Determine if filters should be disabled
+  const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
 
   // Generate unique people and add group options
   const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
@@ -314,6 +317,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
     return dateA.valueOf() - dateB.valueOf();
   });
+
+  const itemsPerPage = 15;
+  const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
+  const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
 
   useEffect(() => {
     // The height calculation is based on showing 2 items.
@@ -551,9 +558,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
-  const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
-  const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
-
+  
   let itemColor = '#ff7043'; // Default orange
   if (isOwedToMe || isBadgeRequestsTab || (isAwaitingResponseTab && title !== 'My Commitments')) {
     itemColor = '#1976d2'; // Blue
@@ -561,13 +566,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     itemColor = '#4F4F4F'; // Grey
   }
 
+  // Determine if the current section is "My Commitments"
+  const isMyCommitmentsSection = title.trim() === 'My Commitments';
+
+  // Bulk actions should only show if it's NOT the "My Commitments" section
+  const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
+
   const showBulkRequest = selectedCount > 0 && isMyPromisesTab;
   const showBulkClarify = selectedCount > 0 && isOwedToMe;
   const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
-
-  const itemsPerPage = 15;
-  const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
-  const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
 
   const isOthersCommitmentsSection = title.trim() === "Others' Commitments";
 
@@ -738,7 +745,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Tabs>
         </Box>
 
-        {paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && (
+        {showBulkActionsSection && ( // Only show this section if bulk actions are allowed
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox
@@ -888,7 +895,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             overflowY: 'scroll',
           }),
         }}>
-          {displayMode === 'table' && title.trim() === 'My Commitments' ? (
+          {displayMode === 'table' && isMyCommitmentsSection ? (
             <CommitmentsTable commitments={currentItems} />
           ) : (
             <Stack spacing={1} sx={{ width: '100%' }}>
@@ -913,12 +920,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 ) : (
                   paginatedItems.map((item, index) => {
                     const isNudgeItem = item.type === 'nudge';
-                    const showCheckboxes = !isUnkeptTab && !isMyBadgesTab;
+                    // Checkboxes are only shown if it's NOT the "My Commitments" section
+                    const showCheckboxes = !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
                     const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
                     const itemDate = parseCommitmentDate(item.dueDate);
                     const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
+                    // Action button for individual items should still be shown if applicable
                     const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
                     // Adjusted logic for showFromLabel
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
