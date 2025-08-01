@@ -630,15 +630,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
   }, []);
 
-  const handleClearTableFilters = useCallback(() => {
-    setBadgeTableFilter('');
-    setCommitmentTextTableFilter('');
-    setAssigneeTableFilter('');
-    setDueDateTableFilter(null);
-    setCommittedDateTableFilter(null);
-    setCurrentPage(1);
-  }, []);
-
   const handleClearAllFilters = () => {
     setPersonFilter('');
     setDateFilter('All');
@@ -646,7 +637,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setSearchTerm('');
     setDateRange([null, null]);
     setTempDateRange([null, null]);
-    handleClearTableFilters(); // Also clear table filters
+    setBadgeTableFilter('');
+    setCommitmentTextTableFilter('');
+    setAssigneeTableFilter('');
+    setDueDateTableFilter(null);
+    setCommittedDateTableFilter(null);
+    setCurrentPage(1);
   };
 
   // Options for table filters
@@ -1002,7 +998,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 committedDate: committedDateTableFilter,
               }}
               onFilterChange={handleTableFilterChange}
-              onClearTableFilters={handleClearTableFilters} // Pass the new handler
               badgeOptions={tableBadgeOptions}
               assigneeOptions={tableAssigneeOptions}
             />
