@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Paper,
   Typography,
@@ -104,9 +104,6 @@ const groupMembers: { [key: string]: string[] } = {
 };
 
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true }) => {
-  console.log('CommitmentsSection title received:', `"${title}"`, 'Length:', title.length);
-  console.log('Comparison result (title.trim() === "My Commitments"):', title.length > 0 && title.trim() === 'My Commitments');
-
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -125,9 +122,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [assigneeTableFilter, setAssigneeTableFilter] = useState('');
   const [dueDateTableFilter, setDueDateTableFilter] = useState<Dayjs | null>(null);
   const [committedDateTableFilter, setCommittedDateTableFilter] = useState<Dayjs | null>(null);
-
-  const [containerHeight, setContainerHeight] = useState<number | string>(360);
-  const firstItemRef = useRef<HTMLDivElement>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
@@ -227,25 +221,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setShowClarificationSuccessModal(false);
   }, []);
 
-  const handleApproveBadgeRequest = (item: Commitment) => {
-    setRequesterForApproval(item.assignee);
-    setCommitments(prev => prev.filter(c => c.id !== item.id));
-    setApprovalModalOpen(true);
-  };
-
-  const handleRejectBadgeRequest = (item: Commitment) => {
-    setCommitmentToReject(item);
-    setRejectBadgeModalOpen(true);
-  };
-
-  const handleConfirmRejectBadge = () => {
-    if (commitmentToReject) {
-      console.log('Rejecting badge for:', commitmentToReject.id);
-      setCommitments(prev => prev.filter(c => c.id !== commitmentToReject.id));
-      handleCloseRejectBadgeModal();
-    }
-  };
-
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
@@ -278,6 +253,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   // Determine if filters should be disabled
   const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
 
+  // Determine if the current section is "My Commitments"
+  const isMyCommitmentsSection = title.trim() === 'My Commitments';
+
   // Generate unique people and add group options
   const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
   const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead'); // Filter out 'Dev Team Lead'
@@ -300,7 +278,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       }
       return item.assignee === personFilter;
     })();
-    if (!personMatch) return false;
+    // Apply person filter only if not 'My Commitments' section
+    if (!isMyCommitmentsSection && !personMatch) return false;
 
     const itemDate = parseCommitmentDate(item.dueDate);
     let dateMatch = true;
@@ -313,7 +292,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
     }
     
-    if (!dateMatch) return false;
+    // Apply date filter only if not 'My Commitments' section
+    if (!isMyCommitmentsSection && !dateMatch) return false;
 
     if (filterBy === 'pastDue') {
       if (!itemDate) return false;
@@ -321,7 +301,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
 
     // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
-    if (displayMode === 'table' && title.trim() === 'My Commitments') {
+    if (displayMode === 'table' && isMyCommitmentsSection) {
       if (badgeTableFilter && item.title !== badgeTableFilter) return false;
       if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
       if (assigneeTableFilter && item.assignee !== assigneeTableFilter) return false;
@@ -349,17 +329,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const itemsPerPage = 15;
   const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
   const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
-
-  useEffect(() => {
-    // The height calculation is based on showing 2 items.
-    // This logic is now applied to both commitment sections.
-    if (firstItemRef.current) {
-      const cardHeight = firstItemRef.current.offsetHeight;
-      const spacing = 8; // From <Stack spacing={1}>
-      const calculatedHeight = (cardHeight * 2) + spacing;
-      setContainerHeight(calculatedHeight);
-    }
-  }, [currentItems]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -567,6 +536,29 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setSelectAll(false);
   };
 
+  // New functions for badge requests
+  const handleApproveBadgeRequest = (commitment: Commitment) => {
+    console.log('Approving badge request:', commitment.id);
+    setCommitments(prev => prev.filter(c => c.id !== commitment.id));
+    setRequesterForApproval(commitment.assignee);
+    setApprovalModalOpen(true);
+  };
+
+  const handleRejectBadgeRequest = (commitment: Commitment) => {
+    console.log('Rejecting badge request:', commitment.id);
+    setCommitmentToReject(commitment); // Set the commitment to be rejected for the modal
+    setRejectBadgeModalOpen(true);
+  };
+
+  const handleConfirmRejectBadge = () => {
+    if (commitmentToReject) {
+      console.log('Confirmed rejection of badge request:', commitmentToReject.id);
+      setCommitments(prev => prev.filter(c => c.id !== commitmentToReject.id));
+      setRejectBadgeModalOpen(false);
+      setCommitmentToReject(null);
+    }
+  };
+
   const handleConfirmBulkApprove = () => {
     const selectedIds = selectedCommitments.map(c => c.id);
     console.log('Bulk approving commitments:', selectedIds);
@@ -593,9 +585,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   } else if (isUnkeptTab) {
     itemColor = '#4F4F4F'; // Grey
   }
-
-  // Determine if the current section is "My Commitments"
-  const isMyCommitmentsSection = title.trim() === 'My Commitments';
 
   // Bulk actions should only show if it's NOT the "My Commitments" section
   const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
@@ -654,7 +643,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <Paper sx={{
         p: 3,
         height: 'auto',
-        minHeight: 'auto',
+        minHeight: 450, // Fixed minimum height for the entire panel
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#ffffff',
@@ -669,37 +658,41 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-              <InputLabel>Person</InputLabel>
-              <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
-                <MenuItem value="">All</MenuItem>
-                {filterOptions.map(person => (
-                  <MenuItem key={person} value={person}>{person}</MenuItem>
-                ))}
-                {hasExternal && <MenuItem value="External">External</MenuItem>}
-              </Select>
-            </FormControl>
+            {!isMyCommitmentsSection && (
+              <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                <InputLabel>Person</InputLabel>
+                <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
+                  <MenuItem value="">All</MenuItem>
+                  {filterOptions.map(person => (
+                    <MenuItem key={person} value={person}>{person}</MenuItem>
+                  ))}
+                  {hasExternal && <MenuItem value="External">External</MenuItem>}
+                </Select>
+              </FormControl>
+            )}
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
-              <InputLabel>Due Date</InputLabel>
-              <Select
-                value={dateFilter}
-                onChange={handleDateFilterChange}
-                label="Due Date"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
-                  </InputAdornment>
-                }
-              >
-                <MenuItem value="All">All</MenuItem>
-                <MenuItem value="Today">Today</MenuItem>
-                <MenuItem value="This Week">This Week</MenuItem>
-                <MenuItem value="Custom Range">Custom Range</MenuItem>
-              </Select>
-            </FormControl>
+            {!isMyCommitmentsSection && (
+              <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
+                <InputLabel>Due Date</InputLabel>
+                <Select
+                  value={dateFilter}
+                  onChange={handleDateFilterChange}
+                  label="Due Date"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                    </InputAdornment>
+                  }
+                >
+                  <MenuItem value="All">All</MenuItem>
+                  <MenuItem value="Today">Today</MenuItem>
+                  <MenuItem value="This Week">This Week</MenuItem>
+                  <MenuItem value="Custom Range">Custom Range</MenuItem>
+                </Select>
+              </FormControl>
+            )}
 
-            {dateFilter === 'Custom Range' && (
+            {dateFilter === 'Custom Range' && !isMyCommitmentsSection && (
               <TextField
                 variant="outlined"
                 size="small"
@@ -833,7 +826,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
-            {tabs.map((tab, index) => <Tab key={index} label={`${tab.label} (${tab.count})`} />)}
+            {tabs.map((tab, _index) => <Tab key={_index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
         </Box>
 
@@ -971,7 +964,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          height: containerHeight, 
+          flex: 1, // Allow this box to take up remaining space
           minHeight: 0, 
           pr: 1,
           // Conditional styles for centering when empty
@@ -1005,11 +998,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             <Stack spacing={1} sx={{ width: '100%' }}>
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
-                  paginatedItems.map((item, index) => (
+                  paginatedItems.map((item, _index) => (
                     <CommitmentListItem
                       key={item.id}
                       {...item}
-                      ref={index === 0 ? firstItemRef : null}
                       color="#4caf50"
                       showCheckbox={false}
                       isCheckboxDisabled={true}
@@ -1022,7 +1014,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     />
                   ))
                 ) : (
-                  paginatedItems.map((item, index) => {
+                  paginatedItems.map((item, _index) => {
                     const isNudgeItem = item.type === 'nudge';
                     // Checkboxes are only shown if it's NOT the "My Commitments" section
                     const showCheckboxes = !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
@@ -1040,7 +1032,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       <CommitmentListItem
                         key={item.id}
                         {...item}
-                        ref={index === 0 ? firstItemRef : null}
                         color={itemColor}
                         showCheckbox={showCheckboxes}
                         isCheckboxDisabled={isCheckboxDisabled}
