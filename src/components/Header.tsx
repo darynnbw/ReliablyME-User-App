@@ -15,12 +15,16 @@ import {
 import { Star, Plus, ChevronDown } from 'lucide-react';
 import { Logout } from '@mui/icons-material';
 import CommitmentActionModal from './CommitmentActionModal';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'promise' | 'request'>('promise');
   const open = Boolean(anchorEl);
+  const { supabase } = useAuth();
+  const navigate = useNavigate();
 
   const handleCloseModal = useCallback(() => setModalOpen(false), []);
 
@@ -38,9 +42,9 @@ const Header: React.FC = () => {
     handleClose();
   };
 
-  const handleLogout = () => {
-    console.log('Logout clicked');
-    // In a real app, you would handle logout logic here
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
   };
 
   return (

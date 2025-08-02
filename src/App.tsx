@@ -1,9 +1,12 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import CommitmentPortfolio from './pages/CommitmentPortfolio';
 import Actions from './pages/Actions';
+import Login from './pages/Login';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -39,13 +42,17 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/commitment-portfolio" element={<CommitmentPortfolio />} />
-            <Route path="/actions" element={<Actions />} />
-            {/* Add other routes here as needed */}
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/commitment-portfolio" element={<CommitmentPortfolio />} />
+                <Route path="/actions" element={<Actions />} />
+                <Route path="/" element={<Navigate to="/dashboard" />} />
+              </Route>
+            </Routes>
+          </AuthProvider>
         </Router>
       </ThemeProvider>
     </LocalizationProvider>
