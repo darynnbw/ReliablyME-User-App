@@ -93,7 +93,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       const currentWidth = newWidths[activeIndex.current!];
       const nextWidth = newWidths[activeIndex.current! + 1];
 
-      const minWidthPercent = (50 / tableWidth) * 100;
+      const minWidthPercent = (80 / tableWidth) * 100; // Increased minimum width to 80px
 
       if (currentWidth + deltaPercent < minWidthPercent || nextWidth - deltaPercent < minWidthPercent) {
         return prev;
