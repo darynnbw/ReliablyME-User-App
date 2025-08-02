@@ -40,6 +40,8 @@ interface CommitmentListItemProps {
   hideDueDate?: boolean;
   isNudge?: boolean;
   nudgesLeft?: number;
+  totalNudges?: number; // Added missing prop
+  questions?: string[]; // Added missing prop
   isMyPromisesTab?: boolean;
   isExternal?: boolean;
   isOverdue?: boolean;
