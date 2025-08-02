@@ -301,7 +301,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       return itemDate.isBefore(dayjs(), 'day');
     }
 
-    // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
+    // Table-specific filters (only apply if displayMode === 'table' and it's 'My Commitments' section)
     if (displayMode === 'table' && isMyCommitmentsSection) {
       if (badgeTableFilter && item.title !== badgeTableFilter) return false;
       if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
@@ -996,7 +996,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               assigneeOptions={tableAssigneeOptions}
             />
           ) : (
-            <Stack spacing={0} sx={{ width: '100%' }}> {/* Changed spacing to 0 */}
+            <Stack spacing={1} sx={{ width: '100%' }}>
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
                   paginatedItems.map((item, index) => (
@@ -1014,7 +1014,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         onToggleSelect={() => {}}
                       />
                       {index < paginatedItems.length - 1 && (
-                        <Divider sx={{ my: 1, borderColor: 'grey.200' }} /> // Added Divider
+                        <Divider sx={{ marginY: 1, borderColor: 'grey.200' }} />
                       )}
                     </React.Fragment>
                   ))
@@ -1063,7 +1063,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                           explanation={item.explanation}
                         />
                         {index < paginatedItems.length - 1 && (
-                          <Divider sx={{ my: 1, borderColor: 'grey.200' }} /> // Added Divider
+                          <Divider sx={{ marginY: 1, borderColor: 'grey.200' }} />
                         )}
                       </React.Fragment>
                     );
