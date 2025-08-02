@@ -31,7 +31,7 @@ import {
   Close,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-// Removed: import { DayCalendarDayProps } from '@mui/x-date-pickers/models';
+import { PickerDayOwnerState } from '@mui/x-date-pickers/internals'; // Import PickerDayOwnerState
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -693,8 +693,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 value={tempDateRange[0]}
                 onChange={handleDateChange}
                 slotProps={{
-                  day: (ownerState) => {
-                    const { day, outsideCurrentMonth } = ownerState as any; // Cast to any to access outsideCurrentMonth
+                  day: (ownerState: PickerDayOwnerState<Dayjs>) => { // Corrected type for ownerState
+                    const { day, isOutsideCurrentMonth } = ownerState;
                     const [start, end] = tempDateRange;
 
                     const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
@@ -704,7 +704,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
                     const sx: SxProps<Theme> = {
                       borderRadius: '50%',
-                      ...(isRangeBoundary && !outsideCurrentMonth && {
+                      ...(isRangeBoundary && !isOutsideCurrentMonth && {
                         backgroundColor: 'primary.main',
                         color: 'common.white',
                         '&:hover, &:focus, &.Mui-selected': {
@@ -712,7 +712,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                           color: 'common.white',
                         },
                       }),
-                      ...(isInRange && !outsideCurrentMonth && {
+                      ...(isInRange && !isOutsideCurrentMonth && {
                         backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
                         color: 'primary.dark',
                         borderRadius: '50%',
