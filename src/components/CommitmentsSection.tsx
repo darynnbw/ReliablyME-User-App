@@ -89,7 +89,7 @@ const parseCommitmentDate = (dateString: string): Dayjs | null => {
     }
     
     // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D, YYYY"
-    const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D'], true);
+    const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D', 'MMM D, YYYY, hh:mm A'], true);
     return date.isValid() ? date : null;
   } catch (error) {
     return null;
@@ -108,7 +108,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
-  const [filterBy, setFilterBy] = useState('dueDateNewest'); // Changed default to 'dueDateNewest'
+  const [filterBy, setFilterBy] = useState('soonest');
+  const [sortBy, setSortBy] = useState('dueDateNewest');
   const [searchTerm, setSearchTerm] = useState('');
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -222,6 +223,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setShowClarificationSuccessModal(false);
   }, []);
 
+  const isMyCommitmentsSection = title.trim() === 'My Commitments';
+
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
@@ -229,7 +232,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     if (disableFilters) {
       setDateFilter('All');
-      setFilterBy('dueDateNewest'); // Reset to new default
+      setFilterBy('soonest');
+      setSortBy('dueDateNewest');
       setSearchTerm('');
       setDateRange([null, null]);
       setTempDateRange([null, null]);
@@ -254,11 +258,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   // Determine if filters should be disabled
   const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
 
-  // Determine if the current section is "My Commitments"
-  const isMyCommitmentsSection = title.trim() === 'My Commitments';
-
   // Generate unique people and add group options
-  const allAssignees = tabs.flatMap((tab) => tab.items.filter((item) => !item.isExternal).map((item) => item.assignee));
+  const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
   const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead'); // Filter out 'Dev Team Lead'
   const filterOptions = [...uniquePeople, 'Development team']; // Add 'Development team' as an option
   const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
@@ -296,32 +297,59 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Apply date filter only if not 'My Commitments' section
     if (!isMyCommitmentsSection && !dateMatch) return false;
 
-    // The 'pastDue' filter logic should not be part of the sort dropdown
-    // It's handled by the `isOverdue` prop on `CommitmentListItem` for visual indication
-    // and can be implicitly filtered by date range if needed.
+    if (!isMyCommitmentsSection && filterBy === 'pastDue') {
+      if (!itemDate) return false;
+      return itemDate.isBefore(dayjs(), 'day');
+    }
+
+    // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
+    if (displayMode === 'table' && isMyCommitmentsSection) {
+      if (badgeTableFilter && item.title !== badgeTableFilter) return false;
+      if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
+      if (assigneeTableFilter && item.assignee !== assigneeTableFilter) return false;
+      
+      const itemDueDate = parseCommitmentDate(item.dueDate);
+      if (dueDateTableFilter && itemDueDate && !itemDueDate.isSame(dueDateTableFilter, 'day')) return false;
+
+      const itemCommittedDate = item.committedDate ? parseCommitmentDate(item.committedDate) : null;
+      if (committedDateTableFilter && itemCommittedDate && !itemCommittedDate.isSame(committedDateTableFilter, 'day')) return false;
+    }
 
     return true;
   }).sort((a, b) => {
-    const dueDateA = parseCommitmentDate(a.dueDate);
-    const dueDateB = parseCommitmentDate(b.dueDate);
-    const committedDateA = a.committedDate ? parseCommitmentDate(a.committedDate) : null;
-    const committedDateB = b.committedDate ? parseCommitmentDate(b.committedDate) : null;
+    if (isMyCommitmentsSection) {
+      if (sortBy.includes('dueDate')) {
+        const dateA = parseCommitmentDate(a.dueDate);
+        const dateB = parseCommitmentDate(b.dueDate);
+        if (!dateA || !dateB) return 0;
+        if (sortBy === 'dueDateNewest') {
+          return dateB.valueOf() - dateA.valueOf();
+        }
+        return dateA.valueOf() - dateB.valueOf(); // dueDateOldest
+      }
+      if (sortBy.includes('committedDate')) {
+        const dateA = a.committedDate ? parseCommitmentDate(a.committedDate) : null;
+        const dateB = b.committedDate ? parseCommitmentDate(b.committedDate) : null;
+        
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return 1;
+        if (!dateB) return -1;
 
-    switch (filterBy) {
-      case 'dueDateNewest':
-        if (!dueDateA || !dueDateB) return 0;
-        return dueDateB.valueOf() - dueDateA.valueOf();
-      case 'dueDateOldest':
-        if (!dueDateA || !dueDateB) return 0;
-        return dueDateA.valueOf() - dueDateB.valueOf();
-      case 'committedDateNewest':
-        if (!committedDateA || !committedDateB) return 0;
-        return committedDateB.valueOf() - committedDateA.valueOf();
-      case 'committedDateOldest':
-        if (!committedDateA || !committedDateB) return 0;
-        return committedDateA.valueOf() - committedDateB.valueOf();
-      default:
-        return 0; // Should not happen with defined options
+        if (sortBy === 'committedDateNewest') {
+          return dateB.valueOf() - dateA.valueOf();
+        }
+        return dateA.valueOf() - dateB.valueOf(); // committedDateOldest
+      }
+      return 0;
+    } else { // Logic for "Others' Commitments"
+      const dateA = parseCommitmentDate(a.dueDate);
+      const dateB = parseCommitmentDate(b.dueDate);
+      if (!dateA || !dateB) return 0;
+
+      if (filterBy === 'latest') {
+        return dateB.valueOf() - dateA.valueOf();
+      }
+      return dateA.valueOf() - dateB.valueOf();
     }
   });
 
@@ -621,7 +649,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const handleClearAllFilters = () => {
     setPersonFilter('');
     setDateFilter('All');
-    setFilterBy('dueDateNewest'); // Reset to new default
+    setFilterBy('soonest');
+    setSortBy('dueDateNewest');
     setSearchTerm('');
     setDateRange([null, null]);
     setTempDateRange([null, null]);
@@ -787,34 +816,39 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </Box>
             </Popover>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
-              <InputLabel>{isMyCommitmentsSection ? 'Sort By' : 'Filter By'}</InputLabel> {/* Conditional Label */}
-              <Select 
-                value={filterBy} 
-                onChange={(e) => setFilterBy(e.target.value as string)} 
-                label={isMyCommitmentsSection ? 'Sort By' : 'Filter By'} {/* Conditional Label */}
-                startAdornment={
+            {isMyCommitmentsSection ? (
+              <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
+                <InputLabel>Sort By</InputLabel>
+                <Select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as string)}
+                  label="Sort By"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <ArrowUpward fontSize="small" />
+                    </InputAdornment>
+                  }
+                >
+                  <MenuItem value="dueDateNewest">Due Date (Newest First)</MenuItem>
+                  <MenuItem value="dueDateOldest">Due Date (Oldest First)</MenuItem>
+                  <MenuItem value="committedDateNewest">Committed Date (Newest First)</MenuItem>
+                  <MenuItem value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
+                <InputLabel>Filter By</InputLabel>
+                <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={
                   <InputAdornment position="start">
                     <ArrowUpward fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
                   </InputAdornment>
-                }
-              >
-                {isMyCommitmentsSection ? (
-                  [
-                    <MenuItem key="dueDateNewest" value="dueDateNewest">Due Date (Newest First)</MenuItem>,
-                    <MenuItem key="dueDateOldest" value="dueDateOldest">Due Date (Oldest First)</MenuItem>,
-                    <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
-                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>,
-                  ]
-                ) : (
-                  [
-                    <MenuItem key="soonest" value="soonest">Due Date (Soonest)</MenuItem>,
-                    <MenuItem key="latest" value="latest">Due Date (Latest)</MenuItem>,
-                    <MenuItem key="pastDue" value="pastDue">Overdue</MenuItem>,
-                  ]
-                )}
-              </Select>
-            </FormControl>
+                }>
+                  <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
+                  <MenuItem value="latest">Due Date (Latest)</MenuItem>
+                  <MenuItem value="pastDue">Overdue</MenuItem>
+                </Select>
+              </FormControl>
+            )}
 
             <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
             
@@ -984,6 +1018,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           flex: 1, // Allow this box to take up remaining space
           minHeight: 0, 
           pr: 1,
+          // Default scroll behavior when not empty
+          overflowY: 'auto', // Always allow scrolling if content overflows
           // Conditional styles for centering when empty
           ...(paginatedItems.length === 0 && {
             display: 'flex',
@@ -991,10 +1027,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             justifyContent: 'center',
             alignItems: 'center',
             overflowY: 'hidden', // Hide scrollbar when empty and centered
-          }),
-          // Default scroll behavior when not empty
-          ...(paginatedItems.length > 0 && {
-            overflowY: 'scroll',
           }),
         }}>
           {displayMode === 'table' && isMyCommitmentsSection ? (
