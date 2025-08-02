@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -47,6 +47,14 @@ interface CommitmentsTableProps {
   assigneeOptions: string[];
 }
 
+const headers = [
+  { id: 'badge', label: 'Badge' },
+  { id: 'commitment', label: 'Original Commitment' },
+  { id: 'assignee', label: 'Assignee' },
+  { id: 'dueDate', label: 'Due Date' },
+  { id: 'committedDate', label: 'Committed Date' },
+];
+
 const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   commitments,
   filters,
@@ -60,28 +68,72 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
 
+  const [colWidths, setColWidths] = useState([15, 35, 15, 17, 18]);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const activeIndex = useRef<number | null>(null);
+
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
   const assigneeCellRef = useRef<HTMLTableCellElement>(null);
-  const dueDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Due Date icon button
-  const committedDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Committed Date icon button
+  const dueDateButtonRef = useRef<HTMLButtonElement>(null);
+  const committedDateButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleBadgeMenuOpen = () => {
-    setBadgeAnchorEl(badgeCellRef.current);
-  };
-  const handleBadgeMenuClose = () => {
-    setBadgeAnchorEl(null);
-  };
+  const handleMouseDown = useCallback((index: number) => (_e: React.MouseEvent) => {
+    activeIndex.current = index;
+    document.body.style.cursor = 'col-resize';
+  }, []);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (activeIndex.current === null || !tableRef.current) return;
+
+    const tableWidth = tableRef.current.offsetWidth;
+    const deltaPercent = (e.movementX / tableWidth) * 100;
+
+    setColWidths(prev => {
+      const newWidths = [...prev];
+      const currentWidth = newWidths[activeIndex.current!];
+      const nextWidth = newWidths[activeIndex.current! + 1];
+
+      const minWidthPercent = (50 / tableWidth) * 100;
+
+      if (currentWidth + deltaPercent < minWidthPercent || nextWidth - deltaPercent < minWidthPercent) {
+        return prev;
+      }
+
+      newWidths[activeIndex.current!] += deltaPercent;
+      newWidths[activeIndex.current! + 1] -= deltaPercent;
+      return newWidths;
+    });
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    activeIndex.current = null;
+    document.body.style.cursor = 'default';
+  }, []);
+
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => handleMouseMove(e);
+    const handleGlobalMouseUp = () => handleMouseUp();
+
+    if (activeIndex.current !== null) {
+      window.addEventListener('mousemove', handleGlobalMouseMove);
+      window.addEventListener('mouseup', handleGlobalMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
+
+  const handleBadgeMenuOpen = () => setBadgeAnchorEl(badgeCellRef.current);
+  const handleBadgeMenuClose = () => setBadgeAnchorEl(null);
   const handleBadgeSelect = (value: string) => {
     onFilterChange('badge', value);
     handleBadgeMenuClose();
   };
 
-  const handleAssigneeMenuOpen = () => {
-    setAssigneeAnchorEl(assigneeCellRef.current);
-  };
-  const handleAssigneeMenuClose = () => {
-    setAssigneeAnchorEl(null);
-  };
+  const handleAssigneeMenuOpen = () => setAssigneeAnchorEl(assigneeCellRef.current);
+  const handleAssigneeMenuClose = () => setAssigneeAnchorEl(null);
   const handleAssigneeSelect = (value: string) => {
     onFilterChange('assignee', value);
     handleAssigneeMenuClose();
@@ -102,112 +154,71 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
+  const cellSx = (index: number) => ({
+    borderRight: index < headers.length - 1 ? `1px solid ${theme.palette.divider}` : 'none',
+    whiteSpace: 'normal',
+    wordBreak: 'break-word',
+  });
+
   return (
     <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3 }}>
-      <Table sx={{ minWidth: 650 }} aria-label="commitments table">
+      <Table ref={tableRef} sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Badge
-                <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
-                  <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
-                </IconButton>
-                <Menu
-                  anchorEl={badgeAnchorEl}
-                  open={Boolean(badgeAnchorEl)}
-                  onClose={handleBadgeMenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: badgeCellRef.current ? badgeCellRef.current.offsetWidth : 'auto' }
-                  }}
-                >
-                  <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
-                  {badgeOptions.map((option) => (
-                    <MenuItem key={option} onClick={() => handleBadgeSelect(option)} selected={filters.badge === option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              Original Commitment
-            </TableCell>
-            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Assignee
-                <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
-                  <ArrowDropDown fontSize="small" sx={{ color: assigneeIconColor }} />
-                </IconButton>
-                <Menu
-                  anchorEl={assigneeAnchorEl}
-                  open={Boolean(assigneeAnchorEl)}
-                  onClose={handleAssigneeMenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: assigneeCellRef.current ? assigneeCellRef.current.offsetWidth : 'auto' }
-                  }}
-                >
-                  <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
-                  {assigneeOptions.map((option) => (
-                    <MenuItem key={option} onClick={() => handleAssigneeSelect(option)} selected={filters.assignee === option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Due Date
-                <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                  <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Due Date"
-                  open={dueDateOpen}
-                  onClose={() => setDueDateOpen(false)}
-                  value={filters.dueDate}
-                  onChange={handleDueDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current, // Anchor to the icon button
-                    }
-                  }}
-                />
-              </Box>
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Committed Date
-                <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
-                  <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Committed Date"
-                  open={committedDateOpen}
-                  onClose={() => setCommittedDateOpen(false)}
-                  value={filters.committedDate}
-                  onChange={handleCommittedDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: committedDateButtonRef.current, // Anchor to the icon button
-                    }
-                  }}
-                />
-              </Box>
-            </TableCell>
+            {headers.map((header, index) => (
+              <TableCell
+                key={header.id}
+                ref={header.id === 'badge' ? badgeCellRef : (header.id === 'assignee' ? assigneeCellRef : null)}
+                sx={{
+                  fontWeight: 'bold',
+                  color: 'text.primary',
+                  whiteSpace: 'nowrap',
+                  position: 'relative',
+                  width: `${colWidths[index]}%`,
+                  borderRight: index < headers.length - 1 ? `1px solid ${theme.palette.divider}` : 'none',
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  {header.label}
+                  {header.id === 'badge' && (
+                    <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
+                      <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
+                    </IconButton>
+                  )}
+                  {header.id === 'assignee' && (
+                    <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
+                      <ArrowDropDown fontSize="small" sx={{ color: assigneeIconColor }} />
+                    </IconButton>
+                  )}
+                  {header.id === 'dueDate' && (
+                    <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                      <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
+                    </IconButton>
+                  )}
+                  {header.id === 'committedDate' && (
+                    <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
+                      <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
+                    </IconButton>
+                  )}
+                </Box>
+                {index < headers.length - 1 && (
+                  <Box
+                    onMouseDown={handleMouseDown(index)}
+                    sx={{
+                      position: 'absolute',
+                      right: 0,
+                      top: 0,
+                      height: '100%',
+                      width: '5px',
+                      cursor: 'col-resize',
+                      userSelect: 'none',
+                      zIndex: 1,
+                      '&:hover': { bgcolor: 'action.hover' },
+                    }}
+                  />
+                )}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -219,26 +230,75 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </TableCell>
             </TableRow>
           ) : (
-            commitments.map((commitment, index) => (
+            commitments.map((commitment, rowIndex) => (
               <TableRow
                 key={commitment.id}
                 sx={{
                   '&:last-child td, &:last-child th': { border: 0 },
-                  bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
+                  bgcolor: rowIndex % 2 === 0 ? 'background.paper' : 'grey.50',
                 }}
               >
-                <TableCell component="th" scope="row">
-                  {commitment.title}
-                </TableCell>
-                <TableCell>{commitment.description}</TableCell>
-                <TableCell>{commitment.assignee}</TableCell>
-                <TableCell>{commitment.dueDate}</TableCell>
-                <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+                <TableCell sx={cellSx(0)}>{commitment.title}</TableCell>
+                <TableCell sx={cellSx(1)}>{commitment.description}</TableCell>
+                <TableCell sx={cellSx(2)}>{commitment.assignee}</TableCell>
+                <TableCell sx={cellSx(3)}>{commitment.dueDate}</TableCell>
+                <TableCell sx={cellSx(4)}>{commitment.committedDate || 'N/A'}</TableCell>
               </TableRow>
             ))
           )}
         </TableBody>
       </Table>
+      {/* Filter Menus and Date Pickers */}
+      <Menu
+        anchorEl={badgeAnchorEl}
+        open={Boolean(badgeAnchorEl)}
+        onClose={handleBadgeMenuClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        PaperProps={{ sx: { minWidth: badgeCellRef.current ? badgeCellRef.current.offsetWidth : 'auto' } }}
+      >
+        <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
+        {badgeOptions.map((option) => (
+          <MenuItem key={option} onClick={() => handleBadgeSelect(option)} selected={filters.badge === option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+      <Menu
+        anchorEl={assigneeAnchorEl}
+        open={Boolean(assigneeAnchorEl)}
+        onClose={handleAssigneeMenuClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        PaperProps={{ sx: { minWidth: assigneeCellRef.current ? assigneeCellRef.current.offsetWidth : 'auto' } }}
+      >
+        <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
+        {assigneeOptions.map((option) => (
+          <MenuItem key={option} onClick={() => handleAssigneeSelect(option)} selected={filters.assignee === option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+      <DatePicker
+        open={dueDateOpen}
+        onClose={() => setDueDateOpen(false)}
+        value={filters.dueDate}
+        onChange={handleDueDateChange}
+        slotProps={{
+          textField: { style: { display: 'none' } },
+          popper: { placement: 'bottom-start', anchorEl: dueDateButtonRef.current },
+        }}
+      />
+      <DatePicker
+        open={committedDateOpen}
+        onClose={() => setCommittedDateOpen(false)}
+        value={filters.committedDate}
+        onChange={handleCommittedDateChange}
+        slotProps={{
+          textField: { style: { display: 'none' } },
+          popper: { placement: 'bottom-start', anchorEl: committedDateButtonRef.current },
+        }}
+      />
     </TableContainer>
   );
 };
