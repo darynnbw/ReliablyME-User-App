@@ -951,7 +951,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           height: isTableView ? 'auto' : containerHeight, 
           minHeight: 0, 
           pr: isTableView ? 0 : 1,
-          mt: 2,
           // Conditional styles for centering when empty
           ...(paginatedItems.length === 0 && {
             display: 'flex',
