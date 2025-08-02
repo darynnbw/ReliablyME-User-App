@@ -31,7 +31,7 @@ import {
   Close,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickerDayOwnerState } from '@mui/x-date-pickers/internals'; // Import PickerDayOwnerState
+import { PickersDayProps } from '@mui/x-date-pickers/PickersDay'; // Corrected import for PickersDayProps
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -693,7 +693,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 value={tempDateRange[0]}
                 onChange={handleDateChange}
                 slotProps={{
-                  day: (ownerState: PickerDayOwnerState<Dayjs>) => { // Corrected type for ownerState
+                  day: (ownerState: PickersDayProps) => { // Using PickersDayProps without generic
                     const { day, isOutsideCurrentMonth } = ownerState;
                     const [start, end] = tempDateRange;
 
