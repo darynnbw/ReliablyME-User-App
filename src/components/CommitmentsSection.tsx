@@ -694,7 +694,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 onChange={handleDateChange}
                 slotProps={{
                   day: (ownerState) => {
-                    const { day, isOutsideCurrentMonth } = ownerState; // Changed to isOutsideCurrentMonth
+                    const { day, outsideCurrentMonth } = ownerState as any; // Cast to any to access outsideCurrentMonth
                     const [start, end] = tempDateRange;
 
                     const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
@@ -704,7 +704,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
                     const sx: SxProps<Theme> = {
                       borderRadius: '50%',
-                      ...(isRangeBoundary && !isOutsideCurrentMonth && { // Used isOutsideCurrentMonth
+                      ...(isRangeBoundary && !outsideCurrentMonth && {
                         backgroundColor: 'primary.main',
                         color: 'common.white',
                         '&:hover, &:focus, &.Mui-selected': {
@@ -712,7 +712,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                           color: 'common.white',
                         },
                       }),
-                      ...(isInRange && !isOutsideCurrentMonth && { // Used isOutsideCurrentMonth
+                      ...(isInRange && !outsideCurrentMonth && {
                         backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
                         color: 'primary.dark',
                         borderRadius: '50%',
