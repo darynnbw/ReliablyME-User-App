@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -55,13 +55,14 @@ const Resizer = ({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => void }
       right: 0,
       top: 0,
       height: '100%',
-      width: '5px',
+      width: '8px',
       cursor: 'col-resize',
-      userSelect: 'none', // Prevent text selection during drag
+      userSelect: 'none',
       zIndex: 1,
+      transform: 'translateX(50%)',
       '&:hover': {
-        backgroundColor: 'primary.light',
-        opacity: 0.5,
+        backgroundColor: 'primary.main',
+        opacity: 0.2,
       },
     }}
   />
@@ -93,15 +94,31 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const dueDateButtonRef = useRef<HTMLButtonElement>(null);
   const committedDateButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleMouseDown = (e: React.MouseEvent, column: keyof typeof columnWidths) => {
+  const columnKeys = useMemo(() => ['badge', 'commitment', 'assignee', 'dueDate', 'committedDate'] as const, []);
+
+  const handleMouseDown = (e: React.MouseEvent, columnIndex: number) => {
     e.preventDefault();
     const startX = e.clientX;
-    const startWidth = columnWidths[column];
+
+    const currentColumnKey = columnKeys[columnIndex];
+    const nextColumnKey = columnKeys[columnIndex + 1];
+
+    if (!nextColumnKey) return;
+
+    const startWidthCurrent = columnWidths[currentColumnKey];
+    const startWidthNext = columnWidths[nextColumnKey];
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
-      const newWidth = startWidth + (moveEvent.clientX - startX);
-      if (newWidth > 80) { // Set a minimum width for columns
-        setColumnWidths(prev => ({ ...prev, [column]: newWidth }));
+      const deltaX = moveEvent.clientX - startX;
+      const newWidthCurrent = startWidthCurrent + deltaX;
+      const newWidthNext = startWidthNext - deltaX;
+
+      if (newWidthCurrent > 80 && newWidthNext > 80) {
+        setColumnWidths(prev => ({
+          ...prev,
+          [currentColumnKey]: newWidthCurrent,
+          [nextColumnKey]: newWidthNext,
+        }));
       }
     };
 
@@ -149,6 +166,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     whiteSpace: 'nowrap',
     borderRight: `1px solid ${theme.palette.divider}`,
     position: 'relative',
+    overflow: 'hidden',
   };
 
   const bodyCellSx = {
@@ -182,11 +200,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   ))}
                 </Menu>
               </Box>
-              <Resizer onMouseDown={(e) => handleMouseDown(e, 'badge')} />
+              <Resizer onMouseDown={(e) => handleMouseDown(e, 0)} />
             </TableCell>
             <TableCell sx={{ ...headerCellSx, width: columnWidths.commitment }}>
               Original Commitment
-              <Resizer onMouseDown={(e) => handleMouseDown(e, 'commitment')} />
+              <Resizer onMouseDown={(e) => handleMouseDown(e, 1)} />
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ ...headerCellSx, width: columnWidths.assignee }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -210,7 +228,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   ))}
                 </Menu>
               </Box>
-              <Resizer onMouseDown={(e) => handleMouseDown(e, 'assignee')} />
+              <Resizer onMouseDown={(e) => handleMouseDown(e, 2)} />
             </TableCell>
             <TableCell sx={{ ...headerCellSx, width: columnWidths.dueDate }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -226,9 +244,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   slotProps={{ textField: { style: { display: 'none' } }, popper: { placement: 'bottom-start', anchorEl: dueDateButtonRef.current } }}
                 />
               </Box>
-              <Resizer onMouseDown={(e) => handleMouseDown(e, 'dueDate')} />
+              <Resizer onMouseDown={(e) => handleMouseDown(e, 3)} />
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: columnWidths.committedDate }}>
+            <TableCell sx={{ ...headerCellSx, width: columnWidths.committedDate, borderRight: 'none' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
@@ -268,7 +286,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 <TableCell sx={bodyCellSx}>{commitment.description}</TableCell>
                 <TableCell sx={bodyCellSx}>{commitment.assignee}</TableCell>
                 <TableCell sx={bodyCellSx}>{commitment.dueDate}</TableCell>
-                <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+                <TableCell sx={{ borderRight: 'none' }}>{commitment.committedDate || 'N/A'}</TableCell>
               </TableRow>
             ))
           )}
