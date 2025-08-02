@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -89,9 +89,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   declineButtonText,
   minHeight = MIN_ROW_HEIGHT,
   maxHeight = MAX_ROW_HEIGHT,
-}, ref) => {
+}, ref) => { // 'ref' is the forwarded ref
   const theme = useTheme();
-  const cardRef = useRef<HTMLDivElement>(null);
+  // Removed local cardRef as the forwarded ref 'ref' will be used directly
   const [currentHeight, setCurrentHeight] = useState(minHeight);
   const [isResizing, setIsResizing] = useState(false);
   const [startY, setStartY] = useState(0);
@@ -99,12 +99,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   // Set initial height after component mounts, if ref is ready
   useEffect(() => {
-    if (cardRef.current) {
+    // Check if ref is an object ref and has a current property
+    if (ref && typeof ref !== 'function' && ref.current) {
       // Ensure initial height is within min/max bounds
-      const initialContentHeight = cardRef.current.scrollHeight; // Get content height
+      const initialContentHeight = ref.current.scrollHeight; // Get content height
       setCurrentHeight(Math.max(minHeight, Math.min(maxHeight, initialContentHeight)));
     }
-  }, [minHeight, maxHeight]);
+  }, [minHeight, maxHeight, ref]); // Add ref to dependency array
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -142,7 +143,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   return (
     <Card
-      ref={cardRef}
+      ref={ref} // Attach the forwarded ref here
       sx={{
         position: 'relative',
         minHeight: `${minHeight}px`, // Ensure minHeight is respected
