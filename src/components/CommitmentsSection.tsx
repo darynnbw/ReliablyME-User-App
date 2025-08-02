@@ -667,129 +667,57 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-              <InputLabel>Person</InputLabel>
-              <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
-                <MenuItem value="">All</MenuItem>
-                {filterOptions.map(person => (
-                  <MenuItem key={person} value={person}>{person}</MenuItem>
-                ))}
-                {hasExternal && <MenuItem value="External">External</MenuItem>}
-              </Select>
-            </FormControl>
+            {title.trim() !== 'My Commitments' && (
+              <>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                  <InputLabel>Person</InputLabel>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
+                    <MenuItem value="">All</MenuItem>
+                    {filterOptions.map(person => (
+                      <MenuItem key={person} value={person}>{person}</MenuItem>
+                    ))}
+                    {hasExternal && <MenuItem value="External">External</MenuItem>}
+                  </Select>
+                </FormControl>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
-              <InputLabel>Due Date</InputLabel>
-              <Select
-                value={dateFilter}
-                onChange={handleDateFilterChange}
-                label="Due Date"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
-                  </InputAdornment>
-                }
-              >
-                <MenuItem value="All">All</MenuItem>
-                <MenuItem value="Today">Today</MenuItem>
-                <MenuItem value="This Week">This Week</MenuItem>
-                <MenuItem value="Custom Range">Custom Range</MenuItem>
-              </Select>
-            </FormControl>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
+                  <InputLabel>Due Date</InputLabel>
+                  <Select
+                    value={dateFilter}
+                    onChange={handleDateFilterChange}
+                    label="Due Date"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                      </InputAdornment>
+                    }
+                  >
+                    <MenuItem value="All">All</MenuItem>
+                    <MenuItem value="Today">Today</MenuItem>
+                    <MenuItem value="This Week">This Week</MenuItem>
+                    <MenuItem value="Custom Range">Custom Range</MenuItem>
+                  </Select>
+                </FormControl>
 
-            {dateFilter === 'Custom Range' && (
-              <TextField
-                variant="outlined"
-                size="small"
-                value={
-                  dateRange[0] && dateRange[1]
-                    ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
-                    : 'Select Range'
-                }
-                onClick={handleCustomRangeClick}
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ minWidth: 180, cursor: 'pointer' }}
-                disabled={disableFilters}
-              />
+                {dateFilter === 'Custom Range' && (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    value={
+                      dateRange[0] && dateRange[1]
+                        ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
+                        : 'Select Range'
+                    }
+                    onClick={handleCustomRangeClick}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    sx={{ minWidth: 180, cursor: 'pointer' }}
+                    disabled={disableFilters}
+                  />
+                )}
+              </>
             )}
-
-            <Popover
-              open={Boolean(popoverAnchor)}
-              anchorEl={popoverAnchor}
-              onClose={handleClosePopover}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-              <DateCalendar
-                value={tempDateRange[0]}
-                onChange={handleDateChange}
-                slotProps={{
-                  day: (ownerState) => {
-                    const { day, outsideCurrentMonth } = ownerState as any;
-                    const [start, end] = tempDateRange;
-
-                    const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
-                    const isEndDate = end?.isSame(day as Dayjs, 'day') ?? false;
-                    const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
-                    const isRangeBoundary = isStartDate || isEndDate;
-
-                    const sx: SxProps<Theme> = {
-                      borderRadius: '50%',
-                      ...(isRangeBoundary && !outsideCurrentMonth && {
-                        backgroundColor: 'primary.main',
-                        color: 'common.white',
-                        '&:hover, &:focus, &.Mui-selected': {
-                          backgroundColor: 'primary.main',
-                          color: 'common.white',
-                        },
-                      }),
-                      ...(isInRange && !outsideCurrentMonth && {
-                        backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
-                        color: 'primary.dark',
-                        borderRadius: '50%',
-                      }),
-                    };
-                    
-                    return { sx } as any;
-                  },
-                }}
-                sx={{ mb: -2 }}
-              />
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'flex-end', 
-                gap: 1,
-                px: 2,
-                pb: 1.5,
-                pt: 0,
-              }}>
-                <Button 
-                  onClick={handleClearDateRange} 
-                  variant="text" 
-                  sx={{ 
-                    py: 0.75, 
-                    px: 2,
-                    color: 'text.secondary' 
-                  }}
-                >
-                  Clear
-                </Button>
-                <Button 
-                  onClick={handleApplyDateRange} 
-                  variant="contained" 
-                  color="primary"
-                  sx={{
-                    py: 0.75,
-                    px: 6,
-                    fontWeight: 600,
-                  }}
-                >
-                  Apply
-                </Button>
-              </Box>
-            </Popover>
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
               <InputLabel>Filter By</InputLabel>
@@ -807,6 +735,82 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
           </Box>
         </Box>
+
+        <Popover
+          open={Boolean(popoverAnchor)}
+          anchorEl={popoverAnchor}
+          onClose={handleClosePopover}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <DateCalendar
+            value={tempDateRange[0]}
+            onChange={handleDateChange}
+            slotProps={{
+              day: (ownerState) => {
+                const { day, outsideCurrentMonth } = ownerState as any;
+                const [start, end] = tempDateRange;
+
+                const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
+                const isEndDate = end?.isSame(day as Dayjs, 'day') ?? false;
+                const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
+                const isRangeBoundary = isStartDate || isEndDate;
+
+                const sx: SxProps<Theme> = {
+                  borderRadius: '50%',
+                  ...(isRangeBoundary && !outsideCurrentMonth && {
+                    backgroundColor: 'primary.main',
+                    color: 'common.white',
+                    '&:hover, &:focus, &.Mui-selected': {
+                      backgroundColor: 'primary.main',
+                      color: 'common.white',
+                    },
+                  }),
+                  ...(isInRange && !outsideCurrentMonth && {
+                    backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
+                    color: 'primary.dark',
+                    borderRadius: '50%',
+                  }),
+                };
+                
+                return { sx } as any;
+              },
+            }}
+            sx={{ mb: -2 }}
+          />
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'flex-end', 
+            gap: 1,
+            px: 2,
+            pb: 1.5,
+            pt: 0,
+          }}>
+            <Button 
+              onClick={handleClearDateRange} 
+              variant="text" 
+              sx={{ 
+                py: 0.75, 
+                px: 2,
+                color: 'text.secondary' 
+              }}
+            >
+              Clear
+            </Button>
+            <Button 
+              onClick={handleApplyDateRange} 
+              variant="contained" 
+              color="primary"
+              sx={{
+                py: 0.75,
+                px: 6,
+                fontWeight: 600,
+              }}
+            >
+              Apply
+            </Button>
+          </Box>
+        </Popover>
 
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
@@ -965,19 +969,21 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           }),
         }}>
           {displayMode === 'table' && isMyCommitmentsSection ? (
-            <CommitmentsTable
-              commitments={currentItems}
-              filters={{
-                badge: badgeTableFilter,
-                commitmentText: commitmentTextTableFilter,
-                assignee: assigneeTableFilter,
-                dueDate: dueDateTableFilter,
-                committedDate: committedDateTableFilter,
-              }}
-              onFilterChange={handleTableFilterChange}
-              badgeOptions={tableBadgeOptions}
-              assigneeOptions={tableAssigneeOptions}
-            />
+            <Box sx={{ mt: 2 }}>
+              <CommitmentsTable
+                commitments={currentItems}
+                filters={{
+                  badge: badgeTableFilter,
+                  commitmentText: commitmentTextTableFilter,
+                  assignee: assigneeTableFilter,
+                  dueDate: dueDateTableFilter,
+                  committedDate: committedDateTableFilter,
+                }}
+                onFilterChange={handleTableFilterChange}
+                badgeOptions={tableBadgeOptions}
+                assigneeOptions={tableAssigneeOptions}
+              />
+            </Box>
           ) : (
             <Stack spacing={1} sx={{ width: '100%' }}>
               {paginatedItems.length > 0 ? (
@@ -1085,7 +1091,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Box>
         )}
 
-        {showClearAllFilters && !isTableView && (
+        {showClearAllFilters && (
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
             <Button
               onClick={handleClearAllFilters}
