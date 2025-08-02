@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -48,12 +48,7 @@ interface CommitmentListItemProps {
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
-  minHeight?: number;
-  maxHeight?: number;
 }
-
-const MIN_ROW_HEIGHT = 140; // Minimum height for a row
-const MAX_ROW_HEIGHT = 500; // Maximum height for a row
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
   id,
@@ -87,51 +82,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showFromLabel = false,
   acceptButtonText,
   declineButtonText,
-  minHeight = MIN_ROW_HEIGHT,
-  maxHeight = MAX_ROW_HEIGHT,
-}, ref) => { // 'ref' is the forwarded ref
+}, ref) => {
   const theme = useTheme();
-  // Removed local cardRef as the forwarded ref 'ref' will be used directly
-  const [currentHeight, setCurrentHeight] = useState(minHeight);
-  const [isResizing, setIsResizing] = useState(false);
-  const [startY, setStartY] = useState(0);
-  const [startHeight, setStartHeight] = useState(0);
-
-  // Set initial height after component mounts, if ref is ready
-  useEffect(() => {
-    // Check if ref is an object ref and has a current property
-    if (ref && typeof ref !== 'function' && ref.current) {
-      // Ensure initial height is within min/max bounds
-      const initialContentHeight = ref.current.scrollHeight; // Get content height
-      setCurrentHeight(Math.max(minHeight, Math.min(maxHeight, initialContentHeight)));
-    }
-  }, [minHeight, maxHeight, ref]); // Add ref to dependency array
-
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsResizing(true);
-    setStartY(e.clientY);
-    setStartHeight(currentHeight);
-    // Add global event listeners
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-  }, [currentHeight]);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isResizing) {
-      const newHeight = startHeight + (e.clientY - startY);
-      const clampedHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
-      setCurrentHeight(clampedHeight);
-    }
-  }, [isResizing, startY, startHeight, minHeight, maxHeight]);
-
-  const handleMouseUp = useCallback(() => {
-    setIsResizing(false);
-    // Remove global event listeners
-    window.removeEventListener('mousemove', handleMouseMove);
-    window.removeEventListener('mouseup', handleMouseUp);
-  }, []);
-
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
@@ -143,18 +95,15 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   return (
     <Card
-      ref={ref} // Attach the forwarded ref here
+      ref={ref}
       sx={{
         position: 'relative',
-        minHeight: `${minHeight}px`, // Ensure minHeight is respected
-        height: currentHeight, // Dynamic height
+        minHeight: 140,
         borderLeft: `4px solid ${color}`,
         boxShadow: 1,
-        transition: isResizing ? 'none' : 'all 0.2s ease-in-out', // Disable transition during resize
+        transition: 'all 0.2s ease-in-out',
         flexShrink: 0,
         overflow: 'hidden',
-        display: 'flex', // Use flex to manage content and resizer
-        flexDirection: 'column',
         '&:hover': {
           transform: 'translateY(-2px)',
           boxShadow: 3,
@@ -174,7 +123,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5, flexGrow: 1 }}> {/* flexGrow to push resizer to bottom */}
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
@@ -419,23 +368,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Stack>
         </Box>
       </CardContent>
-      {/* Resizer Handle */}
-      <Box
-        sx={{
-          width: '100%',
-          height: 10, // Height of the draggable area
-          cursor: 'ns-resize',
-          bgcolor: 'transparent', // Transparent by default
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          zIndex: 1, // Ensure it's above other content
-          '&:hover': {
-            bgcolor: 'rgba(0, 0, 0, 0.05)', // Faint background on hover
-          },
-        }}
-        onMouseDown={handleMouseDown}
-      />
     </Card>
   );
 });

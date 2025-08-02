@@ -19,7 +19,6 @@ import {
   alpha,
   SelectChangeEvent,
   SxProps,
-  Divider, // Import Divider
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import {
@@ -301,7 +300,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       return itemDate.isBefore(dayjs(), 'day');
     }
 
-    // Table-specific filters (only apply if displayMode === 'table' and it's 'My Commitments' section)
+    // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
     if (displayMode === 'table' && isMyCommitmentsSection) {
       if (badgeTableFilter && item.title !== badgeTableFilter) return false;
       if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
@@ -999,27 +998,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             <Stack spacing={1} sx={{ width: '100%' }}>
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
-                  paginatedItems.map((item, index) => (
-                    <React.Fragment key={item.id}>
-                      <CommitmentListItem
-                        {...item}
-                        color="#4caf50"
-                        showCheckbox={false}
-                        isCheckboxDisabled={true}
-                        showActionButton={false}
-                        buttonText=""
-                        onActionButtonClick={() => {}}
-                        showBadgePlaceholder={true}
-                        onViewDetails={() => handleViewBadgeDetails(item)}
-                        onToggleSelect={() => {}}
-                      />
-                      {index < paginatedItems.length - 1 && (
-                        <Divider sx={{ marginY: 1, borderColor: 'grey.200' }} />
-                      )}
-                    </React.Fragment>
+                  paginatedItems.map((item, _index) => (
+                    <CommitmentListItem
+                      key={item.id}
+                      {...item}
+                      color="#4caf50"
+                      showCheckbox={false}
+                      isCheckboxDisabled={true}
+                      showActionButton={false}
+                      buttonText=""
+                      onActionButtonClick={() => {}}
+                      showBadgePlaceholder={true}
+                      onViewDetails={() => handleViewBadgeDetails(item)}
+                      onToggleSelect={() => {}}
+                    />
                   ))
                 ) : (
-                  paginatedItems.map((item, index) => {
+                  paginatedItems.map((item, _index) => {
                     const isNudgeItem = item.type === 'nudge';
                     // Checkboxes are only shown if it's NOT the "My Commitments" section
                     const showCheckboxes = !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
@@ -1034,38 +1029,34 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
                     return (
-                      <React.Fragment key={item.id}>
-                        <CommitmentListItem
-                          {...item}
-                          color={itemColor}
-                          showCheckbox={showCheckboxes}
-                          isCheckboxDisabled={isCheckboxDisabled}
-                          showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
-                          buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
-                          onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
-                          onViewDetails={() => handleViewCommitmentDetails(item)}
-                          onToggleSelect={handleToggleSelectItem}
-                          showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
-                          onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
-                          onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
-                          acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
-                          declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
-                          isBulkSelecting={selectedCount > 0}
-                          hideDueDate={hideDueDate}
-                          isNudge={isNudgeItem}
-                          nudgesLeft={item.nudgesLeft}
-                          isMyPromisesTab={isMyPromisesTab}
-                          isExternal={item.isExternal}
-                          isOverdue={isOverdue}
-                          showRevokeButton={showRevokeButton}
-                          onRevoke={() => handleRevokeClick(item)}
-                          showFromLabel={showFromLabel}
-                          explanation={item.explanation}
-                        />
-                        {index < paginatedItems.length - 1 && (
-                          <Divider sx={{ marginY: 1, borderColor: 'grey.200' }} />
-                        )}
-                      </React.Fragment>
+                      <CommitmentListItem
+                        key={item.id}
+                        {...item}
+                        color={itemColor}
+                        showCheckbox={showCheckboxes}
+                        isCheckboxDisabled={isCheckboxDisabled}
+                        showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
+                        buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
+                        onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
+                        onViewDetails={() => handleViewCommitmentDetails(item)}
+                        onToggleSelect={handleToggleSelectItem}
+                        showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
+                        onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
+                        onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
+                        acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
+                        declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
+                        isBulkSelecting={selectedCount > 0}
+                        hideDueDate={hideDueDate}
+                        isNudge={isNudgeItem}
+                        nudgesLeft={item.nudgesLeft}
+                        isMyPromisesTab={isMyPromisesTab}
+                        isExternal={item.isExternal}
+                        isOverdue={isOverdue}
+                        showRevokeButton={showRevokeButton}
+                        onRevoke={() => handleRevokeClick(item)}
+                        showFromLabel={showFromLabel}
+                        explanation={item.explanation}
+                      />
                     );
                   })
                 )
