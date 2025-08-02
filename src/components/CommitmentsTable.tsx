@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import {
   Menu,
   MenuItem,
   useTheme,
+  styled,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
@@ -47,6 +48,21 @@ interface CommitmentsTableProps {
   assigneeOptions: string[];
 }
 
+const Resizer = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  width: '5px',
+  height: '100%',
+  cursor: 'col-resize',
+  userSelect: 'none',
+  zIndex: 10,
+  transition: 'background-color 0.2s ease',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
 const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   commitments,
   filters,
@@ -60,10 +76,52 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
 
+  const [columnWidths, setColumnWidths] = useState([150, 350, 150, 180, 180]);
+  const isResizing = useRef<number | null>(null);
+  const startX = useRef(0);
+  const startWidths = useRef<number[]>([]);
+
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
   const assigneeCellRef = useRef<HTMLTableCellElement>(null);
-  const dueDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Due Date icon button
-  const committedDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Committed Date icon button
+  const dueDateButtonRef = useRef<HTMLButtonElement>(null);
+  const committedDateButtonRef = useRef<HTMLButtonElement>(null);
+
+  const handleMouseDown = (index: number) => (e: React.MouseEvent) => {
+    isResizing.current = index;
+    startX.current = e.clientX;
+    startWidths.current = [...columnWidths];
+    e.preventDefault();
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isResizing.current === null) return;
+
+    const delta = e.clientX - startX.current;
+    const newWidths = [...startWidths.current];
+    const minWidth = 80;
+
+    const currentWidth = newWidths[isResizing.current];
+    const nextWidth = newWidths[isResizing.current + 1];
+
+    if (currentWidth + delta > minWidth && nextWidth - delta > minWidth) {
+      newWidths[isResizing.current] = currentWidth + delta;
+      newWidths[isResizing.current + 1] = nextWidth - delta;
+      setColumnWidths(newWidths);
+    }
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    isResizing.current = null;
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
   const handleBadgeMenuOpen = () => {
     setBadgeAnchorEl(badgeCellRef.current);
@@ -104,10 +162,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
 
   return (
     <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3 }}>
-      <Table sx={{ minWidth: 650 }} aria-label="commitments table">
+      <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: columnWidths[0], position: 'relative', borderRight: '1px solid #e0e0e0' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
@@ -131,11 +189,13 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   ))}
                 </Menu>
               </Box>
+              <Resizer onMouseDown={handleMouseDown(0)} />
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: columnWidths[1], position: 'relative', borderRight: '1px solid #e0e0e0' }}>
               Original Commitment
+              <Resizer onMouseDown={handleMouseDown(1)} />
             </TableCell>
-            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: columnWidths[2], position: 'relative', borderRight: '1px solid #e0e0e0' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
                 <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
@@ -159,8 +219,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   ))}
                 </Menu>
               </Box>
+              <Resizer onMouseDown={handleMouseDown(2)} />
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: columnWidths[3], position: 'relative', borderRight: '1px solid #e0e0e0' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Due Date
                 <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
@@ -178,13 +239,14 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current, // Anchor to the icon button
+                      anchorEl: dueDateButtonRef.current,
                     }
                   }}
                 />
               </Box>
+              <Resizer onMouseDown={handleMouseDown(3)} />
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: columnWidths[4], position: 'relative' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
@@ -202,7 +264,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
-                      anchorEl: committedDateButtonRef.current, // Anchor to the icon button
+                      anchorEl: committedDateButtonRef.current,
                     }
                   }}
                 />
@@ -213,26 +275,25 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableBody>
           {commitments.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
+              <TableCell colSpan={5} sx={{ textAlign: 'center', color: 'text.secondary', py: 4, border: 'none' }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
               </TableCell>
             </TableRow>
           ) : (
-            commitments.map((commitment, index) => (
+            commitments.map((commitment) => (
               <TableRow
                 key={commitment.id}
                 sx={{
                   '&:last-child td, &:last-child th': { border: 0 },
-                  bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
                 }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" sx={{ borderRight: '1px solid #e0e0e0' }}>
                   {commitment.title}
                 </TableCell>
-                <TableCell>{commitment.description}</TableCell>
-                <TableCell>{commitment.assignee}</TableCell>
-                <TableCell>{commitment.dueDate}</TableCell>
+                <TableCell sx={{ borderRight: '1px solid #e0e0e0' }}>{commitment.description}</TableCell>
+                <TableCell sx={{ borderRight: '1px solid #e0e0e0' }}>{commitment.assignee}</TableCell>
+                <TableCell sx={{ borderRight: '1px solid #e0e0e0' }}>{commitment.dueDate}</TableCell>
                 <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
               </TableRow>
             ))
