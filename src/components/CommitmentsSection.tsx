@@ -104,9 +104,6 @@ const groupMembers: { [key: string]: string[] } = {
 };
 
 const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true }) => {
-  console.log('CommitmentsSection title received:', `"${title}"`, 'Length:', title.length);
-  console.log('Comparison result (title.trim() === "My Commitments"):', title.length > 0 && title.trim() === 'My Commitments');
-
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -596,6 +593,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   // Determine if the current section is "My Commitments"
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
+  const isTableView = displayMode === 'table' && isMyCommitmentsSection;
 
   // Bulk actions should only show if it's NOT the "My Commitments" section
   const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
@@ -807,38 +805,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             </FormControl>
 
             <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
-            
-            {showClearAllFilters && (
-              <Button
-                variant="outlined"
-                onClick={handleClearAllFilters}
-                sx={{
-                  textTransform: 'none',
-                  px: 2,
-                  py: 1,
-                  borderRadius: 1,
-                  borderColor: 'grey.300',
-                  color: 'text.secondary',
-                  '&:hover': {
-                    borderColor: 'grey.500',
-                    bgcolor: 'grey.50',
-                  },
-                }}
-              >
-                Clear All Filters
-              </Button>
-            )}
           </Box>
         </Box>
 
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
             {tabs.map((tab, index) => <Tab key={index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
         </Box>
 
         {showBulkActionsSection && ( // Only show this section if bulk actions are allowed
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, mb: 1, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox
                 size="small"
@@ -971,9 +948,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          height: containerHeight, 
+          height: isTableView ? 'auto' : containerHeight, 
           minHeight: 0, 
-          pr: 1,
+          pr: isTableView ? 0 : 1,
           // Conditional styles for centering when empty
           ...(paginatedItems.length === 0 && {
             display: 'flex',
@@ -984,7 +961,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           }),
           // Default scroll behavior when not empty
           ...(paginatedItems.length > 0 && {
-            overflowY: 'scroll',
+            overflowY: isTableView ? 'visible' : 'scroll',
           }),
         }}>
           {displayMode === 'table' && isMyCommitmentsSection ? (
@@ -1105,6 +1082,27 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         {currentItems.length > 0 && isMyBadgesTab && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
             <Pagination count={totalPages} page={currentPage} onChange={(_, page) => setCurrentPage(page)} color="primary" />
+          </Box>
+        )}
+
+        {showClearAllFilters && !isTableView && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Button
+              onClick={handleClearAllFilters}
+              sx={{
+                textTransform: 'none',
+                color: 'grey.600',
+                textDecoration: 'underline',
+                p: 0,
+                '&:hover': {
+                  textDecoration: 'underline',
+                  bgcolor: 'transparent',
+                  color: 'grey.800',
+                },
+              }}
+            >
+              Clear all filters
+            </Button>
           </Box>
         )}
       </Paper>
