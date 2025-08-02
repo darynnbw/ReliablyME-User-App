@@ -19,7 +19,7 @@ import {
   alpha,
   SelectChangeEvent,
   SxProps,
-  Divider,
+  Divider, // Import Divider
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import {
@@ -31,7 +31,6 @@ import {
   Close,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDayProps } from '@mui/x-date-pickers/PickersDay'; // Corrected import for PickersDayProps
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
@@ -51,7 +50,7 @@ import SuccessConfirmationModal from './SuccessConfirmationModal';
 import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
 import ConfirmationModal from './ConfirmationModal';
 import CommitmentActionModal from './CommitmentActionModal';
-import CommitmentsTable from './CommitmentsTable';
+import CommitmentsTable from './CommitmentsTable'; // Import the new table component
 
 dayjs.extend(isBetween);
 
@@ -74,27 +73,30 @@ interface Commitment {
 interface CommitmentsSectionProps {
   title:string;
   tabs: { label: string; count: number; items: Commitment[] }[];
-  displayMode?: 'regular' | 'table';
-  showClearAllFilters?: boolean;
+  displayMode?: 'regular' | 'table'; // New prop for display mode
+  showClearAllFilters?: boolean; // New prop to control visibility of Clear All Filters button
 }
 
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
   try {
     if (dateString === 'Today') return dayjs().startOf('day');
+    // Handle "Completed Jul 18, 8:00 PM" or "Pending"
     let cleanDateString = dateString;
     if (dateString.startsWith('Completed ')) {
       cleanDateString = dateString.substring('Completed '.length);
     } else if (dateString === 'Pending') {
-      return null;
+      return null; // Or handle as a future/indefinite date
     }
     
-    const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D'], true);
+    // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D, YYYY"
+    const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D', 'MMM D, YYYY, hh:mm A'], true);
     return date.isValid() ? date : null;
   } catch (error) {
     return null;
   }
 };
 
+// Define group members for filtering
 const groupMembers: { [key: string]: string[] } = {
   'Development team': ['Alex Johnson', 'Chris Parker'],
   'Customer facing team': ['Riley Chen'],
@@ -106,7 +108,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
-  const [filterBy, setFilterBy] = useState('dueDateNewest');
+  const [filterBy, setFilterBy] = useState('soonest');
+  const [sortBy, setSortBy] = useState('dueDateNewest');
   const [searchTerm, setSearchTerm] = useState('');
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -115,6 +118,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
 
+  // New state for table-specific filters
   const [badgeTableFilter, setBadgeTableFilter] = useState('');
   const [commitmentTextTableFilter, setCommitmentTextTableFilter] = useState('');
   const [assigneeTableFilter, setAssigneeTableFilter] = useState('');
@@ -189,8 +193,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [bulkRejectModalOpen, setBulkRejectModalOpen] = useState(false);
   const [bulkApprovalSuccessOpen, setBulkApprovalSuccessOpen] = useState(false);
 
+  // New state for clarification success modal
   const [showClarificationSuccessModal, setShowClarificationSuccessModal] = useState(false);
 
+  // State for "Make a Promise" modal from empty state
   const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
 
@@ -217,24 +223,30 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setShowClarificationSuccessModal(false);
   }, []);
 
+  const isMyCommitmentsSection = title.trim() === 'My Commitments';
+
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
     setCurrentPage(1);
+    // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     if (disableFilters) {
       setDateFilter('All');
-      setFilterBy('dueDateNewest');
+      setFilterBy('soonest');
+      setSortBy('dueDateNewest');
       setSearchTerm('');
       setDateRange([null, null]);
       setTempDateRange([null, null]);
     }
+    // Reset table-specific filters when tab changes
     setBadgeTableFilter('');
     setCommitmentTextTableFilter('');
     setAssigneeTableFilter('');
     setDueDateTableFilter(null);
     setCommittedDateTableFilter(null);
-  }, [activeTab, tabs]);
+  }, [activeTab, tabs]); // Removed disableFilters from dependency array as it's derived from activeTab
 
+  // Define these boolean flags after activeTab is set in useEffect or directly from activeTab
   const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
   const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
   const isAwaitingResponseTab = tabs[activeTab].label === 'Awaiting Response';
@@ -243,16 +255,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
 
+  // Determine if filters should be disabled
   const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
 
-  const isMyCommitmentsSection = title.trim() === 'My Commitments';
-
-  const allAssignees = tabs.flatMap((tab) => tab.items.filter((item) => !item.isExternal).map((item) => item.assignee));
-  const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead');
-  const filterOptions = [...uniquePeople, 'Development team'];
+  // Generate unique people and add group options
+  const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
+  const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead'); // Filter out 'Dev Team Lead'
+  const filterOptions = [...uniquePeople, 'Development team']; // Add 'Development team' as an option
   const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
 
   const currentItems = commitments.filter(item => {
+    // Global filters
     const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.assignee.toLowerCase().includes(searchTerm.toLowerCase());
@@ -260,13 +273,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     if (!searchMatch) return false;
 
     const personMatch = (() => {
-      if (!personFilter) return true;
+      if (!personFilter) return true; // 'All' is selected
       if (personFilter === 'External') return item.isExternal === true;
       if (personFilter === 'Development team') {
         return groupMembers['Development team'].includes(item.assignee);
       }
       return item.assignee === personFilter;
     })();
+    // Apply person filter only if not 'My Commitments' section
     if (!isMyCommitmentsSection && !personMatch) return false;
 
     const itemDate = parseCommitmentDate(item.dueDate);
@@ -280,30 +294,62 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
     }
     
+    // Apply date filter only if not 'My Commitments' section
     if (!isMyCommitmentsSection && !dateMatch) return false;
+
+    if (!isMyCommitmentsSection && filterBy === 'pastDue') {
+      if (!itemDate) return false;
+      return itemDate.isBefore(dayjs(), 'day');
+    }
+
+    // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
+    if (displayMode === 'table' && isMyCommitmentsSection) {
+      if (badgeTableFilter && item.title !== badgeTableFilter) return false;
+      if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
+      if (assigneeTableFilter && item.assignee !== assigneeTableFilter) return false;
+      
+      const itemDueDate = parseCommitmentDate(item.dueDate);
+      if (dueDateTableFilter && itemDueDate && !itemDueDate.isSame(dueDateTableFilter, 'day')) return false;
+
+      const itemCommittedDate = item.committedDate ? parseCommitmentDate(item.committedDate) : null;
+      if (committedDateTableFilter && itemCommittedDate && !itemCommittedDate.isSame(committedDateTableFilter, 'day')) return false;
+    }
 
     return true;
   }).sort((a, b) => {
-    const dueDateA = parseCommitmentDate(a.dueDate);
-    const dueDateB = parseCommitmentDate(b.dueDate);
-    const committedDateA = a.committedDate ? parseCommitmentDate(a.committedDate) : null;
-    const committedDateB = b.committedDate ? parseCommitmentDate(b.committedDate) : null;
+    if (isMyCommitmentsSection) {
+      if (sortBy.includes('dueDate')) {
+        const dateA = parseCommitmentDate(a.dueDate);
+        const dateB = parseCommitmentDate(b.dueDate);
+        if (!dateA || !dateB) return 0;
+        if (sortBy === 'dueDateNewest') {
+          return dateB.valueOf() - dateA.valueOf();
+        }
+        return dateA.valueOf() - dateB.valueOf(); // dueDateOldest
+      }
+      if (sortBy.includes('committedDate')) {
+        const dateA = a.committedDate ? parseCommitmentDate(a.committedDate) : null;
+        const dateB = b.committedDate ? parseCommitmentDate(b.committedDate) : null;
+        
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return 1;
+        if (!dateB) return -1;
 
-    switch (filterBy) {
-      case 'dueDateNewest':
-        if (!dueDateA || !dueDateB) return 0;
-        return dueDateB.valueOf() - dueDateA.valueOf();
-      case 'dueDateOldest':
-        if (!dueDateA || !dueDateB) return 0;
-        return dueDateA.valueOf() - dueDateB.valueOf();
-      case 'committedDateNewest':
-        if (!committedDateA || !committedDateB) return 0;
-        return committedDateB.valueOf() - committedDateA.valueOf();
-      case 'committedDateOldest':
-        if (!committedDateA || !committedDateB) return 0;
-        return committedDateA.valueOf() - committedDateB.valueOf();
-      default:
-        return 0;
+        if (sortBy === 'committedDateNewest') {
+          return dateB.valueOf() - dateA.valueOf();
+        }
+        return dateA.valueOf() - dateB.valueOf(); // committedDateOldest
+      }
+      return 0;
+    } else { // Logic for "Others' Commitments"
+      const dateA = parseCommitmentDate(a.dueDate);
+      const dateB = parseCommitmentDate(b.dueDate);
+      if (!dateA || !dateB) return 0;
+
+      if (filterBy === 'latest') {
+        return dateB.valueOf() - dateA.valueOf();
+      }
+      return dateA.valueOf() - dateB.valueOf();
     }
   });
 
@@ -408,6 +454,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const handleConfirmIndividualDecline = () => {
     console.log('Declining commitment:', commitmentToDecline?.id);
+    // In a real app, you would add the logic to actually decline the commitment here
     setIndividualDeclineModalOpen(false);
     setCommitmentToDecline(null);
   };
@@ -428,12 +475,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const handleCommit = (date: Dayjs | null, time: Dayjs | null) => {
     console.log('Committed with date:', date?.format(), 'and time:', time?.format(), 'for commitment:', commitmentToAccept?.id);
+    // The modal will close itself after the success animation.
+    // We just need to clear the commitment state here.
     setCommitmentToAccept(null);
   };
 
   const handleConfirmBulkDecline = () => {
     console.log('Bulk declining commitments:', selectedCommitments.map(c => c.id));
+    // Here you would add the logic to actually decline them
     setBulkDeclineModalOpen(false);
+    // Unselect all after action
     setCommitments(prev => prev.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
   };
@@ -488,7 +539,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     console.log(`Clarification request for ${commitmentToClarify?.id}: ${message}`);
     setClarifyModalOpen(false);
     setCommitmentToClarify(null);
-    setShowClarificationSuccessModal(true);
+    setShowClarificationSuccessModal(true); // Trigger success modal here
   };
 
   const handleRevokeFromDetails = () => {
@@ -512,6 +563,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setSelectAll(false);
   };
 
+  // New functions for badge requests
   const handleApproveBadgeRequest = (commitment: Commitment) => {
     console.log('Approving badge request:', commitment.id);
     setCommitments(prev => prev.filter(c => c.id !== commitment.id));
@@ -521,7 +573,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const handleRejectBadgeRequest = (commitment: Commitment) => {
     console.log('Rejecting badge request:', commitment.id);
-    setCommitmentToReject(commitment);
+    setCommitmentToReject(commitment); // Set the commitment to be rejected for the modal
     setRejectBadgeModalOpen(true);
   };
 
@@ -554,13 +606,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   
-  let itemColor = '#ff7043';
+  let itemColor = '#ff7043'; // Default orange
   if (isOwedToMe || isBadgeRequestsTab || (isAwaitingResponseTab && title !== 'My Commitments')) {
-    itemColor = '#1976d2';
+    itemColor = '#1976d2'; // Blue
   } else if (isUnkeptTab) {
-    itemColor = '#4F4F4F';
+    itemColor = '#4F4F4F'; // Grey
   }
 
+  // Bulk actions should only show if it's NOT the "My Commitments" section
   const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
 
   const showBulkRequest = selectedCount > 0 && isMyPromisesTab;
@@ -569,8 +622,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const isOthersCommitmentsSection = title.trim() === "Others' Commitments";
 
+  // Handlers for table-specific filters
   const handleTableFilterChange = useCallback((filterName: string, value: any) => {
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset pagination on filter change
     switch (filterName) {
       case 'badge':
         setBadgeTableFilter(value);
@@ -595,7 +649,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const handleClearAllFilters = () => {
     setPersonFilter('');
     setDateFilter('All');
-    setFilterBy('dueDateNewest');
+    setFilterBy('soonest');
+    setSortBy('dueDateNewest');
     setSearchTerm('');
     setDateRange([null, null]);
     setTempDateRange([null, null]);
@@ -607,6 +662,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setCurrentPage(1);
   };
 
+  // Options for table filters
   const tableBadgeOptions = [...new Set(commitments.map(item => item.title))];
   const tableAssigneeOptions = [...new Set(commitments.map(item => item.assignee))];
 
@@ -615,7 +671,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <Paper sx={{
         p: 3,
         height: 'auto',
-        minHeight: 450,
+        minHeight: 450, // Fixed minimum height for the entire panel
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#ffffff',
@@ -630,6 +686,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
+            {/* Person Filter - Only show if NOT 'My Commitments' section */}
             {!isMyCommitmentsSection && (
               <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
                 <InputLabel>Person</InputLabel>
@@ -643,6 +700,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </FormControl>
             )}
 
+            {/* Due Date Filter - Only show if NOT 'My Commitments' section */}
             {!isMyCommitmentsSection && (
               <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
                 <InputLabel>Due Date</InputLabel>
@@ -693,8 +751,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 value={tempDateRange[0]}
                 onChange={handleDateChange}
                 slotProps={{
-                  day: (ownerState: PickersDayProps) => { // Using PickersDayProps without generic
-                    const { day, isOutsideCurrentMonth } = ownerState;
+                  day: (ownerState) => {
+                    const { day, outsideCurrentMonth } = ownerState as any;
                     const [start, end] = tempDateRange;
 
                     const isStartDate = start?.isSame(day as Dayjs, 'day') ?? false;
@@ -704,7 +762,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
                     const sx: SxProps<Theme> = {
                       borderRadius: '50%',
-                      ...(isRangeBoundary && !isOutsideCurrentMonth && {
+                      ...(isRangeBoundary && !outsideCurrentMonth && {
                         backgroundColor: 'primary.main',
                         color: 'common.white',
                         '&:hover, &:focus, &.Mui-selected': {
@@ -712,7 +770,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                           color: 'common.white',
                         },
                       }),
-                      ...(isInRange && !isOutsideCurrentMonth && {
+                      ...(isInRange && !outsideCurrentMonth && {
                         backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
                         color: 'primary.dark',
                         borderRadius: '50%',
@@ -758,34 +816,39 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </Box>
             </Popover>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
-              <InputLabel>{isMyCommitmentsSection ? 'Sort By' : 'Filter By'}</InputLabel>
-              <Select 
-                value={filterBy} 
-                onChange={(e) => setFilterBy(e.target.value as string)} 
-                label={isMyCommitmentsSection ? 'Sort By' : 'Filter By'}
-                startAdornment={
+            {isMyCommitmentsSection ? (
+              <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
+                <InputLabel>Sort By</InputLabel>
+                <Select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as string)}
+                  label="Sort By"
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <ArrowUpward fontSize="small" />
+                    </InputAdornment>
+                  }
+                >
+                  <MenuItem value="dueDateNewest">Due Date (Newest First)</MenuItem>
+                  <MenuItem value="dueDateOldest">Due Date (Oldest First)</MenuItem>
+                  <MenuItem value="committedDateNewest">Committed Date (Newest First)</MenuItem>
+                  <MenuItem value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
+                <InputLabel>Filter By</InputLabel>
+                <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={
                   <InputAdornment position="start">
                     <ArrowUpward fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
                   </InputAdornment>
-                }
-              >
-                {isMyCommitmentsSection ? (
-                  [
-                    <MenuItem key="dueDateNewest" value="dueDateNewest">Due Date (Newest First)</MenuItem>,
-                    <MenuItem key="dueDateOldest" value="dueDateOldest">Due Date (Oldest First)</MenuItem>,
-                    <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
-                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>,
-                  ]
-                ) : (
-                  [
-                    <MenuItem key="soonest" value="soonest">Due Date (Soonest)</MenuItem>,
-                    <MenuItem key="latest" value="latest">Due Date (Latest)</MenuItem>,
-                    <MenuItem key="pastDue" value="pastDue">Overdue</MenuItem>,
-                  ]
-                )}
-              </Select>
-            </FormControl>
+                }>
+                  <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
+                  <MenuItem value="latest">Due Date (Latest)</MenuItem>
+                  <MenuItem value="pastDue">Overdue</MenuItem>
+                </Select>
+              </FormControl>
+            )}
 
             <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
             
@@ -818,7 +881,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Tabs>
         </Box>
 
-        {showBulkActionsSection && (
+        {showBulkActionsSection && ( // Only show this section if bulk actions are allowed
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox
@@ -952,18 +1015,18 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          flex: 1,
+          flex: 1, // Allow this box to take up remaining space
           minHeight: 0, 
           pr: 1,
+          // Default scroll behavior when not empty
+          overflowY: 'auto', // Always allow scrolling if content overflows
+          // Conditional styles for centering when empty
           ...(paginatedItems.length === 0 && {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            overflowY: 'hidden',
-          }),
-          ...(paginatedItems.length > 0 && {
-            overflowY: 'scroll',
+            overflowY: 'hidden', // Hide scrollbar when empty and centered
           }),
         }}>
           {displayMode === 'table' && isMyCommitmentsSection ? (
@@ -981,7 +1044,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               assigneeOptions={tableAssigneeOptions}
             />
           ) : (
-            <Stack spacing={0} sx={{ width: '100%' }}>
+            <Stack spacing={0} sx={{ width: '100%' }}> {/* Changed spacing to 0 */}
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
                   paginatedItems.map((item, index) => (
@@ -999,20 +1062,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         onToggleSelect={() => {}}
                       />
                       {index < paginatedItems.length - 1 && (
-                        <Divider sx={{ my: 1, borderColor: 'grey.200' }} />
+                        <Divider sx={{ my: 1, borderColor: 'grey.200' }} /> // Added Divider
                       )}
                     </React.Fragment>
                   ))
                 ) : (
                   paginatedItems.map((item, index) => {
                     const isNudgeItem = item.type === 'nudge';
+                    // Checkboxes are only shown if it's NOT the "My Commitments" section
                     const showCheckboxes = !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
                     const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
                     const itemDate = parseCommitmentDate(item.dueDate);
                     const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
+                    // Action button for individual items should still be shown if applicable
                     const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
+                    // Adjusted logic for showFromLabel
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
                     return (
@@ -1045,7 +1111,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                           explanation={item.explanation}
                         />
                         {index < paginatedItems.length - 1 && (
-                          <Divider sx={{ my: 1, borderColor: 'grey.200' }} />
+                          <Divider sx={{ my: 1, borderColor: 'grey.200' }} /> // Added Divider
                         )}
                       </React.Fragment>
                     );
@@ -1236,7 +1302,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         message={`${selectedCount} ${selectedCount === 1 ? 'person has' : 'people have'} been notified.`}
       />
       <SuccessConfirmationModal
-        open={showClarificationSuccessModal}
+        open={showClarificationSuccessModal} // Controlled by new state
         onClose={handleCloseClarificationSuccessModal}
         title="Request Sent!"
         message="The clarification request has been sent."
@@ -1279,6 +1345,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         confirmColor="error"
       />
 
+      {/* CommitmentActionModal for "Make a Promise" from empty state */}
       <CommitmentActionModal
         open={makePromiseModalOpen}
         onClose={handleCloseMakePromiseModal}
