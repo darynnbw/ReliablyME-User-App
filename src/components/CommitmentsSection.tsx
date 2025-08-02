@@ -279,8 +279,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       }
       return item.assignee === personFilter;
     })();
-    // Apply person filter only if not 'My Commitments' section
-    if (!isMyCommitmentsSection && !personMatch) return false;
+    // Apply person filter universally
+    if (!personMatch) return false;
 
     const itemDate = parseCommitmentDate(item.dueDate);
     let dateMatch = true;
@@ -293,8 +293,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
     }
     
-    // Apply date filter only if not 'My Commitments' section
-    if (!isMyCommitmentsSection && !dateMatch) return false;
+    // Apply date filter universally
+    if (!dateMatch) return false;
 
     // The 'pastDue' filter logic should not be part of the sort dropdown
     // It's handled by the `isOverdue` prop on `CommitmentListItem` for visual indication
@@ -731,21 +731,31 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     const isInRange = start && end ? (day as Dayjs).isBetween(start, end, null, '()') : false;
                     const isRangeBoundary = isStartDate || isEndDate;
 
-                    const sx: SxProps<Theme> = {
-                      borderRadius: '50%',
-                      ...(isRangeBoundary && !outsideCurrentMonth && {
-                        backgroundColor: 'primary.main',
-                        color: 'common.white',
-                        '&:hover, &:focus, &.Mui-selected': {
-                          backgroundColor: 'primary.main',
-                          color: 'common.white',
-                        },
-                      }),
-                      ...(isInRange && !outsideCurrentMonth && {
-                        backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.3),
-                        color: 'primary.dark',
+                    const sx: SxProps<Theme> = (theme) => {
+                      const styles: React.CSSProperties = {
                         borderRadius: '50%',
-                      }),
+                      };
+                      if (isRangeBoundary && !outsideCurrentMonth) {
+                        styles.backgroundColor = theme.palette.primary.main;
+                        styles.color = theme.palette.common.white;
+                        styles['&:hover'] = {
+                          backgroundColor: theme.palette.primary.main,
+                          color: theme.palette.common.white,
+                        };
+                        styles['&:focus'] = {
+                          backgroundColor: theme.palette.primary.main,
+                          color: theme.palette.common.white,
+                        };
+                        styles['&.Mui-selected'] = {
+                          backgroundColor: theme.palette.primary.main,
+                          color: theme.palette.common.white,
+                        };
+                      } else if (isInRange && !outsideCurrentMonth) {
+                        styles.backgroundColor = alpha(theme.palette.primary.light, 0.3);
+                        styles.color = theme.palette.primary.dark;
+                        styles.borderRadius = '50%';
+                      }
+                      return styles;
                     };
                     
                     return { sx } as any;
