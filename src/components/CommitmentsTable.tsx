@@ -111,13 +111,19 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => handleMouseMove(e);
-    const handleGlobalMouseUp = () => handleMouseUp();
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (activeIndex.current !== null) {
+        handleMouseMove(e);
+      }
+    };
+    const handleGlobalMouseUp = () => {
+      if (activeIndex.current !== null) {
+        handleMouseUp();
+      }
+    };
 
-    if (activeIndex.current !== null) {
-      window.addEventListener('mousemove', handleGlobalMouseMove);
-      window.addEventListener('mouseup', handleGlobalMouseUp);
-    }
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    window.addEventListener('mouseup', handleGlobalMouseUp);
 
     return () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
