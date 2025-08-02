@@ -32,6 +32,7 @@ import {
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import RequestBadgeModal from './RequestBadgeModal';
@@ -74,6 +75,7 @@ interface CommitmentsSectionProps {
   tabs: { label: string; count: number; items: Commitment[] }[];
   displayMode?: 'regular' | 'table'; // New prop for display mode
   showClearAllFilters?: boolean; // New prop to control visibility of Clear All Filters button
+  maxItemsToDisplay?: number; // New prop to limit items displayed
 }
 
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
@@ -103,7 +105,7 @@ const groupMembers: { [key: string]: string[] } = {
   'Part-timers': ['Chris Parker'],
 };
 
-const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true }) => {
+const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true, maxItemsToDisplay }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -327,8 +329,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   });
 
   const itemsPerPage = 15;
-  const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
+  // Apply maxItemsToDisplay only if it's not the 'My Badges' tab and maxItemsToDisplay is set
+  const displayedItems = (maxItemsToDisplay && !isMyBadgesTab) ? currentItems.slice(0, maxItemsToDisplay) : currentItems;
+  const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : displayedItems;
   const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
+
+  const showSeeAllButton = (maxItemsToDisplay && !isMyBadgesTab && currentItems.length > maxItemsToDisplay);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -1096,6 +1102,26 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         {currentItems.length > 0 && isMyBadgesTab && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
             <Pagination count={totalPages} page={currentPage} onChange={(_, page) => setCurrentPage(page)} color="primary" />
+          </Box>
+        )}
+
+        {showSeeAllButton && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto', pt: 2 }}>
+            <Button
+              component={Link}
+              to="/actions" // Assuming /actions is the full list page for these sections
+              variant="contained"
+              sx={{
+                bgcolor: '#607d8b',
+                textTransform: 'none',
+                px: 6,
+                py: 1,
+                borderRadius: 1,
+                '&:hover': { bgcolor: '#546e7a' },
+              }}
+            >
+              See all
+            </Button>
           </Box>
         )}
       </Paper>
