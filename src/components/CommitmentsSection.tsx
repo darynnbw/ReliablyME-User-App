@@ -108,7 +108,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
-  const [filterBy, setFilterBy] = useState('soonest');
+  const [filterBy, setFilterBy] = useState('dueDateNewest'); // Changed default to 'dueDateNewest'
   const [searchTerm, setSearchTerm] = useState('');
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -229,7 +229,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     if (disableFilters) {
       setDateFilter('All');
-      setFilterBy('soonest');
+      setFilterBy('dueDateNewest'); // Reset to new default
       setSearchTerm('');
       setDateRange([null, null]);
       setTempDateRange([null, null]);
@@ -258,7 +258,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
 
   // Generate unique people and add group options
-  const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
+  const allAssignees = tabs.flatMap((tab) => tab.items.filter((item) => !item.isExternal).map((item) => item.assignee));
   const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead'); // Filter out 'Dev Team Lead'
   const filterOptions = [...uniquePeople, 'Development team']; // Add 'Development team' as an option
   const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
@@ -296,35 +296,33 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Apply date filter only if not 'My Commitments' section
     if (!isMyCommitmentsSection && !dateMatch) return false;
 
-    if (filterBy === 'pastDue') {
-      if (!itemDate) return false;
-      return itemDate.isBefore(dayjs(), 'day');
-    }
-
-    // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
-    if (displayMode === 'table' && isMyCommitmentsSection) {
-      if (badgeTableFilter && item.title !== badgeTableFilter) return false;
-      if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
-      if (assigneeTableFilter && item.assignee !== assigneeTableFilter) return false;
-      
-      const itemDueDate = parseCommitmentDate(item.dueDate);
-      if (dueDateTableFilter && itemDueDate && !itemDueDate.isSame(dueDateTableFilter, 'day')) return false;
-
-      const itemCommittedDate = item.committedDate ? parseCommitmentDate(item.committedDate) : null;
-      if (committedDateTableFilter && itemCommittedDate && !itemCommittedDate.isSame(committedDateTableFilter, 'day')) return false;
-    }
+    // The 'pastDue' filter logic should not be part of the sort dropdown
+    // It's handled by the `isOverdue` prop on `CommitmentListItem` for visual indication
+    // and can be implicitly filtered by date range if needed.
 
     return true;
   }).sort((a, b) => {
-    const dateA = parseCommitmentDate(a.dueDate);
-    const dateB = parseCommitmentDate(b.dueDate);
-    if (!dateA || !dateB) return 0;
+    const dueDateA = parseCommitmentDate(a.dueDate);
+    const dueDateB = parseCommitmentDate(b.dueDate);
+    const committedDateA = a.committedDate ? parseCommitmentDate(a.committedDate) : null;
+    const committedDateB = b.committedDate ? parseCommitmentDate(b.committedDate) : null;
 
-    if (filterBy === 'latest') {
-      return dateB.valueOf() - dateA.valueOf();
+    switch (filterBy) {
+      case 'dueDateNewest':
+        if (!dueDateA || !dueDateB) return 0;
+        return dueDateB.valueOf() - dueDateA.valueOf();
+      case 'dueDateOldest':
+        if (!dueDateA || !dueDateB) return 0;
+        return dueDateA.valueOf() - dueDateB.valueOf();
+      case 'committedDateNewest':
+        if (!committedDateA || !committedDateB) return 0;
+        return committedDateB.valueOf() - committedDateA.valueOf();
+      case 'committedDateOldest':
+        if (!committedDateA || !committedDateB) return 0;
+        return committedDateA.valueOf() - committedDateB.valueOf();
+      default:
+        return 0; // Should not happen with defined options
     }
-    // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
-    return dateA.valueOf() - dateB.valueOf();
   });
 
   const itemsPerPage = 15;
@@ -623,7 +621,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const handleClearAllFilters = () => {
     setPersonFilter('');
     setDateFilter('All');
-    setFilterBy('soonest');
+    setFilterBy('dueDateNewest'); // Reset to new default
     setSearchTerm('');
     setDateRange([null, null]);
     setTempDateRange([null, null]);
@@ -790,15 +788,31 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             </Popover>
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
-              <InputLabel>Filter By</InputLabel>
-              <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={
-                <InputAdornment position="start">
-                  <ArrowUpward fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
-                </InputAdornment>
-              }>
-                <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
-                <MenuItem value="latest">Due Date (Latest)</MenuItem>
-                <MenuItem value="pastDue">Overdue</MenuItem>
+              <InputLabel>{isMyCommitmentsSection ? 'Sort By' : 'Filter By'}</InputLabel> {/* Conditional Label */}
+              <Select 
+                value={filterBy} 
+                onChange={(e) => setFilterBy(e.target.value as string)} 
+                label={isMyCommitmentsSection ? 'Sort By' : 'Filter By'} {/* Conditional Label */}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <ArrowUpward fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                  </InputAdornment>
+                }
+              >
+                {isMyCommitmentsSection ? (
+                  [
+                    <MenuItem key="dueDateNewest" value="dueDateNewest">Due Date (Newest First)</MenuItem>,
+                    <MenuItem key="dueDateOldest" value="dueDateOldest">Due Date (Oldest First)</MenuItem>,
+                    <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
+                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>,
+                  ]
+                ) : (
+                  [
+                    <MenuItem key="soonest" value="soonest">Due Date (Soonest)</MenuItem>,
+                    <MenuItem key="latest" value="latest">Due Date (Latest)</MenuItem>,
+                    <MenuItem key="pastDue" value="pastDue">Overdue</MenuItem>,
+                  ]
+                )}
               </Select>
             </FormControl>
 
@@ -970,8 +984,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           flex: 1, // Allow this box to take up remaining space
           minHeight: 0, 
           pr: 1,
-          // Default scroll behavior when not empty
-          overflowY: 'auto', // Always allow scrolling if content overflows
           // Conditional styles for centering when empty
           ...(paginatedItems.length === 0 && {
             display: 'flex',
@@ -979,6 +991,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             justifyContent: 'center',
             alignItems: 'center',
             overflowY: 'hidden', // Hide scrollbar when empty and centered
+          }),
+          // Default scroll behavior when not empty
+          ...(paginatedItems.length > 0 && {
+            overflowY: 'scroll',
           }),
         }}>
           {displayMode === 'table' && isMyCommitmentsSection ? (
