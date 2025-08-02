@@ -95,6 +95,20 @@ const parseCommitmentDate = (dateString: string): Dayjs | null => {
   }
 };
 
+const parseCommittedDate = (dateString?: string): Dayjs | null => {
+  if (!dateString) return null;
+  try {
+    let cleanDateString = dateString;
+    if (dateString.startsWith('Requested on ')) {
+      cleanDateString = dateString.substring('Requested on '.length);
+    }
+    const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY, hh:mm A', 'MMM D, YYYY'], true);
+    return date.isValid() ? date : null;
+  } catch (error) {
+    return null;
+  }
+};
+
 // Define group members for filtering
 const groupMembers: { [key: string]: string[] } = {
   'Development team': ['Alex Johnson', 'Chris Parker'],
@@ -107,7 +121,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
-  const [filterBy, setFilterBy] = useState('soonest');
+  const [sortBy, setSortBy] = useState('dueDateNewest');
   const [searchTerm, setSearchTerm] = useState('');
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -250,7 +264,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     if (disableFilters) {
       setDateFilter('All');
-      setFilterBy('soonest');
+      setSortBy('dueDateNewest');
       setSearchTerm('');
       setDateRange([null, null]);
       setTempDateRange([null, null]);
@@ -312,11 +326,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     
     if (!dateMatch) return false;
 
-    if (filterBy === 'pastDue') {
-      if (!itemDate) return false;
-      return itemDate.isBefore(dayjs(), 'day');
-    }
-
     // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
     if (displayMode === 'table' && title.trim() === 'My Commitments') {
       if (badgeTableFilter && item.title !== badgeTableFilter) return false;
@@ -332,15 +341,41 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
     return true;
   }).sort((a, b) => {
-    const dateA = parseCommitmentDate(a.dueDate);
-    const dateB = parseCommitmentDate(b.dueDate);
-    if (!dateA || !dateB) return 0;
-
-    if (filterBy === 'latest') {
-      return dateB.valueOf() - dateA.valueOf();
+    switch (sortBy) {
+      case 'dueDateNewest': {
+        const dateA = parseCommitmentDate(a.dueDate);
+        const dateB = parseCommitmentDate(b.dueDate);
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateB.valueOf() - dateA.valueOf();
+      }
+      case 'dueDateOldest': {
+        const dateA = parseCommitmentDate(a.dueDate);
+        const dateB = parseCommitmentDate(b.dueDate);
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateA.valueOf() - dateB.valueOf();
+      }
+      case 'committedDateNewest': {
+        const dateA = parseCommittedDate(a.committedDate);
+        const dateB = parseCommittedDate(b.committedDate);
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateB.valueOf() - dateA.valueOf();
+      }
+      case 'committedDateOldest': {
+        const dateA = parseCommittedDate(a.committedDate);
+        const dateB = parseCommittedDate(b.committedDate);
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateA.valueOf() - dateB.valueOf();
+      }
+      case 'badgeNameAZ': {
+        return a.title.localeCompare(b.title);
+      }
+      default:
+        return 0;
     }
-    // Default sort is 'soonest', which also works well for 'pastDue' items (oldest first)
-    return dateA.valueOf() - dateB.valueOf();
   });
 
   const itemsPerPage = 15;
@@ -631,7 +666,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const handleClearAllFilters = () => {
     setPersonFilter('');
     setDateFilter('All');
-    setFilterBy('soonest');
+    setSortBy('dueDateNewest');
     setSearchTerm('');
     setDateRange([null, null]);
     setTempDateRange([null, null]);
@@ -720,15 +755,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             )}
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
-              <InputLabel>Filter By</InputLabel>
-              <Select value={filterBy} onChange={(e) => setFilterBy(e.target.value as string)} label="Filter By" startAdornment={
+              <InputLabel>Sort By</InputLabel>
+              <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as string)} label="Sort By" startAdornment={
                 <InputAdornment position="start">
                   <ArrowUpward fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
                 </InputAdornment>
               }>
-                <MenuItem value="soonest">Due Date (Soonest)</MenuItem>
-                <MenuItem value="latest">Due Date (Latest)</MenuItem>
-                <MenuItem value="pastDue">Overdue</MenuItem>
+                <MenuItem value="dueDateNewest">Due Date (Newest First)</MenuItem>
+                <MenuItem value="dueDateOldest">Due Date (Oldest First)</MenuItem>
+                <MenuItem value="committedDateNewest">Committed Date (Newest First)</MenuItem>
+                <MenuItem value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                {isMyCommitmentsSection && <MenuItem value="badgeNameAZ">Badge Name (A–Z)</MenuItem>}
               </Select>
             </FormControl>
 
