@@ -68,7 +68,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
 
-  const [colWidths, setColWidths] = useState([15, 35, 15, 17, 18]);
+  const [colWidths, setColWidths] = useState([20, 35, 15, 15, 15]);
   const tableRef = useRef<HTMLTableElement>(null);
   const activeIndex = useRef<number | null>(null);
 
