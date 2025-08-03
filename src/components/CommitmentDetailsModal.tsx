@@ -240,7 +240,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
           </Typography>
         </Box>
 
-        <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />
+        {renderActionButtons() && <Divider sx={{ mb: 3, borderColor: '#e0e0e0' }} />} {/* Only show divider if buttons are rendered */}
 
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           {renderActionButtons()}

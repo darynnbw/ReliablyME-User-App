@@ -906,10 +906,30 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Box>
         </Popover>
 
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        {/* New container for Tabs and Clear All Filters button */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
             {tabs.map((tab, index) => <Tab key={index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
+          {showClearAllFilters && (
+            <Button
+              onClick={handleClearAllFilters}
+              sx={{
+                textTransform: 'none',
+                color: 'grey.600',
+                textDecoration: 'underline',
+                p: 0,
+                mb: 1, // Adjust this to align with tab text baseline
+                '&:hover': {
+                  textDecoration: 'underline',
+                  bgcolor: 'transparent',
+                  color: 'grey.800',
+                },
+              }}
+            >
+              Clear all filters
+            </Button>
+          )}
         </Box>
 
         {/* Bulk actions section - now conditional on isActionsPage */}
