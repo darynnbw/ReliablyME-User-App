@@ -146,7 +146,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
   const [commitmentToRevoke, setCommitmentToRevoke] = useState<Commitment | null>(null);
-  const [commitmentToClarify, setCommitmentToClarify] = useState<Commitment | null>(null);
+  const [commitmentToClarify, setCommitmentToClarify = useState<Commitment | null>(null);
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
@@ -1078,7 +1078,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               />
             </Box>
           ) : (
-            <Stack spacing={1} sx={{ width: '100%' }}>
+            <Stack spacing={1} sx={{ width: '100%', mt: 2 }}> {/* Added mt: 2 here */}
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
                   paginatedItems.map((item, index) => (
@@ -1106,7 +1106,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     const isCheckboxDisabled = isActionsPage && isMyPromisesTab && isNudgeItem; 
                     
                     const itemDate = parseCommitmentDate(item.dueDate);
-                    const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
+                    // Unkept promises are always overdue
+                    const isOverdue = isUnkeptTab ? true : (itemDate ? itemDate.isBefore(dayjs(), 'day') : false);
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
                     
@@ -1129,7 +1130,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         color={itemColor}
                         showCheckbox={showCheckboxes}
                         isCheckboxDisabled={isCheckboxDisabled}
-                        showActionButton={showActionButton}
+                        showActionButton={Boolean(showActionButton)}
                         buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
                         onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                         onViewDetails={() => handleViewCommitmentDetails(item)}
@@ -1227,6 +1228,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         isOwedToMe={isOwedToMe}
         onRevokeClick={handleRevokeFromDetails}
         onClarifyClick={handleClarifyFromDetails}
+        isActionsPage={isActionsPage} {/* Pass isActionsPage prop */}
       />
       <NudgeDetailsModal
         open={nudgeDetailsModalOpen}

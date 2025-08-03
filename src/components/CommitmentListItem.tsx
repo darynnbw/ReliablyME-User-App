@@ -220,7 +220,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 2 }}> {/* Changed mb to 2 */}
               {description}
             </Typography>
 
