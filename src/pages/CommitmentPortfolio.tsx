@@ -19,6 +19,22 @@ const CommitmentPortfolio: React.FC = () => {
 
   const myPromisesItems = [
     {
+      id: 100,
+      title: 'Weekly Progress Check-in',
+      dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
+      committedDate: 'N/A',
+      description: 'I will provide a weekly update on my progress, addressing key accomplishments, upcoming plans, and any potential blockers.',
+      assignee: 'Alex Johnson',
+      type: 'nudge',
+      nudgesLeft: 8,
+      totalNudges: 12,
+      questions: [
+        '1. What have you accomplished so far this week?',
+        '2. What do you plan to accomplish/complete by the end of the week?',
+        '3. What are you concerned about that might hinder your progress?',
+      ],
+    },
+    {
       id: 99,
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(3, 'month').format('MMM D, YYYY'),
@@ -549,8 +565,7 @@ const CommitmentPortfolio: React.FC = () => {
         <UserProfileSection
           name="Alex Johnson"
           phone="+1 (555) 123-4567"
-          displayMode={displayMode}
-          onToggleDisplayMode={setDisplayMode}
+          // displayMode and onToggleDisplayMode are now handled by CommitmentsSection for My Commitments
           onExportCsv={handleExportCsv}
           onExportXlsx={handleExportXlsx}
           showExportOptions={true} // Always show export options for this section
@@ -578,6 +593,7 @@ const CommitmentPortfolio: React.FC = () => {
               title="My Commitments"
               tabs={myCommitmentsTabs}
               displayMode={displayMode} // Pass displayMode to CommitmentsSection
+              onToggleDisplayMode={setDisplayMode} // Pass toggle handler to CommitmentsSection
               showClearAllFilters={true}
               isActionsPage={false}
               isCommitmentPortfolioPage={true} // New prop

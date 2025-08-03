@@ -1,12 +1,10 @@
 import React from 'react';
-import { Box, Typography, Paper, Switch, FormControlLabel, Button, Menu, MenuItem } from '@mui/material';
+import { Box, Typography, Paper, Button, Menu, MenuItem } from '@mui/material';
 import { Phone, Download } from '@mui/icons-material'; // Removed TableChart, ListAlt
 
 interface UserProfileSectionProps {
   name: string;
   phone: string;
-  displayMode: 'regular' | 'table';
-  onToggleDisplayMode: (mode: 'regular' | 'table') => void;
   onExportCsv: () => void;
   onExportXlsx: () => void;
   showExportOptions: boolean; // New prop to control visibility of export button
@@ -15,8 +13,6 @@ interface UserProfileSectionProps {
 const UserProfileSection: React.FC<UserProfileSectionProps> = ({
   name,
   phone,
-  displayMode,
-  onToggleDisplayMode,
   onExportCsv,
   onExportXlsx,
   showExportOptions,
@@ -72,33 +68,6 @@ const UserProfileSection: React.FC<UserProfileSectionProps> = ({
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={displayMode === 'table'}
-              onChange={() => onToggleDisplayMode(displayMode === 'table' ? 'regular' : 'table')}
-              // Removed icon and checkedIcon props for default circular thumb
-              sx={{
-                '& .MuiSwitch-switchBase': {
-                  color: '#ff7043', // Regular mode thumb color
-                },
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1976d2', // Table mode thumb color
-                },
-                '& .MuiSwitch-track': {
-                  backgroundColor: '#e0e0e0', // Track color
-                },
-                '& .MuiSwitch-thumb': {
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                },
-              }}
-            />
-          }
-          label={displayMode === 'table' ? 'Table Mode' : 'Regular Mode'}
-          labelPlacement="start"
-          sx={{ m: 0 }}
-        />
-
         {showExportOptions && (
           <Button
             variant="contained"

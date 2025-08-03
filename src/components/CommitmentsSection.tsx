@@ -50,6 +50,7 @@ import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
 import ConfirmationModal from './ConfirmationModal';
 import CommitmentActionModal from './CommitmentActionModal';
 import CommitmentsTable from './CommitmentsTable'; // Import the new table component
+import { Switch, FormControlLabel } from '@mui/material'; // Import Switch and FormControlLabel
 
 dayjs.extend(isBetween);
 
@@ -73,6 +74,7 @@ interface CommitmentsSectionProps {
   title:string;
   tabs: { label: string; count: number; items: Commitment[] }[];
   displayMode?: 'regular' | 'table'; // New prop for display mode
+  onToggleDisplayMode?: (mode: 'regular' | 'table') => void; // New prop for toggle handler
   showClearAllFilters?: boolean; // New prop to control visibility of Clear All Filters button
   isActionsPage?: boolean; // New prop to differentiate between Actions and Commitment Portfolio
   isCommitmentPortfolioPage?: boolean; // New prop to indicate if on Commitment Portfolio page
@@ -120,7 +122,7 @@ const groupMembers: { [key: string]: string[] } = {
   'Part-timers': ['Chris Parker'],
 };
 
-const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true, isActionsPage = false, isCommitmentPortfolioPage = false }) => {
+const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', onToggleDisplayMode, showClearAllFilters = true, isActionsPage = false, isCommitmentPortfolioPage = false }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -709,53 +711,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {/* Filters for My Commitments section (including My Promises) */}
             {isMyCommitmentsSection && (
               <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-                  <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
-                    <MenuItem value="">All</MenuItem>
-                    {filterOptions.map(person => (
-                      <MenuItem key={person} value={person}>{person}</MenuItem>
-                    ))}
-                    {hasExternal && <MenuItem value="External">External</MenuItem>}
-                  </Select>
-                </FormControl>
-
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
-                  <InputLabel>Due Date</InputLabel>
-                  <Select
-                    value={dateFilter}
-                    onChange={handleDateFilterChange}
-                    label="Due Date"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
-                      </InputAdornment>
-                    }
-                  >
-                    <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="Today">Today</MenuItem>
-                    <MenuItem value="This Week">This Week</MenuItem>
-                    <MenuItem value="Custom Range">Custom Range</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {dateFilter === 'Custom Range' && (
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={
-                      dateRange[0] && dateRange[1]
-                        ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
-                        : 'Select Range'
-                    }
-                    onClick={handleCustomRangeClick}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    sx={{ minWidth: 180, cursor: 'pointer' }}
-                    disabled={disableFilters}
-                  />
-                )}
+                {/* Removed Person and Due Date filters */}
               </>
             )}
             {/* Filters for Others' Commitments section */}
@@ -911,6 +867,33 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
             {tabs.map((tab, index) => <Tab key={index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
+          {isMyCommitmentsSection && onToggleDisplayMode && (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={displayMode === 'table'}
+                  onChange={() => onToggleDisplayMode(displayMode === 'table' ? 'regular' : 'table')}
+                  sx={{
+                    '& .MuiSwitch-switchBase': {
+                      color: '#ff7043', // Regular mode thumb color
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: '#1976d2', // Table mode thumb color
+                    },
+                    '& .MuiSwitch-track': {
+                      backgroundColor: '#e0e0e0', // Track color
+                    },
+                    '& .MuiSwitch-thumb': {
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                    },
+                  }}
+                />
+              }
+              label={displayMode === 'table' ? 'Table Mode' : 'Regular Mode'}
+              labelPlacement="start"
+              sx={{ m: 0, mb: 1 }} // Align with tab text baseline
+            />
+          )}
           {showClearAllFilters && (
             <Button
               onClick={handleClearAllFilters}
