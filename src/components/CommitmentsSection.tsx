@@ -146,7 +146,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
   const [commitmentToRevoke, setCommitmentToRevoke] = useState<Commitment | null>(null);
-  const [commitmentToClarify, setCommitmentToClarify = useState<Commitment | null>(null);
+  const [commitmentToClarify, setCommitmentToClarify] = useState<Commitment | null>(null);
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
@@ -1113,7 +1113,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     
                     // Action button logic:
                     // Show if on Actions page AND (
-                    //   (it's a Nudge in My Promises tab) OR
+                    //   (isNudgeItem && isMyPromisesTab) OR
                     //   (it's NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
                     // )
                     const showActionButton = isActionsPage && (
@@ -1130,7 +1130,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         color={itemColor}
                         showCheckbox={showCheckboxes}
                         isCheckboxDisabled={isCheckboxDisabled}
-                        showActionButton={Boolean(showActionButton)}
+                        showActionButton={showActionButton}
                         buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
                         onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                         onViewDetails={() => handleViewCommitmentDetails(item)}
