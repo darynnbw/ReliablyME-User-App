@@ -250,39 +250,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             {description}
           </Typography>
 
-          {/* Collapsible Responses */}
-          {showExpandIcon && (
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                  All Responses: {/* Renamed from Historical Responses */}
-                </Typography>
-                <Stack spacing={1}>
-                  {responses
-                    ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
-                    .map((response, idx) => (
-                      <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                        <Chip
-                          label={response.date}
-                          size="small"
-                          sx={{
-                            bgcolor: '#fff3e0', // Nudge pill background
-                            color: '#ff7043', // Nudge pill text color
-                            fontWeight: 700, // Nudge pill font weight
-                            fontSize: '12px', // Nudge pill font size
-                            mb: 1,
-                          }}
-                        />
-                        <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                          {response.answer}
-                        </Typography>
-                      </Box>
-                    ))}
-                </Stack>
-              </Box>
-            </Collapse>
-          )}
-
           {/* Explanation */}
           {explanation && (
             <Box
@@ -306,7 +273,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Bottom row: Assignee and Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 2 }}> {/* Added mb: 2 here */}
             {/* Assignee */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
@@ -423,6 +390,39 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               )}
             </Box>
           </Box>
+
+          {/* Collapsible Responses - MOVED HERE */}
+          {showExpandIcon && (
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+              <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                  All Responses:
+                </Typography>
+                <Stack spacing={1}>
+                  {responses
+                    ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
+                    .map((response, idx) => (
+                      <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                        <Chip
+                          label={response.date}
+                          size="small"
+                          sx={{
+                            bgcolor: '#fff3e0', // Nudge pill background
+                            color: '#ff7043', // Nudge pill text color
+                            fontWeight: 700, // Nudge pill font weight
+                            fontSize: '12px', // Nudge pill font size
+                            mb: 1,
+                          }}
+                        />
+                        <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                          {response.answer}
+                        </Typography>
+                      </Box>
+                    ))}
+                </Stack>
+              </Box>
+            </Collapse>
+          )}
         </Box>
       </CardContent>
     </Card>
