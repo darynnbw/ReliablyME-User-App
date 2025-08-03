@@ -867,52 +867,53 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
             {tabs.map((tab, index) => <Tab key={index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
-          {isMyCommitmentsSection && onToggleDisplayMode && (
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={displayMode === 'table'}
-                  onChange={() => onToggleDisplayMode(displayMode === 'table' ? 'regular' : 'table')}
-                  sx={{
-                    '& .MuiSwitch-switchBase': {
-                      color: '#ff7043', // Regular mode thumb color
-                    },
-                    '& .MuiSwitch-switchBase.Mui-checked': {
-                      color: '#1976d2', // Table mode thumb color
-                    },
-                    '& .MuiSwitch-track': {
-                      backgroundColor: '#e0e0e0', // Track color
-                    },
-                    '& .MuiSwitch-thumb': {
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                    },
-                  }}
-                />
-              }
-              label={displayMode === 'table' ? 'Table Mode' : 'Regular Mode'}
-              labelPlacement="start"
-              sx={{ m: 0, mb: 1 }} // Align with tab text baseline
-            />
-          )}
-          {showClearAllFilters && (
-            <Button
-              onClick={handleClearAllFilters}
-              sx={{
-                textTransform: 'none',
-                color: 'grey.600',
-                textDecoration: 'underline',
-                p: 0,
-                mb: 1, // Adjust this to align with tab text baseline
-                '&:hover': {
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}> {/* New inner Box for toggle and button */}
+            {isMyCommitmentsSection && onToggleDisplayMode && (
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={displayMode === 'table'}
+                    onChange={() => onToggleDisplayMode(displayMode === 'table' ? 'regular' : 'table')}
+                    sx={{
+                      '& .MuiSwitch-switchBase': {
+                        color: '#ff7043', // Regular mode thumb color
+                      },
+                      '& .MuiSwitch-switchBase.Mui-checked': {
+                        color: '#1976d2', // Table mode thumb color
+                      },
+                      '& .MuiSwitch-track': {
+                        backgroundColor: '#e0e0e0', // Track color
+                      },
+                      '& .MuiSwitch-thumb': {
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                      },
+                    }}
+                  />
+                }
+                label={displayMode === 'table' ? 'Table Mode' : 'Regular Mode'}
+                labelPlacement="start"
+                sx={{ m: 0 }} // Removed mb here, let the parent Box handle alignment
+              />
+            )}
+            {showClearAllFilters && (
+              <Button
+                onClick={handleClearAllFilters}
+                sx={{
+                  textTransform: 'capitalize', // Changed to capitalize each word
+                  color: 'grey.600',
                   textDecoration: 'underline',
-                  bgcolor: 'transparent',
-                  color: 'grey.800',
-                },
-              }}
-            >
-              Clear all filters
-            </Button>
-          )}
+                  p: 0,
+                  '&:hover': {
+                    textDecoration: 'underline',
+                    bgcolor: 'transparent',
+                    color: 'grey.800',
+                  },
+                }}
+              >
+                Clear All Filters {/* Changed text to capitalize each word */}
+              </Button>
+            )}
+          </Box>
         </Box>
 
         {/* Bulk actions section - now conditional on isActionsPage */}
@@ -1198,8 +1199,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             <Pagination count={totalPages} page={currentPage} onChange={(_, page) => setCurrentPage(page)} color="primary" />
           </Box>
         )}
-
-        {/* Removed the second Clear All Filters button */}
       </Paper>
 
       <CommitmentDetailsModal 
