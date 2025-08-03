@@ -454,99 +454,6 @@ const CommitmentPortfolio: React.FC = () => {
         { id: 162, title: 'Teamwork', dueDate: 'Mar 28, 11:00 AM', committedDate: 'Mar 27, 9:15 PM', description: 'I promise to provide support to a team member who was struggling.', assignee: 'John Doe' },
         { id: 163, title: 'Attendance', dueDate: 'Mar 27, 10:00 AM', committedDate: 'Mar 26, 9:15 PM', description: 'I will attend the design review meeting.', assignee: 'Jane Smith' },
         { id: 164, title: 'Promise Kept General', dueDate: 'Mar 26, 04:00 PM', committedDate: 'Mar 25, 9:15 PM', description: 'I commit to refactoring a complex piece of code.', assignee: 'Peter Jones' },
-        { id: 165,
-          title: 'Teamwork',
-          dueDate: dayjs().subtract(1, 'day').format('MMM D, YYYY'), // Overdue
-          committedDate: dayjs().subtract(2, 'day').format('MMM D, hh:mm A'),
-          description: 'I am going to help onboard a new team member.',
-          assignee: 'Riley Chen',
-        },
-        {
-          id: 166,
-          title: 'Promise Kept General',
-          dueDate: dayjs().subtract(5, 'day').format('MMM D, YYYY'), // Overdue
-          committedDate: dayjs().subtract(6, 'day').format('MMM D, hh:mm A'),
-          description: 'I will finalize the Q3 marketing budget and present it to the team.',
-          assignee: 'Alex Todd',
-        },
-        {
-          id: 167,
-          title: 'Attendance',
-          dueDate: dayjs().subtract(10, 'day').format('MMM D, YYYY'), // Overdue
-          committedDate: dayjs().subtract(11, 'day').format('MMM D, hh:mm A'),
-          description: 'I will attend the weekly team standup meeting to discuss project progress and upcoming milestones.',
-          assignee: 'John Smith',
-        },
-      ],
-    },
-    {
-      label: 'My Badges',
-      count: 65,
-      items: [
-        { id: 101, title: 'Teamwork', dueDate: 'May 28, 12:00 AM', committedDate: 'May 27, 9:15 PM', description: 'I promise to attend the intern meeting and provide valuable feedback.', assignee: 'Riley Chen' },
-        { id: 102, title: 'Promise Kept General', dueDate: 'May 27, 09:15 PM', committedDate: 'May 27, 9:15 PM', description: 'I will join the project kickoff meeting to discuss the upcoming launch.', assignee: 'Chris Parker' },
-        { id: 103, title: 'Attendance', dueDate: 'May 26, 10:00 AM', committedDate: 'May 25, 9:15 PM', description: 'I commit to be on time for all the daily stand-ups this week.', assignee: 'Alex Johnson' },
-        { id: 104, title: 'Promise Kept General', dueDate: 'May 25, 05:00 PM', committedDate: 'May 24, 9:15 PM', description: 'I will complete the code review for the new feature branch.', assignee: 'Alex Johnson' },
-        { id: 105, title: 'Teamwork', dueDate: 'May 24, 10:00 AM', committedDate: 'May 23, 9:15 PM', description: 'I am going to prepare and share the agenda for the upcoming sprint planning meeting.', assignee: 'Sarah Connor' },
-        { id: 106, title: 'Attendance', dueDate: 'May 23, 09:00 AM', committedDate: 'May 22, 9:15 PM', description: 'I plan to join the all-hands meeting on time and prepared to discuss Q2 goals.', assignee: 'Mike Miller' },
-        { id: 107, title: 'Leadership', dueDate: 'May 22, 03:00 PM', committedDate: 'May 21, 9:15 PM', description: 'I promise to lead the brainstorming session for the new marketing campaign.', assignee: 'Jamie Smith' },
-        { id: 108, title: 'Promise Kept General', dueDate: 'May 21, 11:00 AM', committedDate: 'May 20, 9:15 PM', description: 'I will deliver the final report on the agreed-upon deadline.', assignee: 'John Doe' },
-        { id: 109, title: 'Attendance', dueDate: 'May 20, 02:00 PM', committedDate: 'May 19, 9:15 PM', description: 'I commit to attending the critical client call and contributing positively.', assignee: 'Jane Smith' },
-        { id: 110, title: 'Teamwork', dueDate: 'May 19, 06:00 PM', committedDate: 'May 18, 9:15 PM', description: 'I am going to provide the necessary assets for the marketing campaign on time.', assignee: 'Peter Jones' },
-        { id: 111, title: 'Promise Kept General', dueDate: 'May 18, 04:00 PM', committedDate: 'May 17, 9:15 PM', description: 'I will submit the expense report before the deadline.', assignee: 'Riley Chen' },
-        { id: 112, title: 'Attendance', dueDate: 'May 17, 10:00 AM', committedDate: 'May 16, 9:15 PM', description: 'I plan to be present and engaged in the weekly sync meeting.', assignee: 'Chris Parker' },
-        { id: 113, title: 'Teamwork', dueDate: 'May 16, 01:00 PM', committedDate: 'May 15, 9:15 PM', description: 'I will help a new team member get up to speed on the project.', assignee: 'Alex Johnson' },
-        { id: 114, title: 'Leadership', dueDate: 'May 15, 09:00 AM', committedDate: 'May 14, 9:15 PM', description: 'I promise to mentor a junior developer and help them solve a complex bug.', assignee: 'Sarah Connor' },
-        { id: 115, title: 'Promise Kept General', dueDate: 'May 14, 02:00 PM', committedDate: 'May 13, 9:15 PM', description: 'I will update the project documentation with the latest changes.', assignee: 'Mike Miller' },
-        { id: 116, title: 'Teamwork', dueDate: 'May 13, 12:00 PM', committedDate: 'May 12, 9:15 PM', description: 'I commit to collaborating effectively with the design team on the new UI.', assignee: 'Jamie Smith' },
-        { id: 117, title: 'Attendance', dueDate: 'May 12, 11:00 AM', committedDate: 'May 11, 9:15 PM', description: 'I am going to attend the optional training session to improve skills.', assignee: 'John Doe' },
-        { id: 118, title: 'Promise Kept General', dueDate: 'May 11, 03:00 PM', committedDate: 'May 10, 9:15 PM', description: 'I will provide feedback on the new product design mockups.', assignee: 'Jane Smith' },
-        { id: 119, title: 'Teamwork', dueDate: 'May 10, 05:00 PM', committedDate: 'May 9, 9:15 PM', description: 'I plan to share knowledge with the team during a brown bag session.', assignee: 'Peter Jones' },
-        { id: 120, title: 'Attendance', dueDate: 'May 9, 09:30 AM', committedDate: 'May 8, 9:15 PM', description: 'I promise to be punctual for the sprint retrospective meeting.', assignee: 'Riley Chen' },
-        { id: 121, title: 'Promise Kept General', dueDate: 'May 8, 01:00 PM', committedDate: 'May 7, 9:15 PM', description: 'I will respond to all high-priority emails within 24 hours.', assignee: 'Chris Parker' },
-        { id: 122, title: 'Leadership', dueDate: 'May 7, 04:00 PM', committedDate: 'May 6, 9:15 PM', description: 'I commit to taking initiative to resolve a blocker for the team.', assignee: 'Alex Johnson' },
-        { id: 123, title: 'Teamwork', dueDate: 'May 6, 10:00 AM', committedDate: 'May 5, 9:15 PM', description: 'I am going to pair program with a colleague to solve a difficult issue.', assignee: 'Sarah Connor' },
-        { id: 124, title: 'Attendance', dueDate: 'May 5, 11:00 AM', committedDate: 'May 4, 9:15 PM', description: 'I will attend the company town hall meeting.', assignee: 'Mike Miller' },
-        { id: 125, title: 'Promise Kept General', dueDate: 'May 4, 03:00 PM', committedDate: 'May 3, 9:15 PM', description: 'I plan to organize the team-building activity.', assignee: 'Jamie Smith' },
-        { id: 126, title: 'Teamwork', dueDate: 'May 3, 02:00 PM', committedDate: 'May 2, 9:15 PM', description: 'I promise to contribute to the team\'s shared codebase.', assignee: 'John Doe' },
-        { id: 127, title: 'Attendance', dueDate: 'May 2, 09:00 AM', committedDate: 'May 1, 9:15 PM', description: 'I will be present for the entire duration of the workshop.', assignee: 'Jane Smith' },
-        { id: 128, title: 'Promise Kept General', dueDate: 'May 1, 05:00 PM', committedDate: 'Apr 30, 9:15 PM', description: 'I commit to cleaning up the project board and archiving old tasks.', assignee: 'Peter Jones' },
-        { id: 129, title: 'Leadership', dueDate: 'Apr 30, 10:00 AM', committedDate: 'Apr 29, 9:15 PM', description: 'I am going to volunteer to lead the next project epic.', assignee: 'Riley Chen' },
-        { id: 130, title: 'Teamwork', dueDate: 'Apr 29, 01:00 PM', committedDate: 'Apr 28, 9:15 PM', description: 'I will offer constructive feedback during a peer review.', assignee: 'Chris Parker' },
-        { id: 131, title: 'Attendance', dueDate: 'Apr 28, 09:00 AM', committedDate: 'Apr 27, 9:15 PM', description: 'I plan to attend all scheduled meetings for the week.', assignee: 'Alex Johnson' },
-        { id: 132, title: 'Promise Kept General', dueDate: 'Apr 27, 04:00 PM', committedDate: 'Apr 26, 9:15 PM', description: 'I promise to follow up on all action items from the previous meeting.', assignee: 'Sarah Connor' },
-        { id: 133, title: 'Teamwork', dueDate: 'Apr 26, 11:00 AM', committedDate: 'Apr 25, 9:15 PM', description: 'I will help document a new process for the team.', assignee: 'Mike Miller' },
-        { id: 134, title: 'Leadership', dueDate: 'Apr 25, 02:00 PM', committedDate: 'Apr 24, 9:15 PM', description: 'I commit to presenting the team\'s achievements to senior management.', assignee: 'Jamie Smith' },
-        { id: 135, title: 'Attendance', dueDate: 'Apr 24, 10:00 AM', committedDate: 'Apr 23, 9:15 PM', description: 'I am going to be on time for the client demo.', assignee: 'John Doe' },
-        { id: 136, title: 'Promise Kept General', dueDate: 'Apr 23, 03:00 PM', committedDate: 'Apr 22, 9:15 PM', description: 'I will complete the mandatory security training.', assignee: 'Jane Smith' },
-        { id: 137, title: 'Teamwork', dueDate: 'Apr 22, 01:00 PM', committedDate: 'Apr 21, 9:15 PM', description: 'I plan to welcome a new hire and help them feel comfortable.', assignee: 'Peter Jones' },
-        { id: 138, title: 'Attendance', dueDate: 'Apr 21, 09:30 AM', committedDate: 'Apr 20, 9:15 PM', description: 'I promise to be punctual for the sprint retrospective meeting.', assignee: 'Riley Chen' },
-        { id: 139, title: 'Promise Kept General', dueDate: 'Apr 20, 05:00 PM', committedDate: 'Apr 19, 9:15 PM', description: 'I will review and approve the pull request in a timely manner.', assignee: 'Chris Parker' },
-        { id: 140, title: 'Leadership', dueDate: 'Apr 19, 02:00 PM', committedDate: 'Apr 18, 9:15 PM', description: 'I commit to identifying a potential risk and proposing a mitigation plan.', assignee: 'Alex Johnson' },
-        { id: 141, title: 'Teamwork', dueDate: 'Apr 18, 11:00 AM', committedDate: 'Apr 17, 9:15 PM', description: 'I am going to participate actively in the retrospective.', assignee: 'Sarah Connor' },
-        { id: 142, title: 'Attendance', dueDate: 'Apr 17, 10:00 AM', committedDate: 'Apr 16, 9:15 PM', description: 'I will attend the product roadmap presentation.', assignee: 'Mike Miller' },
-        { id: 143, title: 'Promise Kept General', dueDate: 'Apr 16, 04:00 PM', committedDate: 'Apr 15, 9:15 PM', description: 'I plan to provide a detailed status update in the project channel.', assignee: 'Jamie Smith' },
-        { id: 144, title: 'Teamwork', dueDate: 'Apr 15, 01:00 PM', committedDate: 'Apr 14, 9:15 PM', description: 'I promise to help a colleague with their task when they were stuck.', assignee: 'John Doe' },
-        { id: 145, title: 'Attendance', dueDate: 'Apr 14, 09:00 AM', committedDate: 'Apr 13, 9:15 PM', description: 'I will be present for the team lunch.', assignee: 'Jane Smith' },
-        { id: 146, title: 'Promise Kept General', dueDate: 'Apr 13, 03:00 PM', committedDate: 'Apr 12, 9:15 PM', description: 'I commit to testing the new feature on a staging environment.', assignee: 'Peter Jones' },
-        { id: 147, title: 'Leadership', dueDate: 'Apr 12, 11:00 AM', committedDate: 'Apr 11, 9:15 PM', description: 'I am going to facilitate a productive discussion during a meeting.', assignee: 'Riley Chen' },
-        { id: 148, title: 'Teamwork', dueDate: 'Apr 11, 02:00 PM', committedDate: 'Apr 10, 9:15 PM', description: 'I will acknowledge the contributions of other team members.', assignee: 'Chris Parker' },
-        { id: 149, title: 'Attendance', dueDate: 'Apr 10, 10:00 AM', committedDate: 'Apr 9, 9:15 PM', description: 'I plan to attend the weekly project review.', assignee: 'Alex Johnson' },
-        { id: 150, title: 'Promise Kept General', dueDate: 'Apr 9, 05:00 PM', committedDate: 'Apr 8, 9:15 PM', description: 'I promise to write unit tests for the new code.', assignee: 'Sarah Connor' },
-        { id: 151, title: 'Teamwork', dueDate: 'Apr 8, 01:00 PM', committedDate: 'Apr 7, 9:15 PM', description: 'I will share a useful article with the team.', assignee: 'Mike Miller' },
-        { id: 152, title: 'Attendance', dueDate: 'Apr 7, 09:30 AM', committedDate: 'Apr 6, 9:15 PM', description: 'I commit to being on time for the one-on-one meeting.', assignee: 'Jamie Smith' },
-        { id: 153, title: 'Promise Kept General', dueDate: 'Apr 6, 04:00 PM', committedDate: 'Apr 5, 9:15 PM', description: 'I am going to create a ticket for a bug I found.', assignee: 'John Doe' },
-        { id: 154, title: 'Leadership', dueDate: 'Apr 5, 02:00 PM', committedDate: 'Apr 4, 9:15 PM', description: 'I will provide clear direction to the team on a new task.', assignee: 'Jane Smith' },
-        { id: 155, title: 'Teamwork', dueDate: 'Apr 4, 11:00 AM', committedDate: 'Apr 3, 9:15 PM', description: 'I plan to celebrate a team success.', assignee: 'Peter Jones' },
-        { id: 156, title: 'Attendance', dueDate: 'Apr 3, 10:00 AM', committedDate: 'Apr 2, 9:15 PM', description: 'I promise to attend the sprint planning session.', assignee: 'Riley Chen' },
-        { id: 157, title: 'Promise Kept General', dueDate: 'Apr 2, 03:00 PM', committedDate: 'Apr 1, 9:15 PM', description: 'I will give a presentation on a new technology.', assignee: 'Chris Parker' },
-        { id: 158, title: 'Teamwork', dueDate: 'Apr 1, 01:00 PM', committedDate: 'Mar 31, 9:15 PM', description: 'I commit to brainstorming ideas for the next hackathon.', assignee: 'Alex Johnson' },
-        { id: 159, title: 'Attendance', dueDate: 'Mar 31, 09:00 AM', committedDate: 'Mar 30, 9:15 PM', description: 'I am going to be present for the daily stand-up.', assignee: 'Sarah Connor' },
-        { id: 160, title: 'Promise Kept General', dueDate: 'Mar 30, 05:00 PM', committedDate: 'Mar 29, 9:15 PM', description: 'I will resolve a merge conflict.', assignee: 'Mike Miller' },
-        { id: 161, title: 'Leadership', dueDate: 'Mar 29, 02:00 PM', committedDate: 'Mar 28, 9:15 PM', description: 'I plan to delegate tasks effectively to team members.', assignee: 'Jamie Smith' },
-        { id: 162, title: 'Teamwork', dueDate: 'Mar 28, 11:00 AM', committedDate: 'Mar 27, 9:15 PM', description: 'I promise to provide support to a team member who was struggling.', assignee: 'John Doe' },
-        { id: 163, title: 'Attendance', dueDate: 'Mar 27, 10:00 AM', committedDate: 'Mar 26, 9:15 PM', description: 'I will attend the design review meeting.', assignee: 'Jane Smith' },
-        { id: 164, title: 'Promise Kept General', dueDate: 'Mar 26, 04:00 PM', committedDate: 'Mar 25, 9:15 PM', description: 'I commit to refactoring a complex piece of code.', assignee: 'Peter Jones' },
         { id: 165, title: 'Teamwork', dueDate: 'Mar 25, 01:00 PM', committedDate: 'Mar 24, 9:15 PM', description: 'I am going to help onboard a new team member.', assignee: 'Riley Chen' },
       ],
     },
@@ -557,7 +464,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 9,
           title: 'Promise Kept General',
-          dueDate: 'Mar 20, 03:00 PM',
+          dueDate: dayjs().subtract(20, 'day').format('MMM D, YYYY, hh:mm A'), // Made overdue
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I promised to deliver the final report on the agreed-upon deadline, including all necessary data and analysis.',
           assignee: 'John Doe',
@@ -565,7 +472,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 10,
           title: 'Attendance',
-          dueDate: 'Mar 22, 11:00 AM',
+          dueDate: dayjs().subtract(15, 'day').format('MMM D, YYYY, hh:mm A'), // Made overdue
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I committed to attending the critical client call.',
           assignee: 'Jane Smith',
@@ -573,7 +480,7 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 11,
           title: 'Teamwork',
-          dueDate: 'Mar 25, 06:00 PM',
+          dueDate: dayjs().subtract(10, 'day').format('MMM D, YYYY, hh:mm A'), // Made overdue
           committedDate: 'Mar 27, 9:15 PM',
           description: 'I was going to provide the necessary assets for the marketing campaign, ensuring they were high-quality and on brand.',
           assignee: 'Peter Jones',
@@ -673,6 +580,7 @@ const CommitmentPortfolio: React.FC = () => {
               displayMode={displayMode} // Pass displayMode to CommitmentsSection
               showClearAllFilters={true}
               isActionsPage={false}
+              isCommitmentPortfolioPage={true} // New prop
             />
           </Grid>
 
@@ -684,6 +592,7 @@ const CommitmentPortfolio: React.FC = () => {
               displayMode="regular" // Others' commitments always in regular mode
               showClearAllFilters={true}
               isActionsPage={false}
+              isCommitmentPortfolioPage={true} // New prop
             />
           </Grid>
         </Grid>

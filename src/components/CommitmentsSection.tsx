@@ -75,6 +75,7 @@ interface CommitmentsSectionProps {
   displayMode?: 'regular' | 'table'; // New prop for display mode
   showClearAllFilters?: boolean; // New prop to control visibility of Clear All Filters button
   isActionsPage?: boolean; // New prop to differentiate between Actions and Commitment Portfolio
+  isCommitmentPortfolioPage?: boolean; // New prop to indicate if on Commitment Portfolio page
 }
 
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
@@ -89,7 +90,7 @@ const parseCommitmentDate = (dateString: string): Dayjs | null => {
     }
     
     // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D, YYYY"
-    const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY', 'MMM D'], true);
+    const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY, hh:mm A', 'MMM D', 'MMM D, YYYY'], true);
     return date.isValid() ? date : null;
   } catch (error) {
     return null;
@@ -105,7 +106,8 @@ const parseCommittedDate = (dateString?: string): Dayjs | null => {
     }
     const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY, hh:mm A', 'MMM D, YYYY'], true);
     return date.isValid() ? date : null;
-  } catch (error) {
+  }
+  catch (error) {
     return null;
   }
 };
@@ -118,7 +120,7 @@ const groupMembers: { [key: string]: string[] } = {
   'Part-timers': ['Chris Parker'],
 };
 
-const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true, isActionsPage = false }) => {
+const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true, isActionsPage = false, isCommitmentPortfolioPage = false }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -1078,7 +1080,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               />
             </Box>
           ) : (
-            <Stack spacing={1} sx={{ width: '100%' }}>
+            <Stack spacing={1} sx={{ width: '100%', mt: 2 }}> {/* Added mt: 2 for extra space */}
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
                   paginatedItems.map((item, index) => (
@@ -1106,7 +1108,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     const isCheckboxDisabled = isActionsPage && isMyPromisesTab && isNudgeItem; 
                     
                     const itemDate = parseCommitmentDate(item.dueDate);
-                    const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
+                    // All unkept promises are overdue by default
+                    const isOverdue = isUnkeptTab || (itemDate ? itemDate.isBefore(dayjs(), 'day') : false);
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
                     
@@ -1227,6 +1230,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         isOwedToMe={isOwedToMe}
         onRevokeClick={handleRevokeFromDetails}
         onClarifyClick={handleClarifyFromDetails}
+        isCommitmentPortfolioPage={isCommitmentPortfolioPage}
       />
       <NudgeDetailsModal
         open={nudgeDetailsModalOpen}

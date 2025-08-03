@@ -31,6 +31,7 @@ interface CommitmentDetailsModalProps {
   isOwedToMe?: boolean;
   onRevokeClick?: () => void;
   onClarifyClick?: () => void;
+  isCommitmentPortfolioPage?: boolean; // New prop
 }
 
 const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
@@ -45,6 +46,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
   isOwedToMe,
   onRevokeClick,
   onClarifyClick,
+  isCommitmentPortfolioPage = false, // Default to false
 }) => {
   if (!commitment) return null;
 
@@ -128,26 +130,29 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
         </Box>
       );
     }
-    // Default button
-    return (
-      <Button
-        variant="contained"
-        onClick={onRequestBadgeClick}
-        fullWidth
-        sx={{
-          bgcolor: '#FF7F41',
-          color: 'white',
-          textTransform: 'none',
-          fontWeight: 'bold',
-          py: 1.5,
-          borderRadius: 1,
-          fontSize: '16px',
-          '&:hover': { bgcolor: '#F4611A' },
-        }}
-      >
-        Request Badge
-      </Button>
-    );
+    // Default button (Request Badge) - only show if NOT on Commitment Portfolio page
+    if (!isCommitmentPortfolioPage) {
+      return (
+        <Button
+          variant="contained"
+          onClick={onRequestBadgeClick}
+          fullWidth
+          sx={{
+            bgcolor: '#FF7F41',
+            color: 'white',
+            textTransform: 'none',
+            fontWeight: 'bold',
+            py: 1.5,
+            borderRadius: 1,
+            fontSize: '16px',
+            '&:hover': { bgcolor: '#F4611A' },
+          }}
+        >
+          Request Badge
+        </Button>
+      );
+    }
+    return null; // No button if on Commitment Portfolio page
   };
 
   return (

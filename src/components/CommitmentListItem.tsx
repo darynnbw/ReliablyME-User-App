@@ -220,7 +220,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}>
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: explanation ? 1.5 : 2.5 }}> {/* Adjusted mb */}
               {description}
             </Typography>
 
@@ -233,8 +233,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   py: 1.5,
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
-                  mt: 1,
-                  mb: 3,
+                  mt: 0, // Removed top margin as it's now handled by description's mb
+                  mb: 2.5, // Adjusted mb
                   maxWidth: '100%',
                 }}
               >
