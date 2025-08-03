@@ -255,16 +255,24 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                  Historical Responses:
+                  All Responses: {/* Renamed from Historical Responses */}
                 </Typography>
                 <Stack spacing={1}>
                   {responses
                     ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
                     .map((response, idx) => (
                       <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                          {response.date}:
-                        </Typography>
+                        <Chip
+                          label={response.date}
+                          size="small"
+                          sx={{
+                            bgcolor: '#fff3e0', // Nudge pill background
+                            color: '#ff7043', // Nudge pill text color
+                            fontWeight: 700, // Nudge pill font weight
+                            fontSize: '12px', // Nudge pill font size
+                            mb: 1,
+                          }}
+                        />
                         <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
                           {response.answer}
                         </Typography>
