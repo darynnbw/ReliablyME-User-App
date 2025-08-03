@@ -1228,8 +1228,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         isOwedToMe={isOwedToMe}
         onRevokeClick={handleRevokeFromDetails}
         onClarifyClick={handleClarifyFromDetails}
-        {/* Pass isActionsPage prop */}
-        isActionsPage={isActionsPage}
+        isActionsPage={isActionsPage} {/* Pass isActionsPage prop */}
       />
       <NudgeDetailsModal
         open={nudgeDetailsModalOpen}
