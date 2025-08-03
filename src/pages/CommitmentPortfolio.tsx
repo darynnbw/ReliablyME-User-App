@@ -92,7 +92,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 12,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(1, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
+      dueDate: dayjs().subtract(4, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(3, 'day').hour(9).minute(45).format('MMM D, YYYY, hh:mm A'),
       description: 'I will finalize the budget proposal for the new marketing campaign, incorporating all stakeholder feedback and ensuring cost-effectiveness.',
       assignee: 'Chris Parker',
@@ -100,7 +100,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 13,
       title: 'Teamwork',
-      dueDate: dayjs().add(2, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
+      dueDate: dayjs().subtract(3, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(2, 'day').hour(17).minute(30).format('MMM D, YYYY, hh:mm A'),
       description: 'I will assist a new team member with their onboarding process, providing guidance on tools, workflows, and team culture to ensure a smooth transition.',
       assignee: 'Riley Chen',
@@ -108,7 +108,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 14,
       title: 'Attendance',
-      dueDate: dayjs().add(3, 'day').hour(10).minute(30).format('MMM D, YYYY, hh:mm A'), // Future date
+      dueDate: dayjs().subtract(2, 'day').hour(10).minute(30).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(1, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the weekly project sync meeting without fail, providing updates on my progress and actively participating in problem-solving discussions.',
       assignee: 'Jamie Smith',
@@ -116,7 +116,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 15,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(4, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'), // Future date
+      dueDate: dayjs().subtract(1, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(1, 'day').subtract(2, 'hour').hour(21).minute(59).format('MMM D, YYYY, hh:mm A'), // Adjusted to be before due date
       description: 'I will complete the security audit report by the end of the week, identifying vulnerabilities and recommending actionable mitigation strategies.',
       assignee: 'Alex Johnson',
