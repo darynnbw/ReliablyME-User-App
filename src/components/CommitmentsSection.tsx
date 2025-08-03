@@ -630,8 +630,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
   const isTableView = displayMode === 'table' && isMyCommitmentsSection;
 
-  // Bulk actions should only show if it's NOT the "My Commitments" section
-  const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
+  const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab;
 
   const showBulkRequest = selectedCount > 0 && isMyPromisesTab;
   const showBulkClarify = selectedCount > 0 && isOwedToMe;
@@ -855,7 +854,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Tabs>
         </Box>
 
-        {showBulkActionsSection && ( // Only show this section if bulk actions are allowed
+        {showBulkActionsSection && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, mb: 1, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Checkbox
@@ -1044,16 +1043,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 ) : (
                   paginatedItems.map((item, index) => {
                     const isNudgeItem = item.type === 'nudge';
-                    // Checkboxes are only shown if it's NOT the "My Commitments" section
-                    const showCheckboxes = !isUnkeptTab && !isMyBadgesTab && !isMyCommitmentsSection;
+                    const showCheckboxes = !isUnkeptTab && !isMyBadgesTab;
                     const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
                     const itemDate = parseCommitmentDate(item.dueDate);
                     const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
-                    // Action button for individual items should still be shown if applicable
                     const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
-                    // Adjusted logic for showFromLabel
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
                     return (
