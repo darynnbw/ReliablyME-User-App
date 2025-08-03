@@ -291,8 +291,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
 
+  // Determine if the current section is "My Commitments"
+  const isMyCommitmentsSection = title.trim() === 'My Commitments';
+  const isTableView = displayMode === 'table' && isMyCommitmentsSection;
   // Determine if filters should be disabled
   const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
+  const disableMyCommitmentFiltersInTableMode = displayMode === 'table' && isMyCommitmentsSection;
+
 
   // Generate unique people and add group options
   const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
@@ -632,10 +637,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     itemColor = '#4F4F4F'; // Grey
   }
 
-  // Determine if the current section is "My Commitments"
-  const isMyCommitmentsSection = title.trim() === 'My Commitments';
-  const isTableView = displayMode === 'table' && isMyCommitmentsSection;
-
   // Bulk actions section should only show if it's the Actions page and not for Unkept/MyBadges tabs
   const showBulkActionsSection = isActionsPage && paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab;
 
@@ -711,7 +712,53 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {/* Filters for My Commitments section (including My Promises) */}
             {isMyCommitmentsSection && (
               <>
-                {/* Removed Person and Due Date filters */}
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode}>
+                  <InputLabel>Person</InputLabel>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
+                    <MenuItem value="">All</MenuItem>
+                    {filterOptions.map(person => (
+                      <MenuItem key={person} value={person}>{person}</MenuItem>
+                    ))}
+                    {hasExternal && <MenuItem value="External">External</MenuItem>}
+                  </Select>
+                </FormControl>
+
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode}>
+                  <InputLabel>Due Date</InputLabel>
+                  <Select
+                    value={dateFilter}
+                    onChange={handleDateFilterChange}
+                    label="Due Date"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CalendarToday fontSize="small" sx={{ color: disableMyCommitmentFiltersInTableMode ? 'action.disabled' : 'text.secondary' }} />
+                      </InputAdornment>
+                    }
+                  >
+                    <MenuItem value="All">All</MenuItem>
+                    <MenuItem value="Today">Today</MenuItem>
+                    <MenuItem value="This Week">This Week</MenuItem>
+                    <MenuItem value="Custom Range">Custom Range</MenuItem>
+                  </Select>
+                </FormControl>
+
+                {dateFilter === 'Custom Range' && (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    value={
+                      dateRange[0] && dateRange[1]
+                        ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
+                        : 'Select Range'
+                    }
+                    onClick={handleCustomRangeClick}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    sx={{ minWidth: 180, cursor: 'pointer' }}
+                    disabled={disableMyCommitmentFiltersInTableMode}
+                  />
+                )}
               </>
             )}
             {/* Filters for Others' Commitments section */}
