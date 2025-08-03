@@ -21,8 +21,8 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 100,
       title: 'Weekly Progress Check-in',
-      dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
-      committedDate: 'N/A',
+      dueDate: dayjs().subtract(1, 'day').format('MMM D, hh:mm A'), // Adjusted to past
+      committedDate: dayjs().subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will provide a weekly update on my progress, addressing key accomplishments, upcoming plans, and any potential blockers.',
       assignee: 'Alex Johnson',
       type: 'nudge',
@@ -110,287 +110,287 @@ const CommitmentPortfolio: React.FC = () => {
       id: 15,
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(1, 'day').format('MMM D, YYYY'),
-      committedDate: dayjs().format('MMM D, hh:mm A'),
+      committedDate: dayjs().subtract(1, 'day').subtract(2, 'hour').format('MMM D, hh:mm A'), // Adjusted to be before due date
       description: 'I will complete the security audit report by the end of the week, identifying vulnerabilities and recommending actionable mitigation strategies.',
       assignee: 'Alex Johnson',
     },
     {
       id: 16,
       title: 'Leadership',
-      dueDate: dayjs().add(1, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(1, 'month').subtract(4, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(1, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(1, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will lead the brainstorming session for the next product feature, fostering an environment of creativity and ensuring all ideas are captured and evaluated.',
       assignee: 'Sarah Connor',
     },
     {
       id: 17,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(2, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(1, 'month').subtract(3, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(1, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(1, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will provide a comprehensive review of the new UI/UX designs, offering constructive criticism and suggestions for improvement to enhance user engagement.',
       assignee: 'Mike Miller',
     },
     {
       id: 18,
       title: 'Attendance',
-      dueDate: dayjs().add(3, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(1, 'month').subtract(2, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(2, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(2, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will be present for the client demo call and answer any technical questions, ensuring a smooth and informative presentation for the client.',
       assignee: 'Chris Parker',
     },
     {
       id: 19,
       title: 'Teamwork',
-      dueDate: dayjs().add(4, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(1, 'month').subtract(1, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(2, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(2, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will help debug the critical production issue with the team, collaborating closely to identify the root cause and implement a timely solution.',
       assignee: 'Riley Chen',
     },
     {
       id: 20,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(5, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(1, 'month').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(2, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(2, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will prepare the quarterly business review presentation for the stakeholders, summarizing key achievements, challenges, and future strategies.',
       assignee: 'Jamie Smith',
     },
     {
       id: 21,
       title: 'Attendance',
-      dueDate: dayjs().add(6, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(2, 'month').subtract(4, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(2, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(2, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will attend the company-wide training session on new software tools, actively participating and applying the learned skills to my daily tasks.',
       assignee: 'Alex Johnson',
     },
     {
       id: 22,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(7, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(2, 'month').subtract(3, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(3, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(3, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will update the project roadmap document with the latest changes, ensuring it accurately reflects current progress and upcoming milestones.',
       assignee: 'Sarah Connor',
     },
     {
       id: 23,
       title: 'Teamwork',
-      dueDate: dayjs().add(8, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(2, 'month').subtract(2, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(3, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(3, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will provide constructive feedback during the peer code review session, helping to improve code quality and foster a collaborative development environment.',
       assignee: 'Mike Miller',
     },
     {
       id: 24,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(9, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(2, 'month').subtract(1, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(3, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(3, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will research and propose new technologies for our backend infrastructure, evaluating their suitability and potential benefits for scalability and performance.',
       assignee: 'Chris Parker',
     },
     {
       id: 25,
       title: 'Attendance',
-      dueDate: dayjs().add(10, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(2, 'month').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(3, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(3, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will participate actively in the daily stand-up meetings, providing concise updates and raising any impediments to progress.',
       assignee: 'Riley Chen',
     },
     {
       id: 26,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(11, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(3, 'month').subtract(4, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(4, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(4, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will prepare and deliver a presentation on recent industry trends, sharing insights and their potential impact on our product strategy.',
       assignee: 'Jamie Smith',
     },
     {
       id: 27,
       title: 'Teamwork',
-      dueDate: dayjs().add(12, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(3, 'month').subtract(3, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(4, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(4, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will assist the QA team in testing the new features before release, ensuring thorough coverage and identifying any critical bugs.',
       assignee: 'Alex Johnson',
     },
     {
       id: 28,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(13, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(3, 'month').subtract(2, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(4, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(4, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will document the new API endpoints for external developers, providing clear and comprehensive instructions for integration.',
       assignee: 'Sarah Connor',
     },
     {
       id: 29,
       title: 'Attendance',
-      dueDate: dayjs().add(14, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(3, 'month').subtract(1, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(4, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(4, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will attend the weekly leadership meeting and provide updates on my team\'s progress, contributing to high-level strategic discussions.',
       assignee: 'Mike Miller',
     },
     {
       id: 30,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(15, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(3, 'month').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(5, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(5, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will review and approve the new marketing collateral, ensuring it aligns with brand guidelines and effectively communicates our message.',
       assignee: 'Chris Parker',
     },
     {
       id: 31,
       title: 'Teamwork',
-      dueDate: dayjs().add(16, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(4, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(5, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(5, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will collaborate with the sales team to develop new client proposals, tailoring solutions to meet specific client needs and objectives.',
       assignee: 'Riley Chen',
     },
     {
       id: 32,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(17, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(3, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(5, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(5, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will prepare a detailed report on customer feedback and suggestions, analyzing trends and identifying areas for product improvement.',
       assignee: 'Jamie Smith',
     },
     {
       id: 33,
       title: 'Attendance',
-      dueDate: dayjs().add(18, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(2, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(5, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(5, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will ensure timely attendance at all scheduled client meetings, demonstrating professionalism and commitment to client success.',
       assignee: 'Alex Johnson',
     },
     {
       id: 34,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(19, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(1, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(6, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(6, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will conduct a training session for new employees on our internal tools, ensuring they are proficient and productive from day one.',
       assignee: 'Sarah Connor',
     },
     {
       id: 35,
       title: 'Teamwork',
-      dueDate: dayjs().add(20, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(4, 'month').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(6, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(6, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will assist in organizing the company\'s annual team-building event, contributing to a positive and cohesive work environment.',
       assignee: 'Mike Miller',
     },
     {
       id: 36,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(21, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(5, 'month').subtract(4, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(6, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(6, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will develop and implement a new feature for the mobile application, enhancing user functionality and improving overall app performance.',
       assignee: 'Chris Parker',
     },
     {
       id: 37,
       title: 'Attendance',
-      dueDate: dayjs().add(22, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(5, 'month').subtract(3, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(6, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(6, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will attend the industry conference to gather insights on emerging trends, bringing back valuable knowledge to benefit our team and projects.',
       assignee: 'Riley Chen',
     },
     {
       id: 38,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(23, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(5, 'month').subtract(2, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(7, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(7, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will prepare a detailed financial forecast for the next fiscal year, providing a clear outlook for budgeting and strategic planning.',
       assignee: 'Jamie Smith',
     },
     {
       id: 39,
       title: 'Teamwork',
-      dueDate: dayjs().add(24, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(5, 'month').subtract(1, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(7, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(7, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will collaborate with cross-functional teams to streamline our workflow, identifying inefficiencies and implementing solutions for improved productivity.',
       assignee: 'Alex Johnson',
     },
     {
       id: 40,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(25, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(5, 'month').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(7, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(7, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will conduct a thorough market analysis for our new product launch, identifying target demographics and competitive advantages.',
       assignee: 'Sarah Connor',
     },
     {
       id: 41,
       title: 'Attendance',
-      dueDate: dayjs().add(26, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(6, 'month').subtract(4, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(7, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(7, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will ensure my presence at all mandatory company-wide meetings, actively listening and contributing to discussions.',
       assignee: 'Mike Miller',
     },
     {
       id: 42,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(27, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(6, 'month').subtract(3, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(8, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(8, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will design and implement a new database schema for improved performance, optimizing data storage and retrieval processes.',
       assignee: 'Chris Parker',
     },
     {
       id: 43,
       title: 'Teamwork',
-      dueDate: dayjs().add(28, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(6, 'month').subtract(2, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(8, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(8, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will provide support to colleagues facing technical challenges, offering guidance and solutions to ensure project continuity.',
       assignee: 'Riley Chen',
     },
     {
       id: 44,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(29, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(6, 'month').subtract(1, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(8, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(8, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will prepare a detailed report on the effectiveness of our recent marketing campaigns, analyzing ROI and identifying successful strategies.',
       assignee: 'Jamie Smith',
     },
     {
       id: 45,
       title: 'Attendance',
-      dueDate: dayjs().add(30, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(6, 'month').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(8, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(8, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will attend all scheduled client presentations and contribute to discussions, representing our team professionally and effectively.',
       assignee: 'Alex Johnson',
     },
     {
       id: 46,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(31, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(7, 'month').subtract(4, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(9, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(9, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will develop and deploy a new microservice to enhance system scalability, improving overall application responsiveness and reliability.',
       assignee: 'Sarah Connor',
     },
     {
       id: 47,
       title: 'Teamwork',
-      dueDate: dayjs().add(32, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(7, 'month').subtract(3, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(9, 'month').subtract(3, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(9, 'month').subtract(4, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will actively participate in team discussions and contribute innovative ideas, fostering a collaborative and forward-thinking environment.',
       assignee: 'Mike Miller',
     },
     {
       id: 48,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(33, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(7, 'month').subtract(2, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(9, 'month').subtract(5, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(9, 'month').subtract(6, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will conduct a thorough review of all legal documents related to new partnerships, ensuring compliance and mitigating potential risks.',
       assignee: 'Chris Parker',
     },
     {
       id: 49,
       title: 'Attendance',
-      dueDate: dayjs().add(34, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(7, 'month').subtract(1, 'day').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(9, 'month').subtract(7, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(9, 'month').subtract(8, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will ensure my presence at all critical project review meetings, providing timely updates and addressing any concerns.',
       assignee: 'Riley Chen',
     },
     {
       id: 50,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(35, 'day').format('MMM D, YYYY'), // Future date
-      committedDate: dayjs().subtract(7, 'month').format('MMM D, hh:mm A'),
+      dueDate: dayjs().subtract(10, 'month').subtract(1, 'day').format('MMM D, YYYY'), // Adjusted to past
+      committedDate: dayjs().subtract(10, 'month').subtract(2, 'day').format('MMM D, hh:mm A'), // Adjusted to past
       description: 'I will prepare a comprehensive report on our competitive landscape, identifying key players, market trends, and strategic opportunities.',
       assignee: 'Jamie Smith',
     },
