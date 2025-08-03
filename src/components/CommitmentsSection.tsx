@@ -423,6 +423,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     const checked = event.target.checked;
     setSelectAll(checked);
     setCommitments(prev => prev.map(item => {
+      // Nudges in My Promises tab should never be selectable for bulk actions
       const isNudgeInMyPromises = isMyPromisesTab && item.type === 'nudge';
       return { ...item, selected: isNudgeInMyPromises ? false : checked };
     }));
@@ -634,10 +635,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   // Bulk actions section should only show if it's the Actions page and not for Unkept/MyBadges tabs
   const showBulkActionsSection = isActionsPage && paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab;
 
-  const showBulkRequest = selectedCount > 0 && isMyPromisesTab; // This will now only be true on Actions page
-
-  const showBulkClarify = selectedCount > 0 && isOwedToMe;
-  const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
+  const showBulkRequest = isActionsPage && selectedCount > 0 && isMyPromisesTab;
+  const showBulkClarify = isActionsPage && selectedCount > 0 && isOwedToMe;
+  const showBulkRevoke = isActionsPage && selectedCount > 0 && isAwaitingResponseTab;
 
   const isOthersCommitmentsSection = title.trim() === "Others' Commitments";
 
@@ -1100,17 +1100,24 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 ) : (
                   paginatedItems.map((item, index) => {
                     const isNudgeItem = item.type === 'nudge';
-                    // Checkboxes are shown only on Actions page and not for Unkept/MyBadges/MyPromises tabs
-                    const showCheckboxes = isActionsPage && !isUnkeptTab && !isMyBadgesTab && !isMyPromisesTab;
-                    const isCheckboxDisabled = isMyPromisesTab && isNudgeItem; 
+                    // Checkboxes are shown only on Actions page and not for MyBadges/Unkept tabs
+                    const showCheckboxes = isActionsPage && !isMyBadgesTab && !isUnkeptTab;
+                    // Nudges in My Promises tab on Actions page are disabled for bulk select
+                    const isCheckboxDisabled = isActionsPage && isMyPromisesTab && isNudgeItem; 
+                    
                     const itemDate = parseCommitmentDate(item.dueDate);
                     const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
-                    // Action button is shown only on Actions page for My Promises (Nudge) or other specific tabs
+                    
+                    // Action button logic:
+                    // Show if on Actions page AND (
+                    //   (it's a Nudge in My Promises tab) OR
+                    //   (it's NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
+                    // )
                     const showActionButton = isActionsPage && (
                       (isNudgeItem && isMyPromisesTab) || 
-                      (!isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
+                      (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
                     );
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
