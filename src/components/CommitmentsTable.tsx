@@ -287,8 +287,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                     label={response.date}
                                     size="small"
                                     sx={{
-                                      bgcolor: theme.palette.primary.light,
-                                      color: theme.palette.primary.dark,
+                                      bgcolor: theme.palette.secondary.dark, // Reliably Orange (darker for AA)
+                                      color: 'white', // White text
                                       fontWeight: 500,
                                       mb: 1,
                                     }}
