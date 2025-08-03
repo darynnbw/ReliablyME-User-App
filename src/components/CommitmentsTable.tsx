@@ -13,10 +13,13 @@ import {
   Menu,
   MenuItem,
   useTheme,
+  Collapse, // Import Collapse
+  Stack, // Import Stack for layout
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import { CalendarToday, ArrowDropDown } from '@mui/icons-material';
+import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // Import new icons
+import dayjs from 'dayjs'; // Import dayjs for sorting responses
 
 interface Commitment {
   id: number;
@@ -31,6 +34,7 @@ interface Commitment {
   isExternal?: boolean;
   questions?: string[];
   explanation?: string;
+  responses?: { date: string; answer: string }[]; // Add responses to interface
 }
 
 interface CommitmentsTableProps {
@@ -59,6 +63,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [assigneeAnchorEl, setAssigneeAnchorEl] = useState<null | HTMLElement>(null);
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set()); // State for expanded rows
 
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
   const assigneeCellRef = useRef<HTMLTableCellElement>(null);
@@ -95,6 +100,18 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const handleCommittedDateChange = (newValue: Dayjs | null) => {
     onFilterChange('committedDate', newValue);
     setCommittedDateOpen(false);
+  };
+
+  const handleToggleExpand = (id: number) => {
+    setExpandedRows(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   const badgeIconColor = filters.badge ? theme.palette.primary.main : 'text.secondary';
@@ -220,21 +237,56 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableRow>
           ) : (
             commitments.map((commitment, index) => (
-              <TableRow
-                key={commitment.id}
-                sx={{
-                  '&:last-child td, &:last-child th': { border: 0 },
-                  bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
-                }}
-              >
-                <TableCell component="th" scope="row">
-                  {commitment.title}
-                </TableCell>
-                <TableCell>{commitment.description}</TableCell>
-                <TableCell>{commitment.assignee}</TableCell>
-                <TableCell>{commitment.dueDate}</TableCell>
-                <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
-              </TableRow>
+              <React.Fragment key={commitment.id}>
+                <TableRow
+                  sx={{
+                    '&:last-child td, &:last-child th': { border: 0 },
+                    bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
+                  }}
+                >
+                  <TableCell component="th" scope="row">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
+                        <IconButton size="small" onClick={() => handleToggleExpand(commitment.id)}>
+                          {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                        </IconButton>
+                      )}
+                      {commitment.title}
+                    </Box>
+                  </TableCell>
+                  <TableCell>{commitment.description}</TableCell>
+                  <TableCell>{commitment.assignee}</TableCell>
+                  <TableCell>{commitment.dueDate}</TableCell>
+                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+                </TableRow>
+                {commitment.type === 'nudge' && commitment.responses && (
+                  <TableRow>
+                    <TableCell colSpan={5} sx={{ py: 0 }}>
+                      <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
+                        <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                            Historical Responses:
+                          </Typography>
+                          <Stack spacing={1}>
+                            {commitment.responses
+                              .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
+                              .map((response, idx) => (
+                                <Box key={idx} sx={{ pb: 1, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                                  <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                                    {response.date}:
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                    {response.answer}
+                                  </Typography>
+                                </Box>
+                              ))}
+                          </Stack>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
             ))
           )}
         </TableBody>
