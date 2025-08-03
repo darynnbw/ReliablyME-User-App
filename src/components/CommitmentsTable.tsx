@@ -15,6 +15,7 @@ import {
   useTheme,
   Collapse, // Import Collapse
   Stack, // Import Stack for layout
+  Chip, // Import Chip for pill-shaped dates
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
@@ -152,7 +153,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               Original Commitment
             </TableCell>
-            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 1 }}> {/* Adjusted padding-left */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
                 <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
@@ -265,7 +266,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     </Box>
                   </TableCell>
                   <TableCell>{commitment.description}</TableCell>
-                  <TableCell>{commitment.assignee}</TableCell>
+                  <TableCell sx={{ pl: 1 }}>{commitment.assignee}</TableCell> {/* Adjusted padding-left */}
                   <TableCell>{commitment.dueDate}</TableCell>
                   <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
                 </TableRow>
@@ -275,16 +276,23 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                           <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                            Historical Responses:
+                            All Responses: {/* Renamed from Historical Responses */}
                           </Typography>
                           <Stack spacing={1}>
                             {commitment.responses
                               .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
                               .map((response, idx) => (
                                 <Box key={idx} sx={{ pb: 1, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                                  <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                                    {response.date}:
-                                  </Typography>
+                                  <Chip
+                                    label={response.date}
+                                    size="small"
+                                    sx={{
+                                      bgcolor: theme.palette.primary.light,
+                                      color: theme.palette.primary.dark,
+                                      fontWeight: 500,
+                                      mb: 1,
+                                    }}
+                                  />
                                   <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
                                     {response.answer}
                                   </Typography>
