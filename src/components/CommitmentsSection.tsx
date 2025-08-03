@@ -907,7 +907,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         </Popover>
 
         {/* New container for Tabs and Clear All Filters button */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: 1, borderColor: 'divider', mb: 1 }}> {/* Adjusted mb to 1 */}
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
             {tabs.map((tab, index) => <Tab key={index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
@@ -1100,7 +1100,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               />
             </Box>
           ) : (
-            <Stack spacing={1} sx={{ width: '100%', mt: 2 }}> {/* Added mt: 2 for extra space */}
+            <Stack spacing={1} sx={{ width: '100%', mt: 1 }}> {/* Adjusted mt to 1 */}
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
                   paginatedItems.map((item, index) => (
@@ -1216,26 +1216,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Box>
         )}
 
-        {showClearAllFilters && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-            <Button
-              onClick={handleClearAllFilters}
-              sx={{
-                textTransform: 'none',
-                color: 'grey.600',
-                textDecoration: 'underline',
-                p: 0,
-                '&:hover': {
-                  textDecoration: 'underline',
-                  bgcolor: 'transparent',
-                  color: 'grey.800',
-                },
-              }}
-            >
-              Clear all filters
-            </Button>
-          </Box>
-        )}
+        {/* Removed the second Clear All Filters button */}
       </Paper>
 
       <CommitmentDetailsModal 

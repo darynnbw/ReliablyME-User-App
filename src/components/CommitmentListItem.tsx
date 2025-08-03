@@ -152,7 +152,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         )}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}> {/* Adjusted mb */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -206,7 +206,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           <Stack>
             {/* Due Date */}
             {!hideDueDate && (
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}> {/* Adjusted mb */}
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
                 <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
                 <Typography variant="body2" sx={{ color: dueRowColor, fontWeight: dueRowWeight }}>
                   Due {dueDate}
@@ -220,7 +220,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
 
             {/* Description */}
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: explanation ? 1.5 : 2 }}> {/* Adjusted mb */}
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 2 }}>
               {description}
             </Typography>
 
@@ -233,8 +233,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   py: 1.5,
                   borderRadius: 2,
                   border: '1px solid #e9ecef',
-                  mt: 0, // Removed top margin as it's now handled by description's mb
-                  mb: 2, // Adjusted mb
+                  mb: 2,
                   maxWidth: '100%',
                 }}
               >
