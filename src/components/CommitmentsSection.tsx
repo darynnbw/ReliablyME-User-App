@@ -630,9 +630,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
   const isTableView = displayMode === 'table' && isMyCommitmentsSection;
 
-  const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab;
+  // Bulk actions section should NOT show for My Promises tab
+  const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && !isMyPromisesTab;
 
-  const showBulkRequest = selectedCount > 0 && isMyPromisesTab;
+  const showBulkRequest = selectedCount > 0 && isMyPromisesTab; // This will now always be false due to the above change
   const showBulkClarify = selectedCount > 0 && isOwedToMe;
   const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
 
@@ -701,7 +702,60 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
-            {title.trim() !== 'My Commitments' && (
+            {/* Filters for My Commitments section (including My Promises) */}
+            {isMyCommitmentsSection && (
+              <>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                  <InputLabel>Person</InputLabel>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
+                    <MenuItem value="">All</MenuItem>
+                    {filterOptions.map(person => (
+                      <MenuItem key={person} value={person}>{person}</MenuItem>
+                    ))}
+                    {hasExternal && <MenuItem value="External">External</MenuItem>}
+                  </Select>
+                </FormControl>
+
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
+                  <InputLabel>Due Date</InputLabel>
+                  <Select
+                    value={dateFilter}
+                    onChange={handleDateFilterChange}
+                    label="Due Date"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                      </InputAdornment>
+                    }
+                  >
+                    <MenuItem value="All">All</MenuItem>
+                    <MenuItem value="Today">Today</MenuItem>
+                    <MenuItem value="This Week">This Week</MenuItem>
+                    <MenuItem value="Custom Range">Custom Range</MenuItem>
+                  </Select>
+                </FormControl>
+
+                {dateFilter === 'Custom Range' && (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    value={
+                      dateRange[0] && dateRange[1]
+                        ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
+                        : 'Select Range'
+                    }
+                    onClick={handleCustomRangeClick}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    sx={{ minWidth: 180, cursor: 'pointer' }}
+                    disabled={disableFilters}
+                  />
+                )}
+              </>
+            )}
+            {/* Filters for Others' Commitments section */}
+            {!isMyCommitmentsSection && (
               <>
                 <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
                   <InputLabel>Person</InputLabel>
@@ -1043,13 +1097,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 ) : (
                   paginatedItems.map((item, index) => {
                     const isNudgeItem = item.type === 'nudge';
-                    const showCheckboxes = !isUnkeptTab && !isMyBadgesTab;
-                    const isCheckboxDisabled = isMyPromisesTab && isNudgeItem;
+                    // Checkboxes and action buttons are hidden for My Promises tab
+                    const showCheckboxes = !isUnkeptTab && !isMyBadgesTab && !isMyPromisesTab;
+                    const isCheckboxDisabled = isMyPromisesTab && isNudgeItem; 
                     const itemDate = parseCommitmentDate(item.dueDate);
                     const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
-                    const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab;
+                    // Action button is hidden for My Promises tab
+                    const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab && !isMyPromisesTab;
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
                     return (
@@ -1060,7 +1116,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         color={itemColor}
                         showCheckbox={showCheckboxes}
                         isCheckboxDisabled={isCheckboxDisabled}
-                        showActionButton={showActionButton || (isNudgeItem && isMyPromisesTab)}
+                        showActionButton={showActionButton}
                         buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
                         onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                         onViewDetails={() => handleViewCommitmentDetails(item)}
