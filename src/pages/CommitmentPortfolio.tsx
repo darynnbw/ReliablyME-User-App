@@ -33,6 +33,13 @@ const CommitmentPortfolio: React.FC = () => {
         '2. What do you plan to accomplish/complete by the end of the week?',
         '3. What are you concerned about that might hinder your progress?',
       ],
+      // Added historical responses for the nudge
+      responses: [
+        { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), answer: 'Completed tasks A, B, C. Planning to finish D and E. Concerned about resource allocation for F.' },
+        { date: dayjs().subtract(8, 'day').format('MMM D, YYYY'), answer: 'Finished initial setup for project X. Next, I will start coding module Y. No major concerns at the moment.' },
+        { date: dayjs().subtract(15, 'day').format('MMM D, YYYY'), answer: 'Successfully onboarded new team member. Will focus on documentation next. Minor delay due to software update.' },
+        { date: dayjs().subtract(22, 'day').format('MMM D, YYYY'), answer: 'Reviewed client feedback and integrated changes. Preparing for next sprint. Need clarification on feature Z.' },
+      ],
     },
     {
       id: 99,
