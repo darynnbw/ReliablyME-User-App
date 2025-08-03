@@ -153,7 +153,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               Original Commitment
             </TableCell>
-            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 1 }}> {/* Adjusted padding-left */}
+            <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
                 <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
@@ -266,7 +266,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     </Box>
                   </TableCell>
                   <TableCell>{commitment.description}</TableCell>
-                  <TableCell sx={{ pl: 1 }}>{commitment.assignee}</TableCell> {/* Adjusted padding-left */}
+                  <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
                   <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
                 </TableRow>
@@ -287,9 +287,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                     label={response.date}
                                     size="small"
                                     sx={{
-                                      bgcolor: theme.palette.secondary.dark, // Reliably Orange (darker for AA)
-                                      color: 'white', // White text
-                                      fontWeight: 500,
+                                      bgcolor: '#fff3e0', // Nudge pill background
+                                      color: '#ff7043', // Nudge pill text color
+                                      fontWeight: 700, // Nudge pill font weight
+                                      fontSize: '12px', // Nudge pill font size
                                       mb: 1,
                                     }}
                                   />
