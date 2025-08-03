@@ -714,7 +714,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               <>
                 <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode}>
                   <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: disableMyCommitmentFiltersInTableMode ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
                     <MenuItem value="">All</MenuItem>
                     {filterOptions.map(person => (
                       <MenuItem key={person} value={person}>{person}</MenuItem>
