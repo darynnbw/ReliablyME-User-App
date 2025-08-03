@@ -74,6 +74,7 @@ interface CommitmentsSectionProps {
   tabs: { label: string; count: number; items: Commitment[] }[];
   displayMode?: 'regular' | 'table'; // New prop for display mode
   showClearAllFilters?: boolean; // New prop to control visibility of Clear All Filters button
+  isActionsPage?: boolean; // New prop to differentiate between Actions and Commitment Portfolio
 }
 
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
@@ -117,7 +118,7 @@ const groupMembers: { [key: string]: string[] } = {
   'Part-timers': ['Chris Parker'],
 };
 
-const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true }) => {
+const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, displayMode = 'regular', showClearAllFilters = true, isActionsPage = false }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [personFilter, setPersonFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('All');
@@ -630,10 +631,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
   const isTableView = displayMode === 'table' && isMyCommitmentsSection;
 
-  // Bulk actions section should NOT show for My Promises tab
-  const showBulkActionsSection = paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab && !isMyPromisesTab;
+  // Bulk actions section should only show if it's the Actions page and not for Unkept/MyBadges tabs
+  const showBulkActionsSection = isActionsPage && paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab;
 
-  const showBulkRequest = selectedCount > 0 && isMyPromisesTab; // This will now always be false due to the above change
+  const showBulkRequest = selectedCount > 0 && isMyPromisesTab; // This will now only be true on Actions page
+
   const showBulkClarify = selectedCount > 0 && isOwedToMe;
   const showBulkRevoke = selectedCount > 0 && isAwaitingResponseTab;
 
@@ -908,6 +910,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Tabs>
         </Box>
 
+        {/* Bulk actions section - now conditional on isActionsPage */}
         {showBulkActionsSection && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, mb: 1, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -1097,15 +1100,18 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 ) : (
                   paginatedItems.map((item, index) => {
                     const isNudgeItem = item.type === 'nudge';
-                    // Checkboxes and action buttons are hidden for My Promises tab
-                    const showCheckboxes = !isUnkeptTab && !isMyBadgesTab && !isMyPromisesTab;
+                    // Checkboxes are shown only on Actions page and not for Unkept/MyBadges/MyPromises tabs
+                    const showCheckboxes = isActionsPage && !isUnkeptTab && !isMyBadgesTab && !isMyPromisesTab;
                     const isCheckboxDisabled = isMyPromisesTab && isNudgeItem; 
                     const itemDate = parseCommitmentDate(item.dueDate);
                     const isOverdue = itemDate ? itemDate.isBefore(dayjs(), 'day') : false;
                     const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                     const showRevokeButton = isAwaitingResponseTab;
-                    // Action button is hidden for My Promises tab
-                    const showActionButton = !isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab && !isMyPromisesTab;
+                    // Action button is shown only on Actions page for My Promises (Nudge) or other specific tabs
+                    const showActionButton = isActionsPage && (
+                      (isNudgeItem && isMyPromisesTab) || 
+                      (!isUnkeptTab && !isMyBadgesTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
+                    );
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
                     return (

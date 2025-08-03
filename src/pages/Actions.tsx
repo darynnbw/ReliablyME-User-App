@@ -22,9 +22,9 @@ const Actions: React.FC = () => {
       nudgesLeft: 2,
       totalNudges: 10,
       questions: [
-        'What have you accomplished so far this week?',
-        'What do you plan to accomplish/complete by the end of the week?',
-        'What are you concerned about that might hinder your progress?',
+        '1. What have you accomplished so far this week?',
+        '2. What do you plan to accomplish/complete by the end of the week?',
+        '3. What are you concerned about that might hinder your progress?',
       ],
     },
     {
@@ -87,9 +87,9 @@ const Actions: React.FC = () => {
       assignee: 'Alex Johnson',
       type: 'nudge',
       questions: [
-        'What have you accomplished so far this week?',
-        'What do you plan to accomplish/complete by the end of the week?',
-        'What are you concerned about that might hinder your progress?',
+        '1. What have you accomplished so far this week?',
+        '2. What do you plan to accomplish/complete by the end of the week?',
+        '3. What are you concerned about that might hinder your progress?',
       ],
     },
     {
@@ -179,7 +179,7 @@ const Actions: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Mar 27, 9:15 PM',
-      description: 'I promise to provide feedback on the new product design mockups for client presentation, focusing on usability and aesthetic appeal.',
+      description: 'I will provide feedback on the new product design mockups for client presentation, focusing on usability and aesthetic appeal.',
       assignee: 'Riley Chen',
     },
     {
@@ -329,12 +329,12 @@ const Actions: React.FC = () => {
         <Grid container spacing={3}>
           {/* My Commitments */}
           <Grid item xs={12}>
-            <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} showClearAllFilters={false} />
+            <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} showClearAllFilters={false} isActionsPage={true} />
           </Grid>
 
           {/* Commitments from Others */}
           <Grid item xs={12}>
-            <CommitmentsSection title="Others' Commitments" tabs={commitmentsReceivedTabs} showClearAllFilters={false} />
+            <CommitmentsSection title="Others' Commitments" tabs={commitmentsReceivedTabs} showClearAllFilters={false} isActionsPage={true} />
           </Grid>
         </Grid>
       </Container>
