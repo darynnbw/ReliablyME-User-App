@@ -124,7 +124,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
@@ -244,13 +244,23 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
                   }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" sx={{ pl: 2 }}> {/* Added padding-left here */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
-                        <IconButton size="small" onClick={() => handleToggleExpand(commitment.id)}>
-                          {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                        </IconButton>
-                      )}
+                      {/* Fixed-width container for the expand/collapse icon */}
+                      <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {(() => {
+                          const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
+                          return (
+                            <IconButton
+                              size="small"
+                              onClick={() => handleToggleExpand(commitment.id)}
+                              sx={{ visibility: isNudgeWithResponses ? 'visible' : 'hidden' }}
+                            >
+                              {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                            </IconButton>
+                          );
+                        })()}
+                      </Box>
                       {commitment.title}
                     </Box>
                   </TableCell>
