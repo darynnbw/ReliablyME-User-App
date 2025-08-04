@@ -144,6 +144,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto'); // State for the height of the content area
   const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
+  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
 
   const [currentPage, setCurrentPage] = useState(1);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
@@ -392,6 +393,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
   const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
 
+  // Effect to observe the height of the first item
+  useEffect(() => {
+    if (firstItemRef.current) {
+      const observer = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          setFirstItemObservedHeight(entry.contentRect.height);
+        }
+      });
+      observer.observe(firstItemRef.current);
+      return () => observer.disconnect();
+    }
+  }, [paginatedItems.length, isTableView]); // Re-observe if items change or view mode changes
+
   // Effect to dynamically adjust the height of the content area
   useEffect(() => {
     if (isTableView) {
@@ -402,8 +416,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     if (paginatedItems.length === 0) {
       // When there are no items, set a fixed height for the empty state message
       setContainerContentHeight('250px'); // This value might need fine-tuning
-    } else if (firstItemRef.current) {
-      const cardHeight = firstItemRef.current.offsetHeight;
+    } else if (firstItemObservedHeight !== null) { // Use observed height
+      const cardHeight = firstItemObservedHeight;
       const spacing = 8; // From <Stack spacing={1}>
 
       if (paginatedItems.length === 1) {
@@ -413,7 +427,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         setContainerContentHeight((cardHeight * 2) + spacing);
       }
     }
-  }, [paginatedItems.length, isTableView]); // Recalculate when number of items or display mode changes
+  }, [paginatedItems.length, isTableView, firstItemObservedHeight]); // Add observed height as dependency
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -1143,7 +1157,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     <CommitmentListItem
                       key={item.id}
                       {...item}
-                      // Removed ref={_index === 0 ? firstItemRef : null} as it's no longer needed for height calculation
+                      ref={_index === 0 ? firstItemRef : null} // Keep ref for the first item to measure its height
                       color="#4caf50"
                       showCheckbox={false}
                       isCheckboxDisabled={true}
