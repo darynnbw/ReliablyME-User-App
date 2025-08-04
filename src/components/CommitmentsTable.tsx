@@ -249,8 +249,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 width: '100%',
                 minWidth: 650, // Ensures the cell takes up the minimum table width
               }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
-                <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, textAlign: 'center' }}>No data to display in table.</Typography>
+                <Typography variant="body1" sx={{ textAlign: 'center' }}>Adjust your filters or switch to Regular Mode.</Typography>
               </TableCell>
             </TableRow>
           ) : (
