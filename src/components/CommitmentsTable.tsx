@@ -237,10 +237,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
+                textAlign: 'center',
                 color: 'text.secondary',
               }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, textAlign: 'center' }}>No data to display in table.</Typography>
-                <Typography variant="body1" sx={{ textAlign: 'center' }}>Adjust your filters or switch to Regular Mode.</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
+                <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
               </TableCell>
             </TableRow>
           ) : (
