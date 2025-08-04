@@ -255,7 +255,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   }}
                 >
                   <TableCell component="th" scope="row">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 5 }}>
                       {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
@@ -277,7 +277,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+                  <TableCell sx={{ pr: 5 }}>{commitment.committedDate || 'N/A'}</TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
