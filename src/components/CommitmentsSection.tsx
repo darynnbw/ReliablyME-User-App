@@ -708,7 +708,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {title}
           </Typography>
 
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
             {/* Filters for My Commitments section (including My Promises) */}
             {isMyCommitmentsSection && (
               <>
@@ -1100,7 +1100,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         <Box sx={{ 
           height: isTableView ? 'auto' : containerHeight, 
           minHeight: 0, 
-          px: 3, // Changed from pr: 1 to px: 3 for equal padding
+          pr: isTableView ? 0 : 1,
           // Conditional styles for centering when empty
           ...(paginatedItems.length === 0 && {
             display: 'flex',
