@@ -232,14 +232,13 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           {commitments.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} sx={{
-                textAlign: 'center',
-                color: 'text.secondary',
-                height: 336, // Fixed height for the empty state area
+                height: 336, // Fixed height for the empty state area (392 - header height)
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: '100%', // Ensure it takes full width of the table
+                textAlign: 'center', // Ensure text is centered within the flex container
+                color: 'text.secondary',
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
