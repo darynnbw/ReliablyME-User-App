@@ -142,8 +142,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [dueDateTableFilter, setDueDateTableFilter] = useState<Dayjs | null>(null);
   const [committedDateTableFilter, setCommittedDateTableFilter] = useState<Dayjs | null>(null);
 
-  const [containerHeight, setContainerHeight] = useState<number | string>(360);
-  const firstItemRef = useRef<HTMLDivElement>(null);
+  const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto'); // State for the height of the content area
+  const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
 
   const [currentPage, setCurrentPage] = useState(1);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
@@ -392,16 +392,28 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
   const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
 
+  // Effect to dynamically adjust the height of the content area
   useEffect(() => {
-    // The height calculation is based on showing 2 items.
-    // This logic is now applied to both commitment sections.
-    if (firstItemRef.current) {
+    if (isTableView) {
+      setContainerContentHeight('auto'); // Table view handles its own height
+      return;
+    }
+
+    if (paginatedItems.length === 0) {
+      // When there are no items, set a fixed height for the empty state message
+      setContainerContentHeight('250px'); // This value might need fine-tuning
+    } else if (firstItemRef.current) {
       const cardHeight = firstItemRef.current.offsetHeight;
       const spacing = 8; // From <Stack spacing={1}>
-      const calculatedHeight = (cardHeight * 2) + spacing;
-      setContainerHeight(calculatedHeight);
+
+      if (paginatedItems.length === 1) {
+        setContainerContentHeight(cardHeight);
+      } else {
+        // For 2 or more items, show 2 items and enable scrolling
+        setContainerContentHeight((cardHeight * 2) + spacing);
+      }
     }
-  }, [currentItems]);
+  }, [paginatedItems.length, isTableView]); // Recalculate when number of items or display mode changes
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -693,8 +705,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     <>
       <Paper sx={{
         p: 3,
-        height: 'auto',
-        minHeight: 'auto',
+        height: 'auto', // Let height be determined by content
+        minHeight: 'auto', // Remove fixed minHeight from Paper
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#ffffff',
@@ -912,7 +924,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         {/* New container for Tabs and Clear All Filters button */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: 1, borderColor: 'divider', mb: 1 }}> {/* Adjusted mb to 1 */}
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
-            {tabs.map((tab, index) => <Tab key={index} label={`${tab.label} (${tab.count})`} />)}
+            {tabs.map((tab, _index) => <Tab key={_index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}> {/* New inner Box for toggle and button */}
             {isMyCommitmentsSection && onToggleDisplayMode && (
@@ -1098,14 +1110,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          height: isTableView ? 'auto' : containerHeight, 
-          minHeight: 0, 
-          pr: isTableView ? 0 : 1,
-          // Removed conditional centering for table view, now handled by CommitmentsTable
-          // Default scroll behavior when not empty
-          ...(paginatedItems.length > 0 && {
-            overflowY: isTableView ? 'visible' : 'scroll',
-          }),
+          height: containerContentHeight, // Apply dynamic height here
+          minHeight: 0, // Allow shrinking
+          pr: isTableView ? 0 : 1, // Padding for scrollbar in regular mode
+          overflowY: isTableView ? 'visible' : 'auto', // Use 'auto' for regular mode to enable scrolling
+          display: 'flex', // Ensure flex properties apply to its children
+          flexDirection: 'column', // Stack children vertically
+          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start', // Center content if empty
+          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch', // Center content if empty
         }}>
           {displayMode === 'table' && isMyCommitmentsSection ? (
             <Box sx={{ mt: 2 }}>
@@ -1127,11 +1139,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             <Stack spacing={1} sx={{ width: '100%', mt: 1 }}> {/* Adjusted mt to 1 */}
               {paginatedItems.length > 0 ? (
                 isMyBadgesTab ? (
-                  paginatedItems.map((item, index) => (
+                  paginatedItems.map((item, _index) => (
                     <CommitmentListItem
                       key={item.id}
                       {...item}
-                      ref={index === 0 ? firstItemRef : null}
+                      // Removed ref={_index === 0 ? firstItemRef : null} as it's no longer needed for height calculation
                       color="#4caf50"
                       showCheckbox={false}
                       isCheckboxDisabled={true}
@@ -1144,7 +1156,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     />
                   ))
                 ) : (
-                  paginatedItems.map((item, index) => {
+                  paginatedItems.map((item, _index) => {
                     const isNudgeItem = item.type === 'nudge';
                     // Checkboxes are shown only on Actions page and not for MyBadges/Unkept tabs
                     const showCheckboxes = isActionsPage && !isMyBadgesTab && !isUnkeptTab;
@@ -1159,8 +1171,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     
                     // Action button logic:
                     // Show if on Actions page AND (
-                    //   (it's a Nudge in My Promises tab) OR
-                    //   (it's NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
+                    //   (is a Nudge in My Promises tab) OR
+                    //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
                     // )
                     const showActionButton = isActionsPage && (
                       (isNudgeItem && isMyPromisesTab) || 
@@ -1172,7 +1184,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       <CommitmentListItem
                         key={item.id}
                         {...item}
-                        ref={index === 0 ? firstItemRef : null}
+                        ref={_index === 0 ? firstItemRef : null} // Keep ref for the first item to measure its height
                         color={itemColor}
                         showCheckbox={showCheckboxes}
                         isCheckboxDisabled={isCheckboxDisabled}
@@ -1206,11 +1218,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   textAlign: 'center', 
                   color: 'text.secondary', 
                   width: '100%',
-                  display: 'flex', // Add flex to center content
+                  flex: 1, // Make the empty state box take up all available space
+                  display: 'flex', 
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  minHeight: containerHeight, // Ensure it takes up space
                 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
                   <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%', mx: 'auto' }}>We couldn’t find any commitments that match your filters. Try changing them or create something new.</Typography>
