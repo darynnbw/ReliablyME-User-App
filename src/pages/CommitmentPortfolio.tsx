@@ -23,7 +23,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Weekly Progress Check-in',
       dueDate: dayjs().subtract(1, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(4, 'day').hour(9).minute(30).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will provide a weekly update on my progress, addressing key accomplishments, upcoming plans, and any potential blockers.',
+      description: 'Weekly progress update.',
       assignee: 'Alex Johnson',
       type: 'nudge',
       nudgesLeft: 8,
@@ -45,7 +45,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(5, 'day').hour(14).minute(15).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(8, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will submit the project proposal for the Q3 initiatives, ensuring all financial projections are accurate and aligned with strategic goals and company objectives.',
+      description: 'Submit the Q3 project proposal.',
       assignee: 'Chris Parker',
     },
     {
@@ -53,7 +53,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(2, 'day').hour(11).minute(45).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(6, 'day').hour(16).minute(20).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will provide comprehensive feedback on the new product design mockups for the upcoming client presentation, focusing on user experience and brand consistency.',
+      description: 'Provide feedback on new product designs.',
       assignee: 'Riley Chen',
     },
     {
@@ -61,7 +61,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(7, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(10, 'day').hour(13).minute(5).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will deliver the quarterly marketing report with all key performance indicators (KPIs) and detailed campaign results, highlighting areas of success and opportunities for improvement.',
+      description: 'Deliver the quarterly marketing report with all KPIs and campaign results. This report needs to be exceptionally detailed, covering all aspects of our Q2 performance and providing actionable insights for the next quarter\'s strategy.',
       assignee: 'Jamie Smith',
     },
     {
@@ -69,7 +69,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(3, 'day').hour(18).minute(30).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(5, 'day').hour(11).minute(10).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will complete the code review for the new feature branch by end of day, ensuring adherence to coding standards and identifying potential bugs.',
+      description: 'Complete code review for the new feature branch.',
       assignee: 'Alex Johnson',
     },
     {
@@ -77,7 +77,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(4, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(9, 'day').hour(15).minute(40).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will prepare and share the comprehensive agenda for the upcoming sprint planning meeting, ensuring all critical topics are covered and team members are prepared.',
+      description: 'Prepare and share the agenda for the upcoming sprint planning meeting. It must include time slots for each topic and a list of pre-reading materials for all attendees.',
       assignee: 'Sarah Connor',
     },
     {
@@ -85,7 +85,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(5, 'day').hour(8).minute(15).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(7, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will join the all-hands meeting on time and prepared to discuss Q2 goals, actively contributing to the strategic discussions and providing valuable insights.',
+      description: 'Join the all-hands meeting on time.',
       assignee: 'Mike Miller',
     },
     {
@@ -93,7 +93,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(6, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(11, 'day').hour(9).minute(45).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will finalize the budget proposal for the new marketing campaign, incorporating all stakeholder feedback and ensuring cost-effectiveness.',
+      description: 'Finalize the budget proposal.',
       assignee: 'Chris Parker',
     },
     {
@@ -101,7 +101,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(7, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(12, 'day').hour(17).minute(30).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will assist a new team member with their onboarding process, providing guidance on tools, workflows, and team culture to ensure a smooth transition.',
+      description: 'Onboard the new team member.',
       assignee: 'Riley Chen',
     },
     {
@@ -109,7 +109,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(8, 'day').hour(10).minute(30).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(13, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will attend the weekly project sync meeting without fail, providing updates on my progress and actively participating in problem-solving discussions.',
+      description: 'Attend the weekly project sync.',
       assignee: 'Jamie Smith',
     },
     {
@@ -117,7 +117,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(1, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(3, 'day').hour(21).minute(59).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will complete the security audit report by the end of the week, identifying vulnerabilities and recommending actionable mitigation strategies.',
+      description: 'I will complete the full security audit report for the main application by the end of the week, identifying all critical and high-priority vulnerabilities and recommending actionable mitigation strategies to the security team.',
       assignee: 'Alex Johnson',
     },
     {
@@ -125,7 +125,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Leadership',
       dueDate: dayjs().subtract(9, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(14, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will lead the brainstorming session for the next product feature, fostering an environment of creativity and ensuring all ideas are captured and evaluated.',
+      description: 'Lead the brainstorming session.',
       assignee: 'Sarah Connor',
     },
     {
@@ -133,7 +133,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(10, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(15, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will provide a comprehensive review of the new UI/UX designs, offering constructive criticism and suggestions for improvement to enhance user engagement.',
+      description: 'Review new UI/UX designs.',
       assignee: 'Mike Miller',
     },
     {
@@ -141,7 +141,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(11, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(16, 'day').hour(8).minute(30).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will be present for the client demo call and answer any technical questions, ensuring a smooth and informative presentation for the client.',
+      description: 'Be present for the client demo call.',
       assignee: 'Chris Parker',
     },
     {
@@ -149,7 +149,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(12, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(17, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will help debug the critical production issue with the team, collaborating closely to identify the root cause and implement a timely solution.',
+      description: 'Help debug the critical production issue.',
       assignee: 'Riley Chen',
     },
     {
@@ -157,7 +157,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(13, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(18, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will prepare the quarterly business review presentation for the stakeholders, summarizing key achievements, challenges, and future strategies.',
+      description: 'Prepare the quarterly business review (QBR) presentation for all key stakeholders, summarizing our major achievements, the challenges we faced, and the strategic roadmap for the next two quarters.',
       assignee: 'Jamie Smith',
     },
     {
@@ -165,7 +165,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(14, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(19, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will attend the company-wide training session on new software tools, actively participating and applying the learned skills to my daily tasks.',
+      description: 'Attend the company-wide training session on new software tools.',
       assignee: 'Alex Johnson',
     },
     {
@@ -173,7 +173,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(15, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(20, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will update the project roadmap document with the latest changes, ensuring it accurately reflects current progress and upcoming milestones.',
+      description: 'Update the project roadmap document.',
       assignee: 'Sarah Connor',
     },
     {
@@ -181,7 +181,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(16, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(21, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will provide constructive feedback during the peer code review session, helping to improve code quality and foster a collaborative development environment.',
+      description: 'Provide constructive feedback during the peer code review session.',
       assignee: 'Mike Miller',
     },
     {
@@ -189,7 +189,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(17, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(22, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will research and propose new technologies for our backend infrastructure, evaluating their suitability and potential benefits for scalability and performance.',
+      description: 'Research and propose new technologies for our backend infrastructure.',
       assignee: 'Chris Parker',
     },
     {
@@ -197,7 +197,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(18, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(23, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will participate actively in the daily stand-up meetings, providing concise updates and raising any impediments to progress.',
+      description: 'Participate actively in the daily stand-up meetings.',
       assignee: 'Riley Chen',
     },
     {
@@ -205,7 +205,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(19, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(24, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will prepare and deliver a presentation on recent industry trends, sharing insights and their potential impact on our product strategy.',
+      description: 'Prepare and deliver a presentation on recent industry trends.',
       assignee: 'Jamie Smith',
     },
     {
@@ -213,7 +213,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(20, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(25, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will assist the QA team in testing the new features before release, ensuring thorough coverage and identifying any critical bugs.',
+      description: 'Assist the QA team in testing the new features before release.',
       assignee: 'Alex Johnson',
     },
     {
@@ -221,7 +221,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(21, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(26, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will document the new API endpoints for external developers, providing clear and comprehensive instructions for integration.',
+      description: 'Document the new API endpoints for external developers.',
       assignee: 'Sarah Connor',
     },
     {
@@ -229,7 +229,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(22, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(27, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will attend the weekly leadership meeting and provide updates on my team\'s progress, contributing to high-level strategic discussions.',
+      description: 'Attend the weekly leadership meeting and provide updates on my team\'s progress.',
       assignee: 'Mike Miller',
     },
     {
@@ -237,7 +237,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(23, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(28, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will review and approve the new marketing collateral, ensuring it aligns with brand guidelines and effectively communicates our message.',
+      description: 'Review and approve the new marketing collateral.',
       assignee: 'Chris Parker',
     },
     {
@@ -245,7 +245,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(24, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(29, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will collaborate with the sales team to develop new client proposals, tailoring solutions to meet specific client needs and objectives.',
+      description: 'Collaborate with the sales team to develop new client proposals.',
       assignee: 'Riley Chen',
     },
     {
@@ -253,7 +253,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(25, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(30, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will prepare a detailed report on customer feedback and suggestions, analyzing trends and identifying areas for product improvement.',
+      description: 'Prepare a detailed report on customer feedback and suggestions.',
       assignee: 'Jamie Smith',
     },
     {
@@ -261,7 +261,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(26, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(31, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will ensure timely attendance at all scheduled client meetings, demonstrating professionalism and commitment to client success.',
+      description: 'Ensure timely attendance at all scheduled client meetings.',
       assignee: 'Alex Johnson',
     },
     {
@@ -269,7 +269,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(27, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(32, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will conduct a training session for new employees on our internal tools, ensuring they are proficient and productive from day one.',
+      description: 'Conduct a training session for new employees on our internal tools.',
       assignee: 'Sarah Connor',
     },
     {
@@ -277,7 +277,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(28, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(33, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will assist in organizing the company\'s annual team-building event, contributing to a positive and cohesive work environment.',
+      description: 'Assist in organizing the company\'s annual team-building event.',
       assignee: 'Mike Miller',
     },
     {
@@ -285,7 +285,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(29, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(34, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will develop and implement a new feature for the mobile application, enhancing user functionality and improving overall app performance.',
+      description: 'Develop and implement a new feature for the mobile application.',
       assignee: 'Chris Parker',
     },
     {
@@ -293,7 +293,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(30, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will attend the industry conference to gather insights on emerging trends, bringing back valuable knowledge to benefit our team and projects.',
+      description: 'Attend the industry conference to gather insights on emerging trends.',
       assignee: 'Riley Chen',
     },
     {
@@ -301,7 +301,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(31, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(36, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will prepare a detailed financial forecast for the next fiscal year, providing a clear outlook for budgeting and strategic planning.',
+      description: 'Prepare a detailed financial forecast for the next fiscal year.',
       assignee: 'Jamie Smith',
     },
     {
@@ -309,7 +309,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(32, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(37, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will collaborate with cross-functional teams to streamline our workflow, identifying inefficiencies and implementing solutions for improved productivity.',
+      description: 'Collaborate with cross-functional teams to streamline our workflow.',
       assignee: 'Alex Johnson',
     },
     {
@@ -317,7 +317,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(33, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(38, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will conduct a thorough market analysis for our new product launch, identifying target demographics and competitive advantages.',
+      description: 'Conduct a thorough market analysis for our new product launch.',
       assignee: 'Sarah Connor',
     },
     {
@@ -325,7 +325,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(34, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(39, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will ensure my presence at all mandatory company-wide meetings, actively listening and contributing to discussions.',
+      description: 'Ensure my presence at all mandatory company-wide meetings.',
       assignee: 'Mike Miller',
     },
     {
@@ -333,7 +333,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(40, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will design and implement a new database schema for improved performance, optimizing data storage and retrieval processes.',
+      description: 'Design and implement a new database schema for improved performance.',
       assignee: 'Chris Parker',
     },
     {
@@ -341,7 +341,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(36, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(41, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will provide support to colleagues facing technical challenges, offering guidance and solutions to ensure project continuity.',
+      description: 'Provide support to colleagues facing technical challenges.',
       assignee: 'Riley Chen',
     },
     {
@@ -349,7 +349,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(37, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(42, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will prepare a detailed report on the effectiveness of our recent marketing campaigns, analyzing ROI and identifying successful strategies.',
+      description: 'Prepare a detailed report on the effectiveness of our recent marketing campaigns.',
       assignee: 'Jamie Smith',
     },
     {
@@ -357,7 +357,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(38, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(43, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will attend all scheduled client presentations and contribute to discussions, representing our team professionally and effectively.',
+      description: 'Attend all scheduled client presentations and contribute to discussions.',
       assignee: 'Alex Johnson',
     },
     {
@@ -365,7 +365,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(39, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(44, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will develop and deploy a new microservice to enhance system scalability, improving overall application responsiveness and reliability.',
+      description: 'Develop and deploy a new microservice to enhance system scalability.',
       assignee: 'Sarah Connor',
     },
     {
@@ -373,7 +373,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().subtract(40, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(45, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will actively participate in team discussions and contribute innovative ideas, fostering a collaborative and forward-thinking environment.',
+      description: 'Actively participate in team discussions and contribute innovative ideas.',
       assignee: 'Mike Miller',
     },
     {
@@ -381,7 +381,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(41, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(46, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will conduct a thorough review of all legal documents related to new partnerships, ensuring compliance and mitigating potential risks.',
+      description: 'Conduct a thorough review of all legal documents related to new partnerships.',
       assignee: 'Chris Parker',
     },
     {
@@ -389,7 +389,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().subtract(42, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(47, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will ensure my presence at all critical project review meetings, providing timely updates and addressing any concerns.',
+      description: 'Ensure my presence at all critical project review meetings.',
       assignee: 'Riley Chen',
     },
     {
@@ -397,7 +397,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(43, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(48, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will prepare a comprehensive report on our competitive landscape, identifying key players, market trends, and strategic opportunities.',
+      description: 'Prepare a comprehensive report on our competitive landscape.',
       assignee: 'Jamie Smith',
     },
   ];
