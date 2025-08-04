@@ -121,14 +121,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer component={Paper} sx={{
-      boxShadow: 'none',
-      border: '1px solid #e8eaed',
-      borderRadius: 3,
-      minHeight: 288, // Set minHeight to match regular view's 2 items (140*2 + 8 spacing)
-      display: 'flex', // Make TableContainer a flex container
-      flexDirection: 'column', // Stack children vertically
-    }}>
+    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3 }}>
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
@@ -235,19 +228,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
           </TableRow>
         </TableHead>
-        {/* TableBody needs to fill remaining space and center content when empty */}
-        <TableBody sx={{
-          flexGrow: 1, // Allow TableBody to grow and fill available space
-          display: 'flex', // Make TableBody a flex container
-          flexDirection: 'column', // Stack rows vertically
-          ...(commitments.length === 0 && {
-            justifyContent: 'center', // Center content vertically when empty
-            alignItems: 'center', // Center content horizontally when empty
-          }),
-        }}>
+        <TableBody>
           {commitments.length === 0 ? (
-            <TableRow sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}> {/* Ensure TableRow takes full width and centers its cell */}
-              <TableCell colSpan={5} sx={{ textAlign: 'center', color: 'text.secondary', py: 4, borderBottom: 'none' }}>
+            <TableRow>
+              <TableCell colSpan={5} sx={{ textAlign: 'center', color: 'text.secondary', py: 4 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
               </TableCell>
