@@ -144,9 +144,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   onClose={handleBadgeMenuClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: badgeCellRef.current ? badgeCellRef.current.offsetWidth : 'auto' }
-                  }}
+                  // Removed PaperProps minWidth to prevent crash
                 >
                   <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
                   {badgeOptions.map((option) => (
@@ -172,9 +170,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   onClose={handleAssigneeMenuClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: assigneeCellRef.current ? assigneeCellRef.current.offsetWidth : 'auto' }
-                  }}
+                  // Removed PaperProps minWidth to prevent crash
                 >
                   <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
                   {assigneeOptions.map((option) => (
@@ -235,19 +231,20 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
           </TableRow>
         </TableHead>
-        {/* TableBody needs to fill remaining space and center content when empty */}
-        <TableBody sx={{
-          flexGrow: 1, // Allow TableBody to grow and fill available space
-          display: 'flex', // Make TableBody a flex container
-          flexDirection: 'column', // Stack rows vertically
-          ...(commitments.length === 0 && {
-            justifyContent: 'center', // Center content vertically when empty
-            alignItems: 'center', // Center content horizontally when empty
-          }),
-        }}>
+        <TableBody>
           {commitments.length === 0 ? (
-            <TableRow sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}> {/* Ensure TableRow takes full width and centers its cell */}
-              <TableCell colSpan={5} sx={{ textAlign: 'center', color: 'text.secondary', py: 4, borderBottom: 'none' }}>
+            <TableRow>
+              <TableCell colSpan={5} sx={{ 
+                textAlign: 'center', 
+                color: 'text.secondary', 
+                py: 4, 
+                borderBottom: 'none',
+                height: '100%', // Make cell take full height of row
+                display: 'flex', // Enable flexbox for centering content
+                flexDirection: 'column', // Stack content vertically
+                justifyContent: 'center', // Center content vertically
+                alignItems: 'center', // Center content horizontally
+              }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
               </TableCell>
