@@ -121,7 +121,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 371 }}> {/* Adjusted minHeight to 371px (approx 6 rows + header) */}
+    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 392 }}> {/* Adjusted minHeight to 392px (approx 6 rows + header) */}
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
@@ -228,14 +228,23 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{
+          ...(commitments.length === 0 && {
+            minHeight: 336, // Explicitly set minHeight for empty body (6 rows * 56px/row)
+            display: 'flex', // Ensure flex properties apply
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%', // Ensure it takes full width
+          })
+        }}>
           {commitments.length === 0 ? (
-            <TableRow>
+            <TableRow sx={{ width: '100%' }}> {/* Ensure row takes full width */}
               <TableCell colSpan={5} sx={{
                 textAlign: 'center',
                 color: 'text.secondary',
-                height: 318, // Adjusted height to fill the table body area (371px container - 53px header)
-                display: 'flex', // Use flexbox to center content
+                height: '100%', // Fill the parent TableBody's height
+                display: 'flex', // Use flexbox to center content within this cell
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
