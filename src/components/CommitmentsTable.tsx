@@ -22,6 +22,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // Import new icons
 import dayjs from 'dayjs'; // Import dayjs for sorting responses
+import DateTooltip from './DateTooltip';
 
 interface Commitment {
   id: number;
@@ -134,14 +135,16 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       return <Typography variant="body2">{dateString}</Typography>;
     }
     return (
-      <Box>
-        <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
-          {date.format('MMM D, YYYY')}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.3 }}>
-          {date.format('hh:mm A')}
-        </Typography>
-      </Box>
+      <DateTooltip dateString={dateString}>
+        <Box>
+          <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
+            {date.format('MMM D, YYYY')}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.3 }}>
+            {date.format('hh:mm A')}
+          </Typography>
+        </Box>
+      </DateTooltip>
     );
   };
 
