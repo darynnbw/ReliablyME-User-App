@@ -121,14 +121,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer component={Paper} sx={{
-      boxShadow: 'none',
-      border: '1px solid #e8eaed',
-      borderRadius: 3,
-      minHeight: 392,
-      width: '100%',
-      overflowX: 'auto', // Added for horizontal scrolling
-    }}>
+    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 392, width: '100%' }}>
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
@@ -247,7 +240,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
-                minWidth: 650, // Ensures the cell takes up the minimum table width
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
