@@ -121,7 +121,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 400 }}>
+    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 450 }}> {/* Increased minHeight to match populated table */}
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
@@ -228,98 +228,102 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {commitments.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={5}
-                sx={{
-                  textAlign: 'center',
-                  color: 'text.secondary',
-                  height: '344px', // Fixed height to match populated table's content area
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
-                <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
-              </TableCell>
-            </TableRow>
-          ) : (
-            commitments.map((commitment, index) => (
-              <React.Fragment key={commitment.id}>
-                <TableRow
+        {/* Wrap TableBody content in a Box for consistent height and scrolling */}
+        <Box sx={{ height: 394, overflowY: 'auto' }}> {/* Calculated height: 450 (TableContainer minHeight) - 56 (approx TableHead height) */}
+          <TableBody>
+            {commitments.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
                   sx={{
-                    '&:last-child td, &:last-child th': { border: 0 },
-                    bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
+                    textAlign: 'center',
+                    color: 'text.secondary',
+                    height: '100%', // Make it fill the height of the parent Box
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // Removed py: 4 as height: '100%' combined with flex centering handles vertical spacing
                   }}
                 >
-                  <TableCell component="th" scope="row" sx={{ pl: 2 }}> {/* Added padding-left here */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      {/* Fixed-width container for the expand/collapse icon */}
-                      <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {(() => {
-                          const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
-                          return (
-                            <IconButton
-                              size="small"
-                              onClick={() => handleToggleExpand(commitment.id)}
-                              sx={{ visibility: isNudgeWithResponses ? 'visible' : 'hidden' }}
-                            >
-                              {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                            </IconButton>
-                          );
-                        })()}
-                      </Box>
-                      {commitment.title}
-                    </Box>
-                  </TableCell>
-                  <TableCell>{commitment.description}</TableCell>
-                  <TableCell>{commitment.assignee}</TableCell>
-                  <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell sx={{ pr: 7 }}>{commitment.committedDate || 'N/A'}</TableCell> {/* Added pr: 7 here */}
-                </TableRow>
-                {commitment.type === 'nudge' && commitment.responses && (
-                  <TableRow>
-                    <TableCell colSpan={5} sx={{ py: 0 }}>
-                      <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
-                        <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                            All Responses:
-                          </Typography>
-                          <Stack spacing={1}>
-                            {commitment.responses
-                              .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
-                              .map((response, idx) => (
-                                <Box key={idx} sx={{ pb: 1, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                                  <Chip
-                                    label={response.date}
-                                    size="small"
-                                    sx={{
-                                      bgcolor: '#fff3e0',
-                                      color: '#ff7043',
-                                      fontWeight: 700,
-                                      fontSize: '12px',
-                                      mb: 1,
-                                    }}
-                                  />
-                                  <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                    {response.answer}
-                                  </Typography>
-                                </Box>
-                              ))}
-                          </Stack>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
+                  <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
+                </TableCell>
+              </TableRow>
+            ) : (
+              commitments.map((commitment, index) => (
+                <React.Fragment key={commitment.id}>
+                  <TableRow
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                      bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
+                    }}
+                  >
+                    <TableCell component="th" scope="row" sx={{ pl: 2 }}> {/* Added padding-left here */}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {/* Fixed-width container for the expand/collapse icon */}
+                        <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                          {(() => {
+                            const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
+                            return (
+                              <IconButton
+                                size="small"
+                                onClick={() => handleToggleExpand(commitment.id)}
+                                sx={{ visibility: isNudgeWithResponses ? 'visible' : 'hidden' }}
+                              >
+                                {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                              </IconButton>
+                            );
+                          })()}
                         </Box>
-                      </Collapse>
+                        {commitment.title}
+                      </Box>
                     </TableCell>
+                    <TableCell>{commitment.description}</TableCell>
+                    <TableCell>{commitment.assignee}</TableCell>
+                    <TableCell>{commitment.dueDate}</TableCell>
+                    <TableCell sx={{ pr: 7 }}>{commitment.committedDate || 'N/A'}</TableCell> {/* Added pr: 7 here */}
                   </TableRow>
-                )}
-              </React.Fragment>
-            ))
-          )}
-        </TableBody>
+                  {commitment.type === 'nudge' && commitment.responses && (
+                    <TableRow>
+                      <TableCell colSpan={5} sx={{ py: 0 }}>
+                        <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
+                          <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                              All Responses:
+                            </Typography>
+                            <Stack spacing={1}>
+                              {commitment.responses
+                                .sort((a: { date: string; answer: string }, b: { date: string; answer: string }) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
+                                .map((response: { date: string; answer: string }, idx: number) => (
+                                  <Box key={idx} sx={{ pb: 1, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                                    <Chip
+                                      label={response.date}
+                                      size="small"
+                                      sx={{
+                                        bgcolor: '#fff3e0',
+                                        color: '#ff7043',
+                                        fontWeight: 700,
+                                        fontSize: '12px',
+                                        mb: 1,
+                                      }}
+                                    />
+                                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                      {response.answer}
+                                    </Typography>
+                                  </Box>
+                                ))}
+                            </Stack>
+                          </Box>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              ))
+            )}
+          </TableBody>
+        </Box>
       </Table>
     </TableContainer>
   );
