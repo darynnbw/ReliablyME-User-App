@@ -126,7 +126,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pl: 5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                {/* Fixed-width container for alignment with data rows' expand icon */}
+                <Box sx={{ width: 32, flexShrink: 0 }} />
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
@@ -232,7 +234,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           {commitments.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} sx={{
-                textAlign: 'center',
                 color: 'text.secondary',
                 height: 336, // Fixed height for the empty state area (392 - header height)
                 display: 'flex',
