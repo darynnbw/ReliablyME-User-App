@@ -126,7 +126,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}> {/* Added ml: 5 here for alignment */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}> {/* Adjusted ml to 5 for alignment */}
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
@@ -202,7 +202,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 />
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pr: 7 }}> {/* Added pr: 7 here */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
@@ -268,7 +268,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+                  <TableCell sx={{ pr: 7 }}>{commitment.committedDate || 'N/A'}</TableCell> {/* Added pr: 7 here */}
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
@@ -276,7 +276,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                           <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                            All Responses: {/* Renamed from Historical Responses */}
+                            All Responses:
                           </Typography>
                           <Stack spacing={1}>
                             {commitment.responses
@@ -287,10 +287,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                     label={response.date}
                                     size="small"
                                     sx={{
-                                      bgcolor: '#fff3e0', // Nudge pill background
-                                      color: '#ff7043', // Nudge pill text color
-                                      fontWeight: 700, // Nudge pill font weight
-                                      fontSize: '12px', // Nudge pill font size
+                                      bgcolor: '#fff3e0',
+                                      color: '#ff7043',
+                                      fontWeight: 700,
+                                      fontSize: '12px',
                                       mb: 1,
                                     }}
                                   />
