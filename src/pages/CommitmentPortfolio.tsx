@@ -51,7 +51,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 1,
       title: 'Teamwork',
-      dueDate: dayjs().subtract(2, 'day').hour(11).minute(45).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().add(2, 'day').hour(11).minute(45).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(6, 'day').hour(16).minute(20).format('MMM D, YYYY, hh:mm A'),
       description: 'Provide feedback on new product designs.',
       assignee: 'Riley Chen',
@@ -67,7 +67,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 6,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(3, 'day').hour(18).minute(30).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().add(3, 'day').hour(18).minute(30).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(5, 'day').hour(11).minute(10).format('MMM D, YYYY, hh:mm A'),
       description: 'Complete code review for the new feature branch.',
       assignee: 'Alex Johnson',
@@ -75,7 +75,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 7,
       title: 'Teamwork',
-      dueDate: dayjs().subtract(4, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().add(4, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(9, 'day').hour(15).minute(40).format('MMM D, YYYY, hh:mm A'),
       description: 'Prepare and share the agenda for the upcoming sprint planning meeting. It must include time slots for each topic and a list of pre-reading materials for all attendees.',
       assignee: 'Sarah Connor',
@@ -115,7 +115,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 15,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(1, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().add(1, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(3, 'day').hour(21).minute(59).format('MMM D, YYYY, hh:mm A'),
       description: 'I will complete the full security audit report for the main application by the end of the week, identifying all critical and high-priority vulnerabilities and recommending actionable mitigation strategies to the security team.',
       assignee: 'Alex Johnson',
