@@ -21,8 +21,8 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 100,
       title: 'Weekly Progress Check-in',
-      dueDate: dayjs().add(3, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(2, 'day').hour(9).minute(30).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(1, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(4, 'day').hour(9).minute(30).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide a weekly update on my progress, addressing key accomplishments, upcoming plans, and any potential blockers.',
       assignee: 'Alex Johnson',
       type: 'nudge',
@@ -33,7 +33,6 @@ const CommitmentPortfolio: React.FC = () => {
         '2. What do you plan to accomplish/complete by the end of the week?',
         '3. What are you concerned about that might hinder your progress?',
       ],
-      // Added historical responses for the nudge
       responses: [
         { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), answer: 'Completed tasks A, B, C. Planning to finish D and E. Concerned about resource allocation for F.' },
         { date: dayjs().subtract(8, 'day').format('MMM D, YYYY'), answer: 'Finished initial setup for project X. Next, I will start coding module Y. No major concerns at the moment.' },
@@ -44,360 +43,360 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 99,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(3, 'month').hour(14).minute(15).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(3, 'month').add(5, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(5, 'day').hour(14).minute(15).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(8, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will submit the project proposal for the Q3 initiatives, ensuring all financial projections are accurate and aligned with strategic goals and company objectives.',
       assignee: 'Chris Parker',
     },
     {
       id: 1,
       title: 'Teamwork',
-      dueDate: dayjs().add(5, 'day').hour(11).minute(45).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(2, 'month').add(3, 'day').hour(16).minute(20).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(2, 'day').hour(11).minute(45).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(6, 'day').hour(16).minute(20).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide comprehensive feedback on the new product design mockups for the upcoming client presentation, focusing on user experience and brand consistency.',
       assignee: 'Riley Chen',
     },
     {
       id: 2,
       title: 'Attendance',
-      dueDate: dayjs().subtract(1, 'month').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(1, 'month').add(2, 'day').hour(13).minute(5).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(7, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(10, 'day').hour(13).minute(5).format('MMM D, YYYY, hh:mm A'),
       description: 'I will deliver the quarterly marketing report with all key performance indicators (KPIs) and detailed campaign results, highlighting areas of success and opportunities for improvement.',
       assignee: 'Jamie Smith',
     },
     {
       id: 6,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(1, 'week').hour(18).minute(30).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(2, 'week').add(1, 'day').hour(11).minute(10).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(3, 'day').hour(18).minute(30).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(5, 'day').hour(11).minute(10).format('MMM D, YYYY, hh:mm A'),
       description: 'I will complete the code review for the new feature branch by end of day, ensuring adherence to coding standards and identifying potential bugs.',
       assignee: 'Alex Johnson',
     },
     {
       id: 7,
       title: 'Teamwork',
-      dueDate: dayjs().add(2, 'week').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(1, 'week').add(1, 'day').hour(15).minute(40).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(4, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(9, 'day').hour(15).minute(40).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare and share the comprehensive agenda for the upcoming sprint planning meeting, ensuring all critical topics are covered and team members are prepared.',
       assignee: 'Sarah Connor',
     },
     {
       id: 8,
       title: 'Attendance',
-      dueDate: dayjs().subtract(5, 'day').hour(8).minute(15).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(4, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(5, 'day').hour(8).minute(15).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(7, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will join the all-hands meeting on time and prepared to discuss Q2 goals, actively contributing to the strategic discussions and providing valuable insights.',
       assignee: 'Mike Miller',
     },
     {
       id: 12,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(1, 'month').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(3, 'day').hour(9).minute(45).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(6, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(11, 'day').hour(9).minute(45).format('MMM D, YYYY, hh:mm A'),
       description: 'I will finalize the budget proposal for the new marketing campaign, incorporating all stakeholder feedback and ensuring cost-effectiveness.',
       assignee: 'Chris Parker',
     },
     {
       id: 13,
       title: 'Teamwork',
-      dueDate: dayjs().add(1, 'month').add(3, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(2, 'day').hour(17).minute(30).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(7, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(12, 'day').hour(17).minute(30).format('MMM D, YYYY, hh:mm A'),
       description: 'I will assist a new team member with their onboarding process, providing guidance on tools, workflows, and team culture to ensure a smooth transition.',
       assignee: 'Riley Chen',
     },
     {
       id: 14,
       title: 'Attendance',
-      dueDate: dayjs().add(1, 'month').add(5, 'day').hour(10).minute(30).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(1, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(8, 'day').hour(10).minute(30).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(13, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the weekly project sync meeting without fail, providing updates on my progress and actively participating in problem-solving discussions.',
       assignee: 'Jamie Smith',
     },
     {
       id: 15,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(1, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(1, 'day').subtract(2, 'hour').hour(21).minute(59).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(1, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(3, 'day').hour(21).minute(59).format('MMM D, YYYY, hh:mm A'),
       description: 'I will complete the security audit report by the end of the week, identifying vulnerabilities and recommending actionable mitigation strategies.',
       assignee: 'Alex Johnson',
     },
     {
       id: 16,
       title: 'Leadership',
-      dueDate: dayjs().add(2, 'month').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(1, 'month').subtract(6, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(9, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(14, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will lead the brainstorming session for the next product feature, fostering an environment of creativity and ensuring all ideas are captured and evaluated.',
       assignee: 'Sarah Connor',
     },
     {
       id: 17,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(2, 'month').add(7, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(1, 'month').subtract(8, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(10, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(15, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide a comprehensive review of the new UI/UX designs, offering constructive criticism and suggestions for improvement to enhance user engagement.',
       assignee: 'Mike Miller',
     },
     {
       id: 18,
       title: 'Attendance',
-      dueDate: dayjs().subtract(2, 'month').subtract(1, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(2, 'month').subtract(2, 'day').hour(8).minute(30).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(11, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(16, 'day').hour(8).minute(30).format('MMM D, YYYY, hh:mm A'),
       description: 'I will be present for the client demo call and answer any technical questions, ensuring a smooth and informative presentation for the client.',
       assignee: 'Chris Parker',
     },
     {
       id: 19,
       title: 'Teamwork',
-      dueDate: dayjs().add(3, 'month').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(2, 'month').subtract(4, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(12, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(17, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will help debug the critical production issue with the team, collaborating closely to identify the root cause and implement a timely solution.',
       assignee: 'Riley Chen',
     },
     {
       id: 20,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(3, 'month').add(5, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(2, 'month').subtract(6, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(13, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(18, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare the quarterly business review presentation for the stakeholders, summarizing key achievements, challenges, and future strategies.',
       assignee: 'Jamie Smith',
     },
     {
       id: 21,
       title: 'Attendance',
-      dueDate: dayjs().add(3, 'month').add(7, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(2, 'month').subtract(8, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(14, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(19, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the company-wide training session on new software tools, actively participating and applying the learned skills to my daily tasks.',
       assignee: 'Alex Johnson',
     },
     {
       id: 22,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(3, 'month').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(3, 'month').subtract(2, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(15, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(20, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will update the project roadmap document with the latest changes, ensuring it accurately reflects current progress and upcoming milestones.',
       assignee: 'Sarah Connor',
     },
     {
       id: 23,
       title: 'Teamwork',
-      dueDate: dayjs().add(4, 'month').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(3, 'month').subtract(4, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(16, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(21, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide constructive feedback during the peer code review session, helping to improve code quality and foster a collaborative development environment.',
       assignee: 'Mike Miller',
     },
     {
       id: 24,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(4, 'month').add(5, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(3, 'month').subtract(6, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(17, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(22, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will research and propose new technologies for our backend infrastructure, evaluating their suitability and potential benefits for scalability and performance.',
       assignee: 'Chris Parker',
     },
     {
       id: 25,
       title: 'Attendance',
-      dueDate: dayjs().add(4, 'month').add(7, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(3, 'month').subtract(8, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(18, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(23, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will participate actively in the daily stand-up meetings, providing concise updates and raising any impediments to progress.',
       assignee: 'Riley Chen',
     },
     {
       id: 26,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(5, 'month').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(2, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(19, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(24, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare and deliver a presentation on recent industry trends, sharing insights and their potential impact on our product strategy.',
       assignee: 'Jamie Smith',
     },
     {
       id: 27,
       title: 'Teamwork',
-      dueDate: dayjs().add(5, 'month').add(3, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(4, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(20, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(25, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will assist the QA team in testing the new features before release, ensuring thorough coverage and identifying any critical bugs.',
       assignee: 'Alex Johnson',
     },
     {
       id: 28,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(5, 'month').add(5, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(6, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(21, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(26, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will document the new API endpoints for external developers, providing clear and comprehensive instructions for integration.',
       assignee: 'Sarah Connor',
     },
     {
       id: 29,
       title: 'Attendance',
-      dueDate: dayjs().add(5, 'month').add(7, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(4, 'month').subtract(8, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(22, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(27, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the weekly leadership meeting and provide updates on my team\'s progress, contributing to high-level strategic discussions.',
       assignee: 'Mike Miller',
     },
     {
       id: 30,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(5, 'month').subtract(1, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(5, 'month').subtract(2, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(23, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(28, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will review and approve the new marketing collateral, ensuring it aligns with brand guidelines and effectively communicates our message.',
       assignee: 'Chris Parker',
     },
     {
       id: 31,
       title: 'Teamwork',
-      dueDate: dayjs().add(6, 'month').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(5, 'month').subtract(4, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(24, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(29, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will collaborate with the sales team to develop new client proposals, tailoring solutions to meet specific client needs and objectives.',
       assignee: 'Riley Chen',
     },
     {
       id: 32,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(6, 'month').add(5, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(5, 'month').subtract(6, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(25, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(30, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a detailed report on customer feedback and suggestions, analyzing trends and identifying areas for product improvement.',
       assignee: 'Jamie Smith',
     },
     {
       id: 33,
       title: 'Attendance',
-      dueDate: dayjs().add(6, 'month').add(7, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(5, 'month').subtract(8, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(26, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(31, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will ensure timely attendance at all scheduled client meetings, demonstrating professionalism and commitment to client success.',
       assignee: 'Alex Johnson',
     },
     {
       id: 34,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(6, 'month').subtract(1, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(6, 'month').subtract(2, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(27, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(32, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will conduct a training session for new employees on our internal tools, ensuring they are proficient and productive from day one.',
       assignee: 'Sarah Connor',
     },
     {
       id: 35,
       title: 'Teamwork',
-      dueDate: dayjs().add(7, 'month').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(6, 'month').subtract(4, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(28, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(33, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will assist in organizing the company\'s annual team-building event, contributing to a positive and cohesive work environment.',
       assignee: 'Mike Miller',
     },
     {
       id: 36,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(7, 'month').add(5, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(6, 'month').subtract(6, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(29, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(34, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will develop and implement a new feature for the mobile application, enhancing user functionality and improving overall app performance.',
       assignee: 'Chris Parker',
     },
     {
       id: 37,
       title: 'Attendance',
-      dueDate: dayjs().add(7, 'month').add(7, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(6, 'month').subtract(8, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(30, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the industry conference to gather insights on emerging trends, bringing back valuable knowledge to benefit our team and projects.',
       assignee: 'Riley Chen',
     },
     {
       id: 38,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(7, 'month').subtract(1, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(7, 'month').subtract(2, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(31, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(36, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a detailed financial forecast for the next fiscal year, providing a clear outlook for budgeting and strategic planning.',
       assignee: 'Jamie Smith',
     },
     {
       id: 39,
       title: 'Teamwork',
-      dueDate: dayjs().add(8, 'month').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(7, 'month').subtract(4, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(32, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(37, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will collaborate with cross-functional teams to streamline our workflow, identifying inefficiencies and implementing solutions for improved productivity.',
       assignee: 'Alex Johnson',
     },
     {
       id: 40,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(8, 'month').add(5, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(7, 'month').subtract(6, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(33, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(38, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will conduct a thorough market analysis for our new product launch, identifying target demographics and competitive advantages.',
       assignee: 'Sarah Connor',
     },
     {
       id: 41,
       title: 'Attendance',
-      dueDate: dayjs().add(8, 'month').add(7, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(7, 'month').subtract(8, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(34, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(39, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will ensure my presence at all mandatory company-wide meetings, actively listening and contributing to discussions.',
       assignee: 'Mike Miller',
     },
     {
       id: 42,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(8, 'month').subtract(1, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(8, 'month').subtract(2, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(40, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will design and implement a new database schema for improved performance, optimizing data storage and retrieval processes.',
       assignee: 'Chris Parker',
     },
     {
       id: 43,
       title: 'Teamwork',
-      dueDate: dayjs().add(9, 'month').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(8, 'month').subtract(4, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(36, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(41, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide support to colleagues facing technical challenges, offering guidance and solutions to ensure project continuity.',
       assignee: 'Riley Chen',
     },
     {
       id: 44,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(9, 'month').add(5, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(8, 'month').subtract(6, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(37, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(42, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a detailed report on the effectiveness of our recent marketing campaigns, analyzing ROI and identifying successful strategies.',
       assignee: 'Jamie Smith',
     },
     {
       id: 45,
       title: 'Attendance',
-      dueDate: dayjs().add(9, 'month').add(7, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(8, 'month').subtract(8, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(38, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(43, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend all scheduled client presentations and contribute to discussions, representing our team professionally and effectively.',
       assignee: 'Alex Johnson',
     },
     {
       id: 46,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(9, 'month').subtract(1, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(9, 'month').subtract(2, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(39, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(44, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will develop and deploy a new microservice to enhance system scalability, improving overall application responsiveness and reliability.',
       assignee: 'Sarah Connor',
     },
     {
       id: 47,
       title: 'Teamwork',
-      dueDate: dayjs().add(10, 'month').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(9, 'month').subtract(4, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(40, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(45, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will actively participate in team discussions and contribute innovative ideas, fostering a collaborative and forward-thinking environment.',
       assignee: 'Mike Miller',
     },
     {
       id: 48,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(10, 'month').add(5, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(9, 'month').subtract(6, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(41, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(46, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will conduct a thorough review of all legal documents related to new partnerships, ensuring compliance and mitigating potential risks.',
       assignee: 'Chris Parker',
     },
     {
       id: 49,
       title: 'Attendance',
-      dueDate: dayjs().add(10, 'month').add(7, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), // Future date
-      committedDate: dayjs().subtract(9, 'month').subtract(8, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(42, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(47, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will ensure my presence at all critical project review meetings, providing timely updates and addressing any concerns.',
       assignee: 'Riley Chen',
     },
     {
       id: 50,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(10, 'month').subtract(1, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), // Overdue
-      committedDate: dayjs().subtract(10, 'month').subtract(2, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(43, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(48, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a comprehensive report on our competitive landscape, identifying key players, market trends, and strategic opportunities.',
       assignee: 'Jamie Smith',
     },
@@ -464,7 +463,7 @@ const CommitmentPortfolio: React.FC = () => {
         { id: 149, title: 'Attendance', dueDate: 'Apr 10, 10:00 AM', committedDate: 'Apr 9, 9:15 PM', description: 'I plan to attend the weekly project review.', assignee: 'Alex Johnson' },
         { id: 150, title: 'Promise Kept General', dueDate: 'Apr 9, 05:00 PM', committedDate: 'Apr 8, 9:15 PM', description: 'I promise to write unit tests for the new code.', assignee: 'Sarah Connor' },
         { id: 151, title: 'Teamwork', dueDate: 'Apr 8, 01:00 PM', committedDate: 'Apr 7, 9:15 PM', description: 'I will share a useful article with the team.', assignee: 'Mike Miller' },
-        { id: 152, title: 'Attendance', dueDate: 'Apr 7, 09:30 AM', committedDate: 'Apr 6, 9:15 PM', description: 'I commit to being on time for the one-on-one meeting.', assignee: 'Jamie Smith' },
+        { id: 152, title: 'Attendance', dueDate: 'Apr 6, 09:30 AM', committedDate: 'Apr 5, 9:15 PM', description: 'I commit to being on time for the one-on-one meeting.', assignee: 'Jamie Smith' },
         { id: 153, title: 'Promise Kept General', dueDate: 'Apr 6, 04:00 PM', committedDate: 'Apr 5, 9:15 PM', description: 'I am going to create a ticket for a bug I found.', assignee: 'John Doe' },
         { id: 154, title: 'Leadership', dueDate: 'Apr 5, 02:00 PM', committedDate: 'Apr 4, 9:15 PM', description: 'I will provide clear direction to the team on a new task.', assignee: 'Jane Smith' },
         { id: 155, title: 'Teamwork', dueDate: 'Apr 4, 11:00 AM', committedDate: 'Apr 3, 9:15 PM', description: 'I plan to celebrate a team success.', assignee: 'Peter Jones' },
@@ -487,24 +486,24 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 9,
           title: 'Promise Kept General',
-          dueDate: dayjs().subtract(20, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'), // Made overdue
-          committedDate: 'Mar 27, 9:15 PM',
+          dueDate: dayjs().subtract(20, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'),
+          committedDate: dayjs().subtract(25, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
           description: 'I promised to deliver the final report on the agreed-upon deadline, including all necessary data and analysis.',
           assignee: 'John Doe',
         },
         {
           id: 10,
           title: 'Attendance',
-          dueDate: dayjs().subtract(15, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), // Made overdue
-          committedDate: 'Mar 27, 9:15 PM',
+          dueDate: dayjs().subtract(15, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+          committedDate: dayjs().subtract(18, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
           description: 'I committed to attending the critical client call.',
           assignee: 'Jane Smith',
         },
         {
           id: 11,
           title: 'Teamwork',
-          dueDate: dayjs().subtract(10, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), // Made overdue
-          committedDate: 'Mar 27, 9:15 PM',
+          dueDate: dayjs().subtract(10, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+          committedDate: dayjs().subtract(12, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
           description: 'I was going to provide the necessary assets for the marketing campaign, ensuring they were high-quality and on brand.',
           assignee: 'Peter Jones',
         },
@@ -520,16 +519,16 @@ const CommitmentPortfolio: React.FC = () => {
         {
           id: 1,
           title: 'Teamwork',
-          dueDate: dayjs().add(2, 'day').format('MMM D, hh:mm A'),
-          committedDate: 'Mar 27, 9:15 PM',
+          dueDate: dayjs().subtract(2, 'day').format('MMM D, YYYY, hh:mm A'),
+          committedDate: dayjs().subtract(5, 'day').format('MMM D, YYYY, hh:mm A'),
           description: 'I will provide feedback on the new product design mockups for client presentation, focusing on usability and aesthetic appeal.',
           assignee: 'Riley Chen',
         },
         {
           id: 2,
           title: 'Promise Kept General',
-          dueDate: dayjs().add(4, 'day').format('MMM D, hh:mm A'),
-          committedDate: 'Mar 27, 9:15 PM',
+          dueDate: dayjs().subtract(4, 'day').format('MMM D, YYYY, hh:mm A'),
+          committedDate: dayjs().subtract(7, 'day').format('MMM D, YYYY, hh:mm A'),
           description: 'I am going to deliver the quarterly marketing report with all KPIs and campaign results, highlighting key achievements and areas for improvement.',
           assignee: 'Jamie Smith',
         },
