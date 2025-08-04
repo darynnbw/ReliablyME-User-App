@@ -249,8 +249,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 verticalAlign: 'middle',
                 border: 'none',
               }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
-                <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
+                <Typography variant="body1">Try changing your filters or switch to Regular Mode to see more items.</Typography>
               </TableCell>
             </TableRow>
           ) : (
