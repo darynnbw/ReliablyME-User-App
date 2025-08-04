@@ -125,8 +125,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%', pl: 5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pl: 5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
@@ -202,8 +202,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 />
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%', pr: 5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pr: 5 }}>
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
                   <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
@@ -254,8 +254,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
                   }}
                 >
-                  <TableCell component="th" scope="row" sx={{ pl: 5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <TableCell component="th" scope="row">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 5 }}>
                       {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
