@@ -12,11 +12,12 @@ import {
   alpha,
   Chip,
   useTheme,
-  Collapse, // Import Collapse
+  Collapse,
+  Grid, // Import Grid
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Shield, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Import ExpandMoreIcon
-import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
-import dayjs from 'dayjs'; // Import dayjs for sorting
+import { CalendarToday, Person, MoreHoriz, Shield, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import ContactTooltip from './ContactTooltip';
+import dayjs from 'dayjs';
 
 interface CommitmentListItemProps {
   id: number;
@@ -42,7 +43,7 @@ interface CommitmentListItemProps {
   hideDueDate?: boolean;
   isNudge?: boolean;
   nudgesLeft?: number;
-  totalNudges?: number; // Added totalNudges
+  totalNudges?: number;
   isMyPromisesTab?: boolean;
   isExternal?: boolean;
   isOverdue?: boolean;
@@ -51,7 +52,7 @@ interface CommitmentListItemProps {
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
-  responses?: { date: string; answer: string }[]; // New prop for historical responses
+  responses?: { date: string; answer: string }[];
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -78,7 +79,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   hideDueDate = false,
   isNudge = false,
   nudgesLeft,
-  totalNudges, // Destructure totalNudges
+  totalNudges,
   isMyPromisesTab = false,
   isExternal = false,
   isOverdue = false,
@@ -87,17 +88,17 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showFromLabel = false,
   acceptButtonText,
   declineButtonText,
-  responses, // Destructure responses
+  responses,
 }, ref) => {
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(false); // State for inline collapse
+  const [expanded, setExpanded] = useState(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
 
   const handleExpandClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent card click from triggering
+    event.stopPropagation();
     setExpanded(!expanded);
   };
 
@@ -138,204 +139,243 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
-        {showBadgePlaceholder && (
-          <Box sx={{
-            width: 100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'grey.100',
-            borderRadius: 1,
-            flexShrink: 0,
-          }}>
-            <Shield sx={{ fontSize: 40, color: 'grey.400' }} />
-          </Box>
-        )}
-        {showCheckbox && (
-          <Checkbox
-            size="small"
-            sx={{
-              p: 0,
-              mt: 0.5,
-              alignSelf: 'flex-start',
-            }}
-            checked={selected}
-            onChange={handleCheckboxChange}
-            disabled={isCheckboxDisabled}
-          />
-        )}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                {title}
-              </Typography>
-              {isNudge && (
-                <Chip
-                  label="Nudge"
-                  size="small"
-                  sx={{
-                    bgcolor: '#fff3e0',
-                    color: '#ff7043',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                  }}
-                />
-              )}
-              {isExternal && (
-                <Chip
-                  label="External"
-                  size="small"
-                  sx={{
-                    bgcolor: 'grey.300',
-                    color: 'text.secondary',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                  }}
-                />
-              )}
-              {isOverdue && (
-                <Chip
-                  label="Overdue"
-                  size="small"
-                  sx={{
-                    bgcolor: alpha(theme.palette.error.main, 0.1),
-                    color: 'error.dark',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    height: 20,
-                  }}
-                />
-              )}
-            </Stack>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {showExpandIcon && (
-                <IconButton
-                  onClick={handleExpandClick}
-                  aria-expanded={expanded}
-                  aria-label="show historical responses"
-                  size="small"
-                  sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
-                >
-                  <ExpandMoreIcon />
-                </IconButton>
-              )}
-              <Tooltip title="View details" placement="top" arrow>
-                <IconButton size="small" onClick={onViewDetails}>
-                  <MoreHoriz />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Box>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+        <Grid container spacing={1.5} wrap="nowrap" alignItems="stretch">
+          {/* Fixed-width column for leading elements (Badge Placeholder / Checkbox) */}
+          <Grid item sx={{ width: 100, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            {showBadgePlaceholder && (
+              <Box sx={{
+                width: 100,
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: 'grey.100',
+                borderRadius: 1,
+              }}>
+                <Shield sx={{ fontSize: 40, color: 'grey.400' }} />
+              </Box>
+            )}
+            {showCheckbox && (
+              <Checkbox
+                size="small"
+                sx={{ p: 0, alignSelf: 'flex-start' }}
+                checked={selected}
+                onChange={handleCheckboxChange}
+                disabled={isCheckboxDisabled}
+              />
+            )}
+          </Grid>
 
-          {/* Due Date */}
-          {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
-              <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
-              <Typography variant="body2" sx={{ color: dueRowColor, fontWeight: dueRowWeight }}>
-                Due {dueDate}
-              </Typography>
-              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && (
-                <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
-                  ({nudgesLeft} of {totalNudges} nudges left)
+          {/* Flexible column for main content */}
+          <Grid item xs>
+            {/* Top row: Title, MoreHoriz */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  {title}
                 </Typography>
-              )}
-            </Stack>
-          )}
-
-          {/* Original Description - always visible */}
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 2 }}>
-            {description}
-          </Typography>
-
-          {/* Explanation */}
-          {explanation && (
-            <Box
-              sx={{
-                bgcolor: '#f8f9fa',
-                px: 2,
-                py: 1.5,
-                borderRadius: 2,
-                border: '1px solid #e9ecef',
-                mb: 2,
-                maxWidth: '100%',
-              }}
-            >
-              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                  Explanation:{' '}
-                </Typography>
-                {explanation}
-              </Typography>
-            </Box>
-          )}
-
-          {/* Bottom row: Assignee and Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 2 }}> {/* Added mb: 2 here */}
-            {/* Assignee */}
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Person sx={{ fontSize: 16, color: color }} />
-              <Typography variant="body2" sx={{ color: '#666' }}>
-                {showFromLabel ? 'From:' : 'To:'}{' '}
-                {!isExternal ? (
-                  <ContactTooltip>
-                    <span
-                      style={{
-                        color: '#666',
-                        cursor: 'pointer',
-                        fontSize: 'inherit',
-                        fontFamily: 'inherit',
-                        fontWeight: 'inherit'
-                      }}
-                    >
-                      {assignee}
-                    </span>
-                  </ContactTooltip>
-                ) : (
-                  assignee
+                {isNudge && (
+                  <Chip
+                    label="Nudge"
+                    size="small"
+                    sx={{
+                      bgcolor: '#fff3e0',
+                      color: '#ff7043',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                    }}
+                  />
                 )}
-              </Typography>
-              {isExternal && (
-                <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                  (Non-member)
-                </Typography>
-              )}
-            </Stack>
+                {isExternal && (
+                  <Chip
+                    label="External"
+                    size="small"
+                    sx={{
+                      bgcolor: 'grey.300',
+                      color: 'text.secondary',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                    }}
+                  />
+                )}
+                {isOverdue && (
+                  <Chip
+                    label="Overdue"
+                    size="small"
+                    sx={{
+                      bgcolor: alpha(theme.palette.error.main, 0.1),
+                      color: 'error.dark',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      height: 20,
+                    }}
+                  />
+                )}
+              </Stack>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {showExpandIcon && (
+                  <IconButton
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show historical responses"
+                    size="small"
+                    sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                )}
+                <Tooltip title="View details" placement="top" arrow>
+                  <IconButton size="small" onClick={onViewDetails}>
+                    <MoreHoriz />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
 
-            {/* Action Buttons */}
-            <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-              {showActionButton && (
-                <Button
-                  variant="contained"
-                  onClick={onActionButtonClick}
-                  disabled={isBulkSelecting}
-                  startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
-                  sx={{
-                    bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
-                    color: 'white',
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    px: buttonText === 'Clarify' ? 6 : 3,
-                    py: 1,
-                    borderRadius: 1,
-                    flexShrink: 0,
-                    '&:hover': { 
-                      bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
-                        ? '#f4511e' // Orange hover for Answer Nudge and Request Badge
-                        : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8)) // Dark blue for Clarify, fallback for others (shouldn't be hit)
-                    },
-                  }}
-                >
-                  {buttonText}
-                </Button>
-              )}
-              {showAcceptDeclineButtons && (
-                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+            {/* Due Date */}
+            {!hideDueDate && (
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
+                <Typography variant="body2" sx={{ color: dueRowColor, fontWeight: dueRowWeight }}>
+                  Due {dueDate}
+                </Typography>
+                {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
+                    ({nudgesLeft} of {totalNudges} nudges left)
+                  </Typography>
+                )}
+              </Stack>
+            )}
+
+            {/* Original Description - always visible */}
+            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 2 }}>
+              {description}
+            </Typography>
+
+            {/* Explanation */}
+            {explanation && (
+              <Box
+                sx={{
+                  bgcolor: '#f8f9fa',
+                  px: 2,
+                  py: 1.5,
+                  borderRadius: 2,
+                  border: '1px solid #e9ecef',
+                  mb: 2,
+                  maxWidth: '100%',
+                }}
+              >
+                <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                    Explanation:{' '}
+                  </Typography>
+                  {explanation}
+                </Typography>
+              </Box>
+            )}
+
+            {/* Bottom row: Assignee and Button */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+              {/* Assignee */}
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Person sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  {showFromLabel ? 'From:' : 'To:'}{' '}
+                  {!isExternal ? (
+                    <ContactTooltip>
+                      <span
+                        style={{
+                          color: '#666',
+                          cursor: 'pointer',
+                          fontSize: 'inherit',
+                          fontFamily: 'inherit',
+                          fontWeight: 'inherit'
+                        }}
+                      >
+                        {assignee}
+                      </span>
+                    </ContactTooltip>
+                  ) : (
+                    assignee
+                  )}
+                </Typography>
+                {isExternal && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                    (Non-member)
+                  </Typography>
+                )}
+              </Stack>
+
+              {/* Action Buttons */}
+              <Box sx={{ minWidth: 130, textAlign: 'right' }}>
+                {showActionButton && (
                   <Button
                     variant="contained"
-                    onClick={onDecline}
+                    onClick={onActionButtonClick}
+                    disabled={isBulkSelecting}
+                    startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
+                    sx={{
+                      bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                      px: buttonText === 'Clarify' ? 6 : 3,
+                      py: 1,
+                      borderRadius: 1,
+                      flexShrink: 0,
+                      '&:hover': { 
+                        bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
+                          ? '#f4511e'
+                          : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
+                      },
+                    }}
+                  >
+                    {buttonText}
+                  </Button>
+                )}
+                {showAcceptDeclineButtons && (
+                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="contained"
+                      onClick={onDecline}
+                      disabled={isBulkSelecting}
+                      sx={{
+                        bgcolor: '#F44336',
+                        color: 'white',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                        px: 4,
+                        py: 0.75,
+                        borderRadius: 1,
+                        '&:hover': { bgcolor: '#d32f2f' },
+                      }}
+                    >
+                      {declineButtonText || 'Decline'}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={onAccept}
+                      disabled={isBulkSelecting}
+                      sx={{
+                        bgcolor: '#4CAF50',
+                        color: 'white',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                        px: 4,
+                        py: 0.75,
+                        borderRadius: 1,
+                        '&:hover': { bgcolor: '#388e3c' },
+                      }}
+                    >
+                      {acceptButtonText || 'Accept'}
+                    </Button>
+                  </Box>
+                )}
+                {showRevokeButton && (
+                  <Button
+                    variant="contained"
+                    onClick={onRevoke}
                     disabled={isBulkSelecting}
                     sx={{
                       bgcolor: '#F44336',
@@ -348,82 +388,46 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       '&:hover': { bgcolor: '#d32f2f' },
                     }}
                   >
-                    {declineButtonText || 'Decline'}
+                    Revoke
                   </Button>
-                  <Button
-                    variant="contained"
-                    onClick={onAccept}
-                    disabled={isBulkSelecting}
-                    sx={{
-                      bgcolor: '#4CAF50',
-                      color: 'white',
-                      textTransform: 'none',
-                      fontWeight: 'bold',
-                      px: 4,
-                      py: 0.75,
-                      borderRadius: 1,
-                      '&:hover': { bgcolor: '#388e3c' },
-                    }}
-                  >
-                    {acceptButtonText || 'Accept'}
-                  </Button>
-                </Box>
-              )}
-              {showRevokeButton && (
-                <Button
-                  variant="contained"
-                  onClick={onRevoke}
-                  disabled={isBulkSelecting}
-                  sx={{
-                    bgcolor: '#F44336',
-                    color: 'white',
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    px: 4,
-                    py: 0.75,
-                    borderRadius: 1,
-                    '&:hover': { bgcolor: '#d32f2f' },
-                  }}
-                >
-                  Revoke
-                </Button>
-              )}
-            </Box>
-          </Box>
-
-          {/* Collapsible Responses - MOVED HERE */}
-          {showExpandIcon && (
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                  All Responses:
-                </Typography>
-                <Stack spacing={1}>
-                  {responses
-                    ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
-                    .map((response, idx) => (
-                      <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                        <Chip
-                          label={response.date}
-                          size="small"
-                          sx={{
-                            bgcolor: '#fff3e0', // Nudge pill background
-                            color: '#ff7043', // Nudge pill text color
-                            fontWeight: 700, // Nudge pill font weight
-                            fontSize: '12px', // Nudge pill font size
-                            mb: 1,
-                          }}
-                        />
-                        <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                          {response.answer}
-                        </Typography>
-                      </Box>
-                    ))}
-                </Stack>
+                )}
               </Box>
-            </Collapse>
-          )}
-        </Box>
+            </Box>
+
+            {/* Collapsible Responses */}
+            {showExpandIcon && (
+              <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                    All Responses:
+                  </Typography>
+                  <Stack spacing={1}>
+                    {responses
+                      ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
+                      .map((response, idx) => (
+                        <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                          <Chip
+                            label={response.date}
+                            size="small"
+                            sx={{
+                              bgcolor: '#fff3e0',
+                              color: '#ff7043',
+                              fontWeight: 700,
+                              fontSize: '12px',
+                              mb: 1,
+                            }}
+                          />
+                          <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                            {response.answer}
+                          </Typography>
+                        </Box>
+                      ))}
+                  </Stack>
+                </Box>
+              </Collapse>
+            )}
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
   );
