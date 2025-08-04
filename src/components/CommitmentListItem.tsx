@@ -138,16 +138,26 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
+      <CardContent sx={{
+        position: 'relative', // For absolute positioning of leading elements
+        p: 2, // This applies 16px padding all around
+        pl: 132, // Overrides left padding to 132px. Total from card edge: 4px (border) + 132px = 136px
+        '&:last-child': { pb: 2 },
+        display: 'flex', // Keep flex for internal layout of main content and action buttons
+        alignItems: 'stretch',
+      }}>
         {showBadgePlaceholder && (
           <Box sx={{
+            position: 'absolute',
+            left: 16, // Relative to CardContent's left edge (which is 4px from Card's edge)
+            top: 16, // Relative to CardContent's top edge
             width: 100,
+            height: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             bgcolor: 'grey.100',
             borderRadius: 1,
-            flexShrink: 0,
           }}>
             <Shield sx={{ fontSize: 40, color: 'grey.400' }} />
           </Box>
@@ -156,16 +166,17 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           <Checkbox
             size="small"
             sx={{
+              position: 'absolute',
+              left: 16, // Relative to CardContent's left edge
+              top: 16, // Relative to CardContent's top edge
               p: 0,
-              mt: 0.5,
-              alignSelf: 'flex-start',
             }}
             checked={selected}
             onChange={handleCheckboxChange}
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}> {/* This is the main content box, now starts at 136px from card edge */}
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center">
@@ -273,7 +284,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Bottom row: Assignee and Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 2 }}> {/* Added mb: 2 here */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
             {/* Assignee */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
