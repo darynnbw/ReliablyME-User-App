@@ -117,6 +117,26 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     });
   };
 
+  const renderFormattedDate = (dateString?: string) => {
+    if (!dateString || dateString === 'N/A') {
+      return <Typography variant="body2">N/A</Typography>;
+    }
+    const date = dayjs(dateString, 'MMM D, YYYY, hh:mm A');
+    if (!date.isValid()) {
+      return <Typography variant="body2">{dateString}</Typography>;
+    }
+    return (
+      <Box>
+        <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
+          {date.format('MMM D, YYYY')}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.3 }}>
+          {date.format('hh:mm A')}
+        </Typography>
+      </Box>
+    );
+  };
+
   const badgeIconColor = filters.badge ? theme.palette.primary.main : 'text.secondary';
   const assigneeIconColor = filters.assignee ? theme.palette.primary.main : 'text.secondary';
   const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
@@ -297,9 +317,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   </TableCell>
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
-                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
-                  <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell sx={{ pr: 4 }}>{commitment.approvedDate || 'N/A'}</TableCell>
+                  <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
+                  <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
+                  <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
