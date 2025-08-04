@@ -125,7 +125,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 2 }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
@@ -202,7 +202,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 />
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pr: 7 }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
@@ -254,7 +254,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
                   }}
                 >
-                  <TableCell component="th" scope="row" sx={{ pl: 2 }}>
+                  <TableCell component="th" scope="row">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -277,7 +277,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell sx={{ pr: 7 }}>{commitment.committedDate || 'N/A'}</TableCell>
+                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
