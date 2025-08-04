@@ -237,7 +237,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                textAlign: 'center',
+                textAlign: 'center', // Ensure text is centered within the flex container
                 color: 'text.secondary',
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
