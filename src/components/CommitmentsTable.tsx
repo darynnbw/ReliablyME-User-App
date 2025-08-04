@@ -71,8 +71,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const dueDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Due Date icon button
   const committedDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Committed Date icon button
 
-  const handleBadgeMenuOpen = () => {
-    setBadgeAnchorEl(badgeCellRef.current);
+  const handleBadgeMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setBadgeAnchorEl(event.currentTarget);
   };
   const handleBadgeMenuClose = () => {
     setBadgeAnchorEl(null);
@@ -82,8 +82,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     handleBadgeMenuClose();
   };
 
-  const handleAssigneeMenuOpen = () => {
-    setAssigneeAnchorEl(assigneeCellRef.current);
+  const handleAssigneeMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAssigneeAnchorEl(event.currentTarget);
   };
   const handleAssigneeMenuClose = () => {
     setAssigneeAnchorEl(null);
@@ -126,105 +126,115 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Box sx={{ width: 32, flexShrink: 0, mr: 1 }} /> {/* Placeholder for alignment */}
-                Badge
-                <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
-                  <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
-                </IconButton>
-                <Menu
-                  anchorEl={badgeAnchorEl}
-                  open={Boolean(badgeAnchorEl)}
-                  onClose={handleBadgeMenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: badgeCellRef.current ? badgeCellRef.current.offsetWidth : 'auto' }
-                  }}
-                >
-                  <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
-                  {badgeOptions.map((option) => (
-                    <MenuItem key={option} onClick={() => handleBadgeSelect(option)} selected={filters.badge === option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ width: 32, flexShrink: 0, mr: 1 }} /> {/* Placeholder for alignment */}
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Badge</Typography>
+                </Box>
+                <Box>
+                  <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
+                    <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
+                  </IconButton>
+                  <Menu
+                    anchorEl={badgeAnchorEl}
+                    open={Boolean(badgeAnchorEl)}
+                    onClose={handleBadgeMenuClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    PaperProps={{
+                      sx: { minWidth: 150 }
+                    }}
+                  >
+                    <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
+                    {badgeOptions.map((option) => (
+                      <MenuItem key={option} onClick={() => handleBadgeSelect(option)} selected={filters.badge === option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
               </Box>
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '40%' }}>
               Original Commitment
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Assignee
-                <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
-                  <ArrowDropDown fontSize="small" sx={{ color: assigneeIconColor }} />
-                </IconButton>
-                <Menu
-                  anchorEl={assigneeAnchorEl}
-                  open={Boolean(assigneeAnchorEl)}
-                  onClose={handleAssigneeMenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: assigneeCellRef.current ? assigneeCellRef.current.offsetWidth : 'auto' }
-                  }}
-                >
-                  <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
-                  {assigneeOptions.map((option) => (
-                    <MenuItem key={option} onClick={() => handleAssigneeSelect(option)} selected={filters.assignee === option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Assignee</Typography>
+                <Box>
+                  <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
+                    <ArrowDropDown fontSize="small" sx={{ color: assigneeIconColor }} />
+                  </IconButton>
+                  <Menu
+                    anchorEl={assigneeAnchorEl}
+                    open={Boolean(assigneeAnchorEl)}
+                    onClose={handleAssigneeMenuClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    PaperProps={{
+                      sx: { minWidth: 150 }
+                    }}
+                  >
+                    <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
+                    {assigneeOptions.map((option) => (
+                      <MenuItem key={option} onClick={() => handleAssigneeSelect(option)} selected={filters.assignee === option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
               </Box>
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Due Date
-                <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                  <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Due Date"
-                  open={dueDateOpen}
-                  onClose={() => setDueDateOpen(false)}
-                  value={filters.dueDate}
-                  onChange={handleDueDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current,
-                    }
-                  }}
-                />
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Due Date</Typography>
+                <Box>
+                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                    <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    label="Due Date"
+                    open={dueDateOpen}
+                    onClose={() => setDueDateOpen(false)}
+                    value={filters.dueDate}
+                    onChange={handleDueDateChange}
+                    slotProps={{
+                      textField: {
+                        style: { display: 'none' }
+                      },
+                      popper: {
+                        placement: 'bottom-end',
+                        anchorEl: dueDateButtonRef.current,
+                      }
+                    }}
+                  />
+                </Box>
               </Box>
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%', pr: 4 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Committed Date
-                <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
-                  <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Committed Date"
-                  open={committedDateOpen}
-                  onClose={() => setCommittedDateOpen(false)}
-                  value={filters.committedDate}
-                  onChange={handleCommittedDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: committedDateButtonRef.current,
-                    }
-                  }}
-                />
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>Committed Date</Typography>
+                <Box>
+                  <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
+                    <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    label="Committed Date"
+                    open={committedDateOpen}
+                    onClose={() => setCommittedDateOpen(false)}
+                    value={filters.committedDate}
+                    onChange={handleCommittedDateChange}
+                    slotProps={{
+                      textField: {
+                        style: { display: 'none' }
+                      },
+                      popper: {
+                        placement: 'bottom-end',
+                        anchorEl: committedDateButtonRef.current,
+                      }
+                    }}
+                  />
+                </Box>
               </Box>
             </TableCell>
           </TableRow>
