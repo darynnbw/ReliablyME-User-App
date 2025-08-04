@@ -126,7 +126,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pl: 5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pl: 5 }}> {/* Restored pl: 5 */}
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
@@ -203,7 +203,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </Box>
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pr: 5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pr: 5 }}> {/* Restored pr: 5 */}
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
                   <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
