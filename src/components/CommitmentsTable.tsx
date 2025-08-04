@@ -22,6 +22,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // Import new icons
 import dayjs from 'dayjs'; // Import dayjs for sorting responses
+import ApprovalTooltip from './ApprovalTooltip';
 
 interface Commitment {
   id: number;
@@ -48,6 +49,7 @@ interface CommitmentsTableProps {
     assignee: string;
     dueDate: Dayjs | null;
     committedDate: Dayjs | null;
+    approvedDate: Dayjs | null;
   };
   onFilterChange: (filterName: string, value: any) => void;
   badgeOptions: string[];
@@ -66,12 +68,14 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [assigneeAnchorEl, setAssigneeAnchorEl] = useState<null | HTMLElement>(null);
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
+  const [approvedDateOpen, setApprovedDateOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set()); // State for expanded rows
 
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
   const assigneeCellRef = useRef<HTMLTableCellElement>(null);
   const dueDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Due Date icon button
   const committedDateButtonRef = useRef<HTMLButtonElement>(null); // Ref for Committed Date icon button
+  const approvedDateButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleBadgeMenuOpen = () => {
     setBadgeAnchorEl(badgeCellRef.current);
@@ -103,6 +107,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const handleCommittedDateChange = (newValue: Dayjs | null) => {
     onFilterChange('committedDate', newValue);
     setCommittedDateOpen(false);
+  };
+
+  const handleApprovedDateChange = (newValue: Dayjs | null) => {
+    onFilterChange('approvedDate', newValue);
+    setApprovedDateOpen(false);
   };
 
   const handleToggleExpand = (id: number) => {
@@ -141,6 +150,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const assigneeIconColor = filters.assignee ? theme.palette.primary.main : 'text.secondary';
   const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
+  const approvedDateIconColor = filters.approvedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
     <TableContainer
@@ -267,6 +277,25 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Approved
+                  <IconButton ref={approvedDateButtonRef} size="small" onClick={() => setApprovedDateOpen(true)} aria-label="filter by approved date">
+                    <CalendarToday fontSize="small" sx={{ color: approvedDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    label="Approved Date"
+                    open={approvedDateOpen}
+                    onClose={() => setApprovedDateOpen(false)}
+                    value={filters.approvedDate}
+                    onChange={handleApprovedDateChange}
+                    slotProps={{
+                      textField: {
+                        style: { display: 'none' }
+                      },
+                      popper: {
+                        placement: 'bottom-start',
+                        anchorEl: approvedDateButtonRef.current,
+                      }
+                    }}
+                  />
                 </Box>
               </Tooltip>
             </TableCell>
@@ -319,7 +348,17 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
-                  <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                  <TableCell sx={{ pr: 4 }}>
+                    {commitment.approvedDate && commitment.approvedDate !== 'N/A' ? (
+                      <ApprovalTooltip>
+                        <span style={{ display: 'inline-block', cursor: 'pointer' }}>
+                          {renderFormattedDate(commitment.approvedDate)}
+                        </span>
+                      </ApprovalTooltip>
+                    ) : (
+                      renderFormattedDate(commitment.approvedDate)
+                    )}
+                  </TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>

@@ -142,6 +142,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [assigneeTableFilter, setAssigneeTableFilter] = useState('');
   const [dueDateTableFilter, setDueDateTableFilter] = useState<Dayjs | null>(null);
   const [committedDateTableFilter, setCommittedDateTableFilter] = useState<Dayjs | null>(null);
+  const [approvedDateTableFilter, setApprovedDateTableFilter] = useState<Dayjs | null>(null);
 
   const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto'); // State for the height of the content area
   const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
@@ -349,6 +350,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
       const itemCommittedDate = item.committedDate ? parseCommitmentDate(item.committedDate) : null;
       if (committedDateTableFilter && itemCommittedDate && !itemCommittedDate.isSame(committedDateTableFilter, 'day')) return false;
+
+      const itemApprovedDate = item.approvedDate ? parseCommitmentDate(item.approvedDate) : null;
+      if (approvedDateTableFilter && itemApprovedDate && !itemApprovedDate.isSame(approvedDateTableFilter, 'day')) return false;
     }
 
     return true;
@@ -692,6 +696,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       case 'committedDate':
         setCommittedDateTableFilter(value);
         break;
+      case 'approvedDate':
+        setApprovedDateTableFilter(value);
+        break;
       default:
         break;
     }
@@ -709,6 +716,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setAssigneeTableFilter('');
     setDueDateTableFilter(null);
     setCommittedDateTableFilter(null);
+    setApprovedDateTableFilter(null);
     setCurrentPage(1);
   };
 
@@ -1144,6 +1152,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   assignee: assigneeTableFilter,
                   dueDate: dueDateTableFilter,
                   committedDate: committedDateTableFilter,
+                  approvedDate: approvedDateTableFilter,
                 }}
                 onFilterChange={handleTableFilterChange}
                 badgeOptions={tableBadgeOptions}
