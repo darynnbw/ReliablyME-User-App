@@ -121,18 +121,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        boxShadow: 'none',
-        border: '1px solid #e8eaed',
-        borderRadius: 3,
-        width: '100%',
-        overflowY: 'auto',
-        minHeight: commitments.length === 0 ? 392 : 'auto',
-        maxHeight: 392,
-      }}
-    >
+    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 392, width: '100%', overflowY: 'scroll' }}>
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
