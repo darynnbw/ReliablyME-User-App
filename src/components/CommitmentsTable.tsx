@@ -234,12 +234,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <TableCell colSpan={5} sx={{
                 textAlign: 'center',
                 color: 'text.secondary',
-                height: 336, // Fixed height for the empty state area (392 - header height)
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
+                height: 336,
+                borderBottom: 'none',
+                verticalAlign: 'middle',
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
@@ -255,7 +252,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   }}
                 >
                   <TableCell component="th" scope="row">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 5 }}>
                       {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
@@ -277,7 +274,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+                  <TableCell sx={{ pr: 5 }}>{commitment.committedDate || 'N/A'}</TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
