@@ -121,16 +121,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer component={Paper} sx={{
-      boxShadow: 'none',
-      border: '1px solid #e8eaed',
-      borderRadius: 3,
-      minHeight: 392, // Overall minimum height for the container
-      width: '100%',
-      display: 'flex', // Make TableContainer a flex container
-      flexDirection: 'column', // Stack children vertically
-    }}>
-      <Table sx={{ minWidth: 650, flexGrow: 1 }} aria-label="commitments table"> {/* Table grows to fill container */}
+    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 392, width: '100%' }}>
+      <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 2 }}>
@@ -236,11 +228,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}> {/* TableBody grows and is a flex container */}
+        <TableBody>
           {commitments.length === 0 ? (
-            <TableRow sx={{ flexGrow: 1, display: 'flex' }}> {/* TableRow grows and is a flex container */}
+            <TableRow>
               <TableCell colSpan={5} sx={{
-                flexGrow: 1, // TableCell grows to fill available space
+                height: 336, // Fixed height for the empty state area (392 - header height)
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
