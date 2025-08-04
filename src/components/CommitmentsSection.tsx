@@ -1101,7 +1101,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           height: isTableView ? 'auto' : containerHeight, 
           minHeight: 0, 
           pr: isTableView ? 0 : 1,
-          // Removed conditional centering for table view, now handled by CommitmentsTable
+          // Conditional styles for centering when empty
+          ...(paginatedItems.length === 0 && {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflowY: 'hidden', // Hide scrollbar when empty and centered
+          }),
           // Default scroll behavior when not empty
           ...(paginatedItems.length > 0 && {
             overflowY: isTableView ? 'visible' : 'scroll',
@@ -1206,11 +1213,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   textAlign: 'center', 
                   color: 'text.secondary', 
                   width: '100%',
-                  display: 'flex', // Add flex to center content
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  minHeight: containerHeight, // Ensure it takes up space
                 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>Nothing here yet.</Typography>
                   <Typography variant="body1" sx={{ mb: 3, maxWidth: '80%', mx: 'auto' }}>We couldn’t find any commitments that match your filters. Try changing them or create something new.</Typography>

@@ -121,12 +121,19 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 392, width: '100%' }}>
+    <TableContainer component={Paper} sx={{
+      boxShadow: 'none',
+      border: '1px solid #e8eaed',
+      borderRadius: 3,
+      minHeight: 288, // Set minHeight to match regular view's 2 items (140*2 + 8 spacing)
+      display: 'flex', // Make TableContainer a flex container
+      flexDirection: 'column', // Stack children vertically
+    }}>
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}> {/* Adjusted ml to 5 for alignment */}
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
@@ -137,9 +144,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   onClose={handleBadgeMenuClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: badgeCellRef.current ? badgeCellRef.current.offsetWidth : 'auto' }
-                  }}
+                  // Removed PaperProps minWidth to prevent crash
                 >
                   <MenuItem onClick={() => handleBadgeSelect('')} selected={filters.badge === ''}>All</MenuItem>
                   {badgeOptions.map((option) => (
@@ -165,9 +170,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   onClose={handleAssigneeMenuClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                  PaperProps={{
-                    sx: { minWidth: assigneeCellRef.current ? assigneeCellRef.current.offsetWidth : 'auto' }
-                  }}
+                  // Removed PaperProps minWidth to prevent crash
                 >
                   <MenuItem onClick={() => handleAssigneeSelect('')} selected={filters.assignee === ''}>All</MenuItem>
                   {assigneeOptions.map((option) => (
@@ -196,13 +199,13 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current,
+                      anchorEl: dueDateButtonRef.current, // Anchor to the icon button
                     }
                   }}
                 />
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pr: 7 }}> {/* Added pr: 7 here */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
@@ -220,7 +223,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
-                      anchorEl: committedDateButtonRef.current,
+                      anchorEl: committedDateButtonRef.current, // Anchor to the icon button
                     }
                   }}
                 />
@@ -231,15 +234,16 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableBody>
           {commitments.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} sx={{
-                textAlign: 'center',
-                color: 'text.secondary',
-                height: 336, // Fixed height for the empty state area (392 - header height)
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
+              <TableCell colSpan={5} sx={{ 
+                textAlign: 'center', 
+                color: 'text.secondary', 
+                py: 4, 
+                borderBottom: 'none',
+                height: '100%', // Make cell take full height of row
+                display: 'flex', // Enable flexbox for centering content
+                flexDirection: 'column', // Stack content vertically
+                justifyContent: 'center', // Center content vertically
+                alignItems: 'center', // Center content horizontally
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
@@ -254,7 +258,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
                   }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" sx={{ pl: 2 }}> {/* Added padding-left here */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -277,7 +281,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
+                  <TableCell sx={{ pr: 7 }}>{commitment.committedDate || 'N/A'}</TableCell> {/* Added pr: 7 here */}
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
