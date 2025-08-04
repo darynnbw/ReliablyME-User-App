@@ -17,6 +17,7 @@ import {
 import { CalendarToday, Person, MoreHoriz, Shield, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Import ExpandMoreIcon
 import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
 import dayjs from 'dayjs'; // Import dayjs for sorting
+import BadgeTooltip from './BadgeTooltip';
 
 interface CommitmentListItemProps {
   id: number;
@@ -107,6 +108,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
   const showExpandIcon = isNudge && responses && responses.length > 0;
+  const isPromiseKeptGeneral = title === 'Promise Kept General';
 
   return (
     <Card
@@ -169,6 +171,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
             <Stack direction="row" spacing={1} alignItems="center">
+              {isPromiseKeptGeneral && <BadgeTooltip />}
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
               </Typography>
