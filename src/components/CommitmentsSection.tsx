@@ -62,6 +62,7 @@ interface Commitment {
   assignee: string;
   selected?: boolean;
   committedDate?: string;
+  approvedDate?: string; // Added approvedDate
   type?: string;
   nudgesLeft?: number;
   totalNudges?: number;

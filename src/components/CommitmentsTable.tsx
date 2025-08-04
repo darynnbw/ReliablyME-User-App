@@ -16,6 +16,7 @@ import {
   Collapse, // Import Collapse
   Stack, // Import Stack for layout
   Chip, // Import Chip for pill-shaped dates
+  Tooltip, // Import Tooltip
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
@@ -29,6 +30,7 @@ interface Commitment {
   description: string;
   assignee: string;
   committedDate?: string;
+  approvedDate?: string; // Added approvedDate
   type?: string;
   nudgesLeft?: number;
   totalNudges?: number;
@@ -161,7 +163,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '41%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '34%' }}>
               Original Commitment
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
@@ -189,60 +191,71 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '16%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Due Date
-                <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                  <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Due Date"
-                  open={dueDateOpen}
-                  onClose={() => setDueDateOpen(false)}
-                  value={filters.dueDate}
-                  onChange={handleDueDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current,
-                    }
-                  }}
-                />
-              </Box>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
+              <Tooltip title="The exact time when the user committed to doing something." placement="top">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Committed Date
+                  <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
+                    <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    label="Committed Date"
+                    open={committedDateOpen}
+                    onClose={() => setCommittedDateOpen(false)}
+                    value={filters.committedDate}
+                    onChange={handleCommittedDateChange}
+                    slotProps={{
+                      textField: {
+                        style: { display: 'none' }
+                      },
+                      popper: {
+                        placement: 'bottom-start',
+                        anchorEl: committedDateButtonRef.current,
+                      }
+                    }}
+                  />
+                </Box>
+              </Tooltip>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '16%', pr: 4 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Committed Date
-                <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
-                  <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Committed Date"
-                  open={committedDateOpen}
-                  onClose={() => setCommittedDateOpen(false)}
-                  value={filters.committedDate}
-                  onChange={handleCommittedDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: committedDateButtonRef.current,
-                    }
-                  }}
-                />
-              </Box>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
+              <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Due Date
+                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                    <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    label="Due Date"
+                    open={dueDateOpen}
+                    onClose={() => setDueDateOpen(false)}
+                    value={filters.dueDate}
+                    onChange={handleDueDateChange}
+                    slotProps={{
+                      textField: {
+                        style: { display: 'none' }
+                      },
+                      popper: {
+                        placement: 'bottom-start',
+                        anchorEl: dueDateButtonRef.current,
+                      }
+                    }}
+                  />
+                </Box>
+              </Tooltip>
+            </TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
+              <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Approved Date
+                </Box>
+              </Tooltip>
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {commitments.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} sx={{
+              <TableCell colSpan={6} sx={{
                 textAlign: 'center',
                 color: 'text.secondary',
                 height: 336,
@@ -284,12 +297,13 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   </TableCell>
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
+                  <TableCell>{commitment.committedDate || 'N/A'}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell sx={{ pr: 4 }}>{commitment.committedDate || 'N/A'}</TableCell>
+                  <TableCell sx={{ pr: 4 }}>{commitment.approvedDate || 'N/A'}</TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
-                    <TableCell colSpan={5} sx={{ py: 0 }}>
+                    <TableCell colSpan={6} sx={{ py: 0 }}>
                       <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                           <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
