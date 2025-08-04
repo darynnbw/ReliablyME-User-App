@@ -228,23 +228,19 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{
+          minHeight: 336, // Explicitly set minHeight for empty body (6 rows * 56px/row)
+          display: 'flex', // Ensure flex properties apply
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%', // Ensure it takes full width
+        }}>
           {commitments.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={5} sx={{
-                textAlign: 'center',
-                color: 'text.secondary',
-                height: 336, // Explicitly set height for centering (392 - 56 = 336)
-                display: 'flex', // Use flexbox to center content within this cell
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%', // Ensure it takes full width
-              }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
-                <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
-              </TableCell>
-            </TableRow>
+            <Box sx={{ textAlign: 'center', color: 'text.secondary', width: '100%' }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
+              <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
+            </Box>
           ) : (
             commitments.map((commitment, index) => (
               <React.Fragment key={commitment.id}>
