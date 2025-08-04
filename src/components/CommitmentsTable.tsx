@@ -214,7 +214,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
               <Tooltip title="The exact time when the user committed to doing something." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Committed Date
+                  Committed
                   <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
                     <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
                   </IconButton>
@@ -240,7 +240,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
               <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Due Date
+                  Due
                   <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
                     <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
                   </IconButton>
@@ -266,7 +266,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
               <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Approved Date
+                  Approved
                 </Box>
               </Tooltip>
             </TableCell>
