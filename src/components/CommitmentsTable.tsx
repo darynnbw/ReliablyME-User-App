@@ -154,6 +154,30 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '35%' }}>
               Original Commitment
             </TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                Due Date
+                <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                  <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
+                </IconButton>
+                <DatePicker
+                  label="Due Date"
+                  open={dueDateOpen}
+                  onClose={() => setDueDateOpen(false)}
+                  value={filters.dueDate}
+                  onChange={handleDueDateChange}
+                  slotProps={{
+                    textField: {
+                      style: { display: 'none' }
+                    },
+                    popper: {
+                      placement: 'bottom-start',
+                      anchorEl: dueDateButtonRef.current,
+                    }
+                  }}
+                />
+              </Box>
+            </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
@@ -177,30 +201,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     </MenuItem>
                   ))}
                 </Menu>
-              </Box>
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                Due Date
-                <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                  <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
-                </IconButton>
-                <DatePicker
-                  label="Due Date"
-                  open={dueDateOpen}
-                  onClose={() => setDueDateOpen(false)}
-                  value={filters.dueDate}
-                  onChange={handleDueDateChange}
-                  slotProps={{
-                    textField: {
-                      style: { display: 'none' }
-                    },
-                    popper: {
-                      placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current,
-                    }
-                  }}
-                />
               </Box>
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%', pr: 4 }}>
@@ -276,8 +276,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     </Box>
                   </TableCell>
                   <TableCell>{commitment.description}</TableCell>
-                  <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
+                  <TableCell>{commitment.assignee}</TableCell>
                   <TableCell sx={{ pr: 4 }}>{commitment.committedDate || 'N/A'}</TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
