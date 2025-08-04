@@ -126,7 +126,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}> {/* Added ml: 5 here for alignment */}
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
