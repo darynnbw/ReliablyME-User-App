@@ -203,7 +203,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </Box>
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pr: 5 }}> {/* Added pr: 5 here */}
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
                   <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
