@@ -22,6 +22,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // Import new icons
 import dayjs from 'dayjs'; // Import dayjs for sorting responses
+import BadgeIconWithTooltip from './BadgeIconWithTooltip';
 
 interface Commitment {
   id: number;
@@ -325,7 +326,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 >
                   <TableCell component="th" scope="row">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
                           const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
@@ -340,6 +340,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                           );
                         })()}
                       </Box>
+                      {commitment.title.toLowerCase().includes('promise kept') && <BadgeIconWithTooltip />}
                       {commitment.title}
                     </Box>
                   </TableCell>
