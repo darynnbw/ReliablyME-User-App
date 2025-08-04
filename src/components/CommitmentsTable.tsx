@@ -121,12 +121,12 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
 
   return (
-    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 392, width: '100%' }}>
+    <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid #e8eaed', borderRadius: 3, minHeight: 392, width: '100%' }}> {/* Adjusted minHeight to 392px (approx 6 rows + header) */}
       <Table sx={{ minWidth: 650 }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pl: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 5 }}> {/* Adjusted ml to 5 for alignment */}
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
@@ -196,13 +196,13 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
-                      anchorEl: dueDateButtonRef.current,
+                      anchorEl: dueDateButtonRef.current, // Anchor to the icon button
                     }
                   }}
                 />
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pr: 7 }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', pr: 7 }}> {/* Added pr: 7 here */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Committed Date
                 <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
@@ -220,7 +220,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     },
                     popper: {
                       placement: 'bottom-start',
-                      anchorEl: committedDateButtonRef.current,
+                      anchorEl: committedDateButtonRef.current, // Anchor to the icon button
                     }
                   }}
                 />
@@ -228,23 +228,19 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{
+          minHeight: 336, // Explicitly set minHeight for empty body (6 rows * 56px/row)
+          display: 'flex', // Ensure flex properties apply
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%', // Ensure it takes full width
+        }}>
           {commitments.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={5} sx={{
-                textAlign: 'center',
-                color: 'text.secondary',
-                height: 336, // Fixed height for the empty state area
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%', // Ensure it takes full width of the table
-              }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
-                <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
-              </TableCell>
-            </TableRow>
+            <Box sx={{ textAlign: 'center', color: 'text.secondary', width: '100%' }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
+              <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
+            </Box>
           ) : (
             commitments.map((commitment, index) => (
               <React.Fragment key={commitment.id}>
@@ -254,8 +250,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
                   }}
                 >
-                  <TableCell component="th" scope="row" sx={{ pl: 2 }}>
+                  <TableCell component="th" scope="row" sx={{ pl: 2 }}> {/* Added padding-left here */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
                           const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
@@ -276,7 +273,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{commitment.dueDate}</TableCell>
-                  <TableCell sx={{ pr: 7 }}>{commitment.committedDate || 'N/A'}</TableCell>
+                  <TableCell sx={{ pr: 7 }}>{commitment.committedDate || 'N/A'}</TableCell> {/* Added pr: 7 here */}
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
