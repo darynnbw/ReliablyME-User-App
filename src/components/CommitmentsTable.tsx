@@ -151,7 +151,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '45%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '42.5%' }}>
               Original Commitment
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12.5%' }}>
@@ -179,7 +179,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12.5%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Due Date
                 <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
