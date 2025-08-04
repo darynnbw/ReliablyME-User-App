@@ -125,7 +125,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%', pl: 5 }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '20%', pl: 5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
@@ -150,7 +150,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '40%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '35%' }}>
               Original Commitment
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
@@ -281,7 +281,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
-                    <TableCell colSpan={5} sx={{ py: 0 }}>
+                    <TableCell colSpan={5} sx={{ py: 0, pl: 5, pr: 5 }}>
                       <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                           <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
