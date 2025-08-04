@@ -232,13 +232,14 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           {commitments.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} sx={{
+                textAlign: 'center',
+                color: 'text.secondary',
                 height: 336, // Fixed height for the empty state area (392 - header height)
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                textAlign: 'center',
-                color: 'text.secondary',
+                width: '100%',
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>No data to display in table.</Typography>
                 <Typography variant="body1">Adjust your filters or switch to Regular Mode.</Typography>
@@ -255,6 +256,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 >
                   <TableCell component="th" scope="row" sx={{ pl: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {/* Fixed-width container for the expand/collapse icon */}
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
                           const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
