@@ -402,31 +402,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     if (paginatedItems.length === 0) {
       // When there are no items, set a fixed height for the empty state message
       setContainerContentHeight('250px'); // This value might need fine-tuning
-    } else {
-      // Use a setTimeout to ensure the DOM has settled and ref has a value
-      const timer = setTimeout(() => {
-        if (firstItemRef.current) {
-          const cardHeight = firstItemRef.current.offsetHeight;
-          const spacing = 8; // From <Stack spacing={1}>
+    } else if (firstItemRef.current) {
+      const cardHeight = firstItemRef.current.offsetHeight;
+      const spacing = 8; // From <Stack spacing={1}>
 
-          if (cardHeight > 0) { // Ensure we have a valid height
-            if (paginatedItems.length === 1) {
-              setContainerContentHeight(cardHeight);
-            } else {
-              // For 2 or more items, show 2 items and enable scrolling
-              setContainerContentHeight((cardHeight * 2) + spacing);
-            }
-          } else {
-            // Fallback or log if height is still 0
-            console.warn("CommitmentListItem height is 0, cannot calculate dynamic height.");
-            setContainerContentHeight('auto'); // Fallback to auto
-          }
-        } else {
-          console.warn("firstItemRef.current is null, cannot calculate dynamic height.");
-          setContainerContentHeight('auto'); // Fallback to auto
-        }
-      }, 50); // Small delay to allow DOM to render
-      return () => clearTimeout(timer);
+      if (paginatedItems.length === 1) {
+        setContainerContentHeight(cardHeight);
+      } else {
+        // For 2 or more items, show 2 items and enable scrolling
+        setContainerContentHeight((cardHeight * 2) + spacing);
+      }
     }
   }, [paginatedItems.length, isTableView]); // Recalculate when number of items or display mode changes
 
