@@ -354,7 +354,7 @@ const CommitmentPortfolio: React.FC = () => {
       committedDate: dayjs().subtract(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       approvedDate: dayjs().subtract(29, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the industry conference to gather insights on emerging trends.',
-      explanation: 'I attended the industry conference and gathered valuable insights on emerging trends, which I shared with the team.',
+      explanation: 'I attended the industry conference and gathered valuable insights into emerging trends, which I shared with the team.',
       assignee: 'Riley Chen',
     },
     {
@@ -905,7 +905,32 @@ const CommitmentPortfolio: React.FC = () => {
     { id: 165, title: 'Promise Kept General', dueDate: dayjs().subtract(192, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(194, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(191, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will prepare a detailed report on competitor analysis for the new market.', explanation: 'Prepared a detailed report on competitor analysis for the new market, identifying key players and their strategies.', assignee: 'Jamie Smith' },
   ];
 
-  const unkeptPromisesToMeItems: any[] = [];
+  const unkeptPromisesToMeItems = [
+    {
+      id: 201,
+      title: 'Promise Kept General',
+      dueDate: dayjs().subtract(10, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(15, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      description: 'I promised to deliver the final report on the agreed-upon deadline, including all necessary data and analysis.',
+      assignee: 'John Doe',
+    },
+    {
+      id: 202,
+      title: 'Attendance',
+      dueDate: dayjs().subtract(7, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(10, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      description: 'I committed to attending the critical client call.',
+      assignee: 'Jane Smith',
+    },
+    {
+      id: 203,
+      title: 'Teamwork',
+      dueDate: dayjs().subtract(5, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(7, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      description: 'I was going to provide the necessary assets for the marketing campaign, ensuring they were high-quality and on brand.',
+      assignee: 'Peter Jones',
+    },
+  ];
 
   const commitmentsReceivedTabs = [
     {
