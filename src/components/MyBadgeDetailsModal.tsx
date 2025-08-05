@@ -8,7 +8,7 @@ import {
   IconButton,
   Divider,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
+import { Close, Person, CalendarToday, Schedule, CheckCircle } from '@mui/icons-material';
 
 interface Badge {
   title: string;
@@ -96,7 +96,7 @@ const MyBadgeDetailsModal: React.FC<MyBadgeDetailsModalProps> = ({ open, onClose
 
           {/* Approved Date - Third */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+            <CheckCircle sx={{ fontSize: 20, color: '#4CAF50' }} /> {/* Changed icon to CheckCircle and set color to green */}
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               Approved:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
