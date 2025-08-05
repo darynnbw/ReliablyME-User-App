@@ -1183,8 +1183,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                   
                   const itemDate = parseCommitmentDate(item.dueDate);
-                  // All unkept promises are overdue by default
-                  const isOverdue = isUnkeptTab || (itemDate ? itemDate.isBefore(dayjs(), 'day') : false);
+                  // All unkept promises are NOT overdue by default, only other items if their date is past
+                  const isOverdue = !isUnkeptTab && (itemDate ? itemDate.isBefore(dayjs(), 'day') : false);
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
                   
@@ -1235,7 +1235,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showFromLabel={showFromLabel}
                       explanation={item.explanation}
                       responses={item.responses}
-                      showBadgePlaceholder={isMyBadgesTab} // Pass this prop for My Badges tab
+                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab} // Pass this prop for My Badges tab AND Active Promises
                       approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
                     />
                   );

@@ -344,7 +344,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                           );
                         })()}
                       </Box>
-                      {!isActivePromisesTab && <BadgeIconWithTooltip badgeType={commitment.title} />}
+                      {(isActivePromisesTab || !isActivePromisesTab) && <BadgeIconWithTooltip badgeType={commitment.title} />}
                       {commitment.title}
                     </Box>
                   </TableCell>
