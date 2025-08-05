@@ -284,6 +284,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       setDateRange([null, null]);
       setTempDateRange([null, null]);
     }
+
+    // Set default sortBy for 'My Badges' and 'Badges Issued' tabs
+    if (currentTabLabel === 'My Badges' || currentTabLabel === 'Badges Issued') {
+      setSortBy('approvedDateNewest');
+    } else {
+      setSortBy('dueDateNewest'); // Default for other tabs
+    }
+
     // Reset table-specific filters when tab changes
     setBadgeTableFilter('');
     setCommitmentTextTableFilter('');
@@ -368,21 +376,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
     return true;
   }).sort((a, b) => {
-    const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
-
     let dateA, dateB;
 
     switch (sortBy) {
       case 'dueDateNewest':
       case 'dueDateOldest':
-        // If it's the My Badges tab, sort by approvedDate, otherwise by dueDate
-        dateA = isMyBadgesTab ? parseCommitmentDate(a.approvedDate || '') : parseCommitmentDate(a.dueDate);
-        dateB = isMyBadgesTab ? parseCommitmentDate(b.approvedDate || '') : parseCommitmentDate(b.dueDate);
+        dateA = parseCommitmentDate(a.dueDate);
+        dateB = parseCommitmentDate(b.dueDate);
         break;
       case 'committedDateNewest':
       case 'committedDateOldest':
         dateA = parseCommittedDate(a.committedDate);
         dateB = parseCommittedDate(b.committedDate);
+        break;
+      case 'approvedDateNewest':
+      case 'approvedDateOldest':
+        dateA = a.approvedDate ? dayjs(a.approvedDate, 'MMM D, YYYY, hh:mm A') : null;
+        dateB = b.approvedDate ? dayjs(b.approvedDate, 'MMM D, YYYY, hh:mm A') : null;
         break;
       case 'badgeNameAZ':
         return a.title.localeCompare(b.title);
@@ -390,12 +400,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         return 0;
     }
 
+    if (!dateA && !dateB) return 0;
     if (!dateA) return 1; // Treat null/invalid dates as later for 'newest' or earlier for 'oldest'
     if (!dateB) return -1;
 
-    if (sortBy === 'dueDateNewest' || sortBy === 'committedDateNewest') {
+    if (sortBy.includes('Newest')) {
       return dateB.valueOf() - dateA.valueOf(); // Newest first
-    } else if (sortBy === 'dueDateOldest' || sortBy === 'committedDateOldest') {
+    } else if (sortBy.includes('Oldest')) {
       return dateA.valueOf() - dateB.valueOf(); // Oldest first
     }
     return 0; // Should not be reached
@@ -821,6 +832,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 <MenuItem value="committedDateNewest">Committed Date (Newest First)</MenuItem>
                 <MenuItem value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
                 {isMyCommitmentsSection && <MenuItem value="badgeNameAZ">Badge Name (A–Z)</MenuItem>}
+                {(isMyBadgesTab || isBadgesIssuedTab) && [
+                  <MenuItem key="approvedDateNewest" value="approvedDateNewest">Approved Date (Newest First)</MenuItem>,
+                  <MenuItem key="approvedDateOldest" value="approvedDateOldest">Approved Date (Oldest First)</MenuItem>,
+                ]}
               </Select>
             </FormControl>
 
