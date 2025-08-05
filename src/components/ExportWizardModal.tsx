@@ -14,7 +14,7 @@ import {
   FormGroup,
   Checkbox,
   CircularProgress,
-  Grid, // Added Grid import
+  Grid,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { exportToCsv, exportToPdf } from '../utils/exportUtils';
@@ -34,7 +34,7 @@ interface Commitment {
   questions?: string[];
   explanation?: string;
   responses?: { date: string; answer: string }[];
-  isOverdue?: boolean; // Added isOverdue
+  isOverdue?: boolean;
 }
 
 interface ExportWizardModalProps {
@@ -59,7 +59,7 @@ const allExportFields = [
 ];
 
 const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, data }) => {
-  const [step, setStep] = useState(1); // 1: Choose Format, 2: Select Fields, 3: Preview, 4: Confirm & Download
+  const [step, setStep] = useState(1);
   const [selectedFormat, setSelectedFormat] = useState<'csv' | 'pdf'>('csv');
   const [selectedFields, setSelectedFields] = useState<string[]>(allExportFields.map(f => f.id));
   const [previewContent, setPreviewContent] = useState<string>('');
@@ -104,8 +104,6 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   };
 
   const generatePreview = () => {
-    // This is a simplified preview. For a real app, you might render a small table.
-    // For now, just show a summary of selected fields and format.
     const previewLines: string[] = [];
     previewLines.push(`Export Format: ${selectedFormat.toUpperCase()}`);
     previewLines.push(`Selected Fields: ${selectedFields.map(id => allExportFields.find(f => f.id === id)?.label || id).join(', ')}`);
@@ -126,9 +124,9 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
         } else if (field === 'isExternal') {
           value = record.isExternal ? 'Yes' : 'No';
         } else if (field === 'description' && record.description.length > 100) {
-          value = record.description.substring(0, 97) + '...'; // Truncate for preview
+          value = record.description.substring(0, 97) + '...';
         } else if (field === 'explanation' && record.explanation && record.explanation.length > 100) {
-          value = record.explanation.substring(0, 97) + '...'; // Truncate for preview
+          value = record.explanation.substring(0, 97) + '...';
         }
         if (value !== undefined && value !== null && value !== '') {
           previewLines.push(`  ${allExportFields.find(f => f.id === field)?.label || field}: ${value}`);
@@ -141,49 +139,56 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
 
   const handleDownload = async () => {
     setIsExporting(true);
+    try {
+      // A short delay to allow the UI to update to the loading state
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-    const headers = selectedFields.map(id => ({
-      id,
-      label: allExportFields.find(f => f.id === id)?.label || id
-    }));
+      const headers = selectedFields.map(id => ({
+        id,
+        label: allExportFields.find(f => f.id === id)?.label || id
+      }));
 
-    const exportData = data.map(item => {
-      const row: { [key: string]: any } = {};
-      headers.forEach(header => {
-        const field = header.id;
-        let value;
-        switch (field) {
-          case 'nudgesInfo':
-            value = item.type === 'nudge' ? `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left` : '';
-            break;
-          case 'responses':
-            value = item.responses ? item.responses.map(r => `${r.date}: ${r.answer}`).join('; ') : '';
-            break;
-          case 'isOverdue':
-            value = item.isOverdue ? 'Yes' : 'No';
-            break;
-          case 'isExternal':
-            value = item.isExternal ? 'Yes' : 'No';
-            break;
-          default:
-            value = (item as any)[field] || '';
-        }
-        row[header.label] = value;
+      const exportData = data.map(item => {
+        const row: { [key: string]: any } = {};
+        headers.forEach(header => {
+          const field = header.id;
+          let value;
+          switch (field) {
+            case 'nudgesInfo':
+              value = item.type === 'nudge' ? `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left` : '';
+              break;
+            case 'responses':
+              value = item.responses ? item.responses.map(r => `${r.date}: ${r.answer}`).join('; ') : '';
+              break;
+            case 'isOverdue':
+              value = item.isOverdue ? 'Yes' : 'No';
+              break;
+            case 'isExternal':
+              value = item.isExternal ? 'Yes' : 'No';
+              break;
+            default:
+              value = (item as any)[field] || '';
+          }
+          row[header.label] = value;
+        });
+        return row;
       });
-      return row;
-    });
 
-    // A short delay to allow the UI to update to the loading state
-    await new Promise(resolve => setTimeout(resolve, 100));
+      if (selectedFormat === 'csv') {
+        exportToCsv(exportData, 'Commitment_Portfolio');
+      } else if (selectedFormat === 'pdf') {
+        exportToPdf(exportData, 'Commitment_Portfolio');
+      }
+      
+      // If export is successful, close the modal.
+      handleClose();
 
-    if (selectedFormat === 'csv') {
-      exportToCsv(exportData, 'Commitment_Portfolio');
-    } else if (selectedFormat === 'pdf') {
-      exportToPdf(exportData, 'Commitment_Portfolio');
+    } catch (error) {
+      console.error("Export failed:", error);
+      // If export fails, stop the loading animation but keep the modal open.
+      setIsExporting(false);
+      // In a real app, we would show a toast notification here.
     }
-    
-    setIsExporting(false);
-    handleClose();
   };
 
   return (
