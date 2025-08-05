@@ -141,36 +141,47 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
 
   const handleDownload = async () => {
     setIsExporting(true);
-    const mappedData = data.map(item => {
+
+    const headers = selectedFields.map(id => ({
+      id,
+      label: allExportFields.find(f => f.id === id)?.label || id
+    }));
+
+    const exportData = data.map(item => {
       const row: { [key: string]: any } = {};
-      selectedFields.forEach(field => {
+      headers.forEach(header => {
+        const field = header.id;
+        let value;
         switch (field) {
           case 'nudgesInfo':
-            row[field] = item.type === 'nudge' ? `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left` : '';
+            value = item.type === 'nudge' ? `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left` : '';
             break;
           case 'responses':
-            row[field] = item.responses ? item.responses.map(r => `${r.date}: ${r.answer}`).join('; ') : '';
+            value = item.responses ? item.responses.map(r => `${r.date}: ${r.answer}`).join('; ') : '';
             break;
           case 'isOverdue':
-            row[field] = item.isOverdue ? 'Yes' : 'No';
+            value = item.isOverdue ? 'Yes' : 'No';
             break;
           case 'isExternal':
-            row[field] = item.isExternal ? 'Yes' : 'No';
+            value = item.isExternal ? 'Yes' : 'No';
             break;
           default:
-            row[field] = (item as any)[field] || '';
+            value = (item as any)[field] || '';
         }
+        row[header.label] = value;
       });
       return row;
     });
 
-    const headers = selectedFields.map(id => allExportFields.find(f => f.id === id)?.label || id);
+    // A short delay to allow the UI to update to the loading state
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     if (selectedFormat === 'csv') {
-      exportToCsv(mappedData, 'Commitment_Portfolio', headers);
+      exportToCsv(exportData, 'Commitment_Portfolio');
     } else if (selectedFormat === 'pdf') {
-      exportToPdf(mappedData, 'Commitment_Portfolio', headers);
+      exportToPdf(exportData, 'Commitment_Portfolio');
     }
+    
     setIsExporting(false);
     handleClose();
   };

@@ -7,15 +7,17 @@ interface ExportDataRow {
   [key: string]: any;
 }
 
-export const exportToCsv = (data: ExportDataRow[], filename: string, headers: string[]) => {
-  const ws = XLSX.utils.json_to_sheet(data, { header: headers });
+// This function now expects data objects where keys are the column headers
+export const exportToCsv = (data: ExportDataRow[], filename: string) => {
+  const ws = XLSX.utils.json_to_sheet(data);
   const csv = XLSX.utils.sheet_to_csv(ws);
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   saveAs(blob, `${filename}.csv`);
 };
 
-export const exportToXlsx = (data: ExportDataRow[], filename: string, headers: string[]) => {
-  const ws = XLSX.utils.json_to_sheet(data, { header: headers });
+// This function now expects data objects where keys are the column headers
+export const exportToXlsx = (data: ExportDataRow[], filename: string) => {
+  const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
   const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
@@ -23,19 +25,16 @@ export const exportToXlsx = (data: ExportDataRow[], filename: string, headers: s
   saveAs(blob, `${filename}.xlsx`);
 };
 
-export const exportToPdf = (data: ExportDataRow[], filename: string, headers: string[]) => {
+// This function now derives headers and rows from the data objects
+export const exportToPdf = (data: ExportDataRow[], filename: string) => {
   const doc = new jsPDF();
+  if (data.length === 0) {
+    doc.save(`${filename}.pdf`);
+    return;
+  }
 
-  const tableColumn = headers;
-  const tableRows: any[] = [];
-
-  data.forEach(item => {
-    const rowData: any[] = [];
-    headers.forEach(header => {
-      rowData.push(item[header]);
-    });
-    tableRows.push(rowData);
-  });
+  const tableColumn = Object.keys(data[0]);
+  const tableRows: any[][] = data.map(item => Object.values(item));
 
   (doc as any).autoTable(tableColumn, tableRows, { startY: 20 });
   doc.save(`${filename}.pdf`);
