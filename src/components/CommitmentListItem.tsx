@@ -248,7 +248,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
               </Typography>
-              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && (
+              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && ( // Added nudgesLeft > 0 condition
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
                   ({nudgesLeft} of {totalNudges} nudges left)
                 </Typography>
