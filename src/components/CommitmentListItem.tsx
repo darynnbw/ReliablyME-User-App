@@ -106,30 +106,16 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
     setExpanded(!expanded);
   };
 
-  const isDueToday = dueDate === 'Today';
-  // The color for the date text and icon when not overdue should be the 'color' prop
-  const calculatedDueColor = isOverdue ? theme.palette.error.main : color;
-  const calculatedDueWeight = (isOverdue || isDueToday) ? 600 : 'inherit';
-  
-  let displayDateLabel: string;
-  let displayDateValue: string;
-  let calendarIconColorForDate: string;
-  let finalDisplayDateColor: string;
-  let finalDisplayDateWeight: string | number;
+  // Determine the label and value based on the tab
+  const displayDateLabel = isMyBadgesTab ? 'Approved' : 'Due';
+  const displayDateValue = isMyBadgesTab ? (approvedDate || 'N/A') : dueDate;
 
-  if (isMyBadgesTab) {
-    displayDateLabel = 'Approved';
-    displayDateValue = approvedDate || 'N/A';
-    calendarIconColorForDate = color; // Assuming color is appropriate for approved badges
-    finalDisplayDateColor = '#666'; // Default color for approved date text
-    finalDisplayDateWeight = 'inherit'; // Default weight for approved date text
-  } else { // This covers ActivePromisesTab and all other regular tabs
-    displayDateLabel = 'Due';
-    displayDateValue = dueDate;
-    calendarIconColorForDate = calculatedDueColor; // Icon color still follows section color or red if overdue
-    finalDisplayDateColor = isOverdue ? theme.palette.error.main : '#666'; // Date text is red if overdue, otherwise gray
-    finalDisplayDateWeight = calculatedDueWeight; // Weight still depends on overdue/today
-  }
+  // Determine the color and weight based on overdue status
+  const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
+  const dateTextWeight = isOverdue ? 600 : 'inherit';
+
+  // Determine the icon color based on overdue status or section color
+  const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
   const showExpandIcon = isNudge && responses && responses.length > 0;
 
@@ -258,8 +244,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Due/Approved Date */}
           {!hideDueDate && (
             <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
-              <CalendarToday sx={{ fontSize: 16, color: calendarIconColorForDate }} />
-              <Typography variant="body2" sx={{ color: finalDisplayDateColor, fontWeight: finalDisplayDateWeight }}>
+              <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
+              <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
               </Typography>
               {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && (
