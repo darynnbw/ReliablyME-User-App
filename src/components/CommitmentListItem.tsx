@@ -14,9 +14,10 @@ import {
   useTheme,
   Collapse, // Import Collapse
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Shield, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Import ExpandMoreIcon
+import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Removed Shield
 import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
 import dayjs from 'dayjs'; // Import dayjs for sorting
+import BadgeContent from './BadgeContent'; // Import the new BadgeContent component
 
 interface CommitmentListItemProps {
   id: number;
@@ -34,7 +35,7 @@ interface CommitmentListItemProps {
   onViewDetails: () => void;
   onActionButtonClick: () => void;
   onToggleSelect: (id: number, checked: boolean) => void;
-  showBadgePlaceholder?: boolean;
+  showBadgePlaceholder?: boolean; // This prop will now control rendering BadgeContent
   showAcceptDeclineButtons?: boolean;
   onAccept?: () => void;
   onDecline?: () => void;
@@ -70,7 +71,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onViewDetails,
   onActionButtonClick,
   onToggleSelect,
-  showBadgePlaceholder = false,
+  showBadgePlaceholder = false, // This prop will now control rendering BadgeContent
   showAcceptDeclineButtons = false,
   onAccept,
   onDecline,
@@ -142,14 +143,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
+            height: 100, // Fixed height for consistency
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            bgcolor: 'grey.100',
-            borderRadius: 1,
             flexShrink: 0,
           }}>
-            <Shield sx={{ fontSize: 40, color: 'grey.400' }} />
+            <BadgeContent badgeType={title} size="list-item-large" />
           </Box>
         )}
         {showCheckbox && (

@@ -12,7 +12,6 @@ import {
   InputAdornment,
   TextField,
   Checkbox,
-  Pagination,
   Stack,
   Popover,
   Button,
@@ -145,7 +144,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [committedDateTableFilter, setCommittedDateTableFilter] = useState<Dayjs | null>(null);
   const [approvedDateTableFilter, setApprovedDateTableFilter] = useState<Dayjs | null>(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
   const [commitmentToAccept, setCommitmentToAccept] = useState<Commitment | null>(null);
   const [commitmentToDecline, setCommitmentToDecline] = useState<Commitment | null>(null);
@@ -268,7 +266,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
-    setCurrentPage(1);
     // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     // Determine if filters should be disabled for the current tab
     const currentTabLabel = tabs[activeTab].label;
@@ -400,9 +397,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
   });
 
-  const itemsPerPage = 15;
-  const paginatedItems = isMyBadgesTab ? currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) : currentItems;
-  const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0;
+  // No pagination for My Badges tab
+  const paginatedItems = currentItems;
+  // const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0; // Removed
 
   // Effect to observe the height of the first item
   useEffect(() => {
@@ -450,7 +447,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     } else if (item.type === 'nudge' && (isMyPromisesTab || isRequestsToCommitTab)) {
       setCommitmentForNudgeDetails(item);
       setNudgeDetailsModalOpen(true);
-    } else {
+    } else if (isMyBadgesTab) { // Handle My Badges tab specifically
+      handleViewBadgeDetails(item);
+    }
+    else {
       setCommitmentForDetails(item);
       setModalOpen(true);
     }
@@ -690,7 +690,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   // Handlers for table-specific filters
   const handleTableFilterChange = useCallback((filterName: string, value: any) => {
-    setCurrentPage(1); // Reset pagination on filter change
+    // setCurrentPage(1); // Reset pagination on filter change - Removed
     switch (filterName) {
       case 'badge':
         setBadgeTableFilter(value);
@@ -728,7 +728,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setDueDateTableFilter(null);
     setCommittedDateTableFilter(null);
     setApprovedDateTableFilter(null);
-    setCurrentPage(1);
+    // setCurrentPage(1); // Removed
   };
 
   // Options for table filters
@@ -1174,89 +1174,71 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           ) : (
             <Stack spacing={1} sx={{ width: '100%', mt: 1 }}> {/* Adjusted mt to 1 */}
               {paginatedItems.length > 0 ? (
-                isMyBadgesTab ? (
-                  paginatedItems.map((item, _index) => (
+                paginatedItems.map((item, _index) => {
+                  const isNudgeItem = item.type === 'nudge';
+                  // Checkboxes are shown only on Actions page and not for MyBadges/Unkept tabs
+                  const showCheckboxes = isActionsPage && !isMyBadgesTab && !isUnkeptTab;
+                  // Nudges in My Promises tab on Actions page are disabled for bulk select
+                  // Also, items in 'Active Promises' tab are disabled for bulk select
+                  const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
+                  
+                  const itemDate = parseCommitmentDate(item.dueDate);
+                  // All unkept promises are overdue by default
+                  const isOverdue = isUnkeptTab || (itemDate ? itemDate.isBefore(dayjs(), 'day') : false);
+                  const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
+                  const showRevokeButton = isAwaitingResponseTab;
+                  
+                  // Action button logic:
+                  // Show if on Actions page AND (
+                  //   (is a Nudge in My Promises tab) OR
+                  //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
+                  // )
+                  // Explicitly hide action button for 'Active Promises' tab in Commitment Portfolio
+                  let showActionButtonForListItem = isActionsPage && (
+                    (isNudgeItem && isMyPromisesTab) || 
+                    (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
+                  );
+                  if (isCommitmentPortfolioPage && isActivePromisesTab) {
+                      showActionButtonForListItem = false;
+                  }
+
+                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
+
+                  return (
                     <CommitmentListItem
                       key={item.id}
                       {...item}
                       ref={_index === 0 ? firstItemRef : null} // Keep ref for the first item to measure its height
-                      color="#4caf50"
-                      showCheckbox={false}
-                      isCheckboxDisabled={true}
-                      showActionButton={false}
-                      buttonText=""
-                      onActionButtonClick={() => {}}
-                      showBadgePlaceholder={true}
-                      onViewDetails={() => handleViewBadgeDetails(item)}
-                      onToggleSelect={() => {}}
+                      color={itemColor}
+                      showCheckbox={showCheckboxes}
+                      isCheckboxDisabled={isCheckboxDisabled}
+                      showActionButton={showActionButtonForListItem} // Use the new variable
+                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
+                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
+                      onViewDetails={() => handleViewCommitmentDetails(item)}
+                      onToggleSelect={handleToggleSelectItem}
+                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
+                      onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
+                      onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
+                      acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
+                      declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
+                      isBulkSelecting={selectedCount > 0}
+                      hideDueDate={hideDueDate}
+                      isNudge={isNudgeItem}
+                      nudgesLeft={item.nudgesLeft}
+                      totalNudges={item.totalNudges}
+                      isMyPromisesTab={isMyPromisesTab}
+                      isExternal={item.isExternal}
+                      isOverdue={isOverdue}
+                      showRevokeButton={showRevokeButton}
+                      onRevoke={() => handleRevokeClick(item)}
+                      showFromLabel={showFromLabel}
+                      explanation={item.explanation}
+                      responses={item.responses}
+                      showBadgePlaceholder={isMyBadgesTab} // Pass this prop for My Badges tab
                     />
-                  ))
-                ) : (
-                  paginatedItems.map((item, _index) => {
-                    const isNudgeItem = item.type === 'nudge';
-                    // Checkboxes are shown only on Actions page and not for MyBadges/Unkept tabs
-                    const showCheckboxes = isActionsPage && !isMyBadgesTab && !isUnkeptTab;
-                    // Nudges in My Promises tab on Actions page are disabled for bulk select
-                    // Also, items in 'Active Promises' tab are disabled for bulk select
-                    const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
-                    
-                    const itemDate = parseCommitmentDate(item.dueDate);
-                    // All unkept promises are overdue by default
-                    const isOverdue = isUnkeptTab || (itemDate ? itemDate.isBefore(dayjs(), 'day') : false);
-                    const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
-                    const showRevokeButton = isAwaitingResponseTab;
-                    
-                    // Action button logic:
-                    // Show if on Actions page AND (
-                    //   (is a Nudge in My Promises tab) OR
-                    //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
-                    // )
-                    // Explicitly hide action button for 'Active Promises' tab in Commitment Portfolio
-                    let showActionButtonForListItem = isActionsPage && (
-                      (isNudgeItem && isMyPromisesTab) || 
-                      (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
-                    );
-                    if (isCommitmentPortfolioPage && isActivePromisesTab) {
-                        showActionButtonForListItem = false;
-                    }
-
-                    const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
-
-                    return (
-                      <CommitmentListItem
-                        key={item.id}
-                        {...item}
-                        ref={_index === 0 ? firstItemRef : null} // Keep ref for the first item to measure its height
-                        color={itemColor}
-                        showCheckbox={showCheckboxes}
-                        isCheckboxDisabled={isCheckboxDisabled}
-                        showActionButton={showActionButtonForListItem} // Use the new variable
-                        buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
-                        onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
-                        onViewDetails={() => handleViewCommitmentDetails(item)}
-                        onToggleSelect={handleToggleSelectItem}
-                        showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
-                        onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
-                        onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
-                        acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
-                        declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
-                        isBulkSelecting={selectedCount > 0}
-                        hideDueDate={hideDueDate}
-                        isNudge={isNudgeItem}
-                        nudgesLeft={item.nudgesLeft}
-                        totalNudges={item.totalNudges}
-                        isMyPromisesTab={isMyPromisesTab}
-                        isExternal={item.isExternal}
-                        isOverdue={isOverdue}
-                        showRevokeButton={showRevokeButton}
-                        onRevoke={() => handleRevokeClick(item)}
-                        showFromLabel={showFromLabel}
-                        explanation={item.explanation}
-                        responses={item.responses}
-                      />
-                    );
-                  })
-                )
+                  );
+                })
               ) : (
                 <Box sx={{ 
                   textAlign: 'center', 
@@ -1295,11 +1277,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           )}
         </Box>
         
-        {currentItems.length > 0 && isMyBadgesTab && (
+        {/* Removed pagination for My Badges tab */}
+        {/* {currentItems.length > 0 && isMyBadgesTab && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
             <Pagination count={totalPages} page={currentPage} onChange={(_, page) => setCurrentPage(page)} color="primary" />
           </Box>
-        )}
+        )} */}
       </Paper>
 
       <CommitmentDetailsModal 
