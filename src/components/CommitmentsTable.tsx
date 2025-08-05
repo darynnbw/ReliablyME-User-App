@@ -169,8 +169,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '10%' : '15%', pl: 4 }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '10%' : '15%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Box sx={{ width: 32, flexShrink: 0, mr: 1 }} /> {/* Placeholder for alignment */}
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
@@ -248,7 +249,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            {/* Approved column is removed for Active Promises tab */}
+            {/* Due column moved to the end for Active Promises tab */}
             {!isActivePromisesTab && (
               <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
                 <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
@@ -358,7 +359,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
                   }}
                 >
-                  <TableCell component="th" scope="row" sx={{ pl: 4 }}>
+                  <TableCell component="th" scope="row">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
@@ -381,9 +382,15 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
-                  <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>
+                  {/* Due column moved to the end for Active Promises tab */}
+                  {!isActivePromisesTab && (
+                    <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
+                  )}
                   {!isActivePromisesTab && (
                     <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                  )}
+                  {isActivePromisesTab && (
+                    <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>
                   )}
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
