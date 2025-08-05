@@ -173,8 +173,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Box sx={{ width: 32, flexShrink: 0, mr: 1 }} /> {/* Placeholder for alignment */}
                 Badge
-                <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
-                  <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
+                <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge" disabled={isActivePromisesTab}>
+                  <ArrowDropDown fontSize="small" sx={{ color: isActivePromisesTab ? 'action.disabled' : badgeIconColor }} />
                 </IconButton>
                 <Menu
                   anchorEl={badgeAnchorEl}
@@ -201,8 +201,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 Assignee
-                <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee">
-                  <ArrowDropDown fontSize="small" sx={{ color: assigneeIconColor }} />
+                <IconButton size="small" onClick={handleAssigneeMenuOpen} aria-label="filter by assignee" disabled={isActivePromisesTab}>
+                  <ArrowDropDown fontSize="small" sx={{ color: isActivePromisesTab ? 'action.disabled' : assigneeIconColor }} />
                 </IconButton>
                 <Menu
                   anchorEl={assigneeAnchorEl}
@@ -227,8 +227,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Tooltip title="The exact time when the user committed to doing something." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Committed
-                  <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
-                    <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
+                  <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date" disabled={isActivePromisesTab}>
+                    <CalendarToday fontSize="small" sx={{ color: isActivePromisesTab ? 'action.disabled' : committedDateIconColor }} />
                   </IconButton>
                   <DatePicker
                     label="Committed Date"
@@ -281,8 +281,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Due
-                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                    <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
+                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date" disabled={isActivePromisesTab}>
+                    <CalendarToday fontSize="small" sx={{ color: isActivePromisesTab ? 'action.disabled' : dueDateIconColor }} />
                   </IconButton>
                   <DatePicker
                     label="Due Date"
@@ -295,8 +295,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                         style: { display: 'none' }
                       },
                       popper: {
-                        placement: 'bottom-start',
-                        anchorEl: dueDateButtonRef.current,
+                          placement: 'bottom-start',
+                          anchorEl: dueDateButtonRef.current,
                       }
                     }}
                   />
