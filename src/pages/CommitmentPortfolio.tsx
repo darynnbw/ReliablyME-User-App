@@ -717,8 +717,8 @@ const CommitmentPortfolio: React.FC = () => {
             <CommitmentsSection
               title="Others' Commitments"
               tabs={commitmentsReceivedTabs}
-              displayMode={displayMode} {/* Pass displayMode */}
-              onToggleDisplayMode={setDisplayMode} {/* Pass setDisplayMode */}
+              displayMode={displayMode}
+              onToggleDisplayMode={setDisplayMode}
               showClearAllFilters={true}
               isActionsPage={false}
               isCommitmentPortfolioPage={true}
