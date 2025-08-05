@@ -1149,7 +1149,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                   
                   // Determine overdue status based on tab and explicit flag
-                  const isOverdue = item.isOverdue || (!isUnkeptTab && !isMyBadgesTab && !isBadgesIssuedTab && (parseCommitmentDate(item.dueDate) ? parseCommitmentDate(item.dueDate)!.isBefore(dayjs(), 'day') : false));
+                  const isOverdue = isUnkeptTab || item.isOverdue || (!isMyBadgesTab && !isBadgesIssuedTab && (parseCommitmentDate(item.dueDate) ? parseCommitmentDate(item.dueDate)!.isBefore(dayjs(), 'day') : false));
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
                   
@@ -1167,7 +1167,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showActionButtonForListItem = false;
                   }
 
-                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isBadgesIssuedTab; // Added isBadgesIssuedTab
+                  // Determine 'From:' or 'To:' label based on tab
+                  const showFromLabel = isOwedToMe || isBadgeRequestsTab || isUnkeptTab;
 
                   return (
                     <CommitmentListItem
