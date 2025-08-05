@@ -300,9 +300,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   // Determine if the current section is "My Commitments"
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
   const isTableView = displayMode === 'table' && isMyCommitmentsSection;
-  // Determine if filters should be disabled
-  const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab || isActivePromisesTab;
-  const disableMyCommitmentFiltersInTableMode = displayMode === 'table' && isMyCommitmentsSection;
+  // Determine if filters should be disabled for "Others' Commitments" section or specific tabs
+  const disableFiltersForOthersSection = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
 
 
   // Generate unique people and add group options
@@ -758,9 +757,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {/* Filters for My Commitments section (including My Promises) */}
             {isMyCommitmentsSection && (
               <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode || isActivePromisesTab}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView || isActivePromisesTab}>
                   <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (disableMyCommitmentFiltersInTableMode || isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (isTableView || isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
                     <MenuItem value="">All</MenuItem>
                     {filterOptions.map(person => (
                       <MenuItem key={person} value={person}>{person}</MenuItem>
@@ -769,7 +768,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   </Select>
                 </FormControl>
 
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode || isActivePromisesTab}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView || isActivePromisesTab}>
                   <InputLabel>Due Date</InputLabel>
                   <Select
                     value={dateFilter}
@@ -777,7 +776,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     label="Due Date"
                     startAdornment={
                       <InputAdornment position="start">
-                        <CalendarToday fontSize="small" sx={{ color: (disableMyCommitmentFiltersInTableMode || isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
+                        <CalendarToday fontSize="small" sx={{ color: (isTableView || isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
                       </InputAdornment>
                     }
                   >
@@ -802,7 +801,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       readOnly: true,
                     }}
                     sx={{ minWidth: 180, cursor: 'pointer' }}
-                    disabled={disableMyCommitmentFiltersInTableMode || isActivePromisesTab}
+                    disabled={isTableView || isActivePromisesTab}
                   />
                 )}
               </>
@@ -810,9 +809,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {/* Filters for Others' Commitments section */}
             {!isMyCommitmentsSection && (
               <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFiltersForOthersSection}>
                   <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" /></InputAdornment>}>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: disableFiltersForOthersSection ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
                     <MenuItem value="">All</MenuItem>
                     {filterOptions.map(person => (
                       <MenuItem key={person} value={person}>{person}</MenuItem>
@@ -821,7 +820,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   </Select>
                 </FormControl>
 
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFilters}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableFiltersForOthersSection}>
                   <InputLabel>Due Date</InputLabel>
                   <Select
                     value={dateFilter}
@@ -829,7 +828,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     label="Due Date"
                     startAdornment={
                       <InputAdornment position="start">
-                        <CalendarToday fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                        <CalendarToday fontSize="small" sx={{ color: disableFiltersForOthersSection ? 'action.disabled' : 'text.secondary' }} />
                       </InputAdornment>
                     }
                   >
@@ -854,17 +853,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       readOnly: true,
                     }}
                     sx={{ minWidth: 180, cursor: 'pointer' }}
-                    disabled={disableFilters}
+                    disabled={disableFiltersForOthersSection}
                   />
                 )}
               </>
             )}
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableFilters}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={isMyCommitmentsSection ? isActivePromisesTab : disableFiltersForOthersSection}>
               <InputLabel>Sort By</InputLabel>
               <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as string)} label="Sort By" startAdornment={
                 <InputAdornment position="start">
-                  <ArrowUpward fontSize="small" sx={{ color: disableFilters ? 'action.disabled' : 'text.secondary' }} />
+                  <ArrowUpward fontSize="small" sx={{ color: (isMyCommitmentsSection ? isActivePromisesTab : disableFiltersForOthersSection) ? 'action.disabled' : 'text.secondary' }} />
                 </InputAdornment>
               }>
                 <MenuItem value="dueDateNewest">Due Date (Newest First)</MenuItem>
@@ -875,7 +874,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </Select>
             </FormControl>
 
-            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
+            <TextField 
+              variant="outlined" 
+              size="small" 
+              placeholder="Search..." 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+              InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} 
+              disabled={isMyCommitmentsSection ? (isTableView || isActivePromisesTab) : disableFiltersForOthersSection}
+            />
           </Box>
         </Box>
 
