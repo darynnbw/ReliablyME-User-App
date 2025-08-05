@@ -354,7 +354,7 @@ const CommitmentPortfolio: React.FC = () => {
       committedDate: dayjs().subtract(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       approvedDate: dayjs().subtract(29, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the industry conference to gather insights on emerging trends.',
-      explanation: 'I attended the industry conference and gathered valuable insights into emerging trends, which I shared with the team.',
+      explanation: 'I attended the industry conference and gathered valuable insights on emerging trends, which I shared with the team.',
       assignee: 'Riley Chen',
     },
     {
