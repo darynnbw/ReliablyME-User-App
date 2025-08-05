@@ -28,8 +28,8 @@ const CommitmentPortfolio: React.FC = () => {
       description: 'I will provide a weekly progress update.',
       assignee: 'Alex Johnson',
       type: 'nudge',
-      nudgesLeft: 8,
-      totalNudges: 12,
+      nudgesLeft: 0, // Set to 0 as it's approved
+      totalNudges: 12, // Assuming 12 was the original total
       questions: [
         '1. What have you accomplished so far this week?',
         '2. What do you plan to accomplish/complete by the end of the week?',
