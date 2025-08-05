@@ -150,9 +150,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
 
   const badgeIconColor = filters.badge ? theme.palette.primary.main : 'text.secondary';
   const assigneeIconColor = filters.assignee ? theme.palette.primary.main : 'text.secondary';
-  const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
   const approvedDateIconColor = filters.approvedDate ? theme.palette.primary.main : 'text.secondary';
+  const dueDateIconColor = filters.dueDate ? theme.palette.primary.main : 'text.secondary';
+
 
   return (
     <TableContainer
@@ -195,7 +196,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '39%' : '34%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '52%' : '34%' }}>
               Original Commitment
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
@@ -249,34 +250,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '26%' : '13%', pr: isActivePromisesTab ? 4 : 0 }}>
-              <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Due
-                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                    <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
-                  </IconButton>
-                  <DatePicker
-                    label="Due Date"
-                    open={dueDateOpen}
-                    onClose={() => setDueDateOpen(false)}
-                    value={filters.dueDate}
-                    onChange={handleDueDateChange}
-                    slotProps={{
-                      textField: {
-                        style: { display: 'none' }
-                      },
-                      popper: {
-                        placement: 'bottom-start',
-                        anchorEl: dueDateButtonRef.current,
-                      }
-                    }}
-                  />
-                </Box>
-              </Tooltip>
-            </TableCell>
             {!isActivePromisesTab && (
-              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
+              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
                 <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     Approved
@@ -303,6 +278,32 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Tooltip>
               </TableCell>
             )}
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
+              <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Due
+                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                    <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    label="Due Date"
+                    open={dueDateOpen}
+                    onClose={() => setDueDateOpen(false)}
+                    value={filters.dueDate}
+                    onChange={handleDueDateChange}
+                    slotProps={{
+                      textField: {
+                        style: { display: 'none' }
+                      },
+                      popper: {
+                        placement: 'bottom-start',
+                        anchorEl: dueDateButtonRef.current,
+                      }
+                    }}
+                  />
+                </Box>
+              </Tooltip>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -351,10 +352,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
-                  <TableCell sx={{ pr: isActivePromisesTab ? 4 : 0 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>
                   {!isActivePromisesTab && (
-                    <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                    <TableCell>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                   )}
+                  <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
