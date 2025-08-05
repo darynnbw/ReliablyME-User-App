@@ -69,6 +69,7 @@ interface Commitment {
   isExternal?: boolean;
   questions?: string[];
   explanation?: string;
+  responses?: { date: string; answer: string }[]; // Added responses
 }
 
 interface CommitmentsSectionProps {
@@ -143,10 +144,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [dueDateTableFilter, setDueDateTableFilter] = useState<Dayjs | null>(null);
   const [committedDateTableFilter, setCommittedDateTableFilter] = useState<Dayjs | null>(null);
   const [approvedDateTableFilter, setApprovedDateTableFilter] = useState<Dayjs | null>(null);
-
-  const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto'); // State for the height of the content area
-  const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
-  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
 
   const [currentPage, setCurrentPage] = useState(1);
   const [commitmentForDetails, setCommitmentForDetails] = useState<Commitment | null>(null);
@@ -223,6 +220,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
 
+  // State for dynamic container height
+  const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto');
+
   const handleOpenMakePromiseModal = (type: 'promise' | 'request') => {
     setMakePromiseModalType(type);
     setMakePromiseModalOpen(true);
@@ -270,7 +270,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setSelectAll(false);
     setCurrentPage(1);
     // Reset filters when tab changes to a disabled filter tab, but keep personFilter
-    if (disableFilters) {
+    // Determine if filters should be disabled for the current tab
+    const currentTabLabel = tabs[activeTab].label;
+    const disableFiltersForCurrentTab = currentTabLabel === 'Requests to Commit' || currentTabLabel === 'Awaiting Response' || currentTabLabel === 'Active Promises';
+
+    if (disableFiltersForCurrentTab) {
       setDateFilter('All');
       setSortBy('dueDateNewest');
       setSearchTerm('');
@@ -284,22 +288,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setDueDateTableFilter(null);
     setCommittedDateTableFilter(null);
     setApprovedDateTableFilter(null);
-  }, [activeTab, tabs]); // Removed disableFilters from dependency array as it's derived from activeTab
+  }, [activeTab, tabs]);
 
   // Define these boolean flags after activeTab is set in useEffect or directly from activeTab
-  const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
+  const isActivePromisesTab = tabs[activeTab].label === 'Active Promises'; // New tab
+  const isMyPromisesTab = tabs[activeTab].label === 'My Promises'; // This is the old 'My Promises' (now 'My Badges' in Portfolio)
   const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
   const isAwaitingResponseTab = tabs[activeTab].label === 'Awaiting Response';
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
   const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
-  const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
+  const isMyBadgesTab = tabs[activeTab].label === 'My Badges'; // This is the new 'My Badges'
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
 
   // Determine if the current section is "My Commitments"
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
   const isTableView = displayMode === 'table' && isMyCommitmentsSection;
   // Determine if filters should be disabled
-  const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab;
+  const disableFilters = isRequestsToCommitTab || isAwaitingResponseTab || isActivePromisesTab;
   const disableMyCommitmentFiltersInTableMode = displayMode === 'table' && isMyCommitmentsSection;
 
 
@@ -412,6 +417,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
   }, [paginatedItems.length, isTableView]); // Re-observe if items change or view mode changes
 
+  const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
+  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
+
   // Effect to dynamically adjust the height of the content area
   useEffect(() => {
     if (isTableView) {
@@ -465,8 +473,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setSelectAll(checked);
     setCommitments(prev => prev.map(item => {
       // Nudges in My Promises tab should never be selectable for bulk actions
+      // Also, items in 'Active Promises' tab should not be selectable
       const isNudgeInMyPromises = isMyPromisesTab && item.type === 'nudge';
-      return { ...item, selected: isNudgeInMyPromises ? false : checked };
+      const isItemInActivePromises = isActivePromisesTab;
+      return { ...item, selected: (isNudgeInMyPromises || isItemInActivePromises) ? false : checked };
     }));
   };
 
@@ -748,9 +758,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {/* Filters for My Commitments section (including My Promises) */}
             {isMyCommitmentsSection && (
               <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode || isActivePromisesTab}>
                   <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: disableMyCommitmentFiltersInTableMode ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (disableMyCommitmentFiltersInTableMode || isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
                     <MenuItem value="">All</MenuItem>
                     {filterOptions.map(person => (
                       <MenuItem key={person} value={person}>{person}</MenuItem>
@@ -759,7 +769,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   </Select>
                 </FormControl>
 
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableMyCommitmentFiltersInTableMode || isActivePromisesTab}>
                   <InputLabel>Due Date</InputLabel>
                   <Select
                     value={dateFilter}
@@ -767,7 +777,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     label="Due Date"
                     startAdornment={
                       <InputAdornment position="start">
-                        <CalendarToday fontSize="small" sx={{ color: disableMyCommitmentFiltersInTableMode ? 'action.disabled' : 'text.secondary' }} />
+                        <CalendarToday fontSize="small" sx={{ color: (disableMyCommitmentFiltersInTableMode || isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
                       </InputAdornment>
                     }
                   >
@@ -792,7 +802,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       readOnly: true,
                     }}
                     sx={{ minWidth: 180, cursor: 'pointer' }}
-                    disabled={disableMyCommitmentFiltersInTableMode}
+                    disabled={disableMyCommitmentFiltersInTableMode || isActivePromisesTab}
                   />
                 )}
               </>
@@ -1008,7 +1018,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 sx={{ p: 0 }}
                 checked={selectAll}
                 onChange={handleToggleSelectAll}
-                indeterminate={selectedCount > 0 && selectedCount < currentItems.filter(i => !(isMyPromisesTab && i.type === 'nudge')).length}
+                indeterminate={selectedCount > 0 && selectedCount < currentItems.filter(i => !(isMyPromisesTab && i.type === 'nudge') && !isActivePromisesTab).length}
               />
               <Typography variant="body2" sx={{ color: '#666' }}>{selectedCount} commitment{selectedCount !== 1 ? 's' : ''} selected</Typography>
               
@@ -1186,7 +1196,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     // Checkboxes are shown only on Actions page and not for MyBadges/Unkept tabs
                     const showCheckboxes = isActionsPage && !isMyBadgesTab && !isUnkeptTab;
                     // Nudges in My Promises tab on Actions page are disabled for bulk select
-                    const isCheckboxDisabled = isActionsPage && isMyPromisesTab && isNudgeItem; 
+                    // Also, items in 'Active Promises' tab are disabled for bulk select
+                    const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                     
                     const itemDate = parseCommitmentDate(item.dueDate);
                     // All unkept promises are overdue by default
@@ -1199,10 +1210,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     //   (is a Nudge in My Promises tab) OR
                     //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
                     // )
-                    const showActionButton = isActionsPage && (
+                    // Explicitly hide action button for 'Active Promises' tab in Commitment Portfolio
+                    let showActionButtonForListItem = isActionsPage && (
                       (isNudgeItem && isMyPromisesTab) || 
                       (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
                     );
+                    if (isCommitmentPortfolioPage && isActivePromisesTab) {
+                        showActionButtonForListItem = false;
+                    }
+
                     const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
 
                     return (
@@ -1213,7 +1229,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         color={itemColor}
                         showCheckbox={showCheckboxes}
                         isCheckboxDisabled={isCheckboxDisabled}
-                        showActionButton={showActionButton}
+                        showActionButton={showActionButtonForListItem} // Use the new variable
                         buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
                         onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                         onViewDetails={() => handleViewCommitmentDetails(item)}
@@ -1227,6 +1243,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         hideDueDate={hideDueDate}
                         isNudge={isNudgeItem}
                         nudgesLeft={item.nudgesLeft}
+                        totalNudges={item.totalNudges}
                         isMyPromisesTab={isMyPromisesTab}
                         isExternal={item.isExternal}
                         isOverdue={isOverdue}
@@ -1234,6 +1251,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         onRevoke={() => handleRevokeClick(item)}
                         showFromLabel={showFromLabel}
                         explanation={item.explanation}
+                        responses={item.responses}
                       />
                     );
                   })
