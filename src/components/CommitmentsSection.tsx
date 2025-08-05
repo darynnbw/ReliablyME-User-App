@@ -361,41 +361,37 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
     return true;
   }).sort((a, b) => {
+    const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
+
+    let dateA, dateB;
+
     switch (sortBy) {
-      case 'dueDateNewest': {
-        const dateA = parseCommitmentDate(a.dueDate);
-        const dateB = parseCommitmentDate(b.dueDate);
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return dateB.valueOf() - dateA.valueOf();
-      }
-      case 'dueDateOldest': {
-        const dateA = parseCommitmentDate(a.dueDate);
-        const dateB = parseCommitmentDate(b.dueDate);
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return dateA.valueOf() - dateB.valueOf();
-      }
-      case 'committedDateNewest': {
-        const dateA = parseCommittedDate(a.committedDate);
-        const dateB = parseCommittedDate(b.committedDate);
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return dateB.valueOf() - dateA.valueOf();
-      }
-      case 'committedDateOldest': {
-        const dateA = parseCommittedDate(a.committedDate);
-        const dateB = parseCommittedDate(b.committedDate);
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return dateA.valueOf() - dateB.valueOf();
-      }
-      case 'badgeNameAZ': {
+      case 'dueDateNewest':
+      case 'dueDateOldest':
+        // If it's the My Badges tab, sort by approvedDate, otherwise by dueDate
+        dateA = isMyBadgesTab ? parseCommitmentDate(a.approvedDate || '') : parseCommitmentDate(a.dueDate);
+        dateB = isMyBadgesTab ? parseCommitmentDate(b.approvedDate || '') : parseCommitmentDate(b.dueDate);
+        break;
+      case 'committedDateNewest':
+      case 'committedDateOldest':
+        dateA = parseCommittedDate(a.committedDate);
+        dateB = parseCommittedDate(b.committedDate);
+        break;
+      case 'badgeNameAZ':
         return a.title.localeCompare(b.title);
-      }
       default:
         return 0;
     }
+
+    if (!dateA) return 1; // Treat null/invalid dates as later for 'newest' or earlier for 'oldest'
+    if (!dateB) return -1;
+
+    if (sortBy === 'dueDateNewest' || sortBy === 'committedDateNewest') {
+      return dateB.valueOf() - dateA.valueOf(); // Newest first
+    } else if (sortBy === 'dueDateOldest' || sortBy === 'committedDateOldest') {
+      return dateA.valueOf() - dateB.valueOf(); // Oldest first
+    }
+    return 0; // Should not be reached
   });
 
   // No pagination for My Badges tab
@@ -759,9 +755,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {/* Filters for My Commitments section (including My Promises) */}
             {isMyCommitmentsSection && (
               <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableActivePromisesFiltersInTable}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView && isActivePromisesTab}>
                   <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: disableActivePromisesFiltersInTable ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
+                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (isTableView && isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
                     <MenuItem value="">All</MenuItem>
                     {filterOptions.map(person => (
                       <MenuItem key={person} value={person}>{person}</MenuItem>
@@ -770,7 +766,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   </Select>
                 </FormControl>
 
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableActivePromisesFiltersInTable}>
+                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView && isActivePromisesTab}>
                   <InputLabel>Due Date</InputLabel>
                   <Select
                     value={dateFilter}
@@ -778,7 +774,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     label="Due Date"
                     startAdornment={
                       <InputAdornment position="start">
-                        <CalendarToday fontSize="small" sx={{ color: disableActivePromisesFiltersInTable ? 'action.disabled' : 'text.secondary' }} />
+                        <CalendarToday fontSize="small" sx={{ color: (isTableView && isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
                       </InputAdornment>
                     }
                   >
@@ -803,7 +799,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       readOnly: true,
                     }}
                     sx={{ minWidth: 180, cursor: 'pointer' }}
-                    disabled={disableActivePromisesFiltersInTable}
+                    disabled={isTableView && isActivePromisesTab}
                   />
                 )}
               </>
@@ -861,11 +857,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </>
             )}
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={disableAllFiltersExceptSort}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={isTableView && isActivePromisesTab}>
               <InputLabel>Sort By</InputLabel>
               <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as string)} label="Sort By" startAdornment={
                 <InputAdornment position="start">
-                  <ArrowUpward fontSize="small" sx={{ color: disableAllFiltersExceptSort ? 'action.disabled' : 'text.secondary' }} />
+                  <ArrowUpward fontSize="small" sx={{ color: (isTableView && isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
                 </InputAdornment>
               }>
                 <MenuItem value="dueDateNewest">Due Date (Newest First)</MenuItem>
@@ -876,7 +872,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </Select>
             </FormControl>
 
-            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} disabled={disableActivePromisesFiltersInTable || disableAllFiltersExceptSort} />
+            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} disabled={isTableView && isActivePromisesTab} />
           </Box>
         </Box>
 
