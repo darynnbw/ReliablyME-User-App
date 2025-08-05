@@ -1117,7 +1117,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 onFilterChange={handleTableFilterChange}
                 badgeOptions={tableBadgeOptions}
                 assigneeOptions={tableAssigneeOptions}
-                isActivePromisesTab={isActivePromisesTab} // Pass the prop here
+                isActivePromisesTab={isActivePromisesTab}
+                isMyBadgesTab={isMyBadgesTab}
+                isBadgesIssuedTab={isBadgesIssuedTab}
               />
             </Box>
           ) : (
@@ -1138,7 +1140,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   
                   // Action button logic:
                   // Show if on Actions page AND (
-                  //   (is a Nudge in My Promises tab) OR
+                  //   (is a Nudge in My Promises tab) OR 
                   //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
                   // )
                   // Explicitly hide action button for 'Active Promises' tab in Commitment Portfolio
