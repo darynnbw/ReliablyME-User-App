@@ -125,7 +125,7 @@ const BadgeIconWithTooltip = () => {
       componentsProps={{
         tooltip: {
           sx: {
-            bgcolor: 'transparent',
+            bgcolor: 'white', // Changed background to white
             p: 0,
             boxShadow: 3,
           },
