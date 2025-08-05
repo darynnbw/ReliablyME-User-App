@@ -55,6 +55,8 @@ interface CommitmentsTableProps {
   badgeOptions: string[];
   assigneeOptions: string[];
   isActivePromisesTab?: boolean; // New prop
+  isMyBadgesTab?: boolean; // New prop
+  isBadgesIssuedTab?: boolean; // New prop
 }
 
 const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
@@ -64,6 +66,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   badgeOptions,
   assigneeOptions,
   isActivePromisesTab = false, // Default to false
+  isMyBadgesTab = false, // Default to false
+  isBadgesIssuedTab = false, // Default to false
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
@@ -249,7 +253,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            {!isActivePromisesTab && ( // Conditionally render Approved column
+            {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
               <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
                 <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -351,7 +355,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
-                  {!isActivePromisesTab && ( // Conditionally render Approved column
+                  {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
                     <TableCell>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                   )}
                   <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>

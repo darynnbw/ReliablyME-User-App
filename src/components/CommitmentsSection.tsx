@@ -1117,7 +1117,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 onFilterChange={handleTableFilterChange}
                 badgeOptions={tableBadgeOptions}
                 assigneeOptions={tableAssigneeOptions}
-                isActivePromisesTab={isActivePromisesTab} // Pass the prop here
+                isActivePromisesTab={isActivePromisesTab}
+                isMyBadgesTab={isMyBadgesTab}
+                isBadgesIssuedTab={isBadgesIssuedTab}
               />
             </Box>
           ) : (
