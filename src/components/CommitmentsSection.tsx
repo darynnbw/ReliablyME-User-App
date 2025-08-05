@@ -1187,7 +1187,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showFromLabel={showFromLabel}
                       explanation={item.explanation}
                       responses={item.responses}
-                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab} // Pass this prop for My Badges tab AND Active Promises AND Badges Issued
+                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab || isOwedToMe} // Added isOwedToMe here
                       approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
                     />
                   );

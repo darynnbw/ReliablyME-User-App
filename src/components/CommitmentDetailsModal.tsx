@@ -51,6 +51,11 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
   if (!commitment) return null;
 
   const renderActionButtons = () => {
+    // If it's a "Promise Owed to Me" and on the Commitment Portfolio page, remove all buttons
+    if (isOwedToMe && isCommitmentPortfolioPage) {
+      return null;
+    }
+
     if (isAwaitingResponse) {
       return (
         <Button
