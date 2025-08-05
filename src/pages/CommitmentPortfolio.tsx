@@ -22,7 +22,7 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 100,
       title: 'Weekly Progress Check-in',
-      dueDate: dayjs().subtract(1, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().add(1, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), // Updated to a future date
       committedDate: dayjs().subtract(4, 'day').hour(9).minute(30).format('MMM D, YYYY, hh:mm A'),
       approvedDate: dayjs().subtract(1, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide a weekly progress update.',
