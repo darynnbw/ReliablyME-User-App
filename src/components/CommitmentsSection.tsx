@@ -1236,6 +1236,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       explanation={item.explanation}
                       responses={item.responses}
                       showBadgePlaceholder={isMyBadgesTab} // Pass this prop for My Badges tab
+                      approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
                     />
                   );
                 })
@@ -1333,7 +1334,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         onClose={handleCloseBadgeDetailsModal}
         badge={selectedBadge ? {
           title: selectedBadge.title,
-          approvalDate: selectedBadge.dueDate,
+          approvalDate: selectedBadge.approvedDate || 'N/A', // Use actual approvedDate
+          originalDueDate: selectedBadge.dueDate, // Pass original dueDate
           commitment: selectedBadge.description,
           recipient: selectedBadge.assignee,
           committedDate: selectedBadge.committedDate,

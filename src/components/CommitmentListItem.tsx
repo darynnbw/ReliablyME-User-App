@@ -53,6 +53,7 @@ interface CommitmentListItemProps {
   acceptButtonText?: string;
   declineButtonText?: string;
   responses?: { date: string; answer: string }[]; // New prop for historical responses
+  approvedDate?: string; // Added approvedDate prop
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -89,6 +90,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   acceptButtonText,
   declineButtonText,
   responses, // Destructure responses
+  approvedDate, // Destructure approvedDate
 }, ref) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false); // State for inline collapse
@@ -105,7 +107,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   const isDueToday = dueDate === 'Today';
   const dueRowColor = isOverdue ? theme.palette.error.main : '#666';
   const dueRowWeight = (isOverdue || isDueToday) ? 600 : 'inherit';
-  const calendarIconColor = isOverdue ? theme.palette.error.main : color;
+  
+  // Logic for My Badges tab date display
+  const displayDateLabel = showBadgePlaceholder ? 'Approved' : 'Due';
+  const displayDateValue = showBadgePlaceholder ? (approvedDate || 'N/A') : dueDate;
+  const displayDateColor = showBadgePlaceholder ? '#666' : dueRowColor;
+  const displayDateWeight = showBadgePlaceholder ? 'inherit' : dueRowWeight;
+  const calendarIconColor = showBadgePlaceholder ? color : (isOverdue ? theme.palette.error.main : color);
+
 
   const showExpandIcon = isNudge && responses && responses.length > 0;
 
@@ -139,7 +148,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
@@ -230,12 +239,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Box>
           </Box>
 
-          {/* Due Date */}
+          {/* Due/Approved Date */}
           {!hideDueDate && (
             <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
-              <Typography variant="body2" sx={{ color: dueRowColor, fontWeight: dueRowWeight }}>
-                Due {dueDate}
+              <Typography variant="body2" sx={{ color: displayDateColor, fontWeight: displayDateWeight }}>
+                {displayDateLabel} {displayDateValue}
               </Typography>
               {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && (
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>

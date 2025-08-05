@@ -12,7 +12,8 @@ import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
 
 interface Badge {
   title: string;
-  approvalDate: string;
+  approvalDate: string; // This is now the actual approved date
+  originalDueDate: string; // New prop for the original due date
   commitment: string;
   recipient: string;
   committedDate?: string;
@@ -69,16 +70,7 @@ const MyBadgeDetailsModal: React.FC<MyBadgeDetailsModalProps> = ({ open, onClose
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
-            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              Approved:{' '}
-              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {badge.approvalDate}
-              </Typography>
-            </Typography>
-          </Box>
-
+          {/* Committed Date - First */}
           {badge.committedDate && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
@@ -90,6 +82,28 @@ const MyBadgeDetailsModal: React.FC<MyBadgeDetailsModalProps> = ({ open, onClose
               </Typography>
             </Box>
           )}
+
+          {/* Original Due Date - Second */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+              Due:{' '}
+              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                {badge.originalDueDate}
+              </Typography>
+            </Typography>
+          </Box>
+
+          {/* Approved Date - Third */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+            <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+              Approved:{' '}
+              <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                {badge.approvalDate}
+              </Typography>
+            </Typography>
+          </Box>
         </Box>
 
         <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>
