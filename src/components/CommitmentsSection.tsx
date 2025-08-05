@@ -1167,7 +1167,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showActionButtonForListItem = false;
                   }
 
-                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isBadgesIssuedTab; // Added isBadgesIssuedTab
+                  // Determine 'From:' or 'To:' label based on tab
+                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isUnkeptTab;
 
                   return (
                     <CommitmentListItem
