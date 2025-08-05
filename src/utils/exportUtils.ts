@@ -36,6 +36,10 @@ export const exportToPdf = (data: ExportDataRow[], filename: string) => {
   const tableColumn = Object.keys(data[0]);
   const tableRows: any[][] = data.map(item => Object.values(item));
 
-  (doc as any).autoTable(tableColumn, tableRows, { startY: 20 });
+  (doc as any).autoTable({
+    head: [tableColumn],
+    body: tableRows,
+    startY: 20,
+  });
   doc.save(`${filename}.pdf`);
 };
