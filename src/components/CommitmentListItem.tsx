@@ -142,7 +142,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
-            width: 120, // Increased width to give more space for centering
+            width: 100,
             height: 100, // Fixed height for consistency
             display: 'flex',
             alignItems: 'center',
