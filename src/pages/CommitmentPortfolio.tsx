@@ -137,7 +137,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Leadership',
       dueDate: dayjs().add(9, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(14, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(8, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will lead the brainstorming session.',
       assignee: 'Sarah Connor',
     },
@@ -146,7 +146,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(10, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(15, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(9, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I am going to review new UI/UX designs.',
       assignee: 'Mike Miller',
     },
@@ -155,7 +155,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(11, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(16, 'day').hour(8).minute(30).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(10, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will be present for the client demo call.',
       assignee: 'Chris Parker',
     },
@@ -164,7 +164,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(12, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(17, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(11, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will help debug the critical production issue.',
       assignee: 'Riley Chen',
     },
@@ -173,7 +173,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(13, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(18, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(12, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare the quarterly business review (QBR) presentation for all key stakeholders, summarizing our major achievements, the challenges we faced, and the strategic roadmap for the next two quarters.',
       assignee: 'Jamie Smith',
     },
@@ -182,7 +182,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(14, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(19, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(13, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the company-wide training session on new software tools.',
       assignee: 'Alex Johnson',
     },
@@ -191,7 +191,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(15, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(20, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(14, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I plan to update the project roadmap document.',
       assignee: 'Sarah Connor',
     },
@@ -200,7 +200,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(16, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(21, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(15, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide constructive feedback during the peer code review session.',
       assignee: 'Mike Miller',
     },
@@ -209,7 +209,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(17, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(22, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(16, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will research and propose new technologies for our backend infrastructure.',
       assignee: 'Chris Parker',
     },
@@ -218,7 +218,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(18, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(23, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(17, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will participate actively in the daily stand-up meetings.',
       assignee: 'Riley Chen',
     },
@@ -227,7 +227,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(19, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(24, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(18, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I am going to prepare and deliver a presentation on recent industry trends.',
       assignee: 'Jamie Smith',
     },
@@ -236,7 +236,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(20, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(25, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(19, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will assist the QA team in testing the new features before release.',
       assignee: 'Alex Johnson',
     },
@@ -245,7 +245,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(21, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(26, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(20, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will document the new API endpoints for external developers.',
       assignee: 'Sarah Connor',
     },
@@ -254,7 +254,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(22, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(27, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(21, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the weekly leadership meeting and provide updates on my team\'s progress.',
       assignee: 'Mike Miller',
     },
@@ -263,7 +263,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(23, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(28, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(22, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will review and approve the new marketing collateral.',
       assignee: 'Chris Parker',
     },
@@ -272,7 +272,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(24, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(29, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(23, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will collaborate with the sales team to develop new client proposals.',
       assignee: 'Riley Chen',
     },
@@ -281,7 +281,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(25, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(30, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(24, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a detailed report on customer feedback and suggestions.',
       assignee: 'Jamie Smith',
     },
@@ -290,7 +290,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(26, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(31, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(25, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will ensure timely attendance at all scheduled client meetings.',
       assignee: 'Alex Johnson',
     },
@@ -299,7 +299,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(27, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(32, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(26, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will conduct a training session for new employees on our internal tools.',
       assignee: 'Sarah Connor',
     },
@@ -308,7 +308,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(28, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(33, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(27, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will assist in organizing the company\'s annual team-building event.',
       assignee: 'Mike Miller',
     },
@@ -317,7 +317,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(29, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(34, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(28, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will develop and implement a new feature for the mobile application.',
       assignee: 'Chris Parker',
     },
@@ -326,7 +326,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(30, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(29, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the industry conference to gather insights on emerging trends.',
       assignee: 'Riley Chen',
     },
@@ -335,7 +335,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(31, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(36, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(30, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a detailed financial forecast for the next fiscal year.',
       assignee: 'Jamie Smith',
     },
@@ -344,7 +344,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(32, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(37, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(31, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will collaborate with cross-functional teams to streamline our workflow.',
       assignee: 'Alex Johnson',
     },
@@ -353,7 +353,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(33, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(38, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(32, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will conduct a thorough market analysis for our new product launch.',
       assignee: 'Sarah Connor',
     },
@@ -362,7 +362,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(34, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(39, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(33, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will ensure my presence at all mandatory company-wide meetings.',
       assignee: 'Mike Miller',
     },
@@ -371,7 +371,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(35, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(40, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(34, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will design and implement a new database schema for improved performance.',
       assignee: 'Chris Parker',
     },
@@ -380,7 +380,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(36, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(41, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(35, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will provide support to colleagues facing technical challenges.',
       assignee: 'Riley Chen',
     },
@@ -389,7 +389,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(37, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(42, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(36, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a detailed report on the effectiveness of our recent marketing campaigns.',
       assignee: 'Jamie Smith',
     },
@@ -398,7 +398,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(38, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(43, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(37, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend all scheduled client presentations and contribute to discussions.',
       assignee: 'Alex Johnson',
     },
@@ -407,7 +407,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(39, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(44, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(38, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will develop and deploy a new microservice to enhance system scalability.',
       assignee: 'Sarah Connor',
     },
@@ -416,7 +416,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Teamwork',
       dueDate: dayjs().add(40, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(45, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(39, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will actively participate in team discussions and contribute innovative ideas.',
       assignee: 'Mike Miller',
     },
@@ -425,7 +425,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(41, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(46, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(40, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will conduct a thorough review of all legal documents related to new partnerships.',
       assignee: 'Chris Parker',
     },
@@ -434,7 +434,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Attendance',
       dueDate: dayjs().add(42, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(47, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(41, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will ensure my presence at all critical project review meetings.',
       assignee: 'Riley Chen',
     },
@@ -443,7 +443,7 @@ const CommitmentPortfolio: React.FC = () => {
       title: 'Promise Kept General',
       dueDate: dayjs().add(43, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(48, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
+      approvedDate: dayjs().subtract(42, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will prepare a comprehensive report on our competitive landscape.',
       assignee: 'Jamie Smith',
     },
@@ -479,7 +479,7 @@ const CommitmentPortfolio: React.FC = () => {
   // Filter active promises (not unkept, and not yet approved)
   const activePromisesItems = allMyPromisesSource.filter(item => 
     !item.approvedDate && !myUnkeptPromisesItems.some(unkept => unkept.id === item.id)
-  );
+  ).slice(0, 6); // Keep only 6 active commitments
 
   // Filter completed promises (have an approvedDate)
   const myBadgesItems = allMyPromisesSource.filter(item => !!item.approvedDate);

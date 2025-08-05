@@ -54,6 +54,7 @@ interface CommitmentsTableProps {
   onFilterChange: (filterName: string, value: any) => void;
   badgeOptions: string[];
   assigneeOptions: string[];
+  isActivePromisesTab?: boolean; // New prop
 }
 
 const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
@@ -62,6 +63,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   onFilterChange,
   badgeOptions,
   assigneeOptions,
+  isActivePromisesTab = false, // Default to false
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
@@ -167,7 +169,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '10%' : '15%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Box sx={{ width: 32, flexShrink: 0, mr: 1 }} /> {/* Placeholder for alignment */}
                 Badge
@@ -193,7 +195,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '34%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '39%' : '34%' }}>
               Original Commitment
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
@@ -247,7 +249,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '26%' : '13%' }}>
               <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Due
@@ -273,32 +275,34 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
-              <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Approved
-                  <IconButton ref={approvedDateButtonRef} size="small" onClick={() => setApprovedDateOpen(true)} aria-label="filter by approved date">
-                    <CalendarToday fontSize="small" sx={{ color: approvedDateIconColor }} />
-                  </IconButton>
-                  <DatePicker
-                    label="Approved Date"
-                    open={approvedDateOpen}
-                    onClose={() => setApprovedDateOpen(false)}
-                    value={filters.approvedDate}
-                    onChange={handleApprovedDateChange}
-                    slotProps={{
-                      textField: {
-                        style: { display: 'none' }
-                      },
-                      popper: {
-                        placement: 'bottom-start',
-                        anchorEl: approvedDateButtonRef.current,
-                      }
-                    }}
-                  />
-                </Box>
-              </Tooltip>
-            </TableCell>
+            {!isActivePromisesTab && (
+              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
+                <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    Approved
+                    <IconButton ref={approvedDateButtonRef} size="small" onClick={() => setApprovedDateOpen(true)} aria-label="filter by approved date">
+                      <CalendarToday fontSize="small" sx={{ color: approvedDateIconColor }} />
+                    </IconButton>
+                    <DatePicker
+                      label="Approved Date"
+                      open={approvedDateOpen}
+                      onClose={() => setApprovedDateOpen(false)}
+                      value={filters.approvedDate}
+                      onChange={handleApprovedDateChange}
+                      slotProps={{
+                        textField: {
+                          style: { display: 'none' }
+                        },
+                        popper: {
+                          placement: 'bottom-start',
+                          anchorEl: approvedDateButtonRef.current,
+                        }
+                      }}
+                    />
+                  </Box>
+                </Tooltip>
+              </TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -340,7 +344,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                           );
                         })()}
                       </Box>
-                      <BadgeIconWithTooltip />
+                      {!isActivePromisesTab && <BadgeIconWithTooltip />}
                       {commitment.title}
                     </Box>
                   </TableCell>
@@ -348,7 +352,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
-                  <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                  {!isActivePromisesTab && (
+                    <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                  )}
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>
