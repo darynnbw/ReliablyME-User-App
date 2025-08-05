@@ -148,7 +148,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', alignItems: 'stretch', gap: 1.5 }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', gap: 1.5 }}>
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
@@ -157,6 +157,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
+            alignSelf: 'center', // Add this
           }}>
             <BadgeContent badgeType={title} size="list-item-large" />
           </Box>
@@ -174,7 +175,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}> {/* Add this */}
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
             <Stack direction="row" spacing={1} alignItems="center">
