@@ -52,7 +52,6 @@ interface CommitmentListItemProps {
   acceptButtonText?: string;
   declineButtonText?: string;
   responses?: { date: string; answer: string }[]; // New prop for historical responses
-  hideBadgeName?: boolean; // New prop to hide badge name
 }
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
@@ -89,7 +88,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   acceptButtonText,
   declineButtonText,
   responses, // Destructure responses
-  hideBadgeName = false, // Default to false
 }, ref) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false); // State for inline collapse
@@ -171,11 +169,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
             <Stack direction="row" spacing={1} alignItems="center">
-              {!hideBadgeName && (
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  {title}
-                </Typography>
-              )}
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                {title}
+              </Typography>
               {isNudge && (
                 <Chip
                   label="Nudge"
