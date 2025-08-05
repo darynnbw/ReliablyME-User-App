@@ -676,11 +676,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   
-  let itemColor = '#ff7043'; // Default orange
-  if (isOwedToMe || isBadgeRequestsTab || (isAwaitingResponseTab && title !== 'My Commitments')) {
-    itemColor = '#1976d2'; // Blue
+  let itemColor = '#ff7043'; // Default orange for 'My Commitments'
+  if (title.trim() === "Others' Commitments") {
+    itemColor = '#1976d2'; // Blue for 'Others' Commitments'
   } else if (isUnkeptTab) {
-    itemColor = '#4F4F4F'; // Grey
+    itemColor = '#4F4F4F'; // Grey for 'Unkept' tabs
   }
 
   // Bulk actions section should only show if it's the Actions page and not for Unkept/MyBadges tabs
@@ -1150,7 +1150,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showActionButtonForListItem = false;
                   }
 
-                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab;
+                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isBadgesIssuedTab; // Added isBadgesIssuedTab
 
                   return (
                     <CommitmentListItem

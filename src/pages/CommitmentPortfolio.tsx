@@ -587,7 +587,7 @@ const CommitmentPortfolio: React.FC = () => {
       dueDate: dayjs().subtract(6, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(8, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       approvedDate: dayjs().subtract(5, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I promise to lead the weekly sync meeting and ensure all action items are captured.',
+      description: 'I will lead the weekly team sync meeting and ensure all action items are captured and assigned.',
       explanation: 'I led the meeting, and the minutes with action items have been circulated to all attendees for their reference and follow-up.',
       assignee: 'Sarah Wilson',
     },
@@ -718,7 +718,7 @@ const CommitmentPortfolio: React.FC = () => {
       committedDate: dayjs().subtract(47, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
       approvedDate: dayjs().subtract(44, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will attend the industry conference to gather insights on emerging trends.',
-      explanation: 'I attended the industry conference and gathered valuable insights on emerging trends, which I will share with the team for strategic planning.',
+      explanation: 'I attended the industry conference and gathered valuable insights into emerging trends, which I will share with the team for strategic planning.',
       assignee: 'Riley Chen',
     },
     {
@@ -840,7 +840,8 @@ const CommitmentPortfolio: React.FC = () => {
     { id: 152, title: 'Attendance', dueDate: dayjs().subtract(153, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(155, 'day').hour(8).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(152, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will ensure my presence at all client onboarding sessions.', explanation: 'Ensured my presence at all client onboarding sessions, providing support and ensuring a smooth transition for new clients.', assignee: 'Riley Chen' },
     { id: 153, title: 'Promise Kept General', dueDate: dayjs().subtract(156, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(158, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(155, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will develop and implement a new data visualization dashboard.', explanation: 'Developed and implemented a new data visualization dashboard, providing real-time insights into key business metrics.', assignee: 'Jamie Smith' },
     { id: 154, title: 'Teamwork', dueDate: dayjs().subtract(159, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(161, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(158, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will assist in organizing the company\'s quarterly review meeting.', explanation: 'Assisted in organizing the company\'s quarterly review meeting, ensuring all logistics were handled efficiently.', assignee: 'Alex Johnson' },
-    { id: 155, title: 'Promise Kept General', dueDate: dayjs().subtract(162, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(164, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(161, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will conduct a thorough analysis of our current cybersecurity measures.', explanation: 'Conducted a thorough analysis of our current cybersecurity measures, identifying vulnerabilities and recommending improvements.', assignee: 'Sarah Connor' },
+    {
+      id: 155, title: 'Promise Kept General', dueDate: dayjs().subtract(162, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(164, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(161, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will conduct a thorough analysis of our current cybersecurity measures.', explanation: 'Conducted a thorough analysis of our current cybersecurity measures, identifying vulnerabilities and recommending improvements.', assignee: 'Sarah Connor' },
     { id: 156, title: 'Attendance', dueDate: dayjs().subtract(165, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(167, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(164, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will attend all mandatory compliance training sessions.', explanation: 'Attended all mandatory compliance training sessions, ensuring full adherence to regulatory requirements.', assignee: 'Mike Miller' },
     { id: 157, title: 'Promise Kept General', dueDate: dayjs().subtract(168, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(170, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(167, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will prepare a detailed report on employee engagement survey results.', explanation: 'Prepared a detailed report on employee engagement survey results, providing insights for improving workplace satisfaction.', assignee: 'Chris Parker' },
     { id: 158, title: 'Teamwork', dueDate: dayjs().subtract(171, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(173, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(170, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will collaborate with the marketing team on new campaign strategies.', explanation: 'Collaborated with the marketing team to develop new campaign strategies, resulting in increased brand visibility.', assignee: 'Riley Chen' },
@@ -853,56 +854,30 @@ const CommitmentPortfolio: React.FC = () => {
     { id: 165, title: 'Promise Kept General', dueDate: dayjs().subtract(192, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'), committedDate: dayjs().subtract(194, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'), approvedDate: dayjs().subtract(191, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), description: 'I will prepare a detailed report on competitor analysis for the new market.', explanation: 'Prepared a detailed report on competitor analysis for the new market, identifying key players and their strategies.', assignee: 'Jamie Smith' },
   ];
 
-  const myUnkeptPromisesItems = [
+  const unkeptPromisesToMeItems = [
     {
-      id: 9,
+      id: 201,
       title: 'Promise Kept General',
-      dueDate: dayjs().subtract(20, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'),
-      committedDate: dayjs().subtract(25, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(10, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(15, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
       description: 'I promised to deliver the final report on the agreed-upon deadline, including all necessary data and analysis.',
       assignee: 'John Doe',
     },
     {
-      id: 10,
+      id: 202,
       title: 'Attendance',
-      dueDate: dayjs().subtract(15, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
-      committedDate: dayjs().subtract(18, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(7, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(10, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
       description: 'I committed to attending the critical client call.',
       assignee: 'Jane Smith',
     },
     {
-      id: 11,
+      id: 203,
       title: 'Teamwork',
-      dueDate: dayjs().subtract(10, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
-      committedDate: dayjs().subtract(12, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(5, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(7, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
       description: 'I was going to provide the necessary assets for the marketing campaign, ensuring they were high-quality and on brand.',
       assignee: 'Peter Jones',
-    },
-  ];
-
-  // Filter active promises (not unkept, and not yet approved)
-  const activePromisesItems = allMyPromisesSource.filter(item => 
-    !item.approvedDate && !myUnkeptPromisesItems.some(unkept => unkept.id === item.id)
-  ).slice(0, 6); // Keep only 6 active commitments
-
-  // Filter completed promises (have an approvedDate)
-  const myBadgesItems = allMyPromisesSource.filter(item => !!item.approvedDate);
-
-  const myCommitmentsTabs = [
-    {
-      label: 'Active Promises',
-      count: activePromisesItems.length,
-      items: activePromisesItems,
-    },
-    {
-      label: 'My Badges', // Renamed from 'My Promises'
-      count: myBadgesItems.length,
-      items: myBadgesItems,
-    },
-    {
-      label: 'My Unkept Promises',
-      count: myUnkeptPromisesItems.length,
-      items: myUnkeptPromisesItems,
     },
   ];
 
