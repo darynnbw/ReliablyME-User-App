@@ -17,7 +17,7 @@ import {
   Grid,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { exportToCsv, exportToPdf } from '../utils/exportUtils';
+import { exportToCsv, exportToPdf, exportToXlsx } from '../utils/exportUtils';
 
 interface Commitment {
   id: number;
@@ -60,7 +60,7 @@ const allExportFields = [
 
 const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, data }) => {
   const [step, setStep] = useState(1);
-  const [selectedFormat, setSelectedFormat] = useState<'csv' | 'pdf'>('csv');
+  const [selectedFormat, setSelectedFormat] = useState<'csv' | 'pdf' | 'xlsx'>('csv');
   const [selectedFields, setSelectedFields] = useState<string[]>(allExportFields.map(f => f.id));
   const [previewContent, setPreviewContent] = useState<string>('');
   const [isExporting, setIsExporting] = useState(false);
@@ -86,7 +86,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   };
 
   const handleFormatChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFormat(event.target.value as 'csv' | 'pdf');
+    setSelectedFormat(event.target.value as 'csv' | 'pdf' | 'xlsx');
   };
 
   const handleFieldToggle = (fieldId: string) => {
@@ -175,6 +175,8 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
 
       if (selectedFormat === 'csv') {
         exportToCsv(exportData, 'Commitment_Portfolio');
+      } else if (selectedFormat === 'xlsx') {
+        exportToXlsx(exportData, 'Commitment_Portfolio');
       } else if (selectedFormat === 'pdf') {
         exportToPdf(exportData, 'Commitment_Portfolio');
       }
@@ -222,6 +224,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
             </Typography>
             <RadioGroup value={selectedFormat} onChange={handleFormatChange}>
               <FormControlLabel value="csv" control={<Radio />} label="CSV (Comma Separated Values)" />
+              <FormControlLabel value="xlsx" control={<Radio />} label="XLSX (Excel Spreadsheet)" />
               <FormControlLabel value="pdf" control={<Radio />} label="PDF (Portable Document Format)" />
             </RadioGroup>
           </Box>
