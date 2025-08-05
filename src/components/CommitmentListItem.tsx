@@ -46,6 +46,7 @@ interface CommitmentListItemProps {
   totalNudges?: number; // Added totalNudges
   isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
   isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
+  isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
   isExternal?: boolean;
   isOverdue?: boolean;
   showRevokeButton?: boolean;
@@ -84,6 +85,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   totalNudges, // Destructure totalNudges
   isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
   isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
+  isBadgesIssuedTab = false, // Destructure new prop
   isExternal = false,
   isOverdue = false,
   showRevokeButton = false,
@@ -107,8 +109,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   };
 
   // Determine the label and value based on the tab
-  const displayDateLabel = isMyBadgesTab ? 'Approved' : 'Due';
-  const displayDateValue = isMyBadgesTab ? (approvedDate || 'N/A') : dueDate;
+  const displayDateLabel = isMyBadgesTab || isBadgesIssuedTab ? 'Approved' : 'Due';
+  const displayDateValue = isMyBadgesTab || isBadgesIssuedTab ? (approvedDate || 'N/A') : dueDate;
 
   // Determine the color and weight based on overdue status
   const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
@@ -117,7 +119,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   // Determine the icon color based on overdue status or section color
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
-  const showExpandIcon = isNudge && responses && responses.length > 0;
+  // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
+  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
 
   return (
     <Card
@@ -262,7 +265,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Typography>
 
           {/* Explanation */}
-          {explanation && (
+          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && ( // Only show if not an issued badge (explanation will be in collapse)
             <Box
               sx={{
                 bgcolor: '#f8f9fa',
@@ -402,35 +405,49 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Box>
           </Box>
 
-          {/* Collapsible Responses - MOVED HERE */}
+          {/* Collapsible Responses / Explanation */}
           {showExpandIcon && (
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}> {/* Reduced mt */}
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                  All Responses:
-                </Typography>
-                <Stack spacing={1}>
-                  {responses
-                    ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
-                    .map((response, idx) => (
-                      <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                        <Chip
-                          label={response.date}
-                          size="small"
-                          sx={{
-                            bgcolor: '#fff3e0', // Nudge pill background
-                            color: '#ff7043', // Nudge pill text color
-                            fontWeight: 700, // Nudge pill font weight
-                            fontSize: '12px', // Nudge pill font size
-                            mb: 1,
-                          }}
-                        />
-                        <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                          {response.answer}
-                        </Typography>
-                      </Box>
-                    ))}
-                </Stack>
+                {isNudge && responses && responses.length > 0 && (
+                  <>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                      All Responses:
+                    </Typography>
+                    <Stack spacing={1}>
+                      {responses
+                        ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
+                        .map((response, idx) => (
+                          <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                            <Chip
+                              label={response.date}
+                              size="small"
+                              sx={{
+                                bgcolor: '#fff3e0', // Nudge pill background
+                                color: '#ff7043', // Nudge pill text color
+                                fontWeight: 700, // Nudge pill font weight
+                                fontSize: '12px', // Nudge pill font size
+                                mb: 1,
+                              }}
+                            />
+                            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                              {response.answer}
+                            </Typography>
+                          </Box>
+                        ))}
+                    </Stack>
+                  </>
+                )}
+                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
+                  <>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                      Explanation:
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                      {explanation}
+                    </Typography>
+                  </>
+                )}
               </Box>
             </Collapse>
           )}

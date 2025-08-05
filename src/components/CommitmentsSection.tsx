@@ -69,6 +69,7 @@ interface Commitment {
   questions?: string[];
   explanation?: string;
   responses?: { date: string; answer: string }[]; // Added responses
+  isOverdue?: boolean; // Added isOverdue to Commitment interface
 }
 
 interface CommitmentsSectionProps {
@@ -152,7 +153,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
-  const [commitmentToReject, setCommitmentToReject] = useState<Commitment | null>(null); // This variable is now used
+  const [commitmentToReject, setCommitmentToReject] = useState<Commitment | null>(null);
   const [commitmentForBadgeRequest, setCommitmentForBadgeRequest] = useState<Commitment | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -301,6 +302,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
   const isMyBadgesTab = tabs[activeTab].label === 'My Badges'; // This is the new 'My Badges'
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
+  const isBadgesIssuedTab = tabs[activeTab].label === 'Badges Issued'; // New flag for Badges Issued tab
 
   // Determine if the current section is "My Commitments"
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
@@ -449,7 +451,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     } else if (item.type === 'nudge' && (isMyPromisesTab || isRequestsToCommitTab)) {
       setCommitmentForNudgeDetails(item);
       setNudgeDetailsModalOpen(true);
-    } else if (isMyBadgesTab) { // Handle My Badges tab specifically
+    } else if (isMyBadgesTab || isBadgesIssuedTab) { // Handle My Badges tab and Badges Issued tab specifically
       handleViewBadgeDetails(item);
     }
     else {
@@ -1129,9 +1131,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   // Also, items in 'Active Promises' tab are disabled for bulk select
                   const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                   
-                  const itemDate = parseCommitmentDate(item.dueDate);
-                  // All unkept promises are NOT overdue by default, only other items if their date is past
-                  const isOverdue = !isUnkeptTab && (itemDate ? itemDate.isBefore(dayjs(), 'day') : false);
+                  // Determine overdue status based on tab and explicit flag
+                  const isOverdue = item.isOverdue || (!isUnkeptTab && !isMyBadgesTab && !isBadgesIssuedTab && (parseCommitmentDate(item.dueDate) ? parseCommitmentDate(item.dueDate)!.isBefore(dayjs(), 'day') : false));
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
                   
@@ -1176,15 +1177,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       totalNudges={item.totalNudges}
                       isMyPromisesTab={isMyPromisesTab}
                       isMyBadgesTab={isMyBadgesTab} // Pass this new prop
-                      // isActivePromisesTab={isActivePromisesTab} // Removed this prop
+                      isBadgesIssuedTab={isBadgesIssuedTab} // Pass new prop
                       isExternal={item.isExternal}
-                      isOverdue={isOverdue}
+                      isOverdue={isOverdue} // Pass the calculated isOverdue
                       showRevokeButton={showRevokeButton}
                       onRevoke={() => handleRevokeClick(item)}
                       showFromLabel={showFromLabel}
                       explanation={item.explanation}
                       responses={item.responses}
-                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab} // Pass this prop for My Badges tab AND Active Promises
+                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab} // Pass this prop for My Badges tab AND Active Promises AND Badges Issued
                       approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
                     />
                   );
