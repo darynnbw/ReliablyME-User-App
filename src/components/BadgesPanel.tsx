@@ -6,6 +6,7 @@ import {
   Button,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import BadgeContent from './BadgeContent';
 
 const BadgesPanel: React.FC = () => {
   const badges = [
@@ -13,15 +14,11 @@ const BadgesPanel: React.FC = () => {
       id: 1,
       title: 'Promise Kept General',
       count: 34,
-      borderColor: '#ff7043',
-      bgColor: '#fff3e0',
     },
     {
       id: 2,
       title: 'Attendance',
       count: 4,
-      borderColor: '#1976d2',
-      bgColor: '#e3f2fd',
     },
   ];
 
@@ -89,12 +86,9 @@ const BadgesPanel: React.FC = () => {
               maxWidth: { xs: '100%', sm: '161px' }, // 149 * 1.08 = 160.92 ≈ 161
             }}
           >
-            {/* Large Shield Badge */}
+            {/* Large Shield Badge - now using BadgeContent component */}
             <Box
               sx={{
-                width: 114, // 106 * 1.08 = 114.48 ≈ 114
-                height: 138, // 128 * 1.08 = 138.24 ≈ 138
-                position: 'relative',
                 mb: 2.8, // Increased spacing: 2.13 * 1.3 = 2.77 ≈ 2.8
                 transition: 'all 0.3s ease-in-out',
                 cursor: 'pointer',
@@ -104,92 +98,7 @@ const BadgesPanel: React.FC = () => {
                 },
               }}
             >
-              {/* Shield Shape with Gradient */}
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  background: `linear-gradient(135deg, ${badge.borderColor} 0%, ${badge.borderColor}dd 50%, ${badge.borderColor}bb 100%)`,
-                  clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 70%, 50% 100%, 0% 70%, 0% 20%)',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  boxShadow: `0 6.9px 23px ${badge.borderColor}30`, // 6.38 * 1.08 = 6.89 ≈ 6.9, 21.25 * 1.08 = 22.95 ≈ 23
-                }}
-              />
-              
-              {/* Inner White Area */}
-              <Box
-                sx={{
-                  width: 'calc(100% - 9.2px)', // 8.5 * 1.08 = 9.18 ≈ 9.2
-                  height: 'calc(100% - 9.2px)',
-                  background: 'white',
-                  clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 70%, 50% 100%, 0% 70%, 0% 20%)',
-                  position: 'absolute',
-                  top: 4.6, // 4.25 * 1.08 = 4.59 ≈ 4.6
-                  left: 4.6,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  p: 1.14, // 1.06 * 1.08 = 1.1448 ≈ 1.14
-                }}
-              >
-                {/* ReliablyME Logo */}
-                <Box sx={{ mb: 1.72, textAlign: 'center' }}> {/* 1.59 * 1.08 = 1.7172 ≈ 1.72 */}
-                  <Typography
-                    sx={{
-                      fontSize: '11.48px', // 10.63 * 1.08 = 11.4804 ≈ 11.48
-                      fontWeight: 500,
-                      color: '#ff7043',
-                      lineHeight: 1,
-                      letterSpacing: '0.57px', // 0.53 * 1.08 = 0.5724 ≈ 0.57
-                    }}
-                  >
-                    Reliably
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: '18.36px', // 17 * 1.08 = 18.36
-                      fontWeight: 700,
-                      color: '#1565c0',
-                      lineHeight: 1,
-                      letterSpacing: '-0.57px', // -0.53 * 1.08 = -0.5724 ≈ -0.57
-                    }}
-                  >
-                    ME
-                  </Typography>
-                </Box>
-                
-                {/* Badge Type */}
-                <Typography
-                  sx={{
-                    fontSize: '10.32px', // 9.56 * 1.08 = 10.3248 ≈ 10.32
-                    fontWeight: 700,
-                    color: badge.borderColor,
-                    textAlign: 'center',
-                    lineHeight: 1.1,
-                    textTransform: 'uppercase',
-                    mb: 1.14, // 1.06 * 1.08 = 1.1448 ≈ 1.14
-                    letterSpacing: '0.35px', // 0.32 * 1.08 = 0.3456 ≈ 0.35
-                  }}
-                >
-                  {badge.title === 'Promise Kept General' ? 'PROMISE\nKEPT' : badge.title.toUpperCase()}
-                </Typography>
-                
-                {/* Bottom Logo */}
-                <Typography
-                  sx={{
-                    fontSize: '6.89px', // 6.38 * 1.08 = 6.8904 ≈ 6.89
-                    fontWeight: 600,
-                    color: '#1565c0',
-                    textAlign: 'center',
-                    letterSpacing: '0.23px', // 0.21 * 1.08 = 0.2268 ≈ 0.23
-                  }}
-                >
-                  RELIABLY ME
-                </Typography>
-              </Box>
+              <BadgeContent badgeType={badge.title} size="large" />
             </Box>
             
             {/* Badge Name and Count */}
@@ -204,7 +113,7 @@ const BadgesPanel: React.FC = () => {
                 mb: 0.7, // Increased spacing: 0.53 * 1.3 = 0.689 ≈ 0.7
               }}
             >
-              {badge.title === 'Promise Kept General' ? 'Promise Kept General' : badge.title}
+              {badge.title}
             </Typography>
             <Typography
               variant="body2"
