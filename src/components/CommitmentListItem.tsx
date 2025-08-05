@@ -126,9 +126,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   } else { // This covers ActivePromisesTab and all other regular tabs
     displayDateLabel = 'Due';
     displayDateValue = dueDate;
-    calendarIconColorForDate = calculatedDueColor; // Use calculated color
-    finalDisplayDateColor = calculatedDueColor; // Use calculated color for text
-    finalDisplayDateWeight = calculatedDueWeight; // Use calculated weight for text
+    calendarIconColorForDate = calculatedDueColor; // Icon color still follows section color or red if overdue
+    finalDisplayDateColor = isOverdue ? theme.palette.error.main : '#666'; // Date text is red if overdue, otherwise gray
+    finalDisplayDateWeight = calculatedDueWeight; // Weight still depends on overdue/today
   }
 
   const showExpandIcon = isNudge && responses && responses.length > 0;
