@@ -1,43 +1,18 @@
 import React from 'react';
-import { Box, Typography, Paper, Button, Menu, MenuItem } from '@mui/material';
-import { Phone, Download } from '@mui/icons-material'; // Removed TableChart, ListAlt
+import { Box, Typography, Paper, Button } from '@mui/material';
+import { Phone, Download } from '@mui/icons-material';
 
 interface UserProfileSectionProps {
   name: string;
   phone: string;
-  onExportCsv: () => void;
-  onExportXlsx: () => void;
-  showExportOptions: boolean; // New prop to control visibility of export button
+  onExportClick: () => void; // New prop for opening the wizard
 }
 
 const UserProfileSection: React.FC<UserProfileSectionProps> = ({
   name,
   phone,
-  onExportCsv,
-  onExportXlsx,
-  showExportOptions,
+  onExportClick,
 }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleExportCsv = () => {
-    onExportCsv();
-    handleMenuClose();
-  };
-
-  const handleExportXlsx = () => {
-    onExportXlsx();
-    handleMenuClose();
-  };
-
   return (
     <Paper
       sx={{
@@ -68,40 +43,21 @@ const UserProfileSection: React.FC<UserProfileSectionProps> = ({
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-        {showExportOptions && (
-          <Button
-            variant="contained"
-            startIcon={<Download />}
-            onClick={handleMenuClick}
-            sx={{
-              bgcolor: '#607d8b',
-              textTransform: 'none',
-              px: 3,
-              py: 1,
-              borderRadius: 1,
-              '&:hover': { bgcolor: '#546e7a' },
-              minWidth: anchorEl ? anchorEl.offsetWidth : 'auto', // Make button width match menu
-            }}
-          >
-            Export
-          </Button>
-        )}
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleMenuClose}
-          MenuListProps={{
-            'aria-labelledby': 'export-button',
-          }}
-          PaperProps={{
-            sx: {
-              minWidth: anchorEl ? anchorEl.offsetWidth : 'auto', // Ensure menu matches button width
-            },
+        <Button
+          variant="contained"
+          startIcon={<Download />}
+          onClick={onExportClick} // Trigger the new wizard
+          sx={{
+            bgcolor: '#607d8b',
+            textTransform: 'none',
+            px: 3,
+            py: 1,
+            borderRadius: 1,
+            '&:hover': { bgcolor: '#546e7a' },
           }}
         >
-          <MenuItem onClick={handleExportCsv}>Save as CSV</MenuItem>
-          <MenuItem onClick={handleExportXlsx}>Save as XLSX</MenuItem>
-        </Menu>
+          Export
+        </Button>
       </Box>
     </Paper>
   );
