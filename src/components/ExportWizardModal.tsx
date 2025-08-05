@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -14,7 +14,7 @@ import {
   FormGroup,
   Checkbox,
   CircularProgress,
-  Grid, // Added Grid import
+  Grid,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { exportToCsv, exportToPdf } from '../utils/exportUtils';
@@ -34,7 +34,7 @@ interface Commitment {
   questions?: string[];
   explanation?: string;
   responses?: { date: string; answer: string }[];
-  isOverdue?: boolean; // Added isOverdue
+  isOverdue?: boolean;
 }
 
 interface ExportWizardModalProps {
