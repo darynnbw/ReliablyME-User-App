@@ -249,7 +249,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '26%' : '13%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: isActivePromisesTab ? '26%' : '13%', pr: isActivePromisesTab ? 4 : 0 }}>
               <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Due
@@ -351,7 +351,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
-                  <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
+                  <TableCell sx={{ pr: isActivePromisesTab ? 4 : 0 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>
                   {!isActivePromisesTab && (
                     <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                   )}
