@@ -44,7 +44,8 @@ interface CommitmentListItemProps {
   isNudge?: boolean;
   nudgesLeft?: number;
   totalNudges?: number; // Added totalNudges
-  isMyPromisesTab?: boolean;
+  isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
+  isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
   isExternal?: boolean;
   isOverdue?: boolean;
   showRevokeButton?: boolean;
@@ -81,7 +82,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   isNudge = false,
   nudgesLeft,
   totalNudges, // Destructure totalNudges
-  isMyPromisesTab = false,
+  isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
+  isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
   isExternal = false,
   isOverdue = false,
   showRevokeButton = false,
@@ -105,16 +107,28 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   };
 
   const isDueToday = dueDate === 'Today';
-  const dueRowColor = isOverdue ? theme.palette.error.main : '#666';
-  const dueRowWeight = (isOverdue || isDueToday) ? 600 : 'inherit';
+  const calculatedDueColor = isOverdue ? theme.palette.error.main : '#666';
+  const calculatedDueWeight = (isOverdue || isDueToday) ? 600 : 'inherit';
   
-  // Logic for My Badges tab date display
-  const displayDateLabel = showBadgePlaceholder ? 'Approved' : 'Due';
-  const displayDateValue = showBadgePlaceholder ? (approvedDate || 'N/A') : dueDate;
-  const displayDateColor = showBadgePlaceholder ? '#666' : dueRowColor;
-  const displayDateWeight = showBadgePlaceholder ? 'inherit' : dueRowWeight;
-  const calendarIconColor = showBadgePlaceholder ? color : (isOverdue ? theme.palette.error.main : color);
+  let displayDateLabel: string;
+  let displayDateValue: string;
+  let calendarIconColorForDate: string;
+  let finalDisplayDateColor: string;
+  let finalDisplayDateWeight: string | number;
 
+  if (isMyBadgesTab) {
+    displayDateLabel = 'Approved';
+    displayDateValue = approvedDate || 'N/A';
+    calendarIconColorForDate = color; // Assuming color is appropriate for approved badges
+    finalDisplayDateColor = '#666'; // Default color for approved date text
+    finalDisplayDateWeight = 'inherit'; // Default weight for approved date text
+  } else { // This covers ActivePromisesTab and all other regular tabs
+    displayDateLabel = 'Due';
+    displayDateValue = dueDate;
+    calendarIconColorForDate = calculatedDueColor; // Use calculated color
+    finalDisplayDateColor = calculatedDueColor; // Use calculated color for text
+    finalDisplayDateWeight = calculatedDueWeight; // Use calculated weight for text
+  }
 
   const showExpandIcon = isNudge && responses && responses.length > 0;
 
@@ -243,8 +257,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Due/Approved Date */}
           {!hideDueDate && (
             <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
-              <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
-              <Typography variant="body2" sx={{ color: displayDateColor, fontWeight: displayDateWeight }}>
+              <CalendarToday sx={{ fontSize: 16, color: calendarIconColorForDate }} />
+              <Typography variant="body2" sx={{ color: finalDisplayDateColor, fontWeight: finalDisplayDateWeight }}>
                 {displayDateLabel} {displayDateValue}
               </Typography>
               {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && (
