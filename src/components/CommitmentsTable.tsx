@@ -54,6 +54,8 @@ interface CommitmentsTableProps {
   onFilterChange: (filterName: string, value: any) => void;
   badgeOptions: string[];
   assigneeOptions: string[];
+  hideApprovedColumn?: boolean; // New prop
+  hideBadgeNameInTable?: boolean; // New prop
 }
 
 const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
@@ -62,6 +64,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   onFilterChange,
   badgeOptions,
   assigneeOptions,
+  hideApprovedColumn = false, // Default to false
+  hideBadgeNameInTable = false, // Default to false
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
@@ -273,32 +277,34 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
-              <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Approved
-                  <IconButton ref={approvedDateButtonRef} size="small" onClick={() => setApprovedDateOpen(true)} aria-label="filter by approved date">
-                    <CalendarToday fontSize="small" sx={{ color: approvedDateIconColor }} />
-                  </IconButton>
-                  <DatePicker
-                    label="Approved Date"
-                    open={approvedDateOpen}
-                    onClose={() => setApprovedDateOpen(false)}
-                    value={filters.approvedDate}
-                    onChange={handleApprovedDateChange}
-                    slotProps={{
-                      textField: {
-                        style: { display: 'none' }
-                      },
-                      popper: {
-                        placement: 'bottom-start',
-                        anchorEl: approvedDateButtonRef.current,
-                      }
-                    }}
-                  />
-                </Box>
-              </Tooltip>
-            </TableCell>
+            {!hideApprovedColumn && (
+              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
+                <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    Approved
+                    <IconButton ref={approvedDateButtonRef} size="small" onClick={() => setApprovedDateOpen(true)} aria-label="filter by approved date">
+                      <CalendarToday fontSize="small" sx={{ color: approvedDateIconColor }} />
+                    </IconButton>
+                    <DatePicker
+                      label="Approved Date"
+                      open={approvedDateOpen}
+                      onClose={() => setApprovedDateOpen(false)}
+                      value={filters.approvedDate}
+                      onChange={handleApprovedDateChange}
+                      slotProps={{
+                        textField: {
+                          style: { display: 'none' }
+                        },
+                        popper: {
+                          placement: 'bottom-start',
+                          anchorEl: approvedDateButtonRef.current,
+                        }
+                      }}
+                    />
+                  </Box>
+                </Tooltip>
+              </TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -341,14 +347,14 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                         })()}
                       </Box>
                       <BadgeIconWithTooltip />
-                      {commitment.title}
+                      {!hideBadgeNameInTable && commitment.title}
                     </Box>
                   </TableCell>
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
-                  <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                  {!hideApprovedColumn && <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>}
                 </TableRow>
                 {commitment.type === 'nudge' && commitment.responses && (
                   <TableRow>

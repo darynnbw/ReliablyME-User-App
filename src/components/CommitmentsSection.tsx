@@ -1168,6 +1168,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 onFilterChange={handleTableFilterChange}
                 badgeOptions={tableBadgeOptions}
                 assigneeOptions={tableAssigneeOptions}
+                hideApprovedColumn={isActivePromisesTab} // Hide approved column for Active Promises
+                hideBadgeNameInTable={isActivePromisesTab} // Hide badge name for Active Promises
               />
             </Box>
           ) : (
@@ -1252,6 +1254,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         showFromLabel={showFromLabel}
                         explanation={item.explanation}
                         responses={item.responses}
+                        hideBadgeName={isActivePromisesTab} // Hide badge name for Active Promises
                       />
                     );
                   })
