@@ -950,11 +950,17 @@ const CommitmentPortfolio: React.FC = () => {
     },
   ];
 
-  // Function to get all commitments from the "My Promises" tab for export
-  const getMyPromisesDataForExport = () => {
-    // For export, we should probably export all promises, or just the 'My Badges' ones if that's the new 'My Promises' equivalent
-    // Given the request, 'My Badges' is the new 'My Promises' in terms of content.
-    return myBadgesItems; // Exporting the content of the new 'My Badges' tab
+  const dataSources = {
+    myCommitments: {
+      'Active Promises': activePromisesItems,
+      'My Badges': myBadgesItems,
+      'My Unkept Promises': myUnkeptPromisesItems,
+    },
+    othersCommitments: {
+      'Promises Owed to Me': promisesOwedToMeItems,
+      'Badges Issued': badgesIssuedItems,
+      'Unkept Promises to Me': unkeptPromisesToMeItems,
+    },
   };
 
   const handleOpenExportWizard = () => {
@@ -974,7 +980,7 @@ const CommitmentPortfolio: React.FC = () => {
         <UserProfileSection
           name="Alex Johnson"
           phone="+1 (555) 123-4567"
-          onExportClick={handleOpenExportWizard} // Pass the new handler
+          onExportClick={handleOpenExportWizard}
         />
 
         <Grid container spacing={3}>
@@ -1024,7 +1030,7 @@ const CommitmentPortfolio: React.FC = () => {
       <ExportWizardModal
         open={exportWizardOpen}
         onClose={handleCloseExportWizard}
-        data={getMyPromisesDataForExport()} // Pass the data to the wizard
+        dataSources={dataSources}
       />
     </Box>
   );
