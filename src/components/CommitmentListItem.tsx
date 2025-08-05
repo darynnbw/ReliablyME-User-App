@@ -107,7 +107,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   };
 
   const isDueToday = dueDate === 'Today';
-  const calculatedDueColor = isOverdue ? theme.palette.error.main : '#666';
+  // The color for the date text and icon when not overdue should be the 'color' prop
+  const calculatedDueColor = isOverdue ? theme.palette.error.main : color;
   const calculatedDueWeight = (isOverdue || isDueToday) ? 600 : 'inherit';
   
   let displayDateLabel: string;
