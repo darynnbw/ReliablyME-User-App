@@ -687,10 +687,17 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   
-  let itemColor = '#ff7043'; // Default orange for 'My Commitments'
+  let itemColor = '#ff7043'; // Default orange for 'My Commitments' section
+
+  // Determine item color based on the section title first
   if (title.trim() === "Others' Commitments") {
-    itemColor = '#1976d2'; // Blue for 'Others' Commitments'
-  } else if (isUnkeptTab) {
+    itemColor = '#1976d2'; // Default blue for 'Others' Commitments' section
+  } else { // This is 'My Commitments' section
+    itemColor = '#ff7043'; // Default orange for 'My Commitments' section
+  }
+
+  // Override color for 'Unkept' tabs, regardless of section
+  if (isUnkeptTab) {
     itemColor = '#4F4F4F'; // Grey for 'Unkept' tabs
   }
 
@@ -1168,6 +1175,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   }
 
                   // Determine 'From:' or 'To:' label based on tab
+                  // 'Badges Issued' should be 'To:'
+                  // 'Unkept Promises to Me' should be 'From:'
                   const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isUnkeptTab;
 
                   return (
