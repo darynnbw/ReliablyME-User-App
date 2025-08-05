@@ -1350,8 +1350,8 @@ const CommitmentPortfolio: React.FC = () => {
     },
     {
       label: 'Unkept Promises to Me',
-      count: unkeptPromisesToMeItems.length,
-      items: unkeptPromisesToMeItems,
+      count: unkeptPromisesToMeItems.length, // Corrected variable name
+      items: unkeptPromisesToMeItems, // Corrected variable name
     },
   ];
 
