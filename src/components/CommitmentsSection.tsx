@@ -152,7 +152,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [selectedBadge, setSelectedBadge] = useState<Commitment | null>(null);
   const [commitmentForNudgeDetails, setCommitmentForNudgeDetails] = useState<Commitment | null>(null);
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
-  const [commitmentToReject, setCommitmentToReject] = useState<Commitment | null>(null);
+  const [commitmentToReject, setCommitmentToReject] = useState<Commitment | null>(null); // This variable is now used
   const [commitmentForBadgeRequest, setCommitmentForBadgeRequest] = useState<Commitment | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -244,23 +244,28 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setShowClarificationSuccessModal(false);
   }, []);
 
-  const handleApproveBadgeRequest = (item: Commitment) => {
-    setRequesterForApproval(item.assignee);
-    setCommitments(prev => prev.filter(c => c.id !== item.id));
+  // New functions for badge approval/rejection
+  const handleApproveBadgeRequest = (commitment: Commitment) => {
+    console.log('Approving badge request:', commitment.id);
+    // Logic to remove the approved badge request from the list
+    setCommitments(prev => prev.filter(c => c.id !== commitment.id));
     setApprovalModalOpen(true);
+    setRequesterForApproval(commitment.assignee); // Assuming assignee is the requester
   };
 
-  const handleRejectBadgeRequest = (item: Commitment) => {
-    setCommitmentToReject(item);
+  const handleRejectBadgeRequest = (commitment: Commitment) => {
+    console.log('Rejecting badge request:', commitment.id);
+    // Logic to remove the rejected badge request from the list
+    setCommitments(prev => prev.filter(c => c.id !== commitment.id));
+    setCommitmentToReject(commitment); // Set the commitment for the reject modal
     setRejectBadgeModalOpen(true);
   };
 
   const handleConfirmRejectBadge = () => {
-    if (commitmentToReject) {
-      console.log('Rejecting badge for:', commitmentToReject.id);
-      setCommitments(prev => prev.filter(c => c.id !== commitmentToReject.id));
-      handleCloseRejectBadgeModal();
-    }
+    console.log('Confirming rejection of badge request:', commitmentToReject?.id);
+    // Logic to handle the rejection confirmation
+    setRejectBadgeModalOpen(false);
+    setCommitmentToReject(null);
   };
 
   useEffect(() => {
@@ -299,8 +304,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   // Determine if the current section is "My Commitments"
   const isMyCommitmentsSection = title.trim() === 'My Commitments';
-  const isTableView = displayMode === 'table' && isMyCommitmentsSection;
-  
+  const isTableView = displayMode === 'table'; // Simplified: displayMode is now global
+
   // Determine if all filters (except sort by) should be disabled
   const disableAllFiltersExceptSort = isRequestsToCommitTab || isAwaitingResponseTab;
   // Determine if filters should be disabled for Active Promises in table mode
@@ -343,8 +348,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     
     if (!dateMatch && !disableActivePromisesFiltersInTable) return false; // Only apply date filter if not disabled
 
-    // Table-specific filters (only apply if displayMode is 'table' and it's 'My Commitments' section)
-    if (displayMode === 'table' && title.trim() === 'My Commitments') {
+    // Table-specific filters (only apply if displayMode is 'table')
+    if (displayMode === 'table') {
       if (badgeTableFilter && item.title !== badgeTableFilter) return false;
       if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
       if (assigneeTableFilter && item.assignee !== assigneeTableFilter) return false;
@@ -753,108 +758,53 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
             {/* Filters for My Commitments section (including My Promises) */}
-            {isMyCommitmentsSection && (
-              <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView && isActivePromisesTab}>
-                  <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (isTableView && isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
-                    <MenuItem value="">All</MenuItem>
-                    {filterOptions.map(person => (
-                      <MenuItem key={person} value={person}>{person}</MenuItem>
-                    ))}
-                    {hasExternal && <MenuItem value="External">External</MenuItem>}
-                  </Select>
-                </FormControl>
+            {/* Simplified filter disabling logic: now based on displayMode and specific tabs */}
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView || disableAllFiltersExceptSort}>
+              <InputLabel>Person</InputLabel>
+              <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (isTableView || disableAllFiltersExceptSort) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
+                <MenuItem value="">All</MenuItem>
+                {filterOptions.map(person => (
+                  <MenuItem key={person} value={person}>{person}</MenuItem>
+                ))}
+                {hasExternal && <MenuItem value="External">External</MenuItem>}
+              </Select>
+            </FormControl>
 
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView && isActivePromisesTab}>
-                  <InputLabel>Due Date</InputLabel>
-                  <Select
-                    value={dateFilter}
-                    onChange={handleDateFilterChange}
-                    label="Due Date"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <CalendarToday fontSize="small" sx={{ color: (isTableView && isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
-                      </InputAdornment>
-                    }
-                  >
-                    <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="Today">Today</MenuItem>
-                    <MenuItem value="This Week">This Week</MenuItem>
-                    <MenuItem value="Custom Range">Custom Range</MenuItem>
-                  </Select>
-                </FormControl>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView || disableAllFiltersExceptSort}>
+              <InputLabel>Due Date</InputLabel>
+              <Select
+                value={dateFilter}
+                onChange={handleDateFilterChange}
+                label="Due Date"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <CalendarToday fontSize="small" sx={{ color: (isTableView || disableAllFiltersExceptSort) ? 'action.disabled' : 'text.secondary' }} />
+                  </InputAdornment>
+                }
+              >
+                <MenuItem value="All">All</MenuItem>
+                <MenuItem value="Today">Today</MenuItem>
+                <MenuItem value="This Week">This Week</MenuItem>
+                <MenuItem value="Custom Range">Custom Range</MenuItem>
+              </Select>
+            </FormControl>
 
-                {dateFilter === 'Custom Range' && (
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={
-                      dateRange[0] && dateRange[1]
-                        ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
-                        : 'Select Range'
-                    }
-                    onClick={handleCustomRangeClick}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    sx={{ minWidth: 180, cursor: 'pointer' }}
-                    disabled={isTableView && isActivePromisesTab}
-                  />
-                )}
-              </>
-            )}
-            {/* Filters for Others' Commitments section */}
-            {!isMyCommitmentsSection && (
-              <>
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableAllFiltersExceptSort}>
-                  <InputLabel>Person</InputLabel>
-                  <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: disableAllFiltersExceptSort ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
-                    <MenuItem value="">All</MenuItem>
-                    {filterOptions.map(person => (
-                      <MenuItem key={person} value={person}>{person}</MenuItem>
-                    ))}
-                    {hasExternal && <MenuItem value="External">External</MenuItem>}
-                  </Select>
-                </FormControl>
-
-                <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={disableAllFiltersExceptSort}>
-                  <InputLabel>Due Date</InputLabel>
-                  <Select
-                    value={dateFilter}
-                    onChange={handleDateFilterChange}
-                    label="Due Date"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <CalendarToday fontSize="small" sx={{ color: disableAllFiltersExceptSort ? 'action.disabled' : 'text.secondary' }} />
-                      </InputAdornment>
-                    }
-                  >
-                    <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="Today">Today</MenuItem>
-                    <MenuItem value="This Week">This Week</MenuItem>
-                    <MenuItem value="Custom Range">Custom Range</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {dateFilter === 'Custom Range' && (
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={
-                      dateRange[0] && dateRange[1]
-                        ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
-                        : 'Select Range'
-                    }
-                    onClick={handleCustomRangeClick}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    sx={{ minWidth: 180, cursor: 'pointer' }}
-                    disabled={disableAllFiltersExceptSort}
-                  />
-                )}
-              </>
+            {dateFilter === 'Custom Range' && (
+              <TextField
+                variant="outlined"
+                size="small"
+                value={
+                  dateRange[0] && dateRange[1]
+                    ? `${dateRange[0].format('MMM D')} - ${dateRange[1].format('MMM D, YYYY')}`
+                    : 'Select Range'
+                }
+                onClick={handleCustomRangeClick}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ minWidth: 180, cursor: 'pointer' }}
+                disabled={isTableView || disableAllFiltersExceptSort}
+              />
             )}
 
             <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={isTableView && isActivePromisesTab}>
@@ -958,7 +908,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {tabs.map((tab, _index) => <Tab key={_index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}> {/* New inner Box for toggle and button */}
-            {isMyCommitmentsSection && onToggleDisplayMode && (
+            {onToggleDisplayMode && ( /* Changed condition to just onToggleDisplayMode */
               <FormControlLabel
                 control={
                   <Switch
@@ -1150,7 +1100,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start', // Center content if empty
           alignItems: paginatedItems.length === 0 ? 'center' : 'stretch', // Center content if empty
         }}>
-          {displayMode === 'table' && isMyCommitmentsSection ? (
+          {displayMode === 'table' ? ( /* Simplified condition */
             <Box sx={{ mt: 2 }}>
               <CommitmentsTable
                 commitments={currentItems}

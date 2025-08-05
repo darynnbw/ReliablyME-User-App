@@ -502,38 +502,153 @@ const CommitmentPortfolio: React.FC = () => {
     },
   ];
 
+  // --- New/Expanded data for Others' Commitments ---
+  const promisesOwedToMeItems = [
+    {
+      id: 1,
+      title: 'Teamwork',
+      dueDate: dayjs().add(2, 'day').hour(11).minute(45).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(5, 'day').hour(16).minute(20).format('MMM D, YYYY, hh:mm A'),
+      description: 'I will provide feedback on the new product design mockups for client presentation, focusing on usability and aesthetic appeal.',
+      assignee: 'Riley Chen',
+    },
+    {
+      id: 2,
+      title: 'Promise Kept General',
+      dueDate: dayjs().add(4, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(7, 'day').hour(13).minute(5).format('MMM D, YYYY, hh:mm A'),
+      description: 'I am going to deliver the quarterly marketing report with all KPIs and campaign results, highlighting key achievements and areas for improvement.',
+      assignee: 'Jamie Smith',
+    },
+    {
+      id: 3,
+      title: 'Leadership',
+      dueDate: dayjs().add(6, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(9, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I will lead the weekly team sync meeting and ensure all action items are captured and assigned.',
+      assignee: 'Sarah Connor',
+    },
+    {
+      id: 4,
+      title: 'Attendance',
+      dueDate: dayjs().add(8, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(11, 'day').hour(8).minute(30).format('MMM D, YYYY, hh:mm A'),
+      description: 'I will attend the all-hands company meeting and provide a summary to my team.',
+      assignee: 'Mike Miller',
+    },
+    {
+      id: 5,
+      title: 'Promise Kept General',
+      dueDate: dayjs().add(10, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(13, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I will finalize the client proposal and send it for review by end of day.',
+      assignee: 'Chris Parker',
+    },
+    {
+      id: 6,
+      title: 'Teamwork',
+      dueDate: dayjs().add(12, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(15, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I will assist with the onboarding of the new junior developer, providing guidance and support.',
+      assignee: 'Alex Johnson',
+    },
+  ];
+
+  const badgesIssuedItems = [
+    {
+      id: 101,
+      title: 'Promise Kept General',
+      dueDate: dayjs().subtract(10, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(12, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().subtract(9, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I will complete the mandatory HR compliance training course.',
+      explanation: 'I have submitted the form and answered all the questions, ensuring full compliance with company policies and regulations.',
+      assignee: 'Chris Parker',
+    },
+    {
+      id: 102,
+      title: 'Teamwork',
+      dueDate: dayjs().subtract(8, 'day').hour(16).minute(30).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(10, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().subtract(7, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I will collaborate with the design team on the new UI mockups.',
+      explanation: 'We held a final review session and all stakeholders have signed off on the mockups, incorporating feedback from various departments.',
+      assignee: 'Riley Chen',
+    },
+    {
+      id: 103,
+      title: 'Leadership',
+      dueDate: dayjs().subtract(6, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(8, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().subtract(5, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I promise to lead the weekly sync meeting and ensure all action items are captured.',
+      explanation: 'I led the meeting, and the minutes with action items have been circulated to all attendees for their reference and follow-up.',
+      assignee: 'Sarah Wilson',
+    },
+    {
+      id: 104,
+      title: 'Attendance',
+      dueDate: dayjs().subtract(4, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(6, 'day').hour(8).minute(30).format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().subtract(3, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I commit to attending the full-day workshop on new project management tools.',
+      explanation: 'I attended the entire workshop and have shared my notes with the team, highlighting key takeaways and potential applications for our projects.',
+      assignee: 'Mike Johnson',
+    },
+    {
+      id: 105,
+      title: 'Promise Kept General',
+      dueDate: dayjs().subtract(2, 'day').hour(15).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(4, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().subtract(1, 'day').hour(16).minute(0).format('MMM D, YYYY, hh:mm A'),
+      description: 'I am going to update the shared documentation with the latest API specifications.',
+      explanation: 'The documentation is now up-to-date on Confluence, and the link has been shared in the relevant communication channel for easy access.',
+      assignee: 'Jamie Smith',
+    },
+  ];
+
+  const unkeptPromisesToMeItems = [
+    {
+      id: 201,
+      title: 'Promise Kept General',
+      dueDate: dayjs().subtract(25, 'day').hour(18).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(30, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      description: 'I promised to deliver the final report on the agreed-upon deadline, including all necessary data and analysis.',
+      assignee: 'John Doe',
+    },
+    {
+      id: 202,
+      title: 'Attendance',
+      dueDate: dayjs().subtract(20, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(23, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      description: 'I committed to attending the critical client call.',
+      assignee: 'Jane Smith',
+    },
+    {
+      id: 203,
+      title: 'Teamwork',
+      dueDate: dayjs().subtract(15, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(17, 'day').hour(9).minute(15).format('MMM D, YYYY, hh:mm A'),
+      description: 'I was going to provide the necessary assets for the marketing campaign, ensuring they were high-quality and on brand.',
+      assignee: 'Peter Jones',
+    },
+  ];
+
   const commitmentsReceivedTabs = [
     {
       label: 'Promises Owed to Me',
-      count: 2,
-      items: [
-        {
-          id: 1,
-          title: 'Teamwork',
-          dueDate: dayjs().subtract(2, 'day').format('MMM D, YYYY, hh:mm A'),
-          committedDate: dayjs().subtract(5, 'day').format('MMM D, YYYY, hh:mm A'),
-          description: 'I will provide feedback on the new product design mockups for client presentation, focusing on usability and aesthetic appeal.',
-          assignee: 'Riley Chen',
-        },
-        {
-          id: 2,
-          title: 'Promise Kept General',
-          dueDate: dayjs().subtract(4, 'day').format('MMM D, YYYY, hh:mm A'),
-          committedDate: dayjs().subtract(7, 'day').format('MMM D, YYYY, hh:mm A'),
-          description: 'I am going to deliver the quarterly marketing report with all KPIs and campaign results, highlighting key achievements and areas for improvement.',
-          assignee: 'Jamie Smith',
-        },
-      ],
+      count: promisesOwedToMeItems.length,
+      items: promisesOwedToMeItems,
     },
     {
       label: 'Badges Issued',
-      count: 120,
-      items: [],
+      count: badgesIssuedItems.length,
+      items: badgesIssuedItems,
     },
     {
       label: 'Unkept Promises to Me',
-      count: 31,
-      items: [],
+      count: unkeptPromisesToMeItems.length,
+      items: unkeptPromisesToMeItems,
     },
   ];
 
@@ -602,7 +717,8 @@ const CommitmentPortfolio: React.FC = () => {
             <CommitmentsSection
               title="Others' Commitments"
               tabs={commitmentsReceivedTabs}
-              displayMode="regular"
+              displayMode={displayMode} {/* Pass displayMode */}
+              onToggleDisplayMode={setDisplayMode} {/* Pass setDisplayMode */}
               showClearAllFilters={true}
               isActionsPage={false}
               isCommitmentPortfolioPage={true}
