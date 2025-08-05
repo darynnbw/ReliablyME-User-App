@@ -39,7 +39,6 @@ interface Commitment {
   questions?: string[];
   explanation?: string;
   responses?: { date: string; answer: string }[]; // Add responses to interface
-  isOverdue?: boolean; // Added isOverdue to Commitment interface
 }
 
 interface CommitmentsTableProps {
@@ -133,7 +132,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     });
   };
 
-  const renderFormattedDate = (dateString?: string, isOverdue?: boolean) => {
+  const renderFormattedDate = (dateString?: string) => {
     if (!dateString || dateString === 'N/A') {
       return <Typography variant="body2">N/A</Typography>;
     }
@@ -143,10 +142,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     }
     return (
       <Box>
-        <Typography variant="body2" sx={{ lineHeight: 1.3, color: isOverdue ? theme.palette.error.main : 'text.primary' }}>
+        <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
           {date.format('MMM D, YYYY')}
         </Typography>
-        <Typography variant="body2" sx={{ color: isOverdue ? theme.palette.error.main : 'text.secondary', lineHeight: 1.3 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.3 }}>
           {date.format('hh:mm A')}
         </Typography>
       </Box>
@@ -359,7 +358,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.assignee}</TableCell>
                   {/* Reordered date cells */}
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
-                  <TableCell>{renderFormattedDate(commitment.dueDate, commitment.isOverdue)}</TableCell>
+                  <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
                   {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
                     <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                   )}

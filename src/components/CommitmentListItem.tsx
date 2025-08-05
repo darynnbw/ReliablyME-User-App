@@ -116,8 +116,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
   const dateTextWeight = isOverdue ? 600 : 'inherit';
 
-  // Determine the icon color based on section color, not overdue status
-  const calendarIconColor = color;
+  // Determine the icon color based on overdue status or section color
+  const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
   // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
   const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
