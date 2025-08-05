@@ -31,7 +31,7 @@ interface Commitment {
   description: string;
   assignee: string;
   committedDate?: string;
-  approvedDate?: string; // Added approvedDate
+  approvedDate?: string;
   type?: string;
   nudgesLeft?: number;
   totalNudges?: number;
@@ -340,7 +340,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                           );
                         })()}
                       </Box>
-                      {commitment.title.toLowerCase().includes('promise kept') && <BadgeIconWithTooltip />}
+                      <BadgeIconWithTooltip />
                       {commitment.title}
                     </Box>
                   </TableCell>
