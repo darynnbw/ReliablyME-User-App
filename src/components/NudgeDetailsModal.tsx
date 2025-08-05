@@ -86,16 +86,6 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
 
           {!isRequest && (
             <>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
-                <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                  Last Nudge Due:{' '}
-                  <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
-                    {commitment.dueDate}
-                  </Typography>
-                </Typography>
-              </Box>
-
               {commitment.committedDate && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
@@ -107,6 +97,16 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
                   </Typography>
                 </Box>
               )}
+
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+                <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                  Last Nudge Due:{' '}
+                  <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
+                    {commitment.dueDate}
+                  </Typography>
+                </Typography>
+              </Box>
               
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <NumbersIcon sx={{ fontSize: 20, color: '#666' }} />

@@ -198,18 +198,6 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             </Typography>
           </Box>
 
-          {!isAwaitingResponse && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
-              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Due:{' '}
-                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                  {commitment.dueDate}
-                </Typography>
-              </Typography>
-            </Box>
-          )}
-
           {commitment.committedDate && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
@@ -217,6 +205,18 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
                 Committed:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                   {commitment.committedDate}
+                </Typography>
+              </Typography>
+            </Box>
+          )}
+
+          {!isAwaitingResponse && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                Due:{' '}
+                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                  {commitment.dueDate}
                 </Typography>
               </Typography>
             </Box>

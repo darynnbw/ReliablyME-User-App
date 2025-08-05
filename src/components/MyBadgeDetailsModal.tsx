@@ -44,7 +44,7 @@ const MyBadgeDetailsModal: React.FC<MyBadgeDetailsModalProps> = ({ open, onClose
       <DialogTitle sx={{ p: 0, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>
-            My Badge
+            Commitment Details
           </Typography>
           <IconButton onClick={onClose} sx={{ color: '#666' }}>
             <Close />
@@ -96,7 +96,7 @@ const MyBadgeDetailsModal: React.FC<MyBadgeDetailsModalProps> = ({ open, onClose
 
           {/* Approved Date - Third */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <TaskAltOutlined sx={{ fontSize: 20, color: '#4CAF50' }} /> {/* Changed icon to TaskAltOutlined */}
+            <TaskAltOutlined sx={{ fontSize: 20, color: '#4CAF50' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
               Approved:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
