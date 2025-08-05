@@ -17,7 +17,6 @@ import {
   Chip,
   styled,
   keyframes,
-  Stack, // Import Stack
 } from '@mui/material';
 import { Close, WarningAmber } from '@mui/icons-material';
 
@@ -167,7 +166,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
     >
       {!isSubmitted && (
         <>
-          <DialogTitle sx={{ p: 0, mb: 2 }}> {/* Changed mb to 2 */}
+          <DialogTitle sx={{ p: 0, mb: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Box>
                 <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px', mb: 1 }}>
@@ -182,7 +181,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
               </IconButton>
             </Box>
           </DialogTitle>
-          <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} /> {/* Changed mb to 2 */}
+          <Divider sx={{ mb: 1, borderColor: '#e0e0e0' }} />
         </>
       )}
 
@@ -201,7 +200,7 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
           </Box>
         ) : (
           <>
-            <Stack spacing={3}> {/* Changed Box to Stack with spacing */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: '#333' }}>Badge they'll earn</Typography>
                 <FormControl fullWidth>
@@ -312,8 +311,8 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                   </Typography>
                 )}
               </Box>
-            </Stack>
-            <Box sx={{ mt: 4 }}> {/* Adjusted mt to 4 */}
+            </Box>
+            <Box sx={{ mt: 2.5 }}>
               <Button
                 variant="contained"
                 onClick={handleSubmit}
@@ -323,10 +322,10 @@ const CommitmentActionModal: React.FC<CommitmentActionModalProps> = ({ open, onC
                   bgcolor: type === 'request' ? 'primary.main' : '#ff7043', // Apply primary.main for 'request' type
                   color: 'white',
                   textTransform: 'none',
-                  height: '40px', // Changed height to 40px
-                  borderRadius: 1, // Changed borderRadius to 1
+                  height: '48px',
+                  borderRadius: 2,
                   fontWeight: 600,
-                  fontSize: '14px', // Changed fontSize to 14px
+                  fontSize: '16px',
                   '&:hover': {
                     bgcolor: type === 'request' ? 'primary.dark' : '#f4511e', // Apply primary.dark for 'request' type hover
                   },
