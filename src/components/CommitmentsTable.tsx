@@ -21,7 +21,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // Import new icons
-import dayjs from 'dayjs'; // Import dayjs for sorting responses
+import dayjs from 'dayjs'; // Import dayjs for sorting
 import BadgeIconWithTooltip from './BadgeIconWithTooltip';
 
 interface Commitment {
@@ -227,6 +227,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
+            {/* Reordered date columns */}
             <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
               <Tooltip title="The exact time when the user committed to doing something." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -253,8 +254,34 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
+              <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Due
+                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
+                    <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    label="Due Date"
+                    open={dueDateOpen}
+                    onClose={() => setDueDateOpen(false)}
+                    value={filters.dueDate}
+                    onChange={handleDueDateChange}
+                    slotProps={{
+                      textField: {
+                        style: { display: 'none' }
+                      },
+                      popper: {
+                        placement: 'bottom-start',
+                        anchorEl: dueDateButtonRef.current,
+                      }
+                    }}
+                  />
+                </Box>
+              </Tooltip>
+            </TableCell>
             {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
-              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
+              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
                 <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     Approved
@@ -281,32 +308,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Tooltip>
               </TableCell>
             )}
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
-              <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Due
-                  <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
-                    <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
-                  </IconButton>
-                  <DatePicker
-                    label="Due Date"
-                    open={dueDateOpen}
-                    onClose={() => setDueDateOpen(false)}
-                    value={filters.dueDate}
-                    onChange={handleDueDateChange}
-                    slotProps={{
-                      textField: {
-                        style: { display: 'none' }
-                      },
-                      popper: {
-                        placement: 'bottom-start',
-                        anchorEl: dueDateButtonRef.current,
-                      }
-                    }}
-                  />
-                </Box>
-              </Tooltip>
-            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -337,11 +338,12 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {(() => {
                           const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
+                          const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation;
                           return (
                             <IconButton
                               size="small"
                               onClick={() => handleToggleExpand(commitment.id)}
-                              sx={{ visibility: isNudgeWithResponses ? 'visible' : 'hidden' }}
+                              sx={{ visibility: (isNudgeWithResponses || isBadgeWithExplanation) ? 'visible' : 'hidden' }}
                             >
                               {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                             </IconButton>
@@ -354,42 +356,57 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   </TableCell>
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
+                  {/* Reordered date cells */}
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
+                  <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
                   {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
-                    <TableCell>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                    <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                   )}
-                  <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>
                 </TableRow>
-                {commitment.type === 'nudge' && commitment.responses && (
+                {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
                   <TableRow>
                     <TableCell colSpan={6} sx={{ py: 0 }}>
                       <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                            All Responses:
-                          </Typography>
-                          <Stack spacing={1}>
-                            {commitment.responses
-                              .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
-                              .map((response, idx) => (
-                                <Box key={idx} sx={{ pb: 1, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                                  <Chip
-                                    label={response.date}
-                                    size="small"
-                                    sx={{
-                                      bgcolor: '#fff3e0',
-                                      color: '#ff7043',
-                                      fontWeight: 700,
-                                      fontSize: '12px',
-                                      mb: 1,
-                                    }}
-                                  />
-                                  <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                    {response.answer}
-                                  </Typography>
-                                </Box>
-                              ))}
-                          </Stack>
+                          {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
+                            <>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                                All Responses:
+                              </Typography>
+                              <Stack spacing={1}>
+                                {commitment.responses
+                                  .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
+                                  .map((response, idx) => (
+                                    <Box key={idx} sx={{ pb: 1, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                                      <Chip
+                                        label={response.date}
+                                        size="small"
+                                        sx={{
+                                          bgcolor: '#fff3e0',
+                                          color: '#ff7043',
+                                          fontWeight: 700,
+                                          fontSize: '12px',
+                                          mb: 1,
+                                        }}
+                                      />
+                                      <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                        {response.answer}
+                                      </Typography>
+                                    </Box>
+                                  ))}
+                              </Stack>
+                            </>
+                          )}
+                          {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation) && (
+                            <>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                                Explanation:
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                {commitment.explanation}
+                              </Typography>
+                            </>
+                          )}
                         </Box>
                       </Collapse>
                     </TableCell>
