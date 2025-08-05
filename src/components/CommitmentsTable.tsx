@@ -249,7 +249,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            {!isActivePromisesTab && (
+            {!isActivePromisesTab && ( // Conditionally render Approved column
               <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
                 <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -351,7 +351,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   <TableCell>{commitment.description}</TableCell>
                   <TableCell>{commitment.assignee}</TableCell>
                   <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
-                  {!isActivePromisesTab && (
+                  {!isActivePromisesTab && ( // Conditionally render Approved column
                     <TableCell>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                   )}
                   <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.dueDate)}</TableCell>
