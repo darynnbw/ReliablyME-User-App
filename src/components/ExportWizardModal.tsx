@@ -128,6 +128,22 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     }
   }, [open, resetState]);
 
+  const getCombinedData = useCallback(() => {
+    let combinedData: Commitment[] = [];
+    for (const key in selectedScopes.myCommitments) {
+      if (selectedScopes.myCommitments[key]) {
+        combinedData = [...combinedData, ...dataSources.myCommitments[key]];
+      }
+    }
+    for (const key in selectedScopes.othersCommitments) {
+      if (selectedScopes.othersCommitments[key]) {
+        combinedData = [...combinedData, ...dataSources.othersCommitments[key]];
+      }
+    }
+    // Use a Set to ensure unique commitments by ID, then map back to full objects
+    return Array.from(new Set(combinedData.map(c => c.id))).map(id => combinedData.find(c => c.id === id)!);
+  }, [dataSources, selectedScopes]);
+
   useEffect(() => {
     if (step === 3) {
       const scopes = [
@@ -136,25 +152,34 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       ];
 
       const fields = new Set<string>(['title', 'description', 'assignee', 'committedDate', 'dueDate']);
+      
+      // Add fields relevant to badges (explanation, approvedDate)
       if (scopes.some(s => s.includes('Badge') || s.includes('Issued'))) {
         fields.add('explanation');
         fields.add('approvedDate');
       }
-      if (scopes.some(s => s.includes('Active Promises'))) {
-        fields.add('type');
+
+      // Determine if any selected data contains nudges to include nudge-specific fields
+      const combinedData = getCombinedData(); // Get the data based on current scope selection
+      const hasNudges = combinedData.some(item => item.type === 'nudge');
+
+      if (hasNudges) {
+        fields.add('type'); // 'type' field itself is useful for nudges
         fields.add('nudgesInfo');
         fields.add('responses');
       }
+
+      // Add fields relevant to unkept promises
       if (scopes.some(s => s.includes('Unkept'))) {
         fields.add('isOverdue');
       }
-      fields.add('isExternal');
+      fields.add('isExternal'); // Always add isExternal as it's a general property
 
       const newRelevantFields = allExportFields.filter(f => fields.has(f.id));
       setRelevantFields(newRelevantFields);
       setSelectedFields(newRelevantFields.map(f => f.id));
     }
-  }, [step, selectedScopes]);
+  }, [step, selectedScopes, getCombinedData]); // Added getCombinedData to dependencies
 
   const handleNext = () => {
     if (step === 3) {
@@ -182,21 +207,6 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       [group]: { ...prev[group], [key]: checked },
     }));
   };
-
-  const getCombinedData = useCallback(() => {
-    let combinedData: Commitment[] = [];
-    for (const key in selectedScopes.myCommitments) {
-      if (selectedScopes.myCommitments[key]) {
-        combinedData = [...combinedData, ...dataSources.myCommitments[key]];
-      }
-    }
-    for (const key in selectedScopes.othersCommitments) {
-      if (selectedScopes.othersCommitments[key]) {
-        combinedData = [...combinedData, ...dataSources.othersCommitments[key]];
-      }
-    }
-    return Array.from(new Set(combinedData.map(c => c.id))).map(id => combinedData.find(c => c.id === id)!);
-  }, [dataSources, selectedScopes]);
 
   const generatePreview = useCallback(() => {
     const dataToPreview = getCombinedData();
