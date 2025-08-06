@@ -12,14 +12,13 @@ import {
   alpha,
   Chip,
   useTheme,
-  Collapse,
+  Collapse, // Import Collapse
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
-import ContactTooltip from './ContactTooltip';
-import dayjs from 'dayjs';
-import BadgeContent from './BadgeContent';
+import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Removed Shield
+import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
+import dayjs from 'dayjs'; // Import dayjs for sorting
+import BadgeContent from './BadgeContent'; // Import the new BadgeContent component
 
-// Prop Interfaces
 interface CommitmentListItemProps {
   id: number;
   title: string;
@@ -36,7 +35,7 @@ interface CommitmentListItemProps {
   onViewDetails: () => void;
   onActionButtonClick: () => void;
   onToggleSelect: (id: number, checked: boolean) => void;
-  showBadgePlaceholder?: boolean;
+  showBadgePlaceholder?: boolean; // This prop will now control rendering BadgeContent
   showAcceptDeclineButtons?: boolean;
   onAccept?: () => void;
   onDecline?: () => void;
@@ -44,134 +43,414 @@ interface CommitmentListItemProps {
   hideDueDate?: boolean;
   isNudge?: boolean;
   nudgesLeft?: number;
-  totalNudges?: number;
-  isMyPromisesTab?: boolean;
-  isMyBadgesTab?: boolean;
-  isBadgesIssuedTab?: boolean;
+  totalNudges?: number; // Added totalNudges
+  isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
+  isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
+  isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
   isExternal?: boolean;
-  isOverdue: boolean; // Changed from isOverdue?: boolean;
+  isOverdue?: boolean;
   showRevokeButton?: boolean;
   onRevoke?: () => void;
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
-  responses?: { date: string; answer: string }[];
-  approvedDate?: string;
+  responses?: { date: string; answer: string }[]; // New prop for historical responses
+  approvedDate?: string; // Added approvedDate prop
 }
 
-// Sub-components for internal rendering
-const ItemHeader: React.FC<{ title: string; isNudge?: boolean; isExternal?: boolean; isOverdue: boolean; showExpandIcon: boolean; expanded: boolean; onExpandClick: (e: React.MouseEvent) => void; onViewDetails: () => void; }> = ({ title, isNudge, isExternal, isOverdue, showExpandIcon, expanded, onExpandClick, onViewDetails }) => {
+const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
+  id,
+  title,
+  dueDate,
+  description,
+  explanation,
+  assignee,
+  selected = false,
+  color,
+  showCheckbox,
+  isCheckboxDisabled = false,
+  showActionButton,
+  buttonText,
+  onViewDetails,
+  onActionButtonClick,
+  onToggleSelect,
+  showBadgePlaceholder = false, // This prop will now control rendering BadgeContent
+  showAcceptDeclineButtons = false,
+  onAccept,
+  onDecline,
+  isBulkSelecting = false,
+  hideDueDate = false,
+  isNudge = false,
+  nudgesLeft,
+  totalNudges, // Destructure totalNudges
+  isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
+  isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
+  isBadgesIssuedTab = false, // Destructure new prop
+  isExternal = false,
+  isOverdue = false,
+  showRevokeButton = false,
+  onRevoke,
+  showFromLabel = false,
+  acceptButtonText,
+  declineButtonText,
+  responses, // Destructure responses
+  approvedDate, // Destructure approvedDate
+}, ref) => {
   const theme = useTheme();
-  return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-      <Stack direction="row" spacing={1} alignItems="center">
-        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>{title}</Typography>
-        {isNudge && <Chip label="Nudge" size="small" sx={{ bgcolor: '#fff3e0', color: '#ff7043', fontSize: '12px', fontWeight: 700 }} />}
-        {isExternal && <Chip label="External" size="small" sx={{ bgcolor: 'grey.300', color: 'text.secondary', fontSize: '12px', fontWeight: 700 }} />}
-        {isOverdue && <Chip label="Overdue" size="small" sx={{ bgcolor: alpha(theme.palette.error.main, 0.1), color: 'error.dark', fontSize: '12px', fontWeight: 700, height: 20 }} />}
-      </Stack>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {showExpandIcon && <IconButton onClick={onExpandClick} aria-expanded={expanded} size="small" sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}><ExpandMoreIcon /></IconButton>}
-        <Tooltip title="View details" placement="top" arrow><IconButton size="small" onClick={onViewDetails}><MoreHoriz /></IconButton></Tooltip>
-      </Box>
-    </Box>
-  );
-};
+  const [expanded, setExpanded] = useState(false); // State for inline collapse
 
-const ItemMeta: React.FC<{ hideDueDate?: boolean; displayDateLabel: string; displayDateValue: string; dateTextColor: string; dateTextWeight: string; calendarIconColor: string; isNudge?: boolean; nudgesLeft?: number; totalNudges?: number; }> = ({ hideDueDate, displayDateLabel, displayDateValue, dateTextColor, dateTextWeight, calendarIconColor, isNudge, nudgesLeft, totalNudges }) => {
-  if (hideDueDate) return null;
-  return (
-    <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-      <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
-      <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>{displayDateLabel} {displayDateValue}</Typography>
-      {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>({nudgesLeft} of {totalNudges} nudges left)</Typography>}
-    </Stack>
-  );
-};
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onToggleSelect(id, event.target.checked);
+  };
 
-const ItemBody: React.FC<{ description: string; explanation?: string; isMyBadgesTab?: boolean; isBadgesIssuedTab?: boolean; }> = ({ description, explanation, isMyBadgesTab, isBadgesIssuedTab }) => (
-  <>
-    <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}>{description}</Typography>
-    {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && (
-      <Box sx={{ bgcolor: '#f8f9fa', px: 2, py: 1.5, borderRadius: 2, border: '1px solid #e9ecef', mb: 1.5, maxWidth: '100%' }}>
-        <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}><Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>Explanation:{' '}</Typography>{explanation}</Typography>
-      </Box>
-    )}
-  </>
-);
-
-const ItemFooter: React.FC<{ color: string; showFromLabel?: boolean; isExternal?: boolean; assignee: string; showActionButton: boolean; onActionButtonClick: () => void; isBulkSelecting?: boolean; isNudge?: boolean; isMyPromisesTab?: boolean; buttonText: string; showAcceptDeclineButtons?: boolean; onDecline?: () => void; onAccept?: () => void; declineButtonText?: string; acceptButtonText?: string; showRevokeButton?: boolean; onRevoke?: () => void; }> = (props) => (
-  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
-    <Stack direction="row" spacing={1} alignItems="center">
-      <Person sx={{ fontSize: 16, color: props.color }} />
-      <Typography variant="body2" sx={{ color: '#666' }}>{props.showFromLabel ? 'From:' : 'To:'}{' '}{!props.isExternal ? <ContactTooltip><span style={{ color: '#666', cursor: 'pointer' }}>{props.assignee}</span></ContactTooltip> : props.assignee}</Typography>
-      {props.isExternal && <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>(Non-member)</Typography>}
-    </Stack>
-    <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-      {props.showActionButton && <Button variant="contained" onClick={props.onActionButtonClick} disabled={props.isBulkSelecting} startIcon={props.isNudge && props.isMyPromisesTab ? <Edit /> : undefined} sx={{ bgcolor: (props.isNudge && props.isMyPromisesTab) ? '#ff7043' : props.color, color: 'white', textTransform: 'none', fontWeight: 'bold', px: props.buttonText === 'Clarify' ? 6 : 3, py: 1, borderRadius: 1, flexShrink: 0, '&:hover': { bgcolor: props.buttonText === 'Answer Nudge' || props.buttonText === 'Request Badge' ? '#f4511e' : (props.buttonText === 'Clarify' ? '#1565c0' : alpha(props.color, 0.8)) } }}>{props.buttonText}</Button>}
-      {props.showAcceptDeclineButtons && <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}><Button variant="contained" onClick={props.onDecline} disabled={props.isBulkSelecting} sx={{ bgcolor: '#F44336', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 4, py: 0.75, borderRadius: 1, '&:hover': { bgcolor: '#d32f2f' } }}>{props.declineButtonText || 'Decline'}</Button><Button variant="contained" onClick={props.onAccept} disabled={props.isBulkSelecting} sx={{ bgcolor: '#4CAF50', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 4, py: 0.75, borderRadius: 1, '&:hover': { bgcolor: '#388e3c' } }}>{props.acceptButtonText || 'Accept'}</Button></Box>}
-      {props.showRevokeButton && <Button variant="contained" onClick={props.onRevoke} disabled={props.isBulkSelecting} sx={{ bgcolor: '#F44336', color: 'white', textTransform: 'none', fontWeight: 'bold', px: 4, py: 0.75, borderRadius: 1, '&:hover': { bgcolor: '#d32f2f' } }}>Revoke</Button>}
-    </Box>
-  </Box>
-);
-
-const ItemCollapseContent: React.FC<{ isNudge?: boolean; responses?: { date: string; answer: string }[]; isMyBadgesTab?: boolean; isBadgesIssuedTab?: boolean; explanation?: string; }> = ({ isNudge, responses, isMyBadgesTab, isBadgesIssuedTab, explanation }) => (
-  <Collapse in={true} timeout="auto" unmountOnExit>
-    <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-      {isNudge && responses && responses.length > 0 && (
-        <>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>All Responses:</Typography>
-          <Stack spacing={1}>
-            {responses.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf()).map((response, idx) => (
-              <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                <Chip label={response.date} size="small" sx={{ bgcolor: '#fff3e0', color: '#ff7043', fontWeight: 700, fontSize: '12px', mb: 1 }} />
-                <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>{response.answer}</Typography>
-              </Box>
-            ))}
-          </Stack>
-        </>
-      )}
-      {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
-        <>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>Explanation:</Typography>
-          <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>{explanation}</Typography>
-        </>
-      )}
-    </Box>
-  </Collapse>
-);
-
-// Main Component
-const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>((props, ref) => {
-  const { id, title, dueDate, onToggleSelect, selected = false, showCheckbox, isCheckboxDisabled, showBadgePlaceholder, color, isOverdue } = props;
-  const theme = useTheme();
-  const [expanded, setExpanded] = useState(false);
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => onToggleSelect(id, event.target.checked);
   const handleExpandClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
+    event.stopPropagation(); // Prevent card click from triggering
     setExpanded(!expanded);
   };
 
-  const displayDateLabel = props.isMyBadgesTab || props.isBadgesIssuedTab ? 'Approved' : 'Due';
-  const displayDateValue = props.isMyBadgesTab || props.isBadgesIssuedTab ? (props.approvedDate || 'N/A') : dueDate;
+  // Determine the label and value based on the tab
+  const displayDateLabel = isMyBadgesTab || isBadgesIssuedTab ? 'Approved' : 'Due';
+  const displayDateValue = isMyBadgesTab || isBadgesIssuedTab ? (approvedDate || 'N/A') : dueDate;
+
+  // Determine the color and weight based on overdue status
   const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
-  const dateTextWeight = isOverdue ? '600' : 'inherit';
+  const dateTextWeight = isOverdue ? 600 : 'inherit';
+
+  // Determine the icon color based on overdue status or section color
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
-  const showExpandIcon = (props.isNudge && props.responses && props.responses.length > 0) || ((props.isMyBadgesTab || props.isBadgesIssuedTab) && props.explanation);
+
+  // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
+  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
 
   return (
-    <Card ref={ref} sx={{ position: 'relative', minHeight: 140, borderLeft: `4px solid ${color}`, boxShadow: 1, transition: 'all 0.2s ease-in-out', flexShrink: 0, overflow: 'hidden', '&:hover': { transform: 'translateY(-2px)', boxShadow: 3 } }}>
-      {isOverdue && <Box sx={{ position: 'absolute', top: 0, right: 0, width: '24px', height: '24px', bgcolor: 'error.main', clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }} />}
+    <Card
+      ref={ref}
+      sx={{
+        position: 'relative',
+        minHeight: 140,
+        borderLeft: `4px solid ${color}`,
+        boxShadow: 1,
+        transition: 'all 0.2s ease-in-out',
+        flexShrink: 0,
+        overflow: 'hidden',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: 3,
+        },
+      }}
+    >
+      {isOverdue && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '24px',
+            height: '24px',
+            bgcolor: 'error.main',
+            clipPath: 'polygon(100% 0, 0 0, 100% 100%)',
+          }}
+        />
+      )}
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', gap: 1.5 }}>
-        {showBadgePlaceholder && <Box sx={{ width: 100, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, alignSelf: 'center' }}><BadgeContent badgeType={title} size="list-item-large" /></Box>}
-        {showCheckbox && <Checkbox size="small" sx={{ p: 0, mt: 0.5, alignSelf: 'flex-start' }} checked={selected} onChange={handleCheckboxChange} disabled={isCheckboxDisabled} />}
-        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
-          <ItemHeader title={title} isNudge={props.isNudge} isExternal={props.isExternal} isOverdue={isOverdue} showExpandIcon={showExpandIcon} expanded={expanded} onExpandClick={handleExpandClick} onViewDetails={props.onViewDetails} />
-          <ItemMeta hideDueDate={props.hideDueDate} displayDateLabel={displayDateLabel} displayDateValue={displayDateValue} dateTextColor={dateTextColor} dateTextWeight={dateTextWeight} calendarIconColor={calendarIconColor} isNudge={props.isNudge} nudgesLeft={props.nudgesLeft} totalNudges={props.totalNudges} />
-          <ItemBody description={props.description} explanation={props.explanation} isMyBadgesTab={props.isMyBadgesTab} isBadgesIssuedTab={props.isBadgesIssuedTab} />
-          <ItemFooter {...props} />
-          {showExpandIcon && expanded && <ItemCollapseContent {...props} />}
+        {showBadgePlaceholder && (
+          <Box sx={{
+            width: 100,
+            height: 100, // Fixed height for consistency
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            alignSelf: 'center', // Add this
+          }}>
+            <BadgeContent badgeType={title} size="list-item-large" />
+          </Box>
+        )}
+        {showCheckbox && (
+          <Checkbox
+            size="small"
+            sx={{
+              p: 0,
+              mt: 0.5,
+              alignSelf: 'flex-start',
+            }}
+            checked={selected}
+            onChange={handleCheckboxChange}
+            disabled={isCheckboxDisabled}
+          />
+        )}
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}> {/* Add this */}
+          {/* Top row: Title, MoreHoriz */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                {title}
+              </Typography>
+              {isNudge && (
+                <Chip
+                  label="Nudge"
+                  size="small"
+                  sx={{
+                    bgcolor: '#fff3e0',
+                    color: '#ff7043',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                  }}
+                />
+              )}
+              {isExternal && (
+                <Chip
+                  label="External"
+                  size="small"
+                  sx={{
+                    bgcolor: 'grey.300',
+                    color: 'text.secondary',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                  }}
+                />
+              )}
+              {isOverdue && (
+                <Chip
+                  label="Overdue"
+                  size="small"
+                  sx={{
+                    bgcolor: alpha(theme.palette.error.main, 0.1),
+                    color: 'error.dark',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    height: 20,
+                  }}
+                />
+              )}
+            </Stack>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {showExpandIcon && (
+                <IconButton
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show historical responses"
+                  size="small"
+                  sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
+                >
+                  <ExpandMoreIcon />
+                </IconButton>
+              )}
+              <Tooltip title="View details" placement="top" arrow>
+                <IconButton size="small" onClick={onViewDetails}>
+                  <MoreHoriz />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+
+          {/* Due/Approved Date */}
+          {!hideDueDate && (
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
+              <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
+              <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
+                {displayDateLabel} {displayDateValue}
+              </Typography>
+              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && ( // Added nudgesLeft > 0 condition
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
+                  ({nudgesLeft} of {totalNudges} nudges left)
+                </Typography>
+              )}
+            </Stack>
+          )}
+
+          {/* Original Description - always visible */}
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}> {/* Reduced mb */}
+            {description}
+          </Typography>
+
+          {/* Explanation */}
+          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && ( // Only show if not an issued badge (explanation will be in collapse)
+            <Box
+              sx={{
+                bgcolor: '#f8f9fa',
+                px: 2,
+                py: 1.5,
+                borderRadius: 2,
+                border: '1px solid #e9ecef',
+                mb: 1.5, // Reduced mb
+                maxWidth: '100%',
+              }}
+            >
+              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                  Explanation:{' '}
+                </Typography>
+                {explanation}
+              </Typography>
+            </Box>
+          )}
+
+          {/* Bottom row: Assignee and Button */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}> {/* Reduced mb */}
+            {/* Assignee */}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Person sx={{ fontSize: 16, color: color }} />
+              <Typography variant="body2" sx={{ color: '#666' }}>
+                {showFromLabel ? 'From:' : 'To:'}{' '}
+                {!isExternal ? (
+                  <ContactTooltip>
+                    <span
+                      style={{
+                        color: '#666',
+                        cursor: 'pointer',
+                        fontSize: 'inherit',
+                        fontFamily: 'inherit',
+                        fontWeight: 'inherit'
+                      }}
+                    >
+                      {assignee}
+                    </span>
+                  </ContactTooltip>
+                ) : (
+                  assignee
+                )}
+              </Typography>
+              {isExternal && (
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                  (Non-member)
+                </Typography>
+              )}
+            </Stack>
+
+            {/* Action Buttons */}
+            <Box sx={{ minWidth: 130, textAlign: 'right' }}>
+              {showActionButton && (
+                <Button
+                  variant="contained"
+                  onClick={onActionButtonClick}
+                  disabled={isBulkSelecting}
+                  startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
+                  sx={{
+                    bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: buttonText === 'Clarify' ? 6 : 3,
+                    py: 1,
+                    borderRadius: 1,
+                    flexShrink: 0,
+                    '&:hover': { 
+                      bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
+                        ? '#f4511e' // Orange hover for Answer Nudge and Request Badge
+                        : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8)) // Dark blue for Clarify, fallback for others (shouldn't be hit)
+                    },
+                  }}
+                >
+                  {buttonText}
+                </Button>
+              )}
+              {showAcceptDeclineButtons && (
+                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                  <Button
+                    variant="contained"
+                    onClick={onDecline}
+                    disabled={isBulkSelecting}
+                    sx={{
+                      bgcolor: '#F44336',
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                      px: 4,
+                      py: 0.75,
+                      borderRadius: 1,
+                      '&:hover': { bgcolor: '#d32f2f' },
+                    }}
+                  >
+                    {declineButtonText || 'Decline'}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={onAccept}
+                    disabled={isBulkSelecting}
+                    sx={{
+                      bgcolor: '#4CAF50',
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                      px: 4,
+                      py: 0.75,
+                      borderRadius: 1,
+                      '&:hover': { bgcolor: '#388e3c' },
+                    }}
+                  >
+                    {acceptButtonText || 'Accept'}
+                  </Button>
+                </Box>
+              )}
+              {showRevokeButton && (
+                <Button
+                  variant="contained"
+                  onClick={onRevoke}
+                  disabled={isBulkSelecting}
+                  sx={{
+                    bgcolor: '#F44336',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 4,
+                    py: 0.75,
+                    borderRadius: 1,
+                    '&:hover': { bgcolor: '#d32f2f' },
+                  }}
+                >
+                  Revoke
+                </Button>
+              )}
+            </Box>
+          </Box>
+
+          {/* Collapsible Responses / Explanation */}
+          {showExpandIcon && (
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+              <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}> {/* Reduced mt */}
+                {isNudge && responses && responses.length > 0 && (
+                  <>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                      All Responses:
+                    </Typography>
+                    <Stack spacing={1}>
+                      {responses
+                        ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
+                        .map((response, idx) => (
+                          <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                            <Chip
+                              label={response.date}
+                              size="small"
+                              sx={{
+                                bgcolor: '#fff3e0', // Nudge pill background
+                                color: '#ff7043', // Nudge pill text color
+                                fontWeight: 700, // Nudge pill font weight
+                                fontSize: '12px', // Nudge pill font size
+                                mb: 1,
+                              }}
+                            />
+                            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                              {response.answer}
+                            </Typography>
+                          </Box>
+                        ))}
+                    </Stack>
+                  </>
+                )}
+                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
+                  <>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                      Explanation:
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                      {explanation}
+                    </Typography>
+                  </>
+                )}
+              </Box>
+            </Collapse>
+          )}
         </Box>
       </CardContent>
     </Card>

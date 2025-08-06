@@ -3,18 +3,30 @@ import {
   Paper,
   Typography,
   Box,
+  Card,
+  CardContent,
+  IconButton,
   Chip,
   Button,
+  Tooltip,
   Stack,
 } from '@mui/material';
+import {
+  Check,
+  Close,
+  Edit,
+  Undo,
+  MoreHoriz,
+  Person,
+} from '@mui/icons-material';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
 import AnswerNudgeModal from './AnswerNudgeModal';
 import DeclineModal from './DeclineModal';
+import ContactTooltip from './ContactTooltip';
 import RequestClarificationModal from './RequestClarificationModal';
 import SuccessConfirmationModal from './SuccessConfirmationModal';
 import AcceptRequestModal from './AcceptRequestModal';
 import NudgeDetailsModal from './NudgeDetailsModal';
-import NotificationCard from './NotificationCard';
 
 const initialNotifications = [
   {
@@ -78,6 +90,8 @@ const ActionNotifications: React.FC = () => {
   const [nudgeDetailsModalOpen, setNudgeDetailsModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
+
+  // New state for clarification success modal
   const [showClarificationSuccessModal, setShowClarificationSuccessModal] = useState(false);
 
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
@@ -94,13 +108,39 @@ const ActionNotifications: React.FC = () => {
     setShowClarificationSuccessModal(false);
   }, []);
 
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'Invitation':
+        return '#ff7043';
+      case 'Nudge':
+        return '#ff7043';
+      case 'Badge Request':
+        return '#1976d2';
+      default:
+        return '#666';
+    }
+  };
+
+  const getTypeBackground = (type: string) => {
+    switch (type) {
+      case 'Invitation':
+        return '#fff3e0';
+      case 'Nudge':
+        return '#fff3e0';
+      case 'Badge Request':
+        return '#e3f2fd';
+      default:
+        return '#f5f5f5';
+    }
+  };
+
   const handleActionClick = (action: string, notification: any) => {
     setSelectedNotification(notification);
     
     if (action === 'accept') {
       if (notification.type === 'Invitation') {
         setAcceptModalOpen(true);
-      } else {
+      } else { // This handles 'Badge Request'
         setNotifications(prev => prev.filter(n => n.id !== notification.id));
         setApprovalModalOpen(true);
       }
@@ -118,6 +158,7 @@ const ActionNotifications: React.FC = () => {
 
   const handleDecline = () => {
     if (selectedNotification) {
+      console.log('Declined invitation:', selectedNotification.title);
       setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
       setDeclineModalOpen(false);
       setSelectedNotification(null);
@@ -127,6 +168,8 @@ const ActionNotifications: React.FC = () => {
   const handleAcceptCommit = () => {
     if (selectedNotification) {
       setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
+      // The modal will close itself after the animation.
+      // We just need to clear the selected notification here.
       setSelectedNotification(null);
     }
   };
@@ -144,7 +187,7 @@ const ActionNotifications: React.FC = () => {
   const handleSendClarification = (message: string) => {
     console.log(`Clarification request sent for notification ${selectedNotification?.id}: ${message}`);
     setNotifications(prev => prev.filter(n => n.id !== selectedNotification.id));
-    setShowClarificationSuccessModal(true);
+    setShowClarificationSuccessModal(true); // Trigger success modal here
   };
 
   const handleAnswerNudgeFromDetails = () => {
@@ -192,20 +235,179 @@ const ActionNotifications: React.FC = () => {
           mb: 2,
           pr: 1,
           scrollbarWidth: 'auto',
-          '&::-webkit-scrollbar': { width: '8px' },
-          '&::-webkit-scrollbar-thumb': { backgroundColor: '#888', borderRadius: '4px' },
-          '&::-webkit-scrollbar-track': { backgroundColor: '#f0f0f0' },
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#888',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: '#f0f0f0',
+          },
         }}>
           {notifications.length > 0 ? (
             <Stack spacing={1}>
               {notifications.map((notification) => (
-                <NotificationCard
+                <Card
                   key={notification.id}
-                  notification={notification}
-                  onActionClick={handleActionClick}
-                  onClarificationClick={handleClarificationClick}
-                  onViewDetails={handleViewDetails}
-                />
+                  sx={{
+                    minHeight: 140,
+                    borderLeft: `4px solid ${getTypeColor(notification.type)}`,
+                    boxShadow: 1,
+                    transition: 'all 0.2s ease-in-out',
+                    flexShrink: 0,
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      boxShadow: 3,
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                          {notification.title}
+                        </Typography>
+                        <Chip
+                          label={notification.type}
+                          size="small"
+                          sx={{
+                            bgcolor: getTypeBackground(notification.type),
+                            color: getTypeColor(notification.type),
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            height: 28,
+                            px: 1,
+                          }}
+                        />
+                      </Box>
+                      <Tooltip title="View details" placement="top" arrow>
+                        <IconButton size="small" onClick={() => handleViewDetails(notification)}>
+                          <MoreHoriz />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+
+                    <Typography
+                      variant="body2"
+                      sx={{ color: '#666', mb: 2, lineHeight: 1.5 }}
+                    >
+                      {notification.description}
+                    </Typography>
+
+                    {notification.type === 'Badge Request' && (notification as any).explanation && (
+                      <Box
+                        sx={{
+                          bgcolor: '#f8f9fa',
+                          p: 2,
+                          borderRadius: 2,
+                          border: '1px solid #e9ecef',
+                          mb: 2,
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                          <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                            Explanation:{' '}
+                          </Typography>
+                          {(notification as any).explanation}
+                        </Typography>
+                      </Box>
+                    )}
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Person sx={{ 
+                          fontSize: 16, 
+                          color: getTypeColor(notification.type)
+                        }} />
+                        <Typography variant="body2" sx={{ color: '#666' }}>
+                          To:{' '}
+                          {notification.assignee === 'Chris Parker' ? (
+                            <ContactTooltip>
+                              <span 
+                                style={{ 
+                                  color: '#666',
+                                  cursor: 'pointer',
+                                  fontSize: 'inherit',
+                                  fontFamily: 'inherit',
+                                  fontWeight: 'inherit'
+                                }}
+                              >
+                                {notification.assignee}
+                              </span>
+                            </ContactTooltip>
+                          ) : (
+                            notification.assignee
+                          )}
+                        </Typography>
+                      </Box>
+
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        {notification.actions.includes('accept') && (
+                          <Tooltip title="Accept" placement="top" arrow>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleActionClick('accept', notification)}
+                              sx={{
+                                bgcolor: '#e8f5e8',
+                                color: '#4caf50',
+                                '&:hover': { bgcolor: '#d4edda' },
+                              }}
+                            >
+                              <Check fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {notification.actions.includes('decline') && (
+                          <Tooltip title="Decline" placement="top" arrow>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleActionClick('decline', notification)}
+                              sx={{
+                                bgcolor: '#fde8e8',
+                                color: '#f44336',
+                                '&:hover': { bgcolor: '#f8d7da' },
+                              }}
+                            >
+                              <Close fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {notification.actions.includes('edit') && (
+                          <Tooltip title="Answer Nudge" placement="top" arrow>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleActionClick('edit', notification)}
+                              sx={{
+                                bgcolor: '#fff3e0',
+                                color: '#ff7043',
+                                '&:hover': { bgcolor: '#ffe0b2' },
+                              }}
+                            >
+                              <Edit fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {notification.actions.includes('undo') && (
+                          <Tooltip title="Request Clarification" placement="top" arrow>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleClarificationClick(notification)}
+                              sx={{
+                                bgcolor: '#fff8e1',
+                                color: '#ff9800',
+                                '&:hover': { bgcolor: '#fff3c4' },
+                              }}
+                            >
+                              <Undo fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
               ))}
             </Stack>
           ) : (
@@ -217,20 +419,75 @@ const ActionNotifications: React.FC = () => {
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
-          <Button variant="contained" sx={{ bgcolor: '#607d8b', textTransform: 'none', px: 6, py: 1, borderRadius: 1, '&:hover': { bgcolor: '#546e7a' } }}>
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: '#607d8b',
+              textTransform: 'none',
+              px: 6,
+              py: 1,
+              borderRadius: 1,
+              '&:hover': { bgcolor: '#546e7a' },
+            }}
+          >
             See all
           </Button>
         </Box>
       </Paper>
 
-      <CommitmentDetailsModal open={modalOpen} onClose={handleCloseDetailsModal} commitment={commitmentForDetails} />
-      <NudgeDetailsModal open={nudgeDetailsModalOpen} onClose={handleCloseNudgeDetailsModal} commitment={selectedNotification} onAnswerNudgeClick={handleAnswerNudgeFromDetails} />
-      <AnswerNudgeModal open={answerNudgeModalOpen} onClose={handleCloseAnswerNudgeModal} commitment={selectedNotification} />
-      <DeclineModal open={declineModalOpen} onClose={handleCloseDeclineModal} title="Decline Invitation" onDecline={handleDecline} />
-      <RequestClarificationModal open={requestClarificationModalOpen} onClose={handleCloseClarificationModal} notification={selectedNotification} onSend={handleSendClarification} />
-      <SuccessConfirmationModal open={approvalModalOpen} onClose={handleCloseApprovalModal} title="Badge Approved!" message={`${selectedNotification?.assignee || 'The user'} has been notified.`} />
-      <SuccessConfirmationModal open={showClarificationSuccessModal} onClose={handleCloseClarificationSuccessModal} title="Request Sent!" message="The clarification request has been sent." />
-      <AcceptRequestModal open={acceptModalOpen} onClose={handleCloseAcceptModal} onCommit={handleAcceptCommit} commitmentDescription={selectedNotification?.description || ''} />
+      <CommitmentDetailsModal
+        open={modalOpen}
+        onClose={handleCloseDetailsModal}
+        commitment={commitmentForDetails}
+      />
+
+      <NudgeDetailsModal
+        open={nudgeDetailsModalOpen}
+        onClose={handleCloseNudgeDetailsModal}
+        commitment={selectedNotification}
+        onAnswerNudgeClick={handleAnswerNudgeFromDetails}
+      />
+
+      <AnswerNudgeModal
+        open={answerNudgeModalOpen}
+        onClose={handleCloseAnswerNudgeModal}
+        commitment={selectedNotification}
+      />
+
+      <DeclineModal
+        open={declineModalOpen}
+        onClose={handleCloseDeclineModal}
+        title="Decline Invitation"
+        onDecline={handleDecline}
+      />
+
+      <RequestClarificationModal
+        open={requestClarificationModalOpen}
+        onClose={handleCloseClarificationModal}
+        notification={selectedNotification}
+        onSend={handleSendClarification}
+      />
+
+      <SuccessConfirmationModal
+        open={approvalModalOpen}
+        onClose={handleCloseApprovalModal}
+        title="Badge Approved!"
+        message={`${selectedNotification?.assignee || 'The user'} has been notified.`}
+      />
+
+      <SuccessConfirmationModal
+        open={showClarificationSuccessModal} // Controlled by new state
+        onClose={handleCloseClarificationSuccessModal}
+        title="Request Sent!"
+        message="The clarification request has been sent."
+      />
+
+      <AcceptRequestModal
+        open={acceptModalOpen}
+        onClose={handleCloseAcceptModal}
+        onCommit={handleAcceptCommit}
+        commitmentDescription={selectedNotification?.description || ''}
+      />
     </>
   );
 };
