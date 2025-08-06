@@ -260,7 +260,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '700px' } }}>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '500px' } }}>
       <DialogTitle sx={{ p: 0, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>Export Wizard - Step {step}</Typography>
@@ -270,7 +270,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
       <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
         {step === 1 && (
-          <Box>
+          <Box sx={{ px: 2.5, py: 1.5 }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Choose Export Format</Typography>
             <RadioGroup value={selectedFormat} onChange={handleFormatChange}>
               <FormControlLabel value="csv" control={<Radio />} label="CSV (Comma Separated Values)" />
@@ -280,14 +280,14 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           </Box>
         )}
         {step === 2 && (
-          <Box>
+          <Box sx={{ px: 2.5, py: 1.5 }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Select Data to Export</Typography>
             {renderScopeSelector('My Commitments', 'myCommitments')}
             {renderScopeSelector('Others’ Commitments', 'othersCommitments')}
           </Box>
         )}
         {step === 3 && (
-          <Box>
+          <Box sx={{ px: 2.5, py: 1.5 }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Select Fields to Include</Typography>
             <Box sx={{ mb: 2 }}>
               <Button onClick={handleSelectAllFields} size="small" sx={{ mr: 1 }}>Select All</Button>
@@ -305,7 +305,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           </Box>
         )}
         {step === 4 && (
-          <Box>
+          <Box sx={{ px: 2.5, py: 1.5 }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Preview Export</Typography>
             <Box sx={{ bgcolor: '#f8f9fa', p: 2, borderRadius: 2, border: '1px solid #e9ecef', maxHeight: 300, overflowY: 'auto', fontFamily: 'monospace', whiteSpace: 'pre-wrap', fontSize: '0.85rem', color: '#333' }}>
               {previewContent}
@@ -313,16 +313,96 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           </Box>
         )}
         {step === 5 && (
-          <Box sx={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', px: 2.5, py: 1.5 }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Confirm and Download</Typography>
             <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>Your export is ready. Click 'Download' to save the file.</Typography>
             {isExporting && <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}><CircularProgress size={24} /><Typography variant="body2" sx={{ ml: 2 }}>Preparing your file...</Typography></Box>}
           </Box>
         )}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto', pt: 3 }}>
-          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 3, borderRadius: 1 }}>Back</Button>}
-          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ ml: 'auto', bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, '&:hover': { bgcolor: '#1565c0' } }}>Next</Button>}
-          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ ml: 'auto', bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, '&:hover': { bgcolor: '#388e3c' } }}>Download</Button>}
+        <Box sx={{ display: 'flex', gap: 2, mt: 'auto', pt: 3, width: '100%' }}>
+          {step === 1 ? (
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={isNextDisabled()}
+              sx={{
+                bgcolor: '#1976d2',
+                color: 'white',
+                textTransform: 'none',
+                px: 3,
+                py: 1.5,
+                borderRadius: 2,
+                width: '100%',
+                fontWeight: 600,
+                fontSize: '16px',
+                '&:hover': { bgcolor: '#1565c0' }
+              }}
+            >
+              Next
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                onClick={handleBack}
+                sx={{
+                  color: '#666',
+                  borderColor: '#ddd',
+                  textTransform: 'none',
+                  flex: 1,
+                  height: '40px',
+                  borderRadius: 2,
+                  fontWeight: 500,
+                  fontSize: '14px',
+                  '&:hover': { 
+                    borderColor: '#bbb',
+                    bgcolor: '#f9f9f9'
+                  },
+                }}
+              >
+                Back
+              </Button>
+              {step < 5 ? (
+                <Button
+                  variant="contained"
+                  onClick={handleNext}
+                  disabled={isNextDisabled()}
+                  sx={{
+                    bgcolor: '#1976d2',
+                    color: 'white',
+                    textTransform: 'none',
+                    py: 1.5,
+                    borderRadius: 2,
+                    flex: 1,
+                    fontWeight: 600,
+                    fontSize: '16px',
+                    '&:hover': { bgcolor: '#1565c0' }
+                  }}
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={handleDownload}
+                  disabled={isExporting}
+                  sx={{
+                    bgcolor: '#4caf50',
+                    color: 'white',
+                    textTransform: 'none',
+                    py: 1.5,
+                    borderRadius: 2,
+                    flex: 1,
+                    fontWeight: 600,
+                    fontSize: '16px',
+                    '&:hover': { bgcolor: '#388e3c' }
+                  }}
+                >
+                  Download
+                </Button>
+              )}
+            </>
+          )}
         </Box>
       </DialogContent>
     </Dialog>
