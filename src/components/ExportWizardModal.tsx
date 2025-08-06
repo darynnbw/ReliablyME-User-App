@@ -319,10 +319,10 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
             {isExporting && <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}><CircularProgress size={24} /><Typography variant="body2" sx={{ ml: 2 }}>Preparing your file...</Typography></Box>}
           </Box>
         )}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto', pt: 3 }}>
-          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 4, py: 1.5, borderRadius: 2 }}>Back</Button>}
-          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ ml: 'auto', bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#1565c0' } }}>Next</Button>}
-          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ ml: 'auto', bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#388e3c' } }}>Download</Button>}
+        <Box sx={{ display: 'flex', gap: 2, mt: 'auto', pt: 3 }}>
+          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, flex: 1 }}>Back</Button>}
+          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#1565c0' }, flex: 1 }}>Next</Button>}
+          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#388e3c' }, flex: 1 }}>Download</Button>}
         </Box>
       </DialogContent>
     </Dialog>
