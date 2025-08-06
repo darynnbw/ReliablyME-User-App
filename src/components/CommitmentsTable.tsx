@@ -365,7 +365,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </TableRow>
                 {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
                   <TableRow>
-                    <TableCell colSpan={6} sx={{ py: 0 }}>
+                    <TableCell colSpan={6} sx={{ py: 0, borderBottom: 'none' }}>
                       <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                           {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
