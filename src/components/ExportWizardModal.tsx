@@ -232,14 +232,14 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       <Box sx={{ mb: 2 }}>
         <FormControlLabel
           control={<Checkbox checked={isChecked} indeterminate={isIndeterminate} onChange={(e) => handleParentCheckboxChange(group, e.target.checked)} />}
-          label={<Typography variant="body1" sx={{ fontWeight: 600, color: '#333' }}>{title}</Typography>}
+          label={<Typography variant="body1" sx={{ fontWeight: 600 }}>{title}</Typography>}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
           {Object.keys(groupScopes).map(key => (
             <FormControlLabel
               key={key}
               control={<Checkbox checked={groupScopes[key] || false} onChange={(e) => handleChildCheckboxChange(group, key, e.target.checked)} />}
-              label={<Typography variant="body1" sx={{ color: '#333', fontSize: '16px', fontWeight: 400 }}>{key}</Typography>}
+              label={key}
             />
           ))}
         </Box>
@@ -271,33 +271,33 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
         {step === 1 && (
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>Choose Export Format</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Choose Export Format</Typography>
             <RadioGroup value={selectedFormat} onChange={handleFormatChange}>
-              <FormControlLabel value="csv" control={<Radio />} label={<Typography variant="body1" sx={{ color: '#333', fontSize: '16px', fontWeight: 400 }}>CSV (Comma Separated Values)</Typography>} />
-              <FormControlLabel value="xlsx" control={<Radio />} label={<Typography variant="body1" sx={{ color: '#333', fontSize: '16px', fontWeight: 400 }}>XLSX (Excel Spreadsheet)</Typography>} />
-              <FormControlLabel value="pdf" control={<Radio />} label={<Typography variant="body1" sx={{ color: '#333', fontSize: '16px', fontWeight: 400 }}>PDF (Portable Document Format)</Typography>} />
+              <FormControlLabel value="csv" control={<Radio />} label="CSV (Comma Separated Values)" />
+              <FormControlLabel value="xlsx" control={<Radio />} label="XLSX (Excel Spreadsheet)" />
+              <FormControlLabel value="pdf" control={<Radio />} label="PDF (Portable Document Format)" />
             </RadioGroup>
           </Box>
         )}
         {step === 2 && (
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>Select Data to Export</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Select Data to Export</Typography>
             {renderScopeSelector('My Commitments', 'myCommitments')}
             {renderScopeSelector('Others’ Commitments', 'othersCommitments')}
           </Box>
         )}
         {step === 3 && (
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>Select Fields to Include</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Select Fields to Include</Typography>
             <Box sx={{ mb: 2 }}>
-              <Button onClick={handleSelectAllFields} size="small" sx={{ mr: 1, textTransform: 'none', fontWeight: 500, color: 'primary.main' }}>Select All</Button>
-              <Button onClick={handleDeselectAllFields} size="small" sx={{ textTransform: 'none', fontWeight: 500, color: 'primary.main' }}>Deselect All</Button>
+              <Button onClick={handleSelectAllFields} size="small" sx={{ mr: 1 }}>Select All</Button>
+              <Button onClick={handleDeselectAllFields} size="small">Deselect All</Button>
             </Box>
             <FormGroup>
               <Grid container spacing={1}>
                 {relevantFields.map(field => (
                   <Grid item xs={12} sm={6} key={field.id}>
-                    <FormControlLabel control={<Checkbox checked={selectedFields.includes(field.id)} onChange={() => handleFieldToggle(field.id)} />} label={<Typography variant="body1" sx={{ color: '#333', fontSize: '16px', fontWeight: 400 }}>{field.label}</Typography>} />
+                    <FormControlLabel control={<Checkbox checked={selectedFields.includes(field.id)} onChange={() => handleFieldToggle(field.id)} />} label={field.label} />
                   </Grid>
                 ))}
               </Grid>
@@ -306,23 +306,23 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
         )}
         {step === 4 && (
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333', fontSize: '20px' }}>Preview Export</Typography>
-            <Box sx={{ bgcolor: '#f8f9fa', p: 2.5, borderRadius: 2, border: '1px solid #e9ecef', maxHeight: 300, overflowY: 'auto', fontFamily: 'monospace', whiteSpace: 'pre-wrap', fontSize: '0.85rem', color: '#333' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Preview Export</Typography>
+            <Box sx={{ bgcolor: '#f8f9fa', p: 2, borderRadius: 2, border: '1px solid #e9ecef', maxHeight: 300, overflowY: 'auto', fontFamily: 'monospace', whiteSpace: 'pre-wrap', fontSize: '0.85rem', color: '#333' }}>
               {previewContent}
             </Box>
           </Box>
         )}
         {step === 5 && (
           <Box sx={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: '#333', fontSize: '24px' }}>Confirm and Download</Typography>
-            <Typography variant="body1" sx={{ mb: 3, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>Your export is ready. Click 'Download' to save the file.</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Confirm and Download</Typography>
+            <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>Your export is ready. Click 'Download' to save the file.</Typography>
             {isExporting && <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}><CircularProgress size={24} /><Typography variant="body2" sx={{ ml: 2 }}>Preparing your file...</Typography></Box>}
           </Box>
         )}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto', pt: 3 }}>
-          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 3, borderRadius: 1, color: '#666', borderColor: '#ddd', '&:hover': { borderColor: '#bbb', bgcolor: '#f9f9f9' } }}>Back</Button>}
-          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ ml: 'auto', bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, fontWeight: 600, fontSize: '14px', '&:hover': { bgcolor: '#1565c0' } }}>Next</Button>}
-          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ ml: 'auto', bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, fontWeight: 600, fontSize: '14px', '&:hover': { bgcolor: '#388e3c' } }}>Download</Button>}
+          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 3, borderRadius: 1 }}>Back</Button>}
+          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ ml: 'auto', bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, '&:hover': { bgcolor: '#1565c0' } }}>Next</Button>}
+          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ ml: 'auto', bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, '&:hover': { bgcolor: '#388e3c' } }}>Download</Button>}
         </Box>
       </DialogContent>
     </Dialog>
