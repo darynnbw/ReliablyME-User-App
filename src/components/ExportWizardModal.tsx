@@ -313,7 +313,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           </Box>
         )}
         {step === 5 && (
-          <Box sx={{ textAlign: 'center' }}>
+          <Box sx={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Confirm and Download</Typography>
             <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>Your export is ready. Click 'Download' to save the file.</Typography>
             {isExporting && <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}><CircularProgress size={24} /><Typography variant="body2" sx={{ ml: 2 }}>Preparing your file...</Typography></Box>}
