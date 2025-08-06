@@ -834,15 +834,24 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   <ArrowUpward fontSize="small" sx={{ color: (isTableView && isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
                 </InputAdornment>
               }>
-                <MenuItem value="dueDateNewest">Due Date (Newest First)</MenuItem>
-                <MenuItem value="dueDateOldest">Due Date (Oldest First)</MenuItem>
-                <MenuItem value="committedDateNewest">Committed Date (Newest First)</MenuItem>
-                <MenuItem value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                {/* Conditionally render sort options based on the tab type */}
+                {isMyBadgesTab || isBadgesIssuedTab ? (
+                  [
+                    <MenuItem key="approvedDateNewest" value="approvedDateNewest">Approved Date (Newest First)</MenuItem>,
+                    <MenuItem key="approvedDateOldest" value="approvedDateOldest">Approved Date (Oldest First)</MenuItem>,
+                    <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
+                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                  ]
+                ) : (
+                  [
+                    <MenuItem key="dueDateNewest" value="dueDateNewest">Due Date (Newest First)</MenuItem>,
+                    <MenuItem key="dueDateOldest" value="dueDateOldest">Due Date (Oldest First)</MenuItem>,
+                    <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
+                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                  ]
+                )}
+                {/* Badge Name sort is available for all 'My Commitments' tabs */}
                 {isMyCommitmentsSection && <MenuItem value="badgeNameAZ">Badge Name (A–Z)</MenuItem>}
-                {(isMyBadgesTab || isBadgesIssuedTab) && [
-                  <MenuItem key="approvedDateNewest" value="approvedDateNewest">Approved Date (Newest First)</MenuItem>,
-                  <MenuItem key="approvedDateOldest" value="approvedDateOldest">Approved Date (Oldest First)</MenuItem>,
-                ]}
               </Select>
             </FormControl>
 
