@@ -260,7 +260,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '700px' } }}>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '500px' } }}>
       <DialogTitle sx={{ p: 0, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>Export Wizard - Step {step}</Typography>
@@ -290,8 +290,8 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Select Fields to Include</Typography>
             <Box sx={{ mb: 2 }}>
-              <Button onClick={handleSelectAllFields} size="small" sx={{ mr: 1 }}>Select All</Button>
-              <Button onClick={handleDeselectAllFields} size="small">Deselect All</Button>
+              <Button onClick={handleSelectAllFields} size="small" sx={{ mr: 1, px: 3 }}>Select All</Button>
+              <Button onClick={handleDeselectAllFields} size="small" sx={{ px: 3 }}>Deselect All</Button>
             </Box>
             <FormGroup>
               <Grid container spacing={1}>
@@ -320,9 +320,9 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           </Box>
         )}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto', pt: 3 }}>
-          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 3, borderRadius: 1 }}>Back</Button>}
-          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ ml: 'auto', bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, '&:hover': { bgcolor: '#1565c0' } }}>Next</Button>}
-          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ ml: 'auto', bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 3, borderRadius: 1, '&:hover': { bgcolor: '#388e3c' } }}>Download</Button>}
+          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 4, py: 1.5, borderRadius: 2 }}>Back</Button>}
+          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ ml: 'auto', bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#1565c0' } }}>Next</Button>}
+          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ ml: 'auto', bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#388e3c' } }}>Download</Button>}
         </Box>
       </DialogContent>
     </Dialog>
