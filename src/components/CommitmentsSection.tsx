@@ -327,7 +327,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const filterOptions = [...uniquePeople, 'Development team']; // Add 'Development team' as an option
   const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
 
-  const currentItems = commitments.filter(item => {
+  // Pre-process commitments to add a calculated isOverdue flag for sorting
+  const processedCommitments = commitments.map(item => ({
+    ...item,
+    isOverdue: item.isOverdue || (!isUnkeptTab && !isMyBadgesTab && !isBadgesIssuedTab && (parseCommitmentDate(item.dueDate) ? parseCommitmentDate(item.dueDate)!.isBefore(dayjs(), 'day') : false))
+  }));
+
+  const currentItems = processedCommitments.filter(item => {
     // Global filters
     const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -394,8 +400,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         dateA = a.approvedDate ? dayjs(a.approvedDate, 'MMM D, YYYY, hh:mm A') : null;
         dateB = b.approvedDate ? dayjs(b.approvedDate, 'MMM D, YYYY, hh:mm A') : null;
         break;
-      case 'badgeNameAZ':
-        return a.title.localeCompare(b.title);
+      case 'overdue':
+        // This will sort true (overdue) values before false (not overdue) values.
+        return (b.isOverdue ? 1 : 0) - (a.isOverdue ? 1 : 0);
       default:
         return 0;
     }
@@ -850,8 +857,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
                   ]
                 )}
-                {/* Badge Name sort is available for all 'My Commitments' tabs */}
-                {isMyCommitmentsSection && <MenuItem value="badgeNameAZ">Badge Name (A–Z)</MenuItem>}
+                {/* Add Overdue sort option for relevant tabs */}
+                {!isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && (
+                  <MenuItem value="overdue">Overdue</MenuItem>
+                )}
               </Select>
             </FormControl>
 
@@ -1164,8 +1173,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   // Also, items in 'Active Promises' tab are disabled for bulk select
                   const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                   
-                  // Determine overdue status based on tab and explicit flag
-                  const isOverdue = item.isOverdue || (!isUnkeptTab && !isMyBadgesTab && !isBadgesIssuedTab && (parseCommitmentDate(item.dueDate) ? parseCommitmentDate(item.dueDate)!.isBefore(dayjs(), 'day') : false));
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
                   
@@ -1215,7 +1222,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       isMyBadgesTab={isMyBadgesTab} // Pass this new prop
                       isBadgesIssuedTab={isBadgesIssuedTab} // Pass new prop
                       isExternal={item.isExternal}
-                      isOverdue={isOverdue} // Pass the calculated isOverdue
+                      isOverdue={item.isOverdue} // Pass the pre-calculated isOverdue
                       showRevokeButton={showRevokeButton}
                       onRevoke={() => handleRevokeClick(item)}
                       showFromLabel={showFromLabel}
