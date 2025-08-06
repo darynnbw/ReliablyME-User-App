@@ -167,7 +167,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         {showBadgePlaceholder && <Box sx={{ width: 100, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, alignSelf: 'center' }}><BadgeContent badgeType={title} size="list-item-large" /></Box>}
         {showCheckbox && <Checkbox size="small" sx={{ p: 0, mt: 0.5, alignSelf: 'flex-start' }} checked={selected} onChange={handleCheckboxChange} disabled={isCheckboxDisabled} />}
         <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
-          <ItemHeader title={title} isNudge={props.isNudge} isExternal={props.isExternal} isOverdue={!!isOverdue} showExpandIcon={showExpandIcon} expanded={expanded} onExpandClick={handleExpandClick} onViewDetails={props.onViewDetails} />
+          <ItemHeader title={title} isNudge={props.isNudge} isExternal={props.isExternal} isOverdue={isOverdue} showExpandIcon={showExpandIcon} expanded={expanded} onExpandClick={handleExpandClick} onViewDetails={props.onViewDetails} />
           <ItemMeta hideDueDate={props.hideDueDate} displayDateLabel={displayDateLabel} displayDateValue={displayDateValue} dateTextColor={dateTextColor} dateTextWeight={dateTextWeight} calendarIconColor={calendarIconColor} isNudge={props.isNudge} nudgesLeft={props.nudgesLeft} totalNudges={props.totalNudges} />
           <ItemBody description={props.description} explanation={props.explanation} isMyBadgesTab={props.isMyBadgesTab} isBadgesIssuedTab={props.isBadgesIssuedTab} />
           <ItemFooter {...props} />
