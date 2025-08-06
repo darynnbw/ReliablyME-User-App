@@ -73,6 +73,8 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   const [previewContent, setPreviewContent] = useState<string>('');
   const [isExporting, setIsExporting] = useState(false);
 
+  const totalSteps = 5; // Define total steps
+
   const resetState = useCallback(() => {
     setStep(1);
     setSelectedFormat('csv');
@@ -263,7 +265,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '500px' } }}>
       <DialogTitle sx={{ p: 0, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>Export Wizard - Step {step}</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>Export ({step} of {totalSteps})</Typography>
           <IconButton onClick={onClose} sx={{ color: '#666' }}><Close /></IconButton>
         </Box>
       </DialogTitle>
