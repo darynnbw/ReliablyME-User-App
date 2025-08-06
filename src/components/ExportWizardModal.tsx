@@ -293,7 +293,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           borderRadius: 3, 
           p: 3, 
           maxWidth: '700px', // Keep the wider max width
-          maxHeight: '90vh', // Allow it to take up to 90% of viewport height
+          maxHeight: '95vh', // Increased max height to allow more content
           height: 'auto', // Let height adjust to content if less than maxHeight
         } 
       }}
@@ -305,7 +305,13 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
         </Box>
       </DialogTitle>
       <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
-      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <DialogContent sx={{ 
+        p: 0, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        flex: 1,
+        overflowY: 'auto', // Ensure the content area itself scrolls if needed
+      }}>
         {step === 1 && (
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>Choose Export Format</Typography>
