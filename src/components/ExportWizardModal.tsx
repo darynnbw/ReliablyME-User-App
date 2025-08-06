@@ -261,6 +261,27 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     return false;
   };
 
+  // Define the groups and their fields for rendering
+  const fieldGroups = [
+    {
+      title: 'Badge Information',
+      fields: ['title', 'explanation', 'approvedDate'],
+    },
+    {
+      title: 'Commitment Details',
+      fields: ['description', 'committedDate', 'dueDate', 'type', 'nudgesInfo', 'responses', 'isOverdue'],
+    },
+    {
+      title: 'Parties',
+      fields: ['assignee', 'isExternal'],
+    },
+  ];
+
+  // Helper to filter relevantFields into their respective groups
+  const getFieldsForGroup = (groupFields: string[]) => {
+    return relevantFields.filter(field => groupFields.includes(field.id));
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '500px' } }}>
       <DialogTitle sx={{ p: 0, mb: 2 }}>
@@ -296,13 +317,28 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
               <Button onClick={handleDeselectAllFields} size="small" sx={{ px: 3 }}>Deselect All</Button>
             </Box>
             <FormGroup>
-              <Grid container spacing={1}>
-                {relevantFields.map(field => (
-                  <Grid item xs={12} sm={6} key={field.id}>
-                    <FormControlLabel control={<Checkbox checked={selectedFields.includes(field.id)} onChange={() => handleFieldToggle(field.id)} />} label={field.label} />
-                  </Grid>
-                ))}
-              </Grid>
+              {fieldGroups.map((group, groupIndex) => {
+                const fieldsInThisGroup = getFieldsForGroup(group.fields);
+                if (fieldsInThisGroup.length === 0) return null; // Don't render empty groups
+
+                return (
+                  <Box key={group.title} sx={{ mb: groupIndex < fieldGroups.length - 1 ? 3 : 0 }}> {/* Add margin bottom for separation */}
+                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1.5 }}>
+                      {group.title}
+                    </Typography>
+                    <Grid container spacing={1}>
+                      {fieldsInThisGroup.map(field => (
+                        <Grid item xs={12} sm={6} key={field.id}>
+                          <FormControlLabel
+                            control={<Checkbox checked={selectedFields.includes(field.id)} onChange={() => handleFieldToggle(field.id)} />}
+                            label={field.label}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                );
+              })}
             </FormGroup>
           </Box>
         )}
