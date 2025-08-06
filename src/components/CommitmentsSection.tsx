@@ -827,11 +827,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               />
             )}
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }} disabled={isTableView && isActivePromisesTab}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
               <InputLabel>Sort By</InputLabel>
               <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as string)} label="Sort By" startAdornment={
                 <InputAdornment position="start">
-                  <ArrowUpward fontSize="small" sx={{ color: (isTableView && isActivePromisesTab) ? 'action.disabled' : 'text.secondary' }} />
+                  <ArrowUpward fontSize="small" sx={{ color: 'text.secondary' }} />
                 </InputAdornment>
               }>
                 {/* Conditionally render sort options based on the tab type */}
