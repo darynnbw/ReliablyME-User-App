@@ -131,11 +131,12 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 15,
       title: 'Promise Kept General',
-      dueDate: dayjs().add(1, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().subtract(3, 'day').hour(23).minute(59).format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(3, 'day').hour(21).minute(59).format('MMM D, YYYY, hh:mm A'),
       approvedDate: undefined, // This is an active promise
       description: 'I will complete the full security audit report for the main application by the end of the week, identifying all critical and high-priority vulnerabilities and recommending actionable mitigation strategies to the security team.',
       assignee: 'Alex Johnson',
+      isOverdue: true,
     },
     {
       id: 16,
