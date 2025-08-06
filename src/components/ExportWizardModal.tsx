@@ -15,8 +15,11 @@ import {
   Checkbox,
   CircularProgress,
   Grid,
+  Accordion, // Added Accordion
+  AccordionSummary, // Added AccordionSummary
+  AccordionDetails, // Added AccordionDetails
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Added ExpandMoreIcon
 import { exportToCsv, exportToPdf, exportToXlsx } from '../utils/exportUtils';
 
 interface Commitment {
@@ -61,6 +64,28 @@ const allExportFields = [
   { id: 'isExternal', label: 'External Party' },
 ];
 
+// Define the groups and their fields for rendering
+const fieldGroupsConfig = [
+  {
+    id: 'badgeInfo',
+    title: 'Badge Information',
+    fields: ['title', 'explanation', 'approvedDate'],
+    expandedByDefault: true,
+  },
+  {
+    id: 'commitmentDetails',
+    title: 'Commitment Details',
+    fields: ['description', 'committedDate', 'dueDate', 'type', 'nudgesInfo', 'responses', 'isOverdue'],
+    expandedByDefault: true,
+  },
+  {
+    id: 'parties',
+    title: 'Parties',
+    fields: ['assignee', 'isExternal'],
+    expandedByDefault: false,
+  },
+];
+
 const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, dataSources }) => {
   const [step, setStep] = useState(1);
   const [selectedFormat, setSelectedFormat] = useState<'csv' | 'pdf' | 'xlsx'>('csv');
@@ -72,6 +97,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [previewContent, setPreviewContent] = useState<string>('');
   const [isExporting, setIsExporting] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({}); // State for accordion expanded status
 
   const totalSteps = 5; // Define total steps
 
@@ -88,6 +114,12 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     setSelectedFields([]);
     setPreviewContent('');
     setIsExporting(false);
+    // Initialize expanded groups based on config
+    const initialExpanded: Record<string, boolean> = {};
+    fieldGroupsConfig.forEach(group => {
+      initialExpanded[group.id] = group.expandedByDefault;
+    });
+    setExpandedGroups(initialExpanded);
   }, [dataSources]);
 
   useEffect(() => {
@@ -261,56 +293,49 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     return false;
   };
 
-  // Define the groups and their fields for rendering
-  const fieldGroups = [
-    {
-      title: 'Badge Information',
-      fields: ['title', 'explanation', 'approvedDate'],
-    },
-    {
-      title: 'Commitment Details',
-      fields: ['description', 'committedDate', 'dueDate', 'type', 'nudgesInfo', 'responses', 'isOverdue'],
-    },
-    {
-      title: 'Parties',
-      fields: ['assignee', 'isExternal'],
-    },
-  ];
-
   // Helper to filter relevantFields into their respective groups
   const getFieldsForGroup = (groupFields: string[]) => {
     return relevantFields.filter(field => groupFields.includes(field.id));
   };
 
+  const handleAccordionChange = (panelId: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [panelId]: isExpanded,
+    }));
+  };
+
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="md" 
-      fullWidth 
-      PaperProps={{ 
-        sx: { 
-          borderRadius: 3, 
-          p: 3, 
-          maxWidth: '700px', // Keep the wider max width
-          maxHeight: '95vh', // Increased max height to allow more content
-          height: 'auto', // Let height adjust to content if less than maxHeight
-        } 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          p: 3,
+          maxWidth: '700px',
+          maxHeight: '90vh', // Adjusted max height to ensure header/footer visibility
+          height: 'auto',
+          display: 'flex', // Ensure flex container for content
+          flexDirection: 'column', // Stack children vertically
+        },
       }}
     >
-      <DialogTitle sx={{ p: 0, mb: 2 }}>
+      <DialogTitle sx={{ p: 0, mb: 2, flexShrink: 0 }}> {/* flexShrink to keep it from shrinking */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>Export ({step} of {totalSteps})</Typography>
           <IconButton onClick={onClose} sx={{ color: '#666' }}><Close /></IconButton>
         </Box>
       </DialogTitle>
-      <Divider sx={{ mb: 2, borderColor: '#e0e0e0' }} />
-      <DialogContent sx={{ 
-        p: 0, 
-        display: 'flex', 
-        flexDirection: 'column', 
-        flex: 1,
-        overflowY: 'auto', // Ensure the content area itself scrolls if needed
+      <Divider sx={{ mb: 2, borderColor: '#e0e0e0', flexShrink: 0 }} /> {/* flexShrink */}
+      <DialogContent sx={{
+        p: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1, // Allows content to grow and take available space
+        overflowY: 'auto', // Enables scrolling only for the content area
       }}>
         {step === 1 && (
           <Box>
@@ -337,26 +362,52 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
               <Button onClick={handleDeselectAllFields} size="small" sx={{ px: 3 }}>Deselect All</Button>
             </Box>
             <FormGroup>
-              {fieldGroups.map((group, groupIndex) => {
+              {fieldGroupsConfig.map((group) => {
                 const fieldsInThisGroup = getFieldsForGroup(group.fields);
-                if (fieldsInThisGroup.length === 0) return null; // Don't render empty groups
+                if (fieldsInThisGroup.length === 0) return null;
 
                 return (
-                  <Box key={group.title} sx={{ mb: groupIndex < fieldGroups.length - 1 ? 3 : 0 }}> {/* Add margin bottom for separation */}
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1.5 }}>
-                      {group.title}
-                    </Typography>
-                    <Grid container spacing={1}>
-                      {fieldsInThisGroup.map(field => (
-                        <Grid item xs={12} sm={6} key={field.id}>
-                          <FormControlLabel
-                            control={<Checkbox checked={selectedFields.includes(field.id)} onChange={() => handleFieldToggle(field.id)} />}
-                            label={field.label}
-                          />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Box>
+                  <Accordion
+                    key={group.id}
+                    expanded={expandedGroups[group.id]}
+                    onChange={handleAccordionChange(group.id)}
+                    sx={{
+                      boxShadow: 'none',
+                      border: '1px solid #e0e0e0',
+                      borderRadius: 2,
+                      mb: 1.5,
+                      '&:before': { display: 'none' }, // Remove default Accordion border
+                      '&.Mui-expanded': {
+                        margin: '1.5px 0', // Adjust margin when expanded to prevent jumping
+                      },
+                    }}
+                  >
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      sx={{
+                        minHeight: 48,
+                        '& .MuiAccordionSummary-content': {
+                          my: 1,
+                        },
+                      }}
+                    >
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                        {group.title}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ pt: 0, pb: 2 }}>
+                      <Grid container spacing={1}>
+                        {fieldsInThisGroup.map(field => (
+                          <Grid item xs={12} sm={6} key={field.id}>
+                            <FormControlLabel
+                              control={<Checkbox checked={selectedFields.includes(field.id)} onChange={() => handleFieldToggle(field.id)} />}
+                              label={field.label}
+                            />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
                 );
               })}
             </FormGroup>
@@ -377,12 +428,12 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
             {isExporting && <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}><CircularProgress size={24} /><Typography variant="body2" sx={{ ml: 2 }}>Preparing your file...</Typography></Box>}
           </Box>
         )}
-        <Box sx={{ display: 'flex', gap: 2, mt: 'auto', pt: 3 }}>
-          {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, flex: 1 }}>Back</Button>}
-          {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#1565c0' }, flex: 1 }}>Next</Button>}
-          {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#388e3c' }, flex: 1 }}>Download</Button>}
-        </Box>
       </DialogContent>
+      <Box sx={{ display: 'flex', gap: 2, mt: 'auto', pt: 3, flexShrink: 0 }}> {/* flexShrink */}
+        {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, flex: 1 }}>Back</Button>}
+        {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#1565c0' }, flex: 1 }}>Next</Button>}
+        {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#388e3c' }, flex: 1 }}>Download</Button>}
+      </Box>
     </Dialog>
   );
 };
