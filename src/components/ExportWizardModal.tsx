@@ -283,7 +283,21 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3, p: 3, maxWidth: '700px' } }}>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="md" 
+      fullWidth 
+      PaperProps={{ 
+        sx: { 
+          borderRadius: 3, 
+          p: 3, 
+          maxWidth: '700px', // Keep the wider max width
+          maxHeight: '90vh', // Allow it to take up to 90% of viewport height
+          height: 'auto', // Let height adjust to content if less than maxHeight
+        } 
+      }}
+    >
       <DialogTitle sx={{ p: 0, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>Export ({step} of {totalSteps})</Typography>
