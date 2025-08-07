@@ -27,7 +27,7 @@ export const exportToXlsx = (data: ExportDataRow[], filename: string) => {
 
 // This function now derives headers and rows from the data objects
 export const exportToPdf = (data: ExportDataRow[], filename: string) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape'); // Changed to landscape
   if (data.length === 0) {
     doc.save(`${filename}.pdf`);
     return;
