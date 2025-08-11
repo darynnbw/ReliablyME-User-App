@@ -1220,6 +1220,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       totalNudges={item.totalNudges}
                       isMyPromisesTab={isMyPromisesTab}
                       isMyBadgesTab={isMyBadgesTab} // Pass this new prop
+                      isActivePromisesTab={isActivePromisesTab} // Pass this new prop
                       isBadgesIssuedTab={isBadgesIssuedTab} // Pass new prop
                       isExternal={item.isExternal}
                       isOverdue={item.isOverdue} // Pass the pre-calculated isOverdue
