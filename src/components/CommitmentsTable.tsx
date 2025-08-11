@@ -371,7 +371,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                           {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
                             <>
                               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                                All Responses:
+                                All Responses ({commitment.responses.length}):
                               </Typography>
                               <Stack spacing={2}> {/* Increased spacing */}
                                 {commitment.responses

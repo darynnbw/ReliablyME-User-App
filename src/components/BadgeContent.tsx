@@ -10,7 +10,7 @@ const badgeConfig: { [key: string]: { color: string; displayText: string } } = {
   'Attendance': { color: '#1976d2', displayText: 'ATTENDANCE' },
   'Teamwork': { color: '#4caf50', displayText: 'TEAMWORK' },
   'Leadership': { color: '#9c27b0', displayText: 'LEADERSHIP' },
-  'COMMUNICATION EFFECTIVENESS - nudging': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS' },
+  'Communication Effectiveness - Nudging': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS' },
   // Add more badge types as needed
 };
 

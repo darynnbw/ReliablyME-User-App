@@ -414,7 +414,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 {isNudge && responses && responses.length > 0 && (
                   <>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                      All Responses:
+                      All Responses ({responses.length}):
                     </Typography>
                     <Stack spacing={2}> {/* Increased spacing for better separation */}
                       {responses

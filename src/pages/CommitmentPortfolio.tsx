@@ -45,7 +45,7 @@ const CommitmentPortfolio: React.FC = () => {
     },
     {
       id: 52,
-      title: 'COMMUNICATION EFFECTIVENESS - nudging',
+      title: 'Communication Effectiveness - Nudging',
       dueDate: dayjs().endOf('month').format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().startOf('month').subtract(1, 'month').format('MMM D, YYYY, hh:mm A'),
       approvedDate: dayjs().add(1, 'day').format('MMM D, YYYY, hh:mm A'),
@@ -55,8 +55,21 @@ const CommitmentPortfolio: React.FC = () => {
       nudgesLeft: 0,
       totalNudges: 44,
       questions: [
-        '1. How did you ensure your communications were constructive and timely today?',
-        '2. Provide an example of a message you responded to within the 6-hour timeframe.'
+        'Have you responded to all messages and notifications received in the last 6 hours?',
+        'Are there any unread or ignored messages you need to address now?',
+        'Have you acknowledged every message, even if only to say “I’ll get back to you”?',
+        'Did you review all communication channels (email, messenger, Slack, etc.) today?',
+        'Were your responses constructive and respectful?',
+        'Did you leave any messages half-written or unsent?',
+        'Have you prioritized urgent messages first today?',
+        'Did you follow up on any messages that still require your input?',
+        'Were you clear and concise in your replies?',
+        'Did you check for any missed notifications in the last few hours?',
+        'Have you avoided procrastinating on difficult or awkward replies?',
+        'Did you re-read your responses before sending them to ensure they were constructive?',
+        'Have you replied to all time-sensitive requests today?',
+        'Did you update anyone who is waiting on your progress or decision?',
+        'Were your messages aligned with your professional tone and goals?',
       ],
       responses: [
         { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), answer: 'I made sure to re-read my messages for tone before sending. I responded to the project update email from Sarah within 2 hours.' },
