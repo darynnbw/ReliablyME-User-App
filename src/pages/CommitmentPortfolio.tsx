@@ -44,6 +44,28 @@ const CommitmentPortfolio: React.FC = () => {
       ],
     },
     {
+      id: 52,
+      title: 'COMMUNICATION EFFECTIVENESS - nudging',
+      dueDate: dayjs().endOf('month').format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().startOf('month').subtract(1, 'month').format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().add(1, 'day').format('MMM D, YYYY, hh:mm A'),
+      description: 'I will respond to all messages and notifications constructively within 6 hours of them being sent by responding daily (weekdays) to communication-related nudges through the end of August.',
+      assignee: 'Alex Johnson',
+      type: 'nudge',
+      nudgesLeft: 0,
+      totalNudges: 44,
+      questions: [
+        '1. How did you ensure your communications were constructive and timely today?',
+        '2. Provide an example of a message you responded to within the 6-hour timeframe.'
+      ],
+      responses: [
+        { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), answer: 'I made sure to re-read my messages for tone before sending. I responded to the project update email from Sarah within 2 hours.' },
+        { date: dayjs().subtract(2, 'day').format('MMM D, YYYY'), answer: 'I used positive language and offered solutions instead of just pointing out problems. I replied to the client query that came in at 10 AM by 11:30 AM.' },
+        { date: dayjs().subtract(3, 'day').format('MMM D, YYYY'), answer: 'I focused on being clear and concise to avoid back-and-forth. I answered the Slack message from the design team about the mockups in under an hour.' }
+      ],
+      explanation: 'Consistently responded to daily nudges throughout the commitment period, demonstrating effective and timely communication skills.'
+    },
+    {
       id: 99,
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(5, 'day').hour(14).minute(15).format('MMM D, YYYY, hh:mm A'),
