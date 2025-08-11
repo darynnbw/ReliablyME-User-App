@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Close, CalendarToday } from '@mui/icons-material';
 import ConfettiAnimation from './ConfettiAnimation';
+import dayjs from 'dayjs';
 
 interface AnswerNudgeModalProps {
   open: boolean;
@@ -21,6 +22,7 @@ interface AnswerNudgeModalProps {
     title: string;
     description?: string;
     questions?: string[];
+    dailyQuestions?: { [key: string]: string[] };
     dueDate?: string;
   } | null;
 }
@@ -47,13 +49,19 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
     setIsSubmitted(true);
   };
 
-  const defaultQuestions = [
-    '1. What have you accomplished so far this week?',
-    '2. What do you plan to accomplish/complete by the end of the week?',
-    '3. What are you concerned about that might hinder your progress?',
-  ];
+  const dayOfWeek = dayjs().format('dddd');
+  let questionsToRender: string[] | null = null;
+  let isWeekend = false;
 
-  const questionsToRender = commitment?.questions?.map((q, i) => `${i + 1}. ${q}`) ?? defaultQuestions;
+  if (commitment?.dailyQuestions) {
+    if (commitment.dailyQuestions[dayOfWeek]) {
+      questionsToRender = commitment.dailyQuestions[dayOfWeek];
+    } else {
+      isWeekend = true;
+    }
+  } else if (commitment?.questions) {
+    questionsToRender = commitment.questions;
+  }
 
   return (
     <Dialog
@@ -127,13 +135,19 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
                 border: '1px solid #e9ecef'
               }}
             >
-              <Stack spacing={1}>
-                {questionsToRender.map((question, index) => (
-                  <Typography key={index} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-                    {question}
-                  </Typography>
-                ))}
-              </Stack>
+              {isWeekend ? (
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  Nudges are only for weekdays. Enjoy your weekend!
+                </Typography>
+              ) : (
+                <Stack spacing={1}>
+                  {questionsToRender?.map((question, index) => (
+                    <Typography key={index} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                      {question}
+                    </Typography>
+                  ))}
+                </Stack>
+              )}
             </Box>
 
             <TextField
@@ -144,6 +158,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="Type your answer here..."
               variant="outlined"
+              disabled={isWeekend}
               sx={{
                 mb: 3,
                 '& .MuiOutlinedInput-root': {
@@ -172,7 +187,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
               <Button
                 variant="contained"
                 onClick={handleSubmit}
-                disabled={!answer.trim()}
+                disabled={!answer.trim() || isWeekend}
                 sx={{
                   bgcolor: '#ff7043',
                   color: 'white',
