@@ -31,16 +31,40 @@ const CommitmentPortfolio: React.FC = () => {
       type: 'nudge',
       nudgesLeft: 0, // Set to 0 as it's approved
       totalNudges: 12, // Assuming 12 was the original total
-      questions: [
-        '1. What have you accomplished so far this week?',
-        '2. What do you plan to accomplish/complete by the end of the week?',
-        '3. What are you concerned about that might hinder your progress?',
-      ],
       responses: [
-        { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), answer: 'Completed tasks A, B, C. Planning to finish D and E. Concerned about resource allocation for F.' },
-        { date: dayjs().subtract(8, 'day').format('MMM D, YYYY'), answer: 'Finished initial setup for project X. Next, I will start coding module Y. No major concerns at the moment.' },
-        { date: dayjs().subtract(15, 'day').format('MMM D, YYYY'), answer: 'Successfully onboarded new team member. Will focus on documentation next. Minor delay due to software update.' },
-        { date: dayjs().subtract(22, 'day').format('MMM D, YYYY'), answer: 'Reviewed client feedback and integrated changes. Preparing for next sprint. Need clarification on feature Z.' },
+        { 
+          date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), 
+          answer: 'Completed tasks A, B, C. Planning to finish D and E. Concerned about resource allocation for F.',
+          questions: [
+            '1. What have you accomplished so far this week?',
+            '2. What do you plan to accomplish/complete by the end of the week?',
+            '3. What are you concerned about that might hinder your progress?',
+          ]
+        },
+        { 
+          date: dayjs().subtract(8, 'day').format('MMM D, YYYY'), 
+          answer: 'Finished initial setup for project X. Next, I will start coding module Y. No major concerns at the moment.',
+          questions: [
+            '1. What have you accomplished so far this week?',
+            '2. What do you plan to accomplish/complete by the end of the week?',
+          ]
+        },
+        { 
+          date: dayjs().subtract(15, 'day').format('MMM D, YYYY'), 
+          answer: 'Successfully onboarded new team member. Will focus on documentation next. Minor delay due to software update.',
+          questions: [
+            '1. What have you accomplished so far this week?',
+            '2. What are you concerned about that might hinder your progress?',
+          ]
+        },
+        { 
+          date: dayjs().subtract(22, 'day').format('MMM D, YYYY'), 
+          answer: 'Reviewed client feedback and integrated changes. Preparing for next sprint. Need clarification on feature Z.',
+          questions: [
+            '1. What have you accomplished so far this week?',
+            '2. What do you plan to accomplish/complete by the end of the week?',
+          ]
+        },
       ],
     },
     {
@@ -54,27 +78,31 @@ const CommitmentPortfolio: React.FC = () => {
       type: 'nudge',
       nudgesLeft: 0,
       totalNudges: 44,
-      questions: [
-        'Have you responded to all messages and notifications received in the last 6 hours?',
-        'Are there any unread or ignored messages you need to address now?',
-        'Have you acknowledged every message, even if only to say “I’ll get back to you”?',
-        'Did you review all communication channels (email, messenger, Slack, etc.) today?',
-        'Were your responses constructive and respectful?',
-        'Did you leave any messages half-written or unsent?',
-        'Have you prioritized urgent messages first today?',
-        'Did you follow up on any messages that still require your input?',
-        'Were you clear and concise in your replies?',
-        'Did you check for any missed notifications in the last few hours?',
-        'Have you avoided procrastinating on difficult or awkward replies?',
-        'Did you re-read your responses before sending them to ensure they were constructive?',
-        'Have you replied to all time-sensitive requests today?',
-        'Did you update anyone who is waiting on your progress or decision?',
-        'Were your messages aligned with your professional tone and goals?',
-      ],
       responses: [
-        { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), answer: 'I made sure to re-read my messages for tone before sending. I responded to the project update email from Sarah within 2 hours.' },
-        { date: dayjs().subtract(2, 'day').format('MMM D, YYYY'), answer: 'I used positive language and offered solutions instead of just pointing out problems. I replied to the client query that came in at 10 AM by 11:30 AM.' },
-        { date: dayjs().subtract(3, 'day').format('MMM D, YYYY'), answer: 'I focused on being clear and concise to avoid back-and-forth. I answered the Slack message from the design team about the mockups in under an hour.' }
+        { 
+          date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), 
+          answer: 'I made sure to re-read my messages for tone before sending. I responded to the project update email from Sarah within 2 hours.',
+          questions: [
+            'Did you re-read your responses before sending them to ensure they were constructive?',
+            'Have you replied to all time-sensitive requests today?'
+          ]
+        },
+        { 
+          date: dayjs().subtract(2, 'day').format('MMM D, YYYY'), 
+          answer: 'I used positive language and offered solutions instead of just pointing out problems. I replied to the client query that came in at 10 AM by 11:30 AM.',
+          questions: [
+            'Were your responses constructive and respectful?',
+            'Did you follow up on any messages that still require your input?'
+          ]
+        },
+        { 
+          date: dayjs().subtract(3, 'day').format('MMM D, YYYY'), 
+          answer: 'I focused on being clear and concise to avoid back-and-forth. I answered the Slack message from the design team about the mockups in under an hour.',
+          questions: [
+            'Were you clear and concise in your replies?',
+            'Did you review all communication channels (email, messenger, Slack, etc.) today?'
+          ]
+        }
       ],
       explanation: 'Consistently responded to daily nudges throughout the commitment period, demonstrating effective and timely communication skills.'
     },

@@ -36,7 +36,7 @@ interface Commitment {
   isExternal?: boolean;
   questions?: string[];
   explanation?: string;
-  responses?: { date: string; answer: string }[];
+  responses?: { date: string; answer: string; questions?: string[] }[];
   isOverdue?: boolean;
 }
 

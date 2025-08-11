@@ -38,7 +38,7 @@ interface Commitment {
   isExternal?: boolean;
   questions?: string[];
   explanation?: string;
-  responses?: { date: string; answer: string }[]; // Add responses to interface
+  responses?: { date: string; answer: string; questions?: string[] }[]; // Add responses to interface
 }
 
 interface CommitmentsTableProps {
@@ -389,13 +389,13 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                           mb: 1.5,
                                         }}
                                       />
-                                      {commitment.questions && commitment.questions.length > 0 && (
+                                      {response.questions && response.questions.length > 0 && (
                                         <Box sx={{ mb: 1 }}>
                                           <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
                                             Questions Asked:
                                           </Typography>
                                           <Stack spacing={0.5}>
-                                            {commitment.questions.map((q, qIdx) => (
+                                            {response.questions.map((q, qIdx) => (
                                               <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
                                                 {q}
                                               </Typography>
