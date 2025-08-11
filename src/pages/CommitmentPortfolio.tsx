@@ -37,33 +37,10 @@ const CommitmentPortfolio: React.FC = () => {
         '3. What are you concerned about that might hinder your progress?',
       ],
       responses: [
-        { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), questions: ['1. What have you accomplished so far this week?', '2. What do you plan to accomplish/complete by the end of the week?', '3. What are you concerned about that might hinder your progress?'], answer: 'Completed tasks A, B, C. Planning to finish D and E. Concerned about resource allocation for F.' },
-        { date: dayjs().subtract(8, 'day').format('MMM D, YYYY'), questions: ['1. What have you accomplished so far this week?', '2. What do you plan to accomplish/complete by the end of the week?', '3. What are you concerned about that might hinder your progress?'], answer: 'Finished initial setup for project X. Next, I will start coding module Y. No major concerns at the moment.' },
-        { date: dayjs().subtract(15, 'day').format('MMM D, YYYY'), questions: ['1. What have you accomplished so far this week?', '2. What do you plan to accomplish/complete by the end of the week?', '3. What are you concerned about that might hinder your progress?'], answer: 'Successfully onboarded new team member. Will focus on documentation next. Minor delay due to software update.' },
-        { date: dayjs().subtract(22, 'day').format('MMM D, YYYY'), questions: ['1. What have you accomplished so far this week?', '2. What do you plan to accomplish/complete by the end of the week?', '3. What are you concerned about that might hinder your progress?'], answer: 'Reviewed client feedback and integrated changes. Preparing for next sprint. Need clarification on feature Z.' },
-      ],
-    },
-    {
-      id: 52, // New ID for the communication nudge
-      title: 'COMMUNICATION EFFECTIVENESS - nudging',
-      dueDate: dayjs().endOf('month').format('MMM D, YYYY, hh:mm A'), // End of July
-      committedDate: dayjs().startOf('month').subtract(1, 'day').format('MMM D, YYYY, hh:mm A'),
-      approvedDate: undefined, // This is an active promise
-      description: 'I will respond to all messages and notifications constructively within 6 hours of them being sent by responding daily (weekdays) to communication-related nudges through the end of July.',
-      assignee: 'Alex Johnson',
-      type: 'nudge',
-      nudgesLeft: 15,
-      totalNudges: 22,
-      dailyQuestions: {
-        Monday: ['1. How did you ensure your communications were constructive today?', '2. Did you respond to all messages within the 6-hour timeframe? If not, what were the challenges?'],
-        Tuesday: ['1. What was one communication you could have handled better today?', '2. How are you preparing for tomorrow’s communication tasks?'],
-        Wednesday: ['1. Describe a situation where you successfully clarified a complex topic.', '2. Are there any pending communications you need to address?'],
-        Thursday: ['1. How did you contribute to a positive communication climate within your team today?', '2. What is your plan for wrapping up communications before the weekend?'],
-        Friday: ['1. Reflect on this week’s communication goals. What went well?', '2. What is one thing you will focus on to improve your communication next week?'],
-      },
-      responses: [
-        { date: dayjs().subtract(3, 'day').format('MMM D, YYYY'), questions: ['1. How did you ensure your communications were constructive today?', '2. Did you respond to all messages within the 6-hour timeframe? If not, what were the challenges?'], answer: 'I made sure to re-read my emails for tone before sending. I missed one Slack message but followed up as soon as I saw it.' },
-        { date: dayjs().subtract(4, 'day').format('MMM D, YYYY'), questions: ['1. What was one communication you could have handled better today?', '2. How are you preparing for tomorrow’s communication tasks?'], answer: 'I could have been clearer in the project update meeting. I have prepped my notes for tomorrow\'s client call.' },
+        { date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), answer: 'Completed tasks A, B, C. Planning to finish D and E. Concerned about resource allocation for F.' },
+        { date: dayjs().subtract(8, 'day').format('MMM D, YYYY'), answer: 'Finished initial setup for project X. Next, I will start coding module Y. No major concerns at the moment.' },
+        { date: dayjs().subtract(15, 'day').format('MMM D, YYYY'), answer: 'Successfully onboarded new team member. Will focus on documentation next. Minor delay due to software update.' },
+        { date: dayjs().subtract(22, 'day').format('MMM D, YYYY'), answer: 'Reviewed client feedback and integrated changes. Preparing for next sprint. Need clarification on feature Z.' },
       ],
     },
     {

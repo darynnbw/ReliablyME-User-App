@@ -54,7 +54,7 @@ interface CommitmentListItemProps {
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
-  responses?: { date: string; answer: string; questions?: string[] }[]; // New prop for historical responses
+  responses?: { date: string; answer: string }[]; // New prop for historical responses
   questions?: string[]; // Added questions prop
   approvedDate?: string; // Added approvedDate prop
 }
@@ -432,13 +432,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                 mb: 1.5,
                               }}
                             />
-                            {(response.questions || questions) && (
+                            {questions && questions.length > 0 && (
                               <Box sx={{ mb: 1 }}>
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
                                   Questions Asked:
                                 </Typography>
                                 <Stack spacing={0.5}>
-                                  {(response.questions || questions)?.map((q, qIdx) => (
+                                  {questions.map((q, qIdx) => (
                                     <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
                                       {q}
                                     </Typography>
