@@ -55,6 +55,7 @@ interface CommitmentListItemProps {
   acceptButtonText?: string;
   declineButtonText?: string;
   responses?: { date: string; answer: string }[]; // New prop for historical responses
+  questions?: string[]; // Added questions prop
   approvedDate?: string; // Added approvedDate prop
 }
 
@@ -94,6 +95,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   acceptButtonText,
   declineButtonText,
   responses, // Destructure responses
+  questions, // Destructure questions
   approvedDate, // Destructure approvedDate
 }, ref) => {
   const theme = useTheme();
@@ -414,25 +416,44 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
                       All Responses:
                     </Typography>
-                    <Stack spacing={1}>
+                    <Stack spacing={2}> {/* Increased spacing for better separation */}
                       {responses
                         ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
                         .map((response, idx) => (
-                          <Box key={idx} sx={{ pb: 1, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                          <Box key={idx} sx={{ pb: 2, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
                             <Chip
                               label={response.date}
                               size="small"
                               sx={{
-                                bgcolor: '#fff3e0', // Nudge pill background
-                                color: '#ff7043', // Nudge pill text color
-                                fontWeight: 700, // Nudge pill font weight
-                                fontSize: '12px', // Nudge pill font size
-                                mb: 1,
+                                bgcolor: '#e3f2fd', // Changed color for better contrast
+                                color: '#1976d2',
+                                fontWeight: 700,
+                                fontSize: '12px',
+                                mb: 1.5,
                               }}
                             />
-                            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                              {response.answer}
-                            </Typography>
+                            {questions && questions.length > 0 && (
+                              <Box sx={{ mb: 1 }}>
+                                <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                  Questions Asked:
+                                </Typography>
+                                <Stack spacing={0.5}>
+                                  {questions.map((q, qIdx) => (
+                                    <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                                      {q}
+                                    </Typography>
+                                  ))}
+                                </Stack>
+                              </Box>
+                            )}
+                            <Box>
+                              <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                Your Answer:
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                {response.answer}
+                              </Typography>
+                            </Box>
                           </Box>
                         ))}
                     </Stack>
