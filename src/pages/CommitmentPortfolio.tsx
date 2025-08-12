@@ -127,7 +127,6 @@ const CommitmentPortfolio: React.FC = () => {
           questions: ['Were you clear and concise in your replies? Did you review all communication channels (email, messenger, Slack, etc.) today?']
         }
       ],
-      explanation: 'Consistently responded to daily nudges throughout the commitment period, demonstrating effective and timely communication skills.'
     },
     {
       id: 99,
