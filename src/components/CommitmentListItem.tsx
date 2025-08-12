@@ -284,7 +284,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {isActionsPage ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
               {/* Description and Explanation */}
-              <Box sx={{ mb: 2 }}> {/* Increased mb from 1.5 to 2 */}
+              <Box sx={{ mb: 1.5 }}>
                 <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
                   {description}
                 </Typography>
@@ -311,7 +311,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Box>
 
               {/* Assignee Info */}
-              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5, mb: 1.5 }}> {/* Increased mb from 1 to 1.5 */}
+              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5, mb: 1 }}> {/* Changed spacing to 0.5 */}
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
