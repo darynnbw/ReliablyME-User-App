@@ -158,6 +158,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
   const approvedDateIconColor = filters.approvedDate ? theme.palette.primary.main : 'text.secondary';
 
+  const numColumns = 5 + (isMyBadgesTab || isBadgesIssuedTab ? 1 : 0);
+
   return (
     <TableContainer
       component={Paper}
@@ -313,7 +315,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         <TableBody>
           {commitments.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} sx={{
+              <TableCell colSpan={numColumns} sx={{
                 textAlign: 'center',
                 color: 'text.secondary',
                 height: 336,
@@ -365,7 +367,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </TableRow>
                 {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
                   <TableRow>
-                    <TableCell colSpan={6} sx={{ py: 0, borderBottom: 'none' }}>
+                    <TableCell colSpan={numColumns} sx={{ py: 0, borderBottom: 'none' }}>
                       <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                           {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
