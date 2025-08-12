@@ -47,7 +47,7 @@ interface CommitmentListItemProps {
   totalNudges?: number; // Added totalNudges
   isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
   isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
-  isBadgesIssuedTab?: boolean; // Destructure new prop
+  isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
   isExternal?: boolean;
   isOverdue?: boolean;
   showRevokeButton?: boolean;
@@ -268,7 +268,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: isActionsPage ? 1.5 : 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -282,9 +282,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {isActionsPage ? (
-            <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-              {/* Description and Explanation */}
-              <Box sx={{ mb: 1.5 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
                 <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
                   {description}
                 </Typography>
@@ -308,40 +307,36 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </Typography>
                   </Box>
                 )}
-              </Box>
-
-              {/* Assignee Info */}
-              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5, mb: 1 }}> {/* Changed spacing to 0.5 */}
-                <Person sx={{ fontSize: 16, color: color }} />
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  {showFromLabel ? 'From:' : 'To:'}{' '}
-                  {!isExternal ? (
-                    <ContactTooltip>
-                      <span
-                        style={{
-                          color: '#666',
-                          cursor: 'pointer',
-                          fontSize: 'inherit',
-                          fontFamily: 'inherit',
-                          fontWeight: 'inherit'
-                        }}
-                      >
-                        {assignee}
-                      </span>
-                    </ContactTooltip>
-                  ) : (
-                    assignee
-                  )}
-                </Typography>
-                {isExternal && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                    (Non-member)
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}> {/* Added mb here */}
+                  <Person sx={{ fontSize: 16, color: color }} />
+                  <Typography variant="body2" sx={{ color: '#666' }}>
+                    {showFromLabel ? 'From:' : 'To:'}{' '}
+                    {!isExternal ? (
+                      <ContactTooltip>
+                        <span
+                          style={{
+                            color: '#666',
+                            cursor: 'pointer',
+                            fontSize: 'inherit',
+                            fontFamily: 'inherit',
+                            fontWeight: 'inherit'
+                          }}
+                        >
+                          {assignee}
+                        </span>
+                      </ContactTooltip>
+                    ) : (
+                      assignee
+                    )}
                   </Typography>
-                )}
-              </Stack>
-
-              {/* Action Buttons */}
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                  {isExternal && (
+                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                      (Non-member)
+                    </Typography>
+                  )}
+                </Stack>
+              </Box>
+              <Box sx={{ flexShrink: 0 }}>
                 <Box sx={{ minWidth: 130, textAlign: 'right' }}>
                   {showActionButton && (
                     <Button
@@ -369,7 +364,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </Button>
                   )}
                   {showAcceptDeclineButtons && (
-                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end', mt: showActionButton ? 1 : 0 }}>
+                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
                       <Button
                         variant="contained"
                         onClick={onDecline}
@@ -419,7 +414,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         px: 4,
                         py: 0.75,
                         borderRadius: 1,
-                        mt: (showActionButton || showAcceptDeclineButtons) ? 1 : 0,
                         '&:hover': { bgcolor: '#d32f2f' },
                       }}
                     >
@@ -455,7 +449,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 </Box>
               )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
-                <Stack direction="row" spacing={0.5} alignItems="center"> {/* Changed spacing to 0.5 */}
+                <Stack direction="row" spacing={1} alignItems="center">
                   <Person sx={{ fontSize: 16, color: color }} />
                   <Typography variant="body2" sx={{ color: '#666' }}>
                     {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -560,7 +554,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         px: 4,
                         py: 0.75,
                         borderRadius: 1,
-                        mt: (showActionButton || showAcceptDeclineButtons) ? 1 : 0,
                         '&:hover': { bgcolor: '#d32f2f' },
                       }}
                     >
