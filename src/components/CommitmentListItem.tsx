@@ -61,6 +61,7 @@ interface CommitmentListItemProps {
   onToggleExpand: () => void;
   isActionsPage?: boolean;
   isOthersCommitmentsSection?: boolean;
+  isOwedToMe?: boolean; // New prop to identify Promises Owed to Me tab
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -117,6 +118,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onToggleExpand,
   isActionsPage = false,
   isOthersCommitmentsSection = false,
+  isOwedToMe = false, // Default to false
 }, ref) => {
   const theme = useTheme();
 
@@ -337,88 +339,115 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 </Stack>
               </Box>
               <Box sx={{ flexShrink: 0 }}>
-                <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-                  {showActionButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onActionButtonClick}
-                      disabled={isBulkSelecting}
-                      startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
-                      sx={{
-                        bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: buttonText === 'Clarify' ? 6 : 3,
-                        py: 1,
-                        borderRadius: 1,
-                        flexShrink: 0,
-                        '&:hover': { 
-                          bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
-                            ? '#f4511e'
-                            : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
-                        },
-                      }}
-                    >
-                      {buttonText}
-                    </Button>
-                  )}
-                  {showAcceptDeclineButtons && (
-                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                <Box sx={{ minWidth: 130, textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  {/* Clarify button for Promises Owed to Me */}
+                  {isOwedToMe && showActionButton && (
                       <Button
-                        variant="contained"
-                        onClick={onDecline}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#F44336',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#d32f2f' },
-                        }}
+                          variant="contained"
+                          onClick={onActionButtonClick}
+                          disabled={isBulkSelecting}
+                          sx={{
+                              bgcolor: color,
+                              color: 'white',
+                              textTransform: 'none',
+                              fontWeight: 'bold',
+                              px: 3,
+                              py: 1,
+                              borderRadius: 1,
+                              flexShrink: 0,
+                              '&:hover': { bgcolor: alpha(color, 0.8) },
+                          }}
                       >
-                        {declineButtonText || 'Decline'}
+                          {buttonText}
                       </Button>
-                      <Button
-                        variant="contained"
-                        onClick={onAccept}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#4CAF50',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#388e3c' },
-                        }}
-                      >
-                        {acceptButtonText || 'Accept'}
-                      </Button>
-                    </Box>
                   )}
+
+                  {/* Accept/Decline buttons for Requests to Commit and Badge Requests, AND for Promises Owed to Me */}
+                  {(showAcceptDeclineButtons || isOwedToMe) && (
+                      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                          <Button
+                              variant="contained"
+                              onClick={onDecline}
+                              disabled={isBulkSelecting}
+                              sx={{
+                                  bgcolor: '#F44336',
+                                  color: 'white',
+                                  textTransform: 'none',
+                                  fontWeight: 'bold',
+                                  px: 4,
+                                  py: 0.75,
+                                  borderRadius: 1,
+                                  '&:hover': { bgcolor: '#d32f2f' },
+                              }}
+                          >
+                              {declineButtonText || 'Decline'}
+                          </Button>
+                          <Button
+                              variant="contained"
+                              onClick={onAccept}
+                              disabled={isBulkSelecting}
+                              sx={{
+                                  bgcolor: '#4CAF50',
+                                  color: 'white',
+                                  textTransform: 'none',
+                                  fontWeight: 'bold',
+                                  px: 4,
+                                  py: 0.75,
+                                  borderRadius: 1,
+                                  '&:hover': { bgcolor: '#388e3c' },
+                              }}
+                          >
+                              {acceptButtonText || 'Accept'}
+                          </Button>
+                      </Box>
+                  )}
+
+                  {/* Revoke button (Awaiting Response tab) */}
                   {showRevokeButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onRevoke}
-                      disabled={isBulkSelecting}
-                      sx={{
-                        bgcolor: '#F44336',
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: 4,
-                        py: 0.75,
-                        borderRadius: 1,
-                        '&:hover': { bgcolor: '#d32f2f' },
-                      }}
-                    >
-                      Revoke
-                    </Button>
+                      <Button
+                          variant="contained"
+                          onClick={onRevoke}
+                          disabled={isBulkSelecting}
+                          sx={{
+                              bgcolor: '#F44336',
+                              color: 'white',
+                              textTransform: 'none',
+                              fontWeight: 'bold',
+                              px: 4,
+                              py: 0.75,
+                              borderRadius: 1,
+                              '&:hover': { bgcolor: '#d32f2f' },
+                          }}
+                      >
+                          Revoke
+                      </Button>
+                  )}
+
+                  {/* Default single action button (Request Badge, Answer Nudge) - only if not handled by isOwedToMe or showAcceptDeclineButtons */}
+                  {showActionButton && !isOwedToMe && !showAcceptDeclineButtons && !showRevokeButton && (
+                      <Button
+                          variant="contained"
+                          onClick={onActionButtonClick}
+                          disabled={isBulkSelecting}
+                          startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
+                          sx={{
+                              bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
+                              color: 'white',
+                              textTransform: 'none',
+                              fontWeight: 'bold',
+                              px: buttonText === 'Clarify' ? 6 : 3,
+                              py: 1,
+                              borderRadius: 1,
+                              flexShrink: 0,
+                              '&:hover': {
+                                  bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
+                                      ? '#f4511e'
+                                      : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
+                              },
+                          }}
+                      >
+                          {buttonText}
+                      </Button>
                   )}
                 </Box>
               </Box>
