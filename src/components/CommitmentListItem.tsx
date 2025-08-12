@@ -265,7 +265,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Typography>
 
           {/* Explanation */}
-          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && ( // Only show if not an issued badge (explanation will be in collapse)
+          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
             <Box
               sx={{
                 bgcolor: '#f8f9fa',
@@ -457,7 +457,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </Stack>
                   </>
                 )}
-                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
+                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && !isNudge && (
                   <>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
                       Explanation:

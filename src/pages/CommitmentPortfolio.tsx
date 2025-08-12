@@ -114,26 +114,72 @@ const CommitmentPortfolio: React.FC = () => {
         { 
           date: dayjs().subtract(1, 'day').format('MMM D, YYYY'), 
           answer: 'I made sure to re-read my messages for tone before sending. I responded to the project update email from Sarah within 2 hours.',
-          questions: [
-            'Did you re-read your responses before sending them to ensure they were constructive?',
-            'Have you replied to all time-sensitive requests today?'
-          ]
+          questions: ['Did you re-read your responses before sending them to ensure they were constructive? Have you replied to all time-sensitive requests today?']
         },
         { 
           date: dayjs().subtract(2, 'day').format('MMM D, YYYY'), 
           answer: 'I used positive language and offered solutions instead of just pointing out problems. I replied to the client query that came in at 10 AM by 11:30 AM.',
-          questions: [
-            'Were your responses constructive and respectful?',
-            'Did you follow up on any messages that still require your input?'
-          ]
+          questions: ['Were your responses constructive and respectful? Did you follow up on any messages that still require your input?']
         },
         { 
           date: dayjs().subtract(3, 'day').format('MMM D, YYYY'), 
           answer: 'I focused on being clear and concise to avoid back-and-forth. I answered the Slack message from the design team about the mockups in under an hour.',
-          questions: [
-            'Were you clear and concise in your replies?',
-            'Did you review all communication channels (email, messenger, Slack, etc.) today?'
-          ]
+          questions: ['Were you clear and concise in your replies? Did you review all communication channels (email, messenger, Slack, etc.) today?']
+        },
+        {
+            date: dayjs().subtract(4, 'day').format('MMM D, YYYY'),
+            answer: 'Yes, I reviewed my emails for clarity and tone. All urgent messages were answered before lunch.',
+            questions: ['Did you re-read your responses before sending them to ensure they were constructive? Have you replied to all time-sensitive requests today?']
+        },
+        {
+            date: dayjs().subtract(5, 'day').format('MMM D, YYYY'),
+            answer: 'I made sure my feedback on the design doc was helpful and not just critical. Cleared my inbox of anything needing a reply today.',
+            questions: ['Were your responses constructive and respectful? Did you follow up on any messages that still require your input?']
+        },
+        {
+            date: dayjs().subtract(6, 'day').format('MMM D, YYYY'),
+            answer: 'I kept my replies brief and to the point. All channels are clear.',
+            questions: ['Were you clear and concise in your replies? Did you review all communication channels (email, messenger, Slack, etc.) today?']
+        },
+        {
+            date: dayjs().subtract(7, 'day').format('MMM D, YYYY'),
+            answer: 'Double-checked my tone in all messages. Responded to the client\'s email within the hour.',
+            questions: ['Did you re-read your responses before sending them to ensure they were constructive? Have you replied to all time-sensitive requests today?']
+        },
+        {
+            date: dayjs().subtract(8, 'day').format('MMM D, YYYY'),
+            answer: 'Provided actionable feedback on the latest proposal. Followed up on the outstanding query from the finance team.',
+            questions: ['Were your responses constructive and respectful? Did you follow up on any messages that still require your input?']
+        },
+        {
+            date: dayjs().subtract(9, 'day').format('MMM D, YYYY'),
+            answer: 'Used bullet points to make my points clear in the project update. All communication channels are up to date.',
+            questions: ['Were you clear and concise in your replies? Did you review all communication channels (email, messenger, Slack, etc.) today?']
+        },
+        {
+            date: dayjs().subtract(10, 'day').format('MMM D, YYYY'),
+            answer: 'Ensured my messages were encouraging to the team. All time-sensitive requests have been handled.',
+            questions: ['Did you re-read your responses before sending them to ensure they were constructive? Have you replied to all time-sensitive requests today?']
+        },
+        {
+            date: dayjs().subtract(11, 'day').format('MMM D, YYYY'),
+            answer: 'My feedback was framed with solutions in mind. I have no pending follow-ups.',
+            questions: ['Were your responses constructive and respectful? Did you follow up on any messages that still require your input?']
+        },
+        {
+            date: dayjs().subtract(12, 'day').format('MMM D, YYYY'),
+            answer: 'Avoided jargon to ensure my message was understood by everyone. All channels checked and cleared.',
+            questions: ['Were you clear and concise in your replies? Did you review all communication channels (email, messenger, Slack, etc.) today?']
+        },
+        {
+            date: dayjs().subtract(13, 'day').format('MMM D, YYYY'),
+            answer: 'Read my emails out loud to check for tone. Responded to all urgent matters promptly.',
+            questions: ['Did you re-read your responses before sending them to ensure they were constructive? Have you replied to all time-sensitive requests today?']
+        },
+        {
+            date: dayjs().subtract(14, 'day').format('MMM D, YYYY'),
+            answer: 'Focused on being supportive in my communication. All follow-ups are complete.',
+            questions: ['Were your responses constructive and respectful? Did you follow up on any messages that still require your input?']
         }
       ],
       explanation: 'Consistently responded to daily nudges throughout the commitment period, demonstrating effective and timely communication skills.'

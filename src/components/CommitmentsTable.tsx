@@ -418,7 +418,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                               </Stack>
                             </>
                           )}
-                          {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation) && (
+                          {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation && commitment.type !== 'nudge') && (
                             <>
                               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
                                 Explanation:
