@@ -137,8 +137,8 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
             >
               <Stack spacing={1}>
                 {commitment.questions.map((q, i) => (
-                  <Typography key={i} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
-                    {i + 1}. {q}
+                  <Typography key={i} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontWeight: 400 }}>
+                    {q}
                   </Typography>
                 ))}
               </Stack>

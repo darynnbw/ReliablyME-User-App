@@ -47,6 +47,8 @@ const initialNotifications = [
     actions: ['edit'],
     dueDate: 'Apr 11, 9:00 AM',
     questions: ['Did you complete all your planned tasks today?'],
+    nudgesLeft: 1, // Example: last nudge
+    totalNudges: 5,
   },
   {
     id: 3,
@@ -76,6 +78,8 @@ const initialNotifications = [
     actions: ['edit'],
     dueDate: 'Apr 14, 4:00 PM',
     questions: ['Have you had a chance to review the pull request?'],
+    nudgesLeft: 3,
+    totalNudges: 5,
   },
 ];
 

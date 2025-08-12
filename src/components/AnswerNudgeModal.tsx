@@ -22,6 +22,9 @@ interface AnswerNudgeModalProps {
     description?: string;
     questions?: string[];
     dueDate?: string;
+    nudgesLeft?: number; // Add nudgesLeft
+    totalNudges?: number; // Add totalNudges
+    assignee?: string; // Added assignee
   } | null;
 }
 
@@ -37,10 +40,19 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
 
   useEffect(() => {
     if (isSubmitted) {
+      // Simulate sending data to the person the user committed to
+      console.log(`Sending nudge response for commitment ${commitment?.title} to ${commitment?.assignee || 'recipient'}.`);
+      
+      // Check if this is the last nudge
+      if (commitment?.nudgesLeft === 1) {
+        console.log('This was the last nudge. All responses sent!');
+        // Here you would trigger the final submission logic
+      }
+
       const timerId = setTimeout(handleClose, 3500);
       return () => clearTimeout(timerId);
     }
-  }, [isSubmitted, handleClose]);
+  }, [isSubmitted, handleClose, commitment]); // Added commitment to dependencies
 
   const handleSubmit = () => {
     console.log('Submitted answer:', answer);
@@ -129,7 +141,7 @@ const AnswerNudgeModal: React.FC<AnswerNudgeModalProps> = ({ open, onClose, comm
             >
               <Stack spacing={1}>
                 {questionsToRender.map((question, index) => (
-                  <Typography key={index} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontSize: '16px', fontWeight: 400 }}>
+                  <Typography key={index} variant="body1" sx={{ lineHeight: 1.6, color: '#333', fontWeight: 400 }}>
                     {question}
                   </Typography>
                 ))}

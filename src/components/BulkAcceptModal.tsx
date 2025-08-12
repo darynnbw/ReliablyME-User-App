@@ -61,6 +61,9 @@ interface Commitment {
   title: string;
   description: string;
   type?: string;
+  nudgesLeft?: number; // Add nudgesLeft
+  totalNudges?: number; // Add totalNudges
+  assignee?: string; // Add assignee for console log
 }
 
 interface BulkAcceptModalProps {
@@ -112,8 +115,14 @@ const BulkAcceptModal: React.FC<BulkAcceptModalProps> = ({ open, onClose, commit
   }
 
   const handleNext = () => {
-    console.log(`Accepted commitment ID ${commitments[currentIndex].id} with date: ${date?.format()} and time: ${time?.format()}`);
+    const currentCommitment = commitments[currentIndex];
+    console.log(`Accepted commitment ID ${currentCommitment.id} (Type: ${currentCommitment.type}) with date: ${date?.format()} and time: ${time?.format()}`);
     
+    // If it's a nudge and this is the last one, simulate sending all responses
+    if (currentCommitment.type === 'nudge' && currentCommitment.nudgesLeft === 1) {
+      console.log(`Last nudge for ${currentCommitment.title} to ${currentCommitment.assignee}. All nudge responses sent!`);
+    }
+
     const isLast = currentIndex === commitments.length - 1;
     if (isLast) {
       setIsSubmitted(true);
