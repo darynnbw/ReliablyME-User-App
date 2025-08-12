@@ -36,7 +36,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import CommitmentListItem from './CommitmentListItem';
 import CommitmentDetailsModal from './CommitmentDetailsModal';
-import RequestBadgeModal from './RequestBadge';
+import RequestBadgeModal from './RequestBadgeModal';
 import BulkRequestBadgeModal from './BulkRequestBadgeModal';
 import MyBadgeDetailsModal from './MyBadgeDetailsModal';
 import AcceptRequestModal from './AcceptRequestModal';
@@ -752,7 +752,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const showBulkClarify = isActionsPage && selectedCount > 0 && isOwedToMe;
   const showBulkRevoke = isActionsPage && selectedCount > 0 && isAwaitingResponseTab;
 
-  const isOthersCommitmentsSection = title.trim() === "Others' Commitments';
+  const isOthersCommitmentsSection = title.trim() === "Others' Commitments";
 
   // Handlers for table-specific filters
   const handleTableFilterChange = useCallback((filterName: string, value: any) => {
