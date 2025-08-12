@@ -17,6 +17,19 @@ const DueSoonOverdue: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [requestBadgeModalOpen, setRequestBadgeModalOpen] = useState(false);
   const [commitmentForDetails, setCommitmentForDetails] = useState<any>(null);
+  const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
+
+  const handleToggleExpand = (id: number) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
   const handleCloseRequestBadgeModal = useCallback(() => setRequestBadgeModalOpen(false), []);
@@ -162,6 +175,8 @@ const DueSoonOverdue: React.FC = () => {
                 onActionButtonClick={() => setRequestBadgeModalOpen(true)}
                 onToggleSelect={() => {}}
                 isOverdue={isOverdue}
+                isExpanded={expandedItems.has(item.id)}
+                onToggleExpand={() => handleToggleExpand(item.id)}
               />
             ))}
           </Stack>

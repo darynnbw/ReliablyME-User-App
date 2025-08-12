@@ -1010,7 +1010,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {tabs.map((tab, _index) => <Tab key={_index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}> {/* New inner Box for toggle and button */}
-            {isTableView && totalExpandable > 0 && (
+            {totalExpandable > 0 && (
               <Button
                 size="small"
                 startIcon={expandAllIcon}
@@ -1303,6 +1303,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       responses={item.responses}
                       showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab || isOwedToMe} // Added isOwedToMe here
                       approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
+                      isExpanded={expandedRows.has(item.id)}
+                      onToggleExpand={() => handleToggleExpandRow(item.id)}
                     />
                   );
                 })

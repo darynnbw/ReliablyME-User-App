@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -57,6 +57,8 @@ interface CommitmentListItemProps {
   declineButtonText?: string;
   responses?: { date: string; answer: string; questions?: string[] }[]; // New prop for historical responses
   approvedDate?: string; // Added approvedDate prop
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -109,9 +111,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   declineButtonText,
   responses, // Destructure responses
   approvedDate, // Destructure approvedDate
+  isExpanded,
+  onToggleExpand,
 }, ref) => {
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(false); // State for inline collapse
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
@@ -119,7 +122,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   const handleExpandClick = (event: React.MouseEvent) => {
     event.stopPropagation(); // Prevent card click from triggering
-    setExpanded(!expanded);
+    onToggleExpand();
   };
 
   // Determine the label and value based on the tab
@@ -243,10 +246,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               {showExpandIcon && (
                 <IconButton
                   onClick={handleExpandClick}
-                  aria-expanded={expanded}
+                  aria-expanded={isExpanded}
                   aria-label="show historical responses"
                   size="small"
-                  sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
+                  sx={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
                 >
                   <ExpandMoreIcon />
                 </IconButton>
@@ -422,7 +425,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Collapsible Responses / Explanation */}
           {showExpandIcon && (
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <Collapse in={isExpanded} timeout="auto" unmountOnExit>
               <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                 {isNudge && responses && responses.length > 0 && (
                   isRecurringNudge ? (
