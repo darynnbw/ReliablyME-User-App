@@ -12,15 +12,12 @@ import {
   alpha,
   Chip,
   useTheme,
-  Collapse,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Collapse, // Import Collapse
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
-import ContactTooltip from './ContactTooltip';
-import dayjs from 'dayjs';
-import BadgeContent from './BadgeContent';
+import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Removed Shield
+import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
+import dayjs from 'dayjs'; // Import dayjs for sorting
+import BadgeContent from './BadgeContent'; // Import the new BadgeContent component
 
 interface CommitmentListItemProps {
   id: number;
@@ -38,7 +35,7 @@ interface CommitmentListItemProps {
   onViewDetails: () => void;
   onActionButtonClick: () => void;
   onToggleSelect: (id: number, checked: boolean) => void;
-  showBadgePlaceholder?: boolean;
+  showBadgePlaceholder?: boolean; // This prop will now control rendering BadgeContent
   showAcceptDeclineButtons?: boolean;
   onAccept?: () => void;
   onDecline?: () => void;
@@ -46,10 +43,10 @@ interface CommitmentListItemProps {
   hideDueDate?: boolean;
   isNudge?: boolean;
   nudgesLeft?: number;
-  totalNudges?: number;
-  isMyPromisesTab?: boolean;
-  isMyBadgesTab?: boolean;
-  isBadgesIssuedTab?: boolean;
+  totalNudges?: number; // Added totalNudges
+  isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
+  isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
+  isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
   isExternal?: boolean;
   isOverdue?: boolean;
   showRevokeButton?: boolean;
@@ -57,17 +54,9 @@ interface CommitmentListItemProps {
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
-  responses?: { date: string; answer: string; questions?: string[] }[];
-  approvedDate?: string;
+  responses?: { date: string; answer: string; questions?: string[] }[]; // New prop for historical responses
+  approvedDate?: string; // Added approvedDate prop
 }
-
-const areQuestionsConsistent = (responses?: { questions?: string[] }[]): boolean => {
-  if (!responses || responses.length < 2) {
-    return true;
-  }
-  const firstQuestions = JSON.stringify(responses[0].questions?.slice().sort());
-  return responses.every(r => JSON.stringify(r.questions?.slice().sort()) === firstQuestions);
-};
 
 const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
   id,
@@ -85,7 +74,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onViewDetails,
   onActionButtonClick,
   onToggleSelect,
-  showBadgePlaceholder = false,
+  showBadgePlaceholder = false, // This prop will now control rendering BadgeContent
   showAcceptDeclineButtons = false,
   onAccept,
   onDecline,
@@ -93,10 +82,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   hideDueDate = false,
   isNudge = false,
   nudgesLeft,
-  totalNudges,
-  isMyPromisesTab = false,
-  isMyBadgesTab = false,
-  isBadgesIssuedTab = false,
+  totalNudges, // Destructure totalNudges
+  isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
+  isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
+  isBadgesIssuedTab = false, // Destructure new prop
   isExternal = false,
   isOverdue = false,
   showRevokeButton = false,
@@ -104,30 +93,34 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showFromLabel = false,
   acceptButtonText,
   declineButtonText,
-  responses,
-  approvedDate,
+  responses, // Destructure responses
+  approvedDate, // Destructure approvedDate
 }, ref) => {
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false); // State for inline collapse
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
 
   const handleExpandClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
+    event.stopPropagation(); // Prevent card click from triggering
     setExpanded(!expanded);
   };
 
+  // Determine the label and value based on the tab
   const displayDateLabel = isMyBadgesTab || isBadgesIssuedTab ? 'Approved' : 'Due';
   const displayDateValue = isMyBadgesTab || isBadgesIssuedTab ? (approvedDate || 'N/A') : dueDate;
+
+  // Determine the color and weight based on overdue status
   const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
   const dateTextWeight = isOverdue ? 600 : 'inherit';
-  const calendarIconColor = isOverdue ? theme.palette.error.main : color;
-  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
 
-  const consistentQuestions = areQuestionsConsistent(responses);
-  const firstResponseWithQuestions = responses?.find(r => r.questions && r.questions.length > 0);
+  // Determine the icon color based on overdue status or section color
+  const calendarIconColor = isOverdue ? theme.palette.error.main : color;
+
+  // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
+  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
 
   return (
     <Card
@@ -163,12 +156,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
-            height: 100,
+            height: 100, // Fixed height for consistency
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            alignSelf: 'center',
+            alignSelf: 'center', // Add this
           }}>
             <BadgeContent badgeType={title} size="list-item-large" />
           </Box>
@@ -186,8 +179,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}> {/* Add this */}
+          {/* Top row: Title, MoreHoriz */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -250,13 +244,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Box>
           </Box>
 
+          {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
               </Typography>
-              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && (
+              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && ( // Added nudgesLeft > 0 condition
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
                   ({nudgesLeft} of {totalNudges} nudges left)
                 </Typography>
@@ -264,10 +259,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
           )}
 
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}>
+          {/* Original Description - always visible */}
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}> {/* Reduced mb */}
             {description}
           </Typography>
 
+          {/* Explanation */}
           {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
             <Box
               sx={{
@@ -276,7 +273,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 py: 1.5,
                 borderRadius: 2,
                 border: '1px solid #e9ecef',
-                mb: 1.5,
+                mb: 1.5, // Reduced mb
                 maxWidth: '100%',
               }}
             >
@@ -289,7 +286,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Box>
           )}
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
+          {/* Bottom row: Assignee and Button */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}> {/* Reduced mb */}
+            {/* Assignee */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
               <Typography variant="body2" sx={{ color: '#666' }}>
@@ -319,6 +318,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               )}
             </Stack>
 
+            {/* Action Buttons */}
             <Box sx={{ minWidth: 130, textAlign: 'right' }}>
               {showActionButton && (
                 <Button
@@ -337,8 +337,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     flexShrink: 0,
                     '&:hover': { 
                       bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
-                        ? '#f4511e'
-                        : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
+                        ? '#f4511e' // Orange hover for Answer Nudge and Request Badge
+                        : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8)) // Dark blue for Clarify, fallback for others (shouldn't be hit)
                     },
                   }}
                 >
@@ -405,35 +405,16 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Box>
           </Box>
 
+          {/* Collapsible Responses / Explanation */}
           {showExpandIcon && (
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+              <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}> {/* Reduced mt */}
                 {isNudge && responses && responses.length > 0 && (
                   <>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
                       All Responses ({responses.length}):
                     </Typography>
-
-                    {consistentQuestions && firstResponseWithQuestions && (
-                      <Accordion defaultExpanded sx={{ boxShadow: 'none', border: '1px solid', borderColor: 'divider', borderRadius: 1, '&:before': { display: 'none' }, mb: 2 }}>
-                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                          <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
-                            Questions Asked
-                          </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails sx={{ pt: 0 }}>
-                          <Stack spacing={0.5}>
-                            {firstResponseWithQuestions.questions!.map((q, qIdx) => (
-                              <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                {q}
-                              </Typography>
-                            ))}
-                          </Stack>
-                        </AccordionDetails>
-                      </Accordion>
-                    )}
-
-                    <Stack spacing={2}>
+                    <Stack spacing={2}> {/* Increased spacing for better separation */}
                       {responses
                         ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
                         .map((response, idx) => (
@@ -442,14 +423,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                               label={response.date}
                               size="small"
                               sx={{
-                                bgcolor: '#e3f2fd',
+                                bgcolor: '#e3f2fd', // Changed color for better contrast
                                 color: '#1976d2',
                                 fontWeight: 700,
                                 fontSize: '12px',
                                 mb: 1.5,
                               }}
                             />
-                            {!consistentQuestions && response.questions && response.questions.length > 0 && (
+                            {response.questions && response.questions.length > 0 && (
                               <Box sx={{ mb: 1 }}>
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
                                   Questions Asked:
@@ -463,7 +444,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                 </Stack>
                               </Box>
                             )}
-                            <Box sx={{ mt: !consistentQuestions ? 1 : 0 }}>
+                            <Box>
                               <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
                                 Your Answer:
                               </Typography>
