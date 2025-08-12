@@ -28,6 +28,29 @@ const CommitmentPortfolio: React.FC = () => {
       approvedDate: undefined,
       description: 'I will provide a mid-week progress report to ensure alignment and address any blockers.',
       assignee: 'Alex Johnson',
+      type: 'nudge',
+      nudgesLeft: 8,
+      totalNudges: 12,
+      responses: [
+        {
+          date: dayjs().subtract(5, 'day').format('MMM D, YYYY'),
+          answer: 'Progress is on track. Completed the initial draft of the report. No blockers currently.',
+          questions: [
+            '1. What have you accomplished so far this week?',
+            '2. What do you plan to accomplish/complete by the end of the week?',
+            '3. What are you concerned about that might hinder your progress?',
+          ],
+        },
+        {
+          date: dayjs().subtract(12, 'day').format('MMM D, YYYY'),
+          answer: 'Finalized the data collection phase. Will start drafting the report tomorrow. Awaiting input from the marketing team.',
+          questions: [
+            '1. What have you accomplished so far this week?',
+            '2. What do you plan to accomplish/complete by the end of the week?',
+            '3. What are you concerned about that might hinder your progress?',
+          ],
+        },
+      ],
     },
     {
       id: 100,
