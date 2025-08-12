@@ -59,7 +59,7 @@ interface CommitmentListItemProps {
   approvedDate?: string; // Added approvedDate prop
 }
 
-const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
+const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   id,
   title,
   dueDate,
@@ -97,7 +97,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   declineButtonText,
   responses, // Destructure responses
   approvedDate, // Destructure approvedDate
-}, ref) => {
+}) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false); // State for inline collapse
 
@@ -126,7 +126,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   return (
     <Card
-      ref={ref}
       sx={{
         position: 'relative',
         minHeight: 140,
@@ -498,6 +497,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
       </CardContent>
     </Card>
   );
-});
+};
 
 export default CommitmentListItem;
