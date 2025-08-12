@@ -28,6 +28,20 @@ const CommitmentPortfolio: React.FC = () => {
       approvedDate: undefined,
       description: 'I will provide a mid-week progress report to ensure alignment and address any blockers.',
       assignee: 'Alex Johnson',
+      type: 'nudge',
+      totalNudges: 4,
+      nudgesLeft: 3,
+      responses: [
+        {
+          date: dayjs().subtract(1, 'week').format('MMM D, YYYY'),
+          answer: 'I have completed the initial research phase and started drafting the report. I am on track to meet the deadline.',
+          questions: [
+            '1. What have you accomplished so far this week?',
+            '2. What do you plan to accomplish/complete by the end of the week?',
+            '3. What are you concerned about that might hinder your progress?',
+          ],
+        },
+      ],
     },
     {
       id: 100,
@@ -523,9 +537,9 @@ const CommitmentPortfolio: React.FC = () => {
     {
       id: 47,
       title: 'Teamwork',
-      dueDate: dayjs().add(40, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      committedDate: dayjs().subtract(45, 'day').hour(11).minute(0).format('MMM D, YYYY, hh:mm A'),
-      approvedDate: dayjs().subtract(39, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      dueDate: dayjs().add(40, 'day').hour(13).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(45, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().subtract(39, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),
       description: 'I will actively participate in team discussions and contribute innovative ideas.',
       explanation: 'I actively participated in team discussions, contributing innovative ideas that led to significant project improvements.',
       assignee: 'Mike Miller',
