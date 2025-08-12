@@ -58,6 +58,7 @@ interface CommitmentsTableProps {
   isActivePromisesTab?: boolean; // New prop
   isMyBadgesTab?: boolean; // New prop
   isBadgesIssuedTab?: boolean; // New prop
+  itemColor: string;
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -82,6 +83,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   isActivePromisesTab = false, // Default to false
   isMyBadgesTab = false, // Default to false
   isBadgesIssuedTab = false, // Default to false
+  itemColor,
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
@@ -420,8 +422,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                             label={response.date}
                                             size="small"
                                             sx={{
-                                              bgcolor: '#e3f2fd',
-                                              color: '#1976d2',
+                                              bgcolor: itemColor === '#ff7043' ? '#fff3e0' : (itemColor === '#1976d2' ? '#e3f2fd' : 'grey.200'),
+                                              color: itemColor,
                                               fontWeight: 700,
                                               fontSize: '12px',
                                               mb: 1,
@@ -448,8 +450,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                             label={response.date}
                                             size="small"
                                             sx={{
-                                              bgcolor: '#e3f2fd',
-                                              color: '#1976d2',
+                                              bgcolor: itemColor === '#ff7043' ? '#fff3e0' : (itemColor === '#1976d2' ? '#e3f2fd' : 'grey.200'),
+                                              color: itemColor,
                                               fontWeight: 700,
                                               fontSize: '12px',
                                               mb: 1.5,

@@ -1160,6 +1160,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 isActivePromisesTab={isActivePromisesTab}
                 isMyBadgesTab={isMyBadgesTab}
                 isBadgesIssuedTab={isBadgesIssuedTab}
+                itemColor={itemColor}
               />
             </Box>
           ) : (
