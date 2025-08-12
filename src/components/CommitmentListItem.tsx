@@ -296,7 +296,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       py: 1.5,
                       borderRadius: 2,
                       border: '1px solid #e9ecef',
-                      mb: 1.5, // This is the margin after explanation box
+                      mb: 1.5,
                       maxWidth: '100%',
                     }}
                   >
@@ -310,8 +310,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 )}
               </Box>
 
-              {/* Assignee Info (the "person field") */}
-              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5, mb: 0.5 }}> {/* Changed mb to 0.5 */}
+              {/* Assignee Info */}
+              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5, mb: 1 }}> {/* Changed spacing to 0.5 */}
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -341,7 +341,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Stack>
 
               {/* Action Buttons */}
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mt: 1 }}> {/* Added mt: 1 */}
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                 <Box sx={{ minWidth: 130, textAlign: 'right' }}>
                   {showActionButton && (
                     <Button
@@ -455,7 +455,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 </Box>
               )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
-                <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0.5 }}> {/* Changed mb to 0.5 */}
+                <Stack direction="row" spacing={0.5} alignItems="center"> {/* Changed spacing to 0.5 */}
                   <Person sx={{ fontSize: 16, color: color }} />
                   <Typography variant="body2" sx={{ color: '#666' }}>
                     {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -483,7 +483,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </Typography>
                   )}
                 </Stack>
-                <Box sx={{ minWidth: 130, textAlign: 'right', mt: 1 }}> {/* Added mt: 1 */}
+                <Box sx={{ minWidth: 130, textAlign: 'right' }}>
                   {showActionButton && (
                     <Button
                       variant="contained"
