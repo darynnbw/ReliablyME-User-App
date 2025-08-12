@@ -458,8 +458,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                 label={response.date}
                                 size="small"
                                 sx={{
-                                  bgcolor: '#e3f2fd',
-                                  color: '#1976d2',
+                                  bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
+                                  color: color,
                                   fontWeight: 700,
                                   fontSize: '12px',
                                   mb: 1,
@@ -486,8 +486,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                 label={response.date}
                                 size="small"
                                 sx={{
-                                  bgcolor: '#e3f2fd',
-                                  color: '#1976d2',
+                                  bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
+                                  color: color,
                                   fontWeight: 700,
                                   fontSize: '12px',
                                   mb: 1.5,
