@@ -11,8 +11,6 @@ const badgeConfig: { [key: string]: { color: string; displayText: string } } = {
   'Teamwork': { color: '#4caf50', displayText: 'TEAMWORK' },
   'Leadership': { color: '#9c27b0', displayText: 'LEADERSHIP' },
   'Communication Effectiveness - Nudging': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS' },
-  'On Track (Mid-Week Progress)': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS' },
-  'Weekly Progress Check-in': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS' },
   // Add more badge types as needed
 };
 
