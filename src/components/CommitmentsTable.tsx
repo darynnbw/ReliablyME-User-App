@@ -176,20 +176,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
 
   const numColumns = 5 + (isMyBadgesTab || isBadgesIssuedTab ? 1 : 0);
 
-  const expandableRowIds = commitments
-    .filter(c => (c.type === 'nudge' && c.responses && c.responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && c.explanation))
-    .map(c => c.id);
-
-  const areAllExpanded = expandableRowIds.length > 0 && expandableRowIds.every(id => expandedRows.has(id));
-
-  const handleToggleExpandAll = () => {
-    if (areAllExpanded) {
-      setExpandedRows(new Set());
-    } else {
-      setExpandedRows(new Set(expandableRowIds));
-    }
-  };
-
   return (
     <TableContainer
       component={Paper}
@@ -207,15 +193,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           <TableRow>
             <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '17%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Tooltip title={areAllExpanded ? "Collapse All" : "Expand All"}>
-                    <span>
-                      <IconButton size="small" onClick={handleToggleExpandAll} disabled={expandableRowIds.length === 0}>
-                        {areAllExpanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                </Box>
+                <Box sx={{ width: 32, flexShrink: 0, mr: 1 }} /> {/* Placeholder for alignment */}
                 Badge
                 <IconButton size="small" onClick={handleBadgeMenuOpen} aria-label="filter by badge">
                   <ArrowDropDown fontSize="small" sx={{ color: badgeIconColor }} />
