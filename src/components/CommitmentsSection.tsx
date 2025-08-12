@@ -381,9 +381,26 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
     return true;
   }).sort((a, b) => {
-    let dateA, dateB;
+    // Primary sort: Nudges first
+    const aIsNudge = a.type === 'nudge';
+    const bIsNudge = b.type === 'nudge';
+    if (aIsNudge && !bIsNudge) return -1;
+    if (!aIsNudge && bIsNudge) return 1;
 
-    switch (sortBy) {
+    // Secondary sort: based on user selection
+    let dateA, dateB;
+    
+    // If sortBy is 'nudges', we use a default secondary sort.
+    let effectiveSortBy = sortBy;
+    if (sortBy === 'nudges') {
+      if (isMyBadgesTab || isBadgesIssuedTab) {
+        effectiveSortBy = 'approvedDateNewest';
+      } else {
+        effectiveSortBy = 'dueDateNewest';
+      }
+    }
+
+    switch (effectiveSortBy) {
       case 'dueDateNewest':
       case 'dueDateOldest':
         dateA = parseCommitmentDate(a.dueDate);
@@ -407,15 +424,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     }
 
     if (!dateA && !dateB) return 0;
-    if (!dateA) return 1; // Treat null/invalid dates as later for 'newest' or earlier for 'oldest'
+    if (!dateA) return 1;
     if (!dateB) return -1;
 
-    if (sortBy.includes('Newest')) {
+    if (effectiveSortBy.includes('Newest')) {
       return dateB.valueOf() - dateA.valueOf(); // Newest first
-    } else if (sortBy.includes('Oldest')) {
+    } else if (effectiveSortBy.includes('Oldest')) {
       return dateA.valueOf() - dateB.valueOf(); // Oldest first
     }
-    return 0; // Should not be reached
+    return 0;
   });
 
   // No pagination for My Badges tab
@@ -898,6 +915,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 {/* Conditionally render sort options based on the tab type */}
                 {isMyBadgesTab || isBadgesIssuedTab ? (
                   [
+                    <MenuItem key="nudges" value="nudges">Nudges</MenuItem>,
                     <MenuItem key="approvedDateNewest" value="approvedDateNewest">Approved Date (Newest First)</MenuItem>,
                     <MenuItem key="approvedDateOldest" value="approvedDateOldest">Approved Date (Oldest First)</MenuItem>,
                     <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
@@ -905,6 +923,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   ]
                 ) : (
                   [
+                    <MenuItem key="nudges" value="nudges">Nudges</MenuItem>,
                     <MenuItem key="dueDateNewest" value="dueDateNewest">Due Date (Newest First)</MenuItem>,
                     <MenuItem key="dueDateOldest" value="dueDateOldest">Due Date (Oldest First)</MenuItem>,
                     <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
