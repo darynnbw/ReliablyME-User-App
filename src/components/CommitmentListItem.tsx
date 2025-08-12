@@ -314,7 +314,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5, mb: 1 }}> {/* Changed spacing to 0.5 */}
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
-                  {showFromLabel ? 'From:' : 'To:'}{' '}
+                  {showFromLabel ? 'From:' : 'To:'}
                   {!isExternal ? (
                     <ContactTooltip>
                       <span
@@ -458,7 +458,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 <Stack direction="row" spacing={0.5} alignItems="center"> {/* Changed spacing to 0.5 */}
                   <Person sx={{ fontSize: 16, color: color }} />
                   <Typography variant="body2" sx={{ color: '#666' }}>
-                    {showFromLabel ? 'From:' : 'To:'}{' '}
+                    {showFromLabel ? 'From:' : 'To:'}
                     {!isExternal ? (
                       <ContactTooltip>
                         <span
