@@ -428,9 +428,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     <>
                       {responses[0].questions && responses[0].questions.length > 0 && (
                         <Box sx={{ mb: 2 }}>
-                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                            Questions Asked:
-                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                              Questions Asked:
+                            </Typography>
+                            <Tooltip title="You’ll answer this same set of questions with each nudge.">
+                              <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
+                            </Tooltip>
+                          </Box>
                           <Stack spacing={0.5}>
                             {responses[0].questions.map((q, qIdx) => (
                               <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
@@ -440,19 +445,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           </Stack>
                         </Box>
                       )}
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                          All Responses ({responses.length}):
-                        </Typography>
-                        <Tooltip title="You’ll answer this same set of questions with each nudge.">
-                          <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
-                        </Tooltip>
-                      </Box>
-                      <Stack spacing={2}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: 1.5 }}>
+                        All Responses ({responses.length}):
+                      </Typography>
+                      <Stack spacing={1.5}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
-                            <Box key={idx} sx={{ pb: 2, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                            <Box key={idx} sx={{ pb: 1.5, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
                               <Chip
                                 label={response.date}
                                 size="small"
@@ -473,14 +473,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </>
                   ) : (
                     <>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
                         All Responses ({responses.length}):
                       </Typography>
-                      <Stack spacing={2}>
+                      <Stack spacing={1.5}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
-                            <Box key={idx} sx={{ pb: 2, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                            <Box key={idx} sx={{ pb: 1.5, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
                               <Chip
                                 label={response.date}
                                 size="small"
