@@ -424,6 +424,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   // const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0; // Removed
 
   // Effect to observe the height of the first item
+  const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
+  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
+
   useEffect(() => {
     if (firstItemRef.current) {
       const observer = new ResizeObserver(entries => {
@@ -435,9 +438,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       return () => observer.disconnect();
     }
   }, [paginatedItems.length, isTableView]); // Re-observe if items change or view mode changes
-
-  const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
-  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
 
   // Effect to dynamically adjust the height of the content area
   useEffect(() => {
@@ -1133,14 +1133,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          height: containerContentHeight, // Apply dynamic height here
-          minHeight: 0, // Allow shrinking
-          pr: isTableView ? 0 : 1, // Padding for scrollbar in regular mode
-          overflowY: isTableView ? 'visible' : 'auto', // Use 'auto' for regular mode to enable scrolling
-          display: 'flex', // Ensure flex properties apply to its children
-          flexDirection: 'column', // Stack children vertically
-          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start', // Center content if empty
-          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch', // Center content if empty
+          height: containerContentHeight,
+          minHeight: isTableView ? 'initial' : 0,
+          pr: isTableView ? 0 : 1,
+          overflowY: isTableView ? 'visible' : 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start',
+          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch',
         }}>
           {displayMode === 'table' ? ( /* Simplified condition */
             <Box sx={{ mt: 2 }}>
