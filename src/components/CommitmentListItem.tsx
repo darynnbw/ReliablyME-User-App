@@ -174,7 +174,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 0 }, display: 'flex', gap: 1.5 }}> {/* Changed pb to 0 */}
+      <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, display: 'flex', gap: 1.5 }}> {/* Changed p and pb */}
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
@@ -268,7 +268,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -284,8 +284,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {isActionsPage ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
               {/* Description and Explanation */}
-              <Box sx={{ mb: 1.5 }}>
-                <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
+              <Box sx={{ mb: 1 }}> {/* Reduced mb */}
+                <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0.5 }}> {/* Reduced mb */}
                   {description}
                 </Typography>
                 {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
@@ -296,7 +296,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       py: 1.5,
                       borderRadius: 2,
                       border: '1px solid #e9ecef',
-                      mb: 1.5, // This is the margin after explanation box
+                      mb: 1, // Reduced mb
                       maxWidth: '100%',
                     }}
                   >
@@ -431,7 +431,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Box>
           ) : (
             <>
-              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}>
+              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}> {/* Reduced mb */}
                 {description}
               </Typography>
               {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
@@ -442,7 +442,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     py: 1.5,
                     borderRadius: 2,
                     border: '1px solid #e9ecef',
-                    mb: 1.5,
+                    mb: 1, // Reduced mb
                     maxWidth: '100%',
                   }}
                 >
@@ -454,7 +454,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   </Typography>
                 </Box>
               )}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 0.5 }}> {/* Reduced mb */}
                 <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0 }}>
                   <Person sx={{ fontSize: 16, color: color }} />
                   <Typography variant="body2" sx={{ color: '#666' }}>
@@ -483,7 +483,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </Typography>
                   )}
                 </Stack>
-                <Box sx={{ minWidth: 130, textAlign: 'right', mt: 0 }}> {/* Changed mt to 0 */}
+                <Box sx={{ minWidth: 130, textAlign: 'right', mt: 0 }}>
                   {showActionButton && (
                     <Button
                       variant="contained"
