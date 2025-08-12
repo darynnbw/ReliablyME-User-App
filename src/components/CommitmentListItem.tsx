@@ -59,6 +59,7 @@ interface CommitmentListItemProps {
   approvedDate?: string; // Added approvedDate prop
   isExpanded: boolean;
   onToggleExpand: () => void;
+  isActionsPage?: boolean;
   isOthersCommitmentsSection?: boolean;
 }
 
@@ -114,6 +115,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   approvedDate, // Destructure approvedDate
   isExpanded,
   onToggleExpand,
+  isActionsPage = false,
   isOthersCommitmentsSection = false,
 }, ref) => {
   const theme = useTheme();
@@ -201,7 +203,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         )}
         <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}> {/* Add this */}
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: isActionsPage ? 1 : 0.5 }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -266,7 +268,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: isActionsPage ? 1.5 : 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -280,7 +282,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Original Description - always visible */}
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}> {/* Reduced mb */}
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: isActionsPage ? 2 : 1.5 }}>
             {description}
           </Typography>
 
@@ -307,7 +309,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Bottom row: Assignee and Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}> {/* Reduced mb */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: isActionsPage ? 0 : 1.5 }}>
             {/* Assignee */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />

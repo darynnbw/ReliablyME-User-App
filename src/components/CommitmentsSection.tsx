@@ -918,21 +918,21 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     <MenuItem key="approvedDateNewest" value="approvedDateNewest">Approved Date (Newest First)</MenuItem>,
                     <MenuItem key="approvedDateOldest" value="approvedDateOldest">Approved Date (Oldest First)</MenuItem>,
                     <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
-                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>,
+                    <MenuItem key="overdue" value="overdue">Overdue</MenuItem>,
+                    <MenuItem key="nudges" value="nudges">Nudges</MenuItem>
                   ]
                 ) : (
                   [
                     <MenuItem key="dueDateNewest" value="dueDateNewest">Due Date (Newest First)</MenuItem>,
                     <MenuItem key="dueDateOldest" value="dueDateOldest">Due Date (Oldest First)</MenuItem>,
                     <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
-                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>
+                    <MenuItem key="committedDateOldest" value="committedDateOldest">Committed Date (Oldest First)</MenuItem>,
+                    <MenuItem key="overdue" value="overdue">Overdue</MenuItem>,
+                    <MenuItem key="nudges" value="nudges">Nudges</MenuItem>
                   ]
                 )}
-                {/* Add Overdue sort option for relevant tabs */}
-                {!isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && (
-                  <MenuItem value="overdue">Overdue</MenuItem>
-                )}
-                <MenuItem key="nudges" value="nudges">Nudges</MenuItem>
+                {/* Remove duplicate Overdue option */}
               </Select>
             </FormControl>
 
@@ -1317,6 +1317,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
                       isExpanded={expandedRows.has(item.id)}
                       onToggleExpand={() => handleToggleExpandRow(item.id)}
+                      isActionsPage={isActionsPage}
                       isOthersCommitmentsSection={isOthersCommitmentsSection}
                     />
                   );
