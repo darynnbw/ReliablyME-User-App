@@ -700,9 +700,30 @@ const CommitmentPortfolio: React.FC = () => {
     },
   ];
 
+  const dailyAnswers = [
+    "Refactored the main database query for performance. Learned that indexing a specific column can have a massive impact.",
+    "Completed the UI mockups for the new dashboard. The challenge was incorporating feedback from three different stakeholders, which taught me to consolidate feedback before starting.",
+    "Wrote unit tests for the authentication module, achieving 95% coverage. I learned a new mocking technique for external services.",
+    "Fixed a critical bug in the payment processing system. The lesson was to always validate user input on both the client and server sides.",
+    "Deployed the latest build to the staging environment. Learned the importance of having a rollback plan, even for minor updates.",
+    "Met with the product team to finalize requirements for the next sprint. Learned to ask more clarifying questions to avoid ambiguity.",
+    "Updated the API documentation with the latest endpoints. The challenge was making it clear for non-technical users, improving my technical writing skills.",
+    "Investigated a performance bottleneck in the image upload feature. Learned about the trade-offs between image quality and loading speed.",
+    "Paired with a junior developer to help them with a complex task. It reinforced my own understanding of the codebase.",
+    "Set up a new CI/CD pipeline for the microservice. The lesson was that initial setup takes time but saves hours in the long run.",
+    "Analyzed user feedback from the last release. Learned that users often find creative ways to use features that we didn't anticipate.",
+    "Created a proof-of-concept for the new real-time notification feature. The challenge was choosing the right WebSocket library.",
+    "Participated in a code review for a teammate's feature. Learned a more efficient way to handle asynchronous operations in JavaScript.",
+    "Wrote a script to automate the weekly report generation. The lesson is that a few hours of scripting can save many hours of manual work.",
+    "Designed the database schema for the upcoming user profile section. Learned about the importance of normalization for data integrity.",
+    "Researched third-party APIs for a new integration. The challenge was navigating sparse documentation from one of the providers.",
+    "Sketched out the user flow for the password reset feature. Learned that visualizing the flow on paper first saves a lot of time in the design tool.",
+    "Finalized the user authentication flow. The main challenge was dealing with legacy code, which taught me the importance of clear documentation."
+  ];
+
   const badgesIssuedItems = [
     {
-      id: 166, // New ID
+      id: 166,
       title: 'On Track (Daily)',
       dueDate: dayjs().subtract(1, 'month').format('MMM D, YYYY, hh:mm A'),
       committedDate: dayjs().subtract(2, 'months').format('MMM D, YYYY, hh:mm A'),
@@ -710,13 +731,13 @@ const CommitmentPortfolio: React.FC = () => {
       description: 'I will provide a daily update on my progress towards the quarterly goals, ensuring transparency and accountability.',
       assignee: 'Riley Chen',
       type: 'nudge',
-      responses: Array.from({ length: 18 }, (_, i) => ({
+      responses: dailyAnswers.map((answer, i) => ({
         date: dayjs().subtract(1, 'month').subtract(i, 'days').format('MMM D, YYYY'),
         questions: [
           'What’s one thing you did today that moved you closer to your goal?',
           'What’s one lesson you learned from today’s challenges?'
         ],
-        answer: `Day ${18 - i}: Finalized the user authentication flow. The main challenge was dealing with legacy code, which taught me the importance of clear documentation.`
+        answer: answer
       }))
     },
     {
