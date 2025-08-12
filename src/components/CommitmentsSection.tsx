@@ -915,7 +915,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 {/* Conditionally render sort options based on the tab type */}
                 {isMyBadgesTab || isBadgesIssuedTab ? (
                   [
-                    <MenuItem key="nudges" value="nudges">Nudges</MenuItem>,
                     <MenuItem key="approvedDateNewest" value="approvedDateNewest">Approved Date (Newest First)</MenuItem>,
                     <MenuItem key="approvedDateOldest" value="approvedDateOldest">Approved Date (Oldest First)</MenuItem>,
                     <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
@@ -923,7 +922,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   ]
                 ) : (
                   [
-                    <MenuItem key="nudges" value="nudges">Nudges</MenuItem>,
                     <MenuItem key="dueDateNewest" value="dueDateNewest">Due Date (Newest First)</MenuItem>,
                     <MenuItem key="dueDateOldest" value="dueDateOldest">Due Date (Oldest First)</MenuItem>,
                     <MenuItem key="committedDateNewest" value="committedDateNewest">Committed Date (Newest First)</MenuItem>,
@@ -934,6 +932,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 {!isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && (
                   <MenuItem value="overdue">Overdue</MenuItem>
                 )}
+                <MenuItem key="nudges" value="nudges">Nudges</MenuItem>
               </Select>
             </FormControl>
 
