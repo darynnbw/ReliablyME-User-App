@@ -17,6 +17,7 @@ import {
   Stack, // Import Stack for layout
   Chip, // Import Chip for pill-shaped dates
   Tooltip, // Import Tooltip
+  Divider,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
@@ -410,11 +411,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                   <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: 1.5 }}>
                                     All Responses ({commitment.responses.length}):
                                   </Typography>
-                                  <Stack spacing={1.5}>
+                                  <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                                     {commitment.responses
                                       .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                                       .map((response, idx) => (
-                                        <Box key={idx} sx={{ pb: 1.5, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                                        <Box key={idx}>
                                           <Chip
                                             label={response.date}
                                             size="small"
@@ -423,7 +424,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                               color: '#1976d2',
                                               fontWeight: 700,
                                               fontSize: '12px',
-                                              mb: 1.5,
+                                              mb: 1,
                                             }}
                                           />
                                           <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
@@ -438,11 +439,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                   <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
                                     All Responses ({commitment.responses.length}):
                                   </Typography>
-                                  <Stack spacing={1.5}>
+                                  <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                                     {commitment.responses
                                       .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                                       .map((response, idx) => (
-                                        <Box key={idx} sx={{ pb: 1.5, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                                        <Box key={idx}>
                                           <Chip
                                             label={response.date}
                                             size="small"

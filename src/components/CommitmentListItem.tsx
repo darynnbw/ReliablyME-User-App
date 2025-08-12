@@ -13,6 +13,7 @@ import {
   Chip,
   useTheme,
   Collapse, // Import Collapse
+  Divider,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon, Repeat } from '@mui/icons-material';
 import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
@@ -448,11 +449,11 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: 1.5 }}>
                         All Responses ({responses.length}):
                       </Typography>
-                      <Stack spacing={1.5}>
+                      <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
-                            <Box key={idx} sx={{ pb: 1.5, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                            <Box key={idx}>
                               <Chip
                                 label={response.date}
                                 size="small"
@@ -461,7 +462,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                   color: '#1976d2',
                                   fontWeight: 700,
                                   fontSize: '12px',
-                                  mb: 1.5,
+                                  mb: 1,
                                 }}
                               />
                               <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
@@ -476,11 +477,11 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
                         All Responses ({responses.length}):
                       </Typography>
-                      <Stack spacing={1.5}>
+                      <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
-                            <Box key={idx} sx={{ pb: 1.5, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                            <Box key={idx}>
                               <Chip
                                 label={response.date}
                                 size="small"
