@@ -311,7 +311,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Box>
 
               {/* Assignee Info */}
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, mb: 2 }}>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, mb: 1 }}> {/* Changed mb to 1 */}
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -560,6 +560,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         px: 4,
                         py: 0.75,
                         borderRadius: 1,
+                        mt: (showActionButton || showAcceptDeclineButtons) ? 1 : 0,
                         '&:hover': { bgcolor: '#d32f2f' },
                       }}
                     >
