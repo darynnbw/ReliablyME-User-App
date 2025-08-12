@@ -379,7 +379,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                 {commitment.responses
                                   .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
                                   .map((response, idx) => (
-                                    <Box key={idx} sx={{ pt: 2, borderTop: idx > 0 ? '1px solid grey.200' : 'none' }}>
+                                    <Box key={idx} sx={{ pb: 2, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
                                       <Chip
                                         label={response.date}
                                         size="small"
