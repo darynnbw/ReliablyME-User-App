@@ -93,7 +93,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             '&:hover': { bgcolor: 'primary.dark' },
           }}
         >
-          Clarify
+          Clarify Request
         </Button>
       );
     }
