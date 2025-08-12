@@ -702,6 +702,24 @@ const CommitmentPortfolio: React.FC = () => {
 
   const badgesIssuedItems = [
     {
+      id: 166, // New ID
+      title: 'On Track (Daily)',
+      dueDate: dayjs().subtract(1, 'month').format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(2, 'months').format('MMM D, YYYY, hh:mm A'),
+      approvedDate: dayjs().subtract(1, 'month').add(1, 'day').format('MMM D, YYYY, hh:mm A'),
+      description: 'I will provide a daily update on my progress towards the quarterly goals, ensuring transparency and accountability.',
+      assignee: 'Riley Chen',
+      type: 'nudge',
+      responses: Array.from({ length: 18 }, (_, i) => ({
+        date: dayjs().subtract(1, 'month').subtract(i, 'days').format('MMM D, YYYY'),
+        questions: [
+          'What’s one thing you did today that moved you closer to your goal?',
+          'What’s one lesson you learned from today’s challenges?'
+        ],
+        answer: `Day ${18 - i}: Finalized the user authentication flow. The main challenge was dealing with legacy code, which taught me the importance of clear documentation.`
+      }))
+    },
+    {
       id: 101,
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(10, 'day').hour(14).minute(0).format('MMM D, YYYY, hh:mm A'),

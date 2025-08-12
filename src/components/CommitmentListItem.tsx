@@ -59,6 +59,7 @@ interface CommitmentListItemProps {
   approvedDate?: string; // Added approvedDate prop
   isExpanded: boolean;
   onToggleExpand: () => void;
+  isOthersCommitmentsSection?: boolean;
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -113,6 +114,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   approvedDate, // Destructure approvedDate
   isExpanded,
   onToggleExpand,
+  isOthersCommitmentsSection = false,
 }, ref) => {
   const theme = useTheme();
 
@@ -512,7 +514,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                               )}
                               <Box>
                                 <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
-                                  Your Answer:
+                                  {isOthersCommitmentsSection ? 'Their Answer:' : 'Your Answer:'}
                                 </Typography>
                                 <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
                                   {response.answer}
