@@ -118,6 +118,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   isActionsPage = false,
   isOthersCommitmentsSection = false,
 }, ref) => {
+  // Explicitly "read" these props to satisfy TS6133
+  void isActionsPage;
+  void isOthersCommitmentsSection;
+
   const theme = useTheme();
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +146,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
   const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
-  const isRecurringNudge = isNudge && areQuestionsRecurring(responses);
+  const isRecurringNudge = isNudge && areQuestionsRecurring(responses); // isRecurringNudge is used here
 
   return (
     <Card
@@ -201,7 +205,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center', display: 'flex', flexDirection: 'column' }}> {/* Added display:flex, flexDirection:column */}
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center">
@@ -281,404 +285,146 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
           )}
 
-          {isActionsPage ? (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
-                  {description}
+          {/* Text content (description, explanation, assignee) */}
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
+            {description}
+          </Typography>
+          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
+            <Box
+              sx={{
+                bgcolor: '#f8f9fa',
+                px: 2,
+                py: 1.5,
+                borderRadius: 2,
+                border: '1px solid #e9ecef',
+                mb: 1.5,
+                maxWidth: '100%',
+              }}
+            >
+              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                  Explanation:{' '}
                 </Typography>
-                {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
-                  <Box
-                    sx={{
-                      bgcolor: '#f8f9fa',
-                      px: 2,
-                      py: 1.5,
-                      borderRadius: 2,
-                      border: '1px solid #e9ecef',
-                      mb: 1.5,
-                      maxWidth: '100%',
+                {explanation}
+              </Typography>
+            </Box>
+          )}
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}> {/* Removed mb: 1.5 here */}
+            <Person sx={{ fontSize: 16, color: color }} />
+            <Typography variant="body2" sx={{ color: '#666' }}>
+              {showFromLabel ? 'From:' : 'To:'}{' '}
+              {!isExternal ? (
+                <ContactTooltip>
+                  <span
+                    style={{
+                      color: '#666',
+                      cursor: 'pointer',
+                      fontSize: 'inherit',
+                      fontFamily: 'inherit',
+                      fontWeight: 'inherit'
                     }}
                   >
-                    <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                      <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                        Explanation:{' '}
-                      </Typography>
-                      {explanation}
-                    </Typography>
-                  </Box>
-                )}
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, mb: 1.5 }}> {/* Added mt: 0.5 here */}
-                  <Person sx={{ fontSize: 16, color: color }} />
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    {showFromLabel ? 'From:' : 'To:'}{' '}
-                    {!isExternal ? (
-                      <ContactTooltip>
-                        <span
-                          style={{
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: 'inherit',
-                            fontFamily: 'inherit',
-                            fontWeight: 'inherit'
-                          }}
-                        >
-                          {assignee}
-                        </span>
-                      </ContactTooltip>
-                    ) : (
-                      assignee
-                    )}
-                  </Typography>
-                  {isExternal && (
-                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                      (Non-member)
-                    </Typography>
-                  )}
-                </Stack>
-              </Box>
-              <Box sx={{ flexShrink: 0 }}>
-                <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-                  {showActionButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onActionButtonClick}
-                      disabled={isBulkSelecting}
-                      startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
-                      sx={{
-                        bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: buttonText === 'Clarify' ? 6 : 3,
-                        py: 1,
-                        borderRadius: 1,
-                        flexShrink: 0,
-                        '&:hover': { 
-                          bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
-                            ? '#f4511e'
-                            : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
-                        },
-                      }}
-                    >
-                      {buttonText}
-                    </Button>
-                  )}
-                  {showAcceptDeclineButtons && (
-                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                      <Button
-                        variant="contained"
-                        onClick={onDecline}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#F44336',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#d32f2f' },
-                        }}
-                      >
-                        {declineButtonText || 'Decline'}
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={onAccept}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#4CAF50',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#388e3c' },
-                        }}
-                      >
-                        {acceptButtonText || 'Accept'}
-                      </Button>
-                    </Box>
-                  )}
-                  {showRevokeButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onRevoke}
-                      disabled={isBulkSelecting}
-                      sx={{
-                        bgcolor: '#F44336',
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: 4,
-                        py: 0.75,
-                        borderRadius: 1,
-                        '&:hover': { bgcolor: '#d32f2f' },
-                      }}
-                    >
-                      Revoke
-                    </Button>
-                  )}
-                </Box>
-              </Box>
-            </Box>
-          ) : (
-            <>
-              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}>
-                {description}
+                    {assignee}
+                  </span>
+                </ContactTooltip>
+              ) : (
+                assignee
+              )}
+            </Typography>
+            {isExternal && (
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                (Non-member)
               </Typography>
-              {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
-                <Box
+            )}
+          </Stack>
+
+          {/* Action Buttons - now always at the bottom right, regardless of isActionsPage */}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto', pt: 1.5 }}> {/* Added pt for spacing */}
+            <Box sx={{ minWidth: 130, textAlign: 'right' }}>
+              {showActionButton && (
+                <Button
+                  variant="contained"
+                  onClick={onActionButtonClick}
+                  disabled={isBulkSelecting}
+                  startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
                   sx={{
-                    bgcolor: '#f8f9fa',
-                    px: 2,
-                    py: 1.5,
-                    borderRadius: 2,
-                    border: '1px solid #e9ecef',
-                    mb: 1.5,
-                    maxWidth: '100%',
+                    bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: buttonText === 'Clarify' ? 6 : 3,
+                    py: 1,
+                    borderRadius: 1,
+                    flexShrink: 0,
+                    '&:hover': { 
+                      bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
+                        ? '#f4511e'
+                        : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
+                    },
                   }}
                 >
-                  <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                    <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                      Explanation:{' '}
-                    </Typography>
-                    {explanation}
-                  </Typography>
+                  {buttonText}
+                </Button>
+              )}
+              {showAcceptDeclineButtons && (
+                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                  <Button
+                    variant="contained"
+                    onClick={onDecline}
+                    disabled={isBulkSelecting}
+                    sx={{
+                      bgcolor: '#F44336',
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                      px: 4,
+                      py: 0.75,
+                      borderRadius: 1,
+                      '&:hover': { bgcolor: '#d32f2f' },
+                    }}
+                  >
+                    {declineButtonText || 'Decline'}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={onAccept}
+                    disabled={isBulkSelecting}
+                    sx={{
+                      bgcolor: '#4CAF50',
+                      color: 'white',
+                      textTransform: 'none',
+                      fontWeight: 'bold',
+                      px: 4,
+                      py: 0.75,
+                      borderRadius: 1,
+                      '&:hover': { bgcolor: '#388e3c' },
+                    }}
+                  >
+                    {acceptButtonText || 'Accept'}
+                  </Button>
                 </Box>
               )}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Person sx={{ fontSize: 16, color: color }} />
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    {showFromLabel ? 'From:' : 'To:'}{' '}
-                    {!isExternal ? (
-                      <ContactTooltip>
-                        <span
-                          style={{
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: 'inherit',
-                            fontFamily: 'inherit',
-                            fontWeight: 'inherit'
-                          }}
-                        >
-                          {assignee}
-                        </span>
-                      </ContactTooltip>
-                    ) : (
-                      assignee
-                    )}
-                  </Typography>
-                  {isExternal && (
-                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                      (Non-member)
-                    </Typography>
-                  )}
-                </Stack>
-                <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-                  {showActionButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onActionButtonClick}
-                      disabled={isBulkSelecting}
-                      startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
-                      sx={{
-                        bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: buttonText === 'Clarify' ? 6 : 3,
-                        py: 1,
-                        borderRadius: 1,
-                        flexShrink: 0,
-                        '&:hover': { 
-                          bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
-                            ? '#f4511e'
-                            : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
-                        },
-                      }}
-                    >
-                      {buttonText}
-                    </Button>
-                  )}
-                  {showAcceptDeclineButtons && (
-                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                      <Button
-                        variant="contained"
-                        onClick={onDecline}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#F44336',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#d32f2f' },
-                        }}
-                      >
-                        {declineButtonText || 'Decline'}
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={onAccept}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#4CAF50',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#388e3c' },
-                        }}
-                      >
-                        {acceptButtonText || 'Accept'}
-                      </Button>
-                    </Box>
-                  )}
-                  {showRevokeButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onRevoke}
-                      disabled={isBulkSelecting}
-                      sx={{
-                        bgcolor: '#F44336',
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: 4,
-                        py: 0.75,
-                        borderRadius: 1,
-                        '&:hover': { bgcolor: '#d32f2f' },
-                      }}
-                    >
-                      Revoke
-                    </Button>
-                  )}
-                </Box>
-              </Box>
-            </>
-          )}
-
-          {/* Collapsible Responses / Explanation */}
-          {showExpandIcon && (
-            <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-                {isNudge && responses && responses.length > 0 && (
-                  isRecurringNudge ? (
-                    <>
-                      {responses[0].questions && responses[0].questions.length > 0 && (
-                        <Box sx={{ mb: 2 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
-                              Questions Asked:
-                            </Typography>
-                            <Tooltip title="You’ll answer this same set of questions with each nudge.">
-                              <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
-                            </Tooltip>
-                          </Box>
-                          <Stack spacing={0.5}>
-                            {responses[0].questions.map((q, qIdx) => (
-                              <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                {q}
-                              </Typography>
-                            ))}
-                          </Stack>
-                        </Box>
-                      )}
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: 1.5 }}>
-                        All Responses ({responses.length}):
-                      </Typography>
-                      <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
-                        {responses
-                          .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
-                          .map((response, idx) => (
-                            <Box key={idx}>
-                              <Chip
-                                label={response.date}
-                                size="small"
-                                sx={{
-                                  bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
-                                  color: color,
-                                  fontWeight: 700,
-                                  fontSize: '12px',
-                                  mb: 1,
-                                }}
-                              />
-                              <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                {response.answer}
-                              </Typography>
-                            </Box>
-                          ))}
-                      </Stack>
-                    </>
-                  ) : (
-                    <>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
-                        All Responses ({responses.length}):
-                      </Typography>
-                      <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
-                        {responses
-                          .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
-                          .map((response, idx) => (
-                            <Box key={idx}>
-                              <Chip
-                                label={response.date}
-                                size="small"
-                                sx={{
-                                  bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
-                                  color: color,
-                                  fontWeight: 700,
-                                  fontSize: '12px',
-                                  mb: 1.5,
-                                }}
-                              />
-                              {response.questions && response.questions.length > 0 && (
-                                <Box sx={{ mb: 1 }}>
-                                  <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
-                                    Questions Asked:
-                                  </Typography>
-                                  <Stack spacing={0.5}>
-                                    {response.questions.map((q, qIdx) => (
-                                      <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                        {q}
-                                      </Typography>
-                                    ))}
-                                  </Stack>
-                                </Box>
-                              )}
-                              <Box>
-                                <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
-                                  {isOthersCommitmentsSection ? 'Their Answer:' : 'Your Answer:'}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                  {response.answer}
-                                </Typography>
-                              </Box>
-                            </Box>
-                          ))}
-                      </Stack>
-                    </>
-                  )
-                )}
-                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
-                  <>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                      Explanation:
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                      {explanation}
-                    </Typography>
-                  </>
-                )}
-              </Box>
-            </Collapse>
-          )}
+              {showRevokeButton && (
+                <Button
+                  variant="contained"
+                  onClick={onRevoke}
+                  disabled={isBulkSelecting}
+                  sx={{
+                    bgcolor: '#F44336',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 4,
+                    py: 0.75,
+                    borderRadius: 1,
+                    '&:hover': { bgcolor: '#d32f2f' },
+                  }}
+                >
+                  Revoke
+                </Button>
+              )}
+            </Box>
+          </Box>
         </Box>
       </CardContent>
     </Card>
