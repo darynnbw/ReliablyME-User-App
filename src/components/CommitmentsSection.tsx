@@ -51,8 +51,8 @@ import SuccessConfirmationModal from './SuccessConfirmationModal';
 import BadgeRequestDetailsModal from './BadgeRequestDetailsModal';
 import ConfirmationModal from './ConfirmationModal';
 import CommitmentActionModal from './CommitmentActionModal';
-import CommitmentsTable from './CommitmentsTable'; // Import the new table component
-import { Switch, FormControlLabel } from '@mui/material'; // Import Switch and FormControlLabel
+import CommitmentsTable from './CommitmentsTable';
+import { Switch, FormControlLabel } from '@mui/material';
 
 dayjs.extend(isBetween);
 
@@ -64,39 +64,37 @@ interface Commitment {
   assignee: string;
   selected?: boolean;
   committedDate?: string;
-  approvedDate?: string; // Added approvedDate
+  approvedDate?: string;
   type?: string;
   nudgesLeft?: number;
   totalNudges?: number;
   isExternal?: boolean;
   questions?: string[];
   explanation?: string;
-  responses?: { date: string; answer: string; questions?: string[] }[]; // Added questions to responses
-  isOverdue?: boolean; // Added isOverdue to Commitment interface
+  responses?: { date: string; answer: string; questions?: string[] }[];
+  isOverdue?: boolean;
 }
 
 interface CommitmentsSectionProps {
   title:string;
   tabs: { label: string; count: number; items: Commitment[] }[];
-  displayMode?: 'regular' | 'table'; // New prop for display mode
-  onToggleDisplayMode?: (mode: 'regular' | 'table') => void; // New prop for toggle handler
-  showClearAllFilters?: boolean; // New prop to control visibility of Clear All Filters button
-  isActionsPage?: boolean; // New prop to differentiate between Actions and Commitment Portfolio
-  isCommitmentPortfolioPage?: boolean; // New prop to indicate if on Commitment Portfolio page
+  displayMode?: 'regular' | 'table';
+  onToggleDisplayMode?: (mode: 'regular' | 'table') => void;
+  showClearAllFilters?: boolean;
+  isActionsPage?: boolean;
+  isCommitmentPortfolioPage?: boolean;
 }
 
 const parseCommitmentDate = (dateString: string): Dayjs | null => {
   try {
     if (dateString === 'Today') return dayjs().startOf('day');
-    // Handle "Completed Jul 18, 8:00 PM" or "Pending"
     let cleanDateString = dateString;
     if (dateString.startsWith('Completed ')) {
       cleanDateString = dateString.substring('Completed '.length);
     } else if (dateString === 'Pending') {
-      return null; // Or handle as a future/indefinite date
+      return null;
     }
     
-    // Attempt to parse different formats, like "MMM D, hh:mm A" or "MMM D, YYYY"
     const date = dayjs(cleanDateString, ['MMM D, hh:mm A', 'MMM D, YYYY, hh:mm A', 'MMM D', 'MMM D, YYYY'], true);
     return date.isValid() ? date : null;
   } catch (error) {
@@ -119,7 +117,6 @@ const parseCommittedDate = (dateString?: string): Dayjs | null => {
   }
 };
 
-// Define group members for filtering
 const groupMembers: { [key: string]: string[] } = {
   'Development team': ['Alex Johnson', 'Chris Parker'],
   'Customer facing team': ['Riley Chen'],
@@ -135,13 +132,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [searchTerm, setSearchTerm] = useState('');
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set()); // Fixed: Correct useState initialization
   
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
 
-  // New state for table-specific filters
   const [badgeTableFilter, setBadgeTableFilter] = useState('');
   const [commitmentTextTableFilter, setCommitmentTextTableFilter] = useState('');
   const [assigneeTableFilter, setAssigneeTableFilter] = useState('');
@@ -216,14 +212,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [bulkRejectModalOpen, setBulkRejectModalOpen] = useState(false);
   const [bulkApprovalSuccessOpen, setBulkApprovalSuccessOpen] = useState(false);
 
-  // New state for clarification success modal
-  const [showClarificationSuccessModal, setShowClarificationSuccessModal] = useState(false);
-
-  // State for "Make a Promise" modal from empty state
   const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
 
-  // State for dynamic container height
   const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto');
 
   const handleOpenMakePromiseModal = (type: 'promise' | 'request') => {
@@ -249,26 +240,22 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setShowClarificationSuccessModal(false);
   }, []);
 
-  // New functions for badge approval/rejection
   const handleApproveBadgeRequest = (commitment: Commitment) => {
     console.log('Approving badge request:', commitment.id);
-    // Logic to remove the approved badge request from the list
     setCommitments(prev => prev.filter(c => c.id !== commitment.id));
     setApprovalModalOpen(true);
-    setRequesterForApproval(commitment.assignee); // Assuming assignee is the requester
+    setRequesterForApproval(commitment.assignee);
   };
 
   const handleRejectBadgeRequest = (commitment: Commitment) => {
     console.log('Rejecting badge request:', commitment.id);
-    // Logic to remove the rejected badge request from the list
     setCommitments(prev => prev.filter(c => c.id !== commitment.id));
-    setCommitmentToReject(commitment); // Set the commitment for the reject modal
+    setCommitmentToReject(commitment);
     setRejectBadgeModalOpen(true);
   };
 
   const handleConfirmRejectBadge = () => {
     console.log('Confirming rejection of badge request:', commitmentToReject?.id);
-    // Logic to handle the rejection confirmation
     setRejectBadgeModalOpen(false);
     setCommitmentToReject(null);
   };
@@ -277,8 +264,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
     setExpandedRows(new Set());
-    // Reset filters when tab changes to a disabled filter tab, but keep personFilter
-    // Determine if filters should be disabled for the current tab
     const currentTabLabel = tabs[activeTab].label;
     const disableFiltersForCurrentTab = currentTabLabel === 'Requests to Commit' || currentTabLabel === 'Awaiting Response' || currentTabLabel === 'Active Promises';
 
@@ -290,14 +275,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       setTempDateRange([null, null]);
     }
 
-    // Set default sortBy for 'My Badges' and 'Badges Issued' tabs
     if (currentTabLabel === 'My Badges' || currentTabLabel === 'Badges Issued') {
       setSortBy('approvedDateNewest');
     } else {
-      setSortBy('dueDateNewest'); // Default for other tabs
+      setSortBy('dueDateNewest');
     }
 
-    // Reset table-specific filters when tab changes
     setBadgeTableFilter('');
     setCommitmentTextTableFilter('');
     setAssigneeTableFilter('');
@@ -306,34 +289,29 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setApprovedDateTableFilter(null);
   }, [activeTab, tabs]);
 
-  // Define these boolean flags after activeTab is set in useEffect or directly from activeTab
-  const isActivePromisesTab = tabs[activeTab].label === 'Active Promises'; // New tab
-  const isMyPromisesTab = tabs[activeTab].label === 'My Promises'; // This is the old 'My Promises' (now 'My Badges' in Portfolio)
+  const isActivePromisesTab = tabs[activeTab].label === 'Active Promises';
+  const isMyPromisesTab = tabs[activeTab].label === 'My Promises';
   const isRequestsToCommitTab = tabs[activeTab].label === 'Requests to Commit';
   const isAwaitingResponseTab = tabs[activeTab].label === 'Awaiting Response';
   const isOwedToMe = tabs[activeTab].label === 'Promises Owed to Me';
   const isBadgeRequestsTab = tabs[activeTab].label === 'Badge Requests';
-  const isMyBadgesTab = tabs[activeTab].label === 'My Badges'; // This is the new 'My Badges'
+  const isMyBadgesTab = tabs[activeTab].label === 'My Badges';
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
-  const isBadgesIssuedTab = tabs[activeTab].label === 'Badges Issued'; // New flag for Badges Issued tab
+  const isBadgesIssuedTab = tabs[activeTab].label === 'Badges Issued';
 
-  // Determine if all filters (except sort by) should be disabled
   const disableAllFiltersExceptSort = isRequestsToCommitTab || isAwaitingResponseTab;
 
-  // Generate unique people and add group options
   const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
-  const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead'); // Filter out 'Dev Team Lead'
-  const filterOptions = [...uniquePeople, 'Development team']; // Add 'Development team' as an option
+  const uniquePeople = [...new Set(allAssignees)].filter(name => name !== 'Dev Team Lead');
+  const filterOptions = [...uniquePeople, 'Development team'];
   const hasExternal = tabs.some(tab => tab.items.some(item => item.isExternal));
 
-  // Pre-process commitments to add a calculated isOverdue flag for sorting
   const processedCommitments = commitments.map(item => ({
     ...item,
     isOverdue: item.isOverdue || (!isUnkeptTab && !isMyBadgesTab && !isBadgesIssuedTab && (parseCommitmentDate(item.dueDate) ? parseCommitmentDate(item.dueDate)!.isBefore(dayjs(), 'day') : false))
   }));
 
   const currentItems = processedCommitments.filter(item => {
-    // Global filters
     const searchMatch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.assignee.toLowerCase().includes(searchTerm.toLowerCase());
@@ -341,7 +319,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     if (!searchMatch) return false;
 
     const personMatch = (() => {
-      if (!personFilter) return true; // 'All' is selected
+      if (!personFilter) return true;
       if (personFilter === 'External') return item.isExternal === true;
       if (personFilter === 'Development team') {
         return groupMembers['Development team'].includes(item.assignee);
@@ -363,7 +341,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     
     if (!dateMatch) return false;
 
-    // Table-specific filters (only apply if displayMode is 'table')
     if (displayMode === 'table') {
       if (badgeTableFilter && item.title !== badgeTableFilter) return false;
       if (commitmentTextTableFilter && !item.description.toLowerCase().includes(commitmentTextTableFilter.toLowerCase())) return false;
@@ -381,16 +358,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
     return true;
   }).sort((a, b) => {
-    // Primary sort: Nudges first
     const aIsNudge = a.type === 'nudge';
     const bIsNudge = b.type === 'nudge';
     if (aIsNudge && !bIsNudge) return -1;
     if (!aIsNudge && bIsNudge) return 1;
 
-    // Secondary sort: based on user selection
-    let dateA, dateB;
-    
-    // If sortBy is 'nudges', we use a default secondary sort.
     let effectiveSortBy = sortBy;
     if (sortBy === 'nudges') {
       if (isMyBadgesTab || isBadgesIssuedTab) {
@@ -400,6 +372,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       }
     }
 
+    let dateA, dateB;
     switch (effectiveSortBy) {
       case 'dueDateNewest':
       case 'dueDateOldest':
@@ -417,7 +390,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         dateB = b.approvedDate ? dayjs(b.approvedDate, 'MMM D, YYYY, hh:mm A') : null;
         break;
       case 'overdue':
-        // This will sort true (overdue) values before false (not overdue) values.
         return (b.isOverdue ? 1 : 0) - (a.isOverdue ? 1 : 0);
       default:
         return 0;
@@ -428,18 +400,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     if (!dateB) return -1;
 
     if (effectiveSortBy.includes('Newest')) {
-      return dateB.valueOf() - dateA.valueOf(); // Newest first
+      return dateB.valueOf() - dateA.valueOf();
     } else if (effectiveSortBy.includes('Oldest')) {
-      return dateA.valueOf() - dateB.valueOf(); // Oldest first
+      return dateA.valueOf() - dateB.valueOf();
     }
     return 0;
   });
 
-  // No pagination for My Badges tab
   const paginatedItems = currentItems;
-  // const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0; // Removed
 
-  // Effect to observe the height of the first item
   useEffect(() => {
     if (firstItemRef.current) {
       const observer = new ResizeObserver(entries => {
@@ -450,33 +419,30 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       observer.observe(firstItemRef.current);
       return () => observer.disconnect();
     }
-  }, [paginatedItems.length, displayMode]); // Re-observe if items change or view mode changes
+  }, [paginatedItems.length, displayMode]);
 
-  const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
-  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
+  const firstItemRef = useRef<HTMLDivElement>(null);
+  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null);
 
-  // Effect to dynamically adjust the height of the content area
   useEffect(() => {
     if (displayMode === 'table') {
-      setContainerContentHeight('auto'); // Table view handles its own height
+      setContainerContentHeight('auto');
       return;
     }
 
     if (paginatedItems.length === 0) {
-      // When there are no items, set a fixed height for the empty state message
-      setContainerContentHeight('250px'); // This value might need fine-tuning
-    } else if (firstItemObservedHeight !== null) { // Use observed height
+      setContainerContentHeight('250px');
+    } else if (firstItemObservedHeight !== null) {
       const cardHeight = firstItemObservedHeight;
-      const spacing = 8; // From <Stack spacing={1}>
+      const spacing = 8;
 
       if (paginatedItems.length === 1) {
         setContainerContentHeight(cardHeight);
       } else {
-        // For 2 or more items, show 2 items and enable scrolling
         setContainerContentHeight((cardHeight * 2) + spacing);
       }
     }
-  }, [paginatedItems.length, displayMode, firstItemObservedHeight]); // Add observed height as dependency
+  }, [paginatedItems.length, displayMode, firstItemObservedHeight]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -485,7 +451,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     } else if (item.type === 'nudge' && (isMyPromisesTab || isRequestsToCommitTab)) {
       setCommitmentForNudgeDetails(item);
       setNudgeDetailsModalOpen(true);
-    } else if (isMyBadgesTab || isBadgesIssuedTab) { // Handle My Badges tab and Badges Issued tab specifically
+    } else if (isMyBadgesTab || isBadgesIssuedTab) {
       handleViewBadgeDetails(item);
     }
     else {
@@ -510,8 +476,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     const checked = event.target.checked;
     setSelectAll(checked);
     setCommitments(prev => prev.map(item => {
-      // Nudges in My Promises tab should never be selectable for bulk actions
-      // Also, items in 'Active Promises' tab should not be selectable
       const isNudgeInMyPromises = isMyPromisesTab && item.type === 'nudge';
       const isItemInActivePromises = isActivePromisesTab;
       return { ...item, selected: (isNudgeInMyPromises || isItemInActivePromises) ? false : checked };
@@ -581,7 +545,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const handleConfirmIndividualDecline = () => {
     console.log('Declining commitment:', commitmentToDecline?.id);
-    // In a real app, you would add the logic to actually decline the commitment here
     setIndividualDeclineModalOpen(false);
     setCommitmentToDecline(null);
   };
@@ -602,16 +565,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const handleCommit = (date: Dayjs | null, time: Dayjs | null) => {
     console.log('Committed with date:', date?.format(), 'and time:', time?.format(), 'for commitment:', commitmentToAccept?.id);
-    // The modal will close itself after the success animation.
-    // We just need to clear the commitment state here.
     setCommitmentToAccept(null);
   };
 
   const handleConfirmBulkDecline = () => {
     console.log('Bulk declining commitments:', selectedCommitments.map(c => c.id));
-    // Here you would add the logic to actually decline them
     setBulkDeclineModalOpen(false);
-    // Unselect all after action
     setCommitments(prev => prev.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
   };
@@ -666,7 +625,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     console.log(`Clarification request for ${commitmentToClarify?.id}: ${message}`);
     setClarifyModalOpen(false);
     setCommitmentToClarify(null);
-    setShowClarificationSuccessModal(true); // Trigger success modal here
+    setShowClarificationSuccessModal(true);
   };
 
   const handleRevokeFromDetails = () => {
@@ -710,21 +669,18 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const selectedCommitments = commitments.filter(item => item.selected);
   const selectedCount = selectedCommitments.length;
   
-  let itemColor = '#ff7043'; // Default orange for 'My Commitments' section
+  let itemColor = '#ff7043';
 
-  // Determine item color based on the section title first
   if (title.trim() === "Others' Commitments") {
-    itemColor = '#1976d2'; // Default blue for 'Others' Commitments' section
-  } else { // This is 'My Commitments' section
-    itemColor = '#ff7043'; // Default orange for 'My Commitments' section
+    itemColor = '#1976d2';
+  } else {
+    itemColor = '#ff7043';
   }
 
-  // Override color for 'Unkept' tabs, regardless of section
   if (isUnkeptTab) {
-    itemColor = '#4F4F4F'; // Grey for 'Unkept' tabs
+    itemColor = '#4F4F4F';
   }
 
-  // Bulk actions section should only show if it's the Actions page and not for Unkept/MyBadges tabs
   const showBulkActionsSection = isActionsPage && paginatedItems.length > 0 && !isUnkeptTab && !isMyBadgesTab;
 
   const showBulkRequest = isActionsPage && selectedCount > 0 && isMyPromisesTab;
@@ -733,9 +689,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const isOthersCommitmentsSection = title.trim() === "Others' Commitments";
 
-  // Handlers for table-specific filters
   const handleTableFilterChange = useCallback((filterName: string, value: any) => {
-    // setCurrentPage(1); // Reset pagination on filter change - Removed
     switch (filterName) {
       case 'badge':
         setBadgeTableFilter(value);
@@ -773,7 +727,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setDueDateTableFilter(null);
     setCommittedDateTableFilter(null);
     setApprovedDateTableFilter(null);
-    // setCurrentPage(1); // Removed
   };
 
   const handleToggleExpandRow = (id: number) => {
@@ -806,9 +759,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   const handleToggleExpandAll = () => {
     if (expandAllState === 'expanded') {
-      setExpandedRows(new Set()); // Collapse all
+      setExpandedRows(new Set());
     } else {
-      setExpandedRows(new Set(expandableCommitmentIds)); // Expand all
+      setExpandedRows(new Set(expandableCommitmentIds));
     }
   };
 
@@ -831,7 +784,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       break;
   }
 
-  // Options for table filters
   const tableBadgeOptions = [...new Set(commitments.map(item => item.title))];
   const tableAssigneeOptions = [...new Set(commitments.map(item => item.assignee))];
 
@@ -839,8 +791,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     <>
       <Paper sx={{
         p: 3,
-        height: 'auto', // Let height be determined by content
-        minHeight: 'auto', // Remove fixed minHeight from Paper
+        height: 'auto',
+        minHeight: 'auto',
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#ffffff',
@@ -855,8 +807,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
-            {/* Filters for My Commitments section (including My Promises) */}
-            {/* Simplified filter disabling logic: now based on displayMode and specific tabs */}
             <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={displayMode === 'table' || disableAllFiltersExceptSort}>
               <InputLabel>Person</InputLabel>
               <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (displayMode === 'table' || disableAllFiltersExceptSort) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
@@ -912,7 +862,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   <ArrowUpward fontSize="small" sx={{ color: 'text.secondary' }} />
                 </InputAdornment>
               }>
-                {/* Conditionally render sort options based on the tab type */}
                 {isMyBadgesTab || isBadgesIssuedTab ? (
                   [
                     <MenuItem key="approvedDateNewest" value="approvedDateNewest">Approved Date (Newest First)</MenuItem>,
@@ -932,7 +881,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     <MenuItem key="nudges" value="nudges">Nudges</MenuItem>
                   ]
                 )}
-                {/* Remove duplicate Overdue option */}
               </Select>
             </FormControl>
 
@@ -1016,12 +964,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           </Box>
         </Popover>
 
-        {/* New container for Tabs and Clear All Filters button */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: 1, borderColor: 'divider', mb: 1 }}> {/* Adjusted mb to 1 */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: 1, borderColor: 'divider', mb: 1 }}>
           <Tabs value={activeTab} onChange={(_: React.SyntheticEvent, newValue: number) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 600 }, '& .Mui-selected': { color: 'primary.main' } }}>
             {tabs.map((tab, _index) => <Tab key={_index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}> {/* New inner Box for toggle and button */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
             {totalExpandable > 0 && (
               <Button
                 size="small"
@@ -1032,7 +979,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 {expandAllLabel}
               </Button>
             )}
-            {onToggleDisplayMode && ( /* Changed condition to just onToggleDisplayMode */
+            {onToggleDisplayMode && (
               <FormControlLabel
                 control={
                   <Switch
@@ -1040,13 +987,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     onChange={() => onToggleDisplayMode(displayMode === 'table' ? 'regular' : 'table')}
                     sx={{
                       '& .MuiSwitch-switchBase': {
-                        color: '#ff7043', // Regular mode thumb color
+                        color: '#ff7043',
                       },
                       '& .MuiSwitch-switchBase.Mui-checked': {
-                        color: '#1976d2', // Table mode thumb color
+                        color: '#1976d2',
                       },
                       '& .MuiSwitch-track': {
-                        backgroundColor: '#e0e0e0', // Track color
+                        backgroundColor: '#e0e0e0',
                       },
                       '& .MuiSwitch-thumb': {
                         boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
@@ -1056,14 +1003,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 }
                 label={displayMode === 'table' ? 'Table Mode' : 'Regular Mode'}
                 labelPlacement="start"
-                sx={{ m: 0 }} // Removed mb here, let the parent Box handle alignment
+                sx={{ m: 0 }}
               />
             )}
             {showClearAllFilters && (
               <Button
                 onClick={handleClearAllFilters}
                 sx={{
-                  textTransform: 'capitalize', // Changed to capitalize each word
+                  textTransform: 'capitalize',
                   color: 'grey.600',
                   textDecoration: 'underline',
                   p: 0,
@@ -1074,13 +1021,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   },
                 }}
               >
-                Clear All Filters {/* Changed text to capitalize each word */}
+                Clear All Filters
               </Button>
             )}
           </Box>
         </Box>
 
-        {/* Bulk actions section - now conditional on isActionsPage */}
         {showBulkActionsSection && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, mb: 1, flexWrap: 'wrap', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -1215,16 +1161,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          height: containerContentHeight, // Apply dynamic height here
-          minHeight: 0, // Allow shrinking
-          pr: displayMode === 'table' ? 0 : 1, // Padding for scrollbar in regular mode
-          overflowY: displayMode === 'table' ? 'visible' : 'auto', // Use 'auto' for regular mode to enable scrolling
-          display: 'flex', // Ensure flex properties apply to its children
-          flexDirection: 'column', // Stack children vertically
-          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start', // Center content if empty
-          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch', // Center content if empty
+          height: containerContentHeight,
+          minHeight: 0,
+          pr: displayMode === 'table' ? 0 : 1,
+          overflowY: displayMode === 'table' ? 'visible' : 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start',
+          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch',
         }}>
-          {displayMode === 'table' ? ( /* Simplified condition */
+          {displayMode === 'table' ? (
             <Box sx={{ mt: 2 }}>
               <CommitmentsTable
                 commitments={currentItems}
@@ -1248,77 +1194,95 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               />
             </Box>
           ) : (
-            <Stack spacing={1} sx={{ width: '100%', mt: 1 }}> {/* Adjusted mt to 1 */}
+            <Stack spacing={1} sx={{ width: '100%', mt: 1 }}>
               {paginatedItems.length > 0 ? (
                 paginatedItems.map((item, _index) => {
                   const isNudgeItem = item.type === 'nudge';
-                  // Checkboxes are shown only on Actions page and not for MyBadges/Unkept tabs
                   const showCheckboxes = isActionsPage && !isMyBadgesTab && !isUnkeptTab;
-                  // Nudges in My Promises tab on Actions page are disabled for bulk select
-                  // Also, items in 'Active Promises' tab are disabled for bulk select
                   const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                   
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
                   const showRevokeButton = isAwaitingResponseTab;
                   
-                  // Action button logic:
-                  // Show if on Actions page AND (
-                  //   (is a Nudge in My Promises tab) OR
-                  //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
-                  // )
-                  // Explicitly hide action button for 'Active Promises' tab in Commitment Portfolio
-                  let showActionButtonForListItem = isActionsPage && (
-                    (isNudgeItem && isMyPromisesTab) || 
-                    (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
-                  );
-                  if (isCommitmentPortfolioPage && isActivePromisesTab) {
-                      showActionButtonForListItem = false;
+                  let showOriginalActionButton = false;
+                  let originalButtonText = '';
+                  let originalOnActionButtonClick = () => {};
+
+                  if (isNudgeItem && isMyPromisesTab) {
+                    showOriginalActionButton = true;
+                    originalButtonText = 'Answer Nudge';
+                    originalOnActionButtonClick = () => handleAnswerNudge(item);
+                  } else if (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab && !isOwedToMe) {
+                      showOriginalActionButton = true;
+                      originalButtonText = 'Request Badge';
+                      originalOnActionButtonClick = handleRequestBadge;
                   }
 
-                  // Determine 'From:' or 'To:' label based on tab
-                  // 'Badges Issued' should be 'To:'
-                  // 'Unkept Promises to Me' should be 'From:'
+                  const showClarifyButtonForListItem = isOwedToMe;
+
+                  const showAcceptDeclineButtonsForListItem = isRequestsToCommitTab || isBadgeRequestsTab || isOwedToMe;
+
+                  let onAcceptHandler = () => {};
+                  let onDeclineHandler = () => {};
+                  let acceptBtnText = undefined;
+                  let declineBtnText = undefined;
+
+                  if (isBadgeRequestsTab) {
+                    onAcceptHandler = () => handleApproveBadgeRequest(item);
+                    onDeclineHandler = () => handleRejectBadgeRequest(item);
+                    acceptBtnText = 'Approve';
+                    declineBtnText = 'Reject';
+                  } else if (isRequestsToCommitTab || isOwedToMe) {
+                    onAcceptHandler = () => handleAcceptClick(item);
+                    onDeclineHandler = () => handleDeclineClick(item);
+                    if (isOwedToMe) {
+                      acceptBtnText = 'Approve';
+                      declineBtnText = 'Reject';
+                    }
+                  }
+
                   const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isUnkeptTab;
 
                   return (
                     <CommitmentListItem
                       key={item.id}
                       {...item}
-                      ref={_index === 0 ? firstItemRef : null} // Keep ref for the first item to measure its height
+                      ref={_index === 0 ? firstItemRef : null}
                       color={itemColor}
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
-                      showActionButton={showActionButtonForListItem} // Use the new variable
-                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
-                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
-                      onViewDetails={() => handleViewCommitmentDetails(item)}
-                      onToggleSelect={handleToggleSelectItem}
-                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
-                      onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
-                      onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
-                      acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
-                      declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
+                      showActionButton={showOriginalActionButton}
+                      buttonText={originalButtonText}
+                      onActionButtonClick={originalOnActionButtonClick}
+                      showClarifyButton={showClarifyButtonForListItem}
+                      showAcceptDeclineButtons={showAcceptDeclineButtonsForListItem}
+                      onAccept={onAcceptHandler}
+                      onDecline={onDeclineHandler}
+                      acceptButtonText={acceptBtnText}
+                      declineButtonText={declineBtnText}
                       isBulkSelecting={selectedCount > 0}
                       hideDueDate={hideDueDate}
                       isNudge={isNudgeItem}
                       nudgesLeft={item.nudgesLeft}
                       totalNudges={item.totalNudges}
                       isMyPromisesTab={isMyPromisesTab}
-                      isMyBadgesTab={isMyBadgesTab} // Pass this new prop
-                      isBadgesIssuedTab={isBadgesIssuedTab} // Pass new prop
+                      isMyBadgesTab={isMyBadgesTab}
+                      isBadgesIssuedTab={isBadgesIssuedTab}
                       isExternal={item.isExternal}
-                      isOverdue={item.isOverdue} // Pass the pre-calculated isOverdue
+                      isOverdue={item.isOverdue}
                       showRevokeButton={showRevokeButton}
                       onRevoke={() => handleRevokeClick(item)}
                       showFromLabel={showFromLabel}
                       explanation={item.explanation}
                       responses={item.responses}
-                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab || isOwedToMe} // Added isOwedToMe here
-                      approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
+                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab || isOwedToMe}
+                      approvedDate={item.approvedDate}
                       isExpanded={expandedRows.has(item.id)}
                       onToggleExpand={() => handleToggleExpandRow(item.id)}
                       isActionsPage={isActionsPage}
                       isOthersCommitmentsSection={isOthersCommitmentsSection}
+                      onViewDetails={() => handleViewCommitmentDetails(item)} // Added missing prop
+                      onToggleSelect={handleToggleSelectItem} // Added missing prop
                     />
                   );
                 })
@@ -1327,7 +1291,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   textAlign: 'center', 
                   color: 'text.secondary', 
                   width: '100%',
-                  flex: 1, // Make the empty state box take up all available space
+                  flex: 1,
                   display: 'flex', 
                   flexDirection: 'column',
                   justifyContent: 'center',
@@ -1359,13 +1323,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             </Stack>
           )}
         </Box>
-        
-        {/* Removed pagination for My Badges tab */}
-        {/* {currentItems.length > 0 && isMyBadgesTab && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto', pt: 2 }}>
-            <Pagination count={totalPages} page={currentPage} onChange={(_, page) => setCurrentPage(page)} color="primary" />
-          </Box>
-        )} */}
       </Paper>
 
       <CommitmentDetailsModal 
@@ -1416,8 +1373,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         onClose={handleCloseBadgeDetailsModal}
         badge={selectedBadge ? {
           title: selectedBadge.title,
-          approvalDate: selectedBadge.approvedDate || 'N/A', // Use actual approvedDate
-          originalDueDate: selectedBadge.dueDate, // Pass original dueDate
+          approvalDate: selectedBadge.approvedDate || 'N/A',
+          originalDueDate: selectedBadge.dueDate,
           commitment: selectedBadge.description,
           recipient: selectedBadge.assignee,
           committedDate: selectedBadge.committedDate,
@@ -1441,7 +1398,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Decline Invitations"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to decline {selectedCount} selected invitation{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+            {`Are you sure you want to decline ${selectedCount} selected invitation${selectedCount > 1 ? 's' : ''}? This action cannot be undone.`}
           </Typography>
         }
         onDecline={handleConfirmBulkDecline}
@@ -1475,7 +1432,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Bulk Revoke"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to revoke {selectedCount} selected request{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+            {`Are you sure you want to revoke ${selectedCount} selected request${selectedCount > 1 ? 's' : ''}? This action cannot be undone.`}
           </Typography>
         }
         onDecline={handleConfirmBulkRevoke}
@@ -1515,7 +1472,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         message={`${selectedCount} ${selectedCount === 1 ? 'person has' : 'people have'} been notified.`}
       />
       <SuccessConfirmationModal
-        open={showClarificationSuccessModal} // Controlled by new state
+        open={showClarificationSuccessModal}
         onClose={handleCloseClarificationSuccessModal}
         title="Request Sent!"
         message="The clarification request has been sent."
@@ -1537,7 +1494,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Bulk Approve Requests"
         description={
           <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-            Are you sure you want to approve {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
+            {`Are you sure you want to approve ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
           </Typography>
         }
         onConfirm={handleConfirmBulkApprove}
@@ -1549,8 +1506,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         onClose={() => setBulkRejectModalOpen(false)}
         title="Bulk Reject Requests"
         description={
-          <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-            Are you sure you want to reject {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
+          <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }>
+            {`Are you sure you want to reject ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
           </Typography>
         }
         onConfirm={handleConfirmBulkReject}
@@ -1558,7 +1515,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         confirmColor="error"
       />
 
-      {/* CommitmentActionModal for "Make a Promise" from empty state */}
       <CommitmentActionModal
         open={makePromiseModalOpen}
         onClose={handleCloseMakePromiseModal}
