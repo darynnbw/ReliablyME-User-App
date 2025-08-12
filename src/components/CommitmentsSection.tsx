@@ -1293,11 +1293,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
-                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab || isOwedToMe}
-                      onAccept={isBadgeRequestsTab || isOwedToMe ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
-                      onDecline={isBadgeRequestsTab || isOwedToMe ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
-                      acceptButtonText={isBadgeRequestsTab || isOwedToMe ? 'Approve' : undefined}
-                      declineButtonText={isBadgeRequestsTab || isOwedToMe ? 'Reject' : undefined}
+                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
+                      onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
+                      onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
+                      acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
+                      declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
                       isBulkSelecting={selectedCount > 0}
                       hideDueDate={hideDueDate}
                       isNudge={isNudgeItem}
@@ -1319,7 +1319,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       onToggleExpand={() => handleToggleExpandRow(item.id)}
                       isActionsPage={isActionsPage}
                       isOthersCommitmentsSection={isOthersCommitmentsSection}
-                      isOwedToMe={isOwedToMe} // Pass the new prop
                     />
                   );
                 })
