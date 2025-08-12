@@ -317,14 +317,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const isUnkeptTab = tabs[activeTab].label.includes('Unkept');
   const isBadgesIssuedTab = tabs[activeTab].label === 'Badges Issued'; // New flag for Badges Issued tab
 
-  // Determine if the current section is "My Commitments"
-  const isMyCommitmentsSection = title.trim() === 'My Commitments';
-  const isTableView = displayMode === 'table'; // Simplified: displayMode is now global
-
   // Determine if all filters (except sort by) should be disabled
   const disableAllFiltersExceptSort = isRequestsToCommitTab || isAwaitingResponseTab;
-  // Determine if filters should be disabled for Active Promises in table mode
-  const disableActivePromisesFiltersInTable = isCommitmentPortfolioPage && isMyCommitmentsSection && isTableView && isActivePromisesTab;
 
   // Generate unique people and add group options
   const allAssignees = tabs.flatMap(tab => tab.items.filter(item => !item.isExternal).map(item => item.assignee));
@@ -344,7 +338,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.assignee.toLowerCase().includes(searchTerm.toLowerCase());
 
-    if (!searchMatch && !disableActivePromisesFiltersInTable) return false; // Only apply search if not disabled
+    if (!searchMatch) return false;
 
     const personMatch = (() => {
       if (!personFilter) return true; // 'All' is selected
@@ -354,7 +348,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       }
       return item.assignee === personFilter;
     })();
-    if (!personMatch && !disableActivePromisesFiltersInTable) return false; // Only apply person filter if not disabled
+    if (!personMatch) return false;
 
     const itemDate = parseCommitmentDate(item.dueDate);
     let dateMatch = true;
@@ -367,7 +361,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       dateMatch = itemDate ? itemDate.isBetween(dayjs().startOf('week'), dayjs().endOf('week'), null, '[]') : false;
     }
     
-    if (!dateMatch && !disableActivePromisesFiltersInTable) return false; // Only apply date filter if not disabled
+    if (!dateMatch) return false;
 
     // Table-specific filters (only apply if displayMode is 'table')
     if (displayMode === 'table') {
@@ -439,14 +433,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       observer.observe(firstItemRef.current);
       return () => observer.disconnect();
     }
-  }, [paginatedItems.length, isTableView]); // Re-observe if items change or view mode changes
+  }, [paginatedItems.length, displayMode]); // Re-observe if items change or view mode changes
 
   const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
   const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
 
   // Effect to dynamically adjust the height of the content area
   useEffect(() => {
-    if (isTableView) {
+    if (displayMode === 'table') {
       setContainerContentHeight('auto'); // Table view handles its own height
       return;
     }
@@ -465,7 +459,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         setContainerContentHeight((cardHeight * 2) + spacing);
       }
     }
-  }, [paginatedItems.length, isTableView, firstItemObservedHeight]); // Add observed height as dependency
+  }, [paginatedItems.length, displayMode, firstItemObservedHeight]); // Add observed height as dependency
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -846,9 +840,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
             {/* Filters for My Commitments section (including My Promises) */}
             {/* Simplified filter disabling logic: now based on displayMode and specific tabs */}
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView || disableAllFiltersExceptSort}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={displayMode === 'table' || disableAllFiltersExceptSort}>
               <InputLabel>Person</InputLabel>
-              <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (isTableView || disableAllFiltersExceptSort) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
+              <Select value={personFilter} onChange={(e) => setPersonFilter(e.target.value as string)} label="Person" startAdornment={<InputAdornment position="start"><Person fontSize="small" sx={{ color: (displayMode === 'table' || disableAllFiltersExceptSort) ? 'action.disabled' : 'text.secondary' }} /></InputAdornment>}>
                 <MenuItem value="">All</MenuItem>
                 {filterOptions.map(person => (
                   <MenuItem key={person} value={person}>{person}</MenuItem>
@@ -857,7 +851,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </Select>
             </FormControl>
 
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={isTableView || disableAllFiltersExceptSort}>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }} disabled={displayMode === 'table' || disableAllFiltersExceptSort}>
               <InputLabel>Due Date</InputLabel>
               <Select
                 value={dateFilter}
@@ -865,7 +859,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 label="Due Date"
                 startAdornment={
                   <InputAdornment position="start">
-                    <CalendarToday fontSize="small" sx={{ color: (isTableView || disableAllFiltersExceptSort) ? 'action.disabled' : 'text.secondary' }} />
+                    <CalendarToday fontSize="small" sx={{ color: (displayMode === 'table' || disableAllFiltersExceptSort) ? 'action.disabled' : 'text.secondary' }} />
                   </InputAdornment>
                 }
               >
@@ -890,7 +884,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   readOnly: true,
                 }}
                 sx={{ minWidth: 180, cursor: 'pointer' }}
-                disabled={isTableView || disableAllFiltersExceptSort}
+                disabled={displayMode === 'table' || disableAllFiltersExceptSort}
               />
             )}
 
@@ -924,7 +918,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </Select>
             </FormControl>
 
-            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} disabled={isTableView && isActivePromisesTab} />
+            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
           </Box>
         </Box>
 
@@ -1205,8 +1199,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         <Box sx={{ 
           height: containerContentHeight, // Apply dynamic height here
           minHeight: 0, // Allow shrinking
-          pr: isTableView ? 0 : 1, // Padding for scrollbar in regular mode
-          overflowY: isTableView ? 'visible' : 'auto', // Use 'auto' for regular mode to enable scrolling
+          pr: displayMode === 'table' ? 0 : 1, // Padding for scrollbar in regular mode
+          overflowY: displayMode === 'table' ? 'visible' : 'auto', // Use 'auto' for regular mode to enable scrolling
           display: 'flex', // Ensure flex properties apply to its children
           flexDirection: 'column', // Stack children vertically
           justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start', // Center content if empty
