@@ -55,9 +55,9 @@ interface CommitmentsTableProps {
   onFilterChange: (filterName: string, value: any) => void;
   badgeOptions: string[];
   assigneeOptions: string[];
+  isActivePromisesTab?: boolean; // New prop
   isMyBadgesTab?: boolean; // New prop
   isBadgesIssuedTab?: boolean; // New prop
-  isUnkeptTab?: boolean; // New prop
   itemColor: string;
   expandedRows: Set<number>;
   onToggleExpand: (id: number) => void;
@@ -82,9 +82,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   onFilterChange,
   badgeOptions,
   assigneeOptions,
+  isActivePromisesTab = false, // Default to false
   isMyBadgesTab = false, // Default to false
   isBadgesIssuedTab = false, // Default to false
-  isUnkeptTab = false, // Default to false
   itemColor,
   expandedRows,
   onToggleExpand,
@@ -361,7 +361,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                             );
                           })()}
                         </Box>
-                        {!isUnkeptTab && <BadgeIconWithTooltip badgeType={commitment.title} />}
+                        {(isActivePromisesTab || !isActivePromisesTab) && <BadgeIconWithTooltip badgeType={commitment.title} />}
                         {commitment.title}
                       </Box>
                     </TableCell>
