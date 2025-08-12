@@ -27,6 +27,9 @@ import {
   ArrowUpward,
   Check,
   Close,
+  KeyboardArrowUp,
+  KeyboardArrowDown,
+  Remove,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import dayjs, { Dayjs } from 'dayjs';
@@ -132,6 +135,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [searchTerm, setSearchTerm] = useState('');
   const [commitments, setCommitments] = useState<Commitment[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [tempDateRange, setTempDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
@@ -272,6 +276,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   useEffect(() => {
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
+    setExpandedRows(new Set());
     // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     // Determine if filters should be disabled for the current tab
     const currentTabLabel = tabs[activeTab].label;
@@ -760,6 +765,61 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // setCurrentPage(1); // Removed
   };
 
+  const handleToggleExpandRow = (id: number) => {
+    setExpandedRows(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const expandableCommitmentIds = currentItems
+    .filter(c => (c.type === 'nudge' && c.responses && c.responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && c.explanation))
+    .map(c => c.id);
+
+  const expandedCount = expandedRows.size;
+  const totalExpandable = expandableCommitmentIds.length;
+
+  let expandAllState: 'collapsed' | 'expanded' | 'indeterminate' = 'collapsed';
+  if (expandedCount === 0) {
+    expandAllState = 'collapsed';
+  } else if (expandedCount === totalExpandable && totalExpandable > 0) {
+    expandAllState = 'expanded';
+  } else if (expandedCount > 0) {
+    expandAllState = 'indeterminate';
+  }
+
+  const handleToggleExpandAll = () => {
+    if (expandAllState === 'expanded') {
+      setExpandedRows(new Set()); // Collapse all
+    } else {
+      setExpandedRows(new Set(expandableCommitmentIds)); // Expand all
+    }
+  };
+
+  let expandAllIcon;
+  let expandAllLabel = '';
+
+  switch (expandAllState) {
+    case 'expanded':
+      expandAllIcon = <KeyboardArrowUp fontSize="small" />;
+      expandAllLabel = 'Collapse All';
+      break;
+    case 'indeterminate':
+      expandAllIcon = <Remove fontSize="small" />;
+      expandAllLabel = 'Some Expanded';
+      break;
+    case 'collapsed':
+    default:
+      expandAllIcon = <KeyboardArrowDown fontSize="small" />;
+      expandAllLabel = 'Expand All';
+      break;
+  }
+
   // Options for table filters
   const tableBadgeOptions = [...new Set(commitments.map(item => item.title))];
   const tableAssigneeOptions = [...new Set(commitments.map(item => item.assignee))];
@@ -950,6 +1010,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
             {tabs.map((tab, _index) => <Tab key={_index} label={`${tab.label} (${tab.count})`} />)}
           </Tabs>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}> {/* New inner Box for toggle and button */}
+            {isTableView && totalExpandable > 0 && (
+              <Button
+                size="small"
+                startIcon={expandAllIcon}
+                onClick={handleToggleExpandAll}
+                sx={{ textTransform: 'none', color: 'text.secondary', mr: 1 }}
+              >
+                {expandAllLabel}
+              </Button>
+            )}
             {onToggleDisplayMode && ( /* Changed condition to just onToggleDisplayMode */
               <FormControlLabel
                 control={
@@ -1161,6 +1231,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 isMyBadgesTab={isMyBadgesTab}
                 isBadgesIssuedTab={isBadgesIssuedTab}
                 itemColor={itemColor}
+                expandedRows={expandedRows}
+                onToggleExpand={handleToggleExpandRow}
               />
             </Box>
           ) : (

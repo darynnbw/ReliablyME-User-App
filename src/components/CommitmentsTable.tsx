@@ -59,6 +59,8 @@ interface CommitmentsTableProps {
   isMyBadgesTab?: boolean; // New prop
   isBadgesIssuedTab?: boolean; // New prop
   itemColor: string;
+  expandedRows: Set<number>;
+  onToggleExpand: (id: number) => void;
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -84,6 +86,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   isMyBadgesTab = false, // Default to false
   isBadgesIssuedTab = false, // Default to false
   itemColor,
+  expandedRows,
+  onToggleExpand,
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
@@ -91,7 +95,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [dueDateOpen, setDueDateOpen] = useState(false);
   const [committedDateOpen, setCommittedDateOpen] = useState(false);
   const [approvedDateOpen, setApprovedDateOpen] = useState(false);
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set()); // State for expanded rows
 
   const badgeCellRef = useRef<HTMLTableCellElement>(null);
   const assigneeCellRef = useRef<HTMLTableCellElement>(null);
@@ -134,18 +137,6 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const handleApprovedDateChange = (newValue: Dayjs | null) => {
     onFilterChange('approvedDate', newValue);
     setApprovedDateOpen(false);
-  };
-
-  const handleToggleExpand = (id: number) => {
-    setExpandedRows(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
   };
 
   const renderFormattedDate = (dateString?: string) => {
@@ -362,7 +353,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                             return (
                               <IconButton
                                 size="small"
-                                onClick={() => handleToggleExpand(commitment.id)}
+                                onClick={() => onToggleExpand(commitment.id)}
                                 sx={{ visibility: (isNudgeWithResponses || isBadgeWithExplanation) ? 'visible' : 'hidden' }}
                               >
                                 {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
