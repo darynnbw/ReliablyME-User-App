@@ -107,6 +107,34 @@ const CommitmentPortfolio: React.FC = () => {
       explanation: 'Consistently responded to daily nudges throughout the commitment period, demonstrating effective and timely communication skills.'
     },
     {
+      id: 53,
+      title: 'On Track (Mid-Week Progress)',
+      dueDate: dayjs().day(4).isBefore(dayjs()) ? dayjs().day(4).add(1, 'week').format('MMM D, YYYY, hh:mm A') : dayjs().day(4).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(10, 'day').format('MMM D, YYYY, hh:mm A'),
+      approvedDate: undefined,
+      description: 'I will provide a mid-week progress report every Thursday by answering a set of recurring questions.',
+      assignee: 'Alex Johnson',
+      type: 'nudge',
+      nudgesLeft: 3,
+      totalNudges: 4,
+      questions: [
+        'What have you accomplished since your last update?',
+        'What are your top priorities for the rest of the week?',
+        'Are there any blockers or challenges you\'re facing?',
+      ],
+      responses: [
+        {
+          date: dayjs().day(4).isBefore(dayjs()) ? dayjs().day(4).format('MMM D, YYYY') : dayjs().day(4).subtract(1, 'week').format('MMM D, YYYY'),
+          answer: 'Last week, I finalized the user authentication flow and deployed it to the staging environment. No major blockers currently.',
+          questions: [
+            'What have you accomplished since your last update?',
+            'What are your top priorities for the rest of the week?',
+            'Are there any blockers or challenges you\'re facing?',
+          ]
+        }
+      ]
+    },
+    {
       id: 99,
       title: 'Promise Kept General',
       dueDate: dayjs().subtract(5, 'day').hour(14).minute(15).format('MMM D, YYYY, hh:mm A'),
