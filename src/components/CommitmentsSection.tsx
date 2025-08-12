@@ -777,7 +777,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   };
 
   const handleToggleExpandRow = (id: number) => {
-    setExpandedRows((prev: Set<number>) => {
+    setExpandedRows(prev => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -845,7 +845,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         flexDirection: 'column',
         bgcolor: '#ffffff',
         borderRadius: 3,
-        boxShadow: '0 44px 12px rgba(0, 0, 0, 0.08)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
         border: '1px solid #e8eaed',
         mb: 4,
       }}>
@@ -1289,13 +1289,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
                       showActionButton={showActionButtonForListItem} // Use the new variable
-                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify Request' : 'Request Badge')}
+                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
                       onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
-                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab || (isOwedToMe && isActionsPage)}
-                      onAccept={(isBadgeRequestsTab || (isOwedToMe && isActionsPage)) ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
-                      onDecline={(isBadgeRequestsTab || (isOwedToMe && isActionsPage)) ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
+                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
+                      onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
+                      onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
+                      acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
+                      declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
                       isBulkSelecting={selectedCount > 0}
                       hideDueDate={hideDueDate}
                       isNudge={isNudgeItem}
@@ -1317,8 +1319,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       onToggleExpand={() => handleToggleExpandRow(item.id)}
                       isActionsPage={isActionsPage}
                       isOthersCommitmentsSection={isOthersCommitmentsSection}
-                      isOwedToMe={isOwedToMe} // Pass new prop
-                      isBadgeRequestsTab={isBadgeRequestsTab} // Pass new prop
                     />
                   );
                 })
