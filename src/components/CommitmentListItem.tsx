@@ -409,54 +409,104 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {showExpandIcon && (
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}> {/* Reduced mt */}
-                {isNudge && responses && responses.length > 0 && (
-                  <>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                      All Responses ({responses.length}):
-                    </Typography>
-                    <Stack spacing={2}> {/* Increased spacing for better separation */}
-                      {responses
-                        ?.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
-                        .map((response, idx) => (
-                          <Box key={idx} sx={{ pb: 2, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                            <Chip
-                              label={response.date}
-                              size="small"
-                              sx={{
-                                bgcolor: '#e3f2fd', // Changed color for better contrast
-                                color: '#1976d2',
-                                fontWeight: 700,
-                                fontSize: '12px',
-                                mb: 1.5,
-                              }}
-                            />
-                            {response.questions && response.questions.length > 0 && (
-                              <Box sx={{ mb: 1 }}>
+                {isNudge && responses && responses.length > 0 && (() => {
+                  const areQuestionsConsistent = responses.every(r => 
+                      JSON.stringify(r.questions) === JSON.stringify(responses[0].questions)
+                  );
+                  const sortedResponses = [...responses].sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf());
+
+                  if (areQuestionsConsistent && responses[0].questions) {
+                    return (
+                      <>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                          Questions Asked:
+                        </Typography>
+                        <Stack spacing={0.5} sx={{ mb: 2 }}>
+                          {responses[0].questions.map((q, qIdx) => (
+                            <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                              {q}
+                            </Typography>
+                          ))}
+                        </Stack>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                          All Responses ({responses.length}):
+                        </Typography>
+                        <Stack spacing={2}>
+                          {sortedResponses.map((response, idx) => (
+                            <Box key={idx} sx={{ pb: 2, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                              <Chip
+                                label={response.date}
+                                size="small"
+                                sx={{
+                                  bgcolor: '#e3f2fd',
+                                  color: '#1976d2',
+                                  fontWeight: 700,
+                                  fontSize: '12px',
+                                  mb: 1.5,
+                                }}
+                              />
+                              <Box>
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
-                                  Questions Asked:
+                                  Your Answer:
                                 </Typography>
-                                <Stack spacing={0.5}>
-                                  {response.questions.map((q, qIdx) => (
-                                    <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                      {q}
-                                    </Typography>
-                                  ))}
-                                </Stack>
+                                <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                  {response.answer}
+                                </Typography>
                               </Box>
-                            )}
-                            <Box>
-                              <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
-                                Your Answer:
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                {response.answer}
-                              </Typography>
                             </Box>
-                          </Box>
-                        ))}
-                    </Stack>
-                  </>
-                )}
+                          ))}
+                        </Stack>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                          All Responses ({responses.length}):
+                        </Typography>
+                        <Stack spacing={2}>
+                          {sortedResponses.map((response, idx) => (
+                            <Box key={idx} sx={{ pb: 2, borderBottom: idx < responses.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                              <Chip
+                                label={response.date}
+                                size="small"
+                                sx={{
+                                  bgcolor: '#e3f2fd',
+                                  color: '#1976d2',
+                                  fontWeight: 700,
+                                  fontSize: '12px',
+                                  mb: 1.5,
+                                }}
+                              />
+                              {response.questions && response.questions.length > 0 && (
+                                <Box sx={{ mb: 1 }}>
+                                  <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                    Questions Asked:
+                                  </Typography>
+                                  <Stack spacing={0.5}>
+                                    {response.questions.map((q, qIdx) => (
+                                      <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                                        {q}
+                                      </Typography>
+                                    ))}
+                                  </Stack>
+                                </Box>
+                              )}
+                              <Box>
+                                <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                  Your Answer:
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                  {response.answer}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          ))}
+                        </Stack>
+                      </>
+                    );
+                  }
+                })()}
                 {(isMyBadgesTab || isBadgesIssuedTab) && explanation && !isNudge && (
                   <>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
