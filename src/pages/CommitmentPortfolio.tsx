@@ -21,6 +21,15 @@ const CommitmentPortfolio: React.FC = () => {
   // Consolidated source for all my promises, including those that might become badges or unkept
   const allMyPromisesSource = [
     {
+      id: 53,
+      title: 'On Track (Mid-Week Progress)',
+      dueDate: dayjs().add(3, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
+      committedDate: dayjs().subtract(2, 'day').hour(10).minute(0).format('MMM D, YYYY, hh:mm A'),
+      approvedDate: undefined,
+      description: 'I will provide a mid-week progress report to ensure alignment and address any blockers.',
+      assignee: 'Alex Johnson',
+    },
+    {
       id: 100,
       title: 'Weekly Progress Check-in',
       dueDate: dayjs().add(1, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), // Updated to a future date
