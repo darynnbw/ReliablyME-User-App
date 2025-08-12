@@ -45,7 +45,6 @@ interface CommitmentListItemProps {
   nudgesLeft?: number;
   totalNudges?: number; // Added totalNudges
   isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
-  isActivePromisesTab?: boolean; // New prop
   isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
   isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
   isExternal?: boolean;
@@ -85,7 +84,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   nudgesLeft,
   totalNudges, // Destructure totalNudges
   isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
-  isActivePromisesTab = false,
   isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
   isBadgesIssuedTab = false, // Destructure new prop
   isExternal = false,
@@ -123,10 +121,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
   const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
-
-  const mostRecentResponse = (isActivePromisesTab && isNudge && responses && responses.length > 0)
-    ? [...responses].sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())[0]
-    : null;
 
   return (
     <Card
@@ -257,29 +251,18 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
               </Typography>
-              {isNudge && totalNudges !== undefined && (
+              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && ( // Added nudgesLeft > 0 condition
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
-                  ({totalNudges - (nudgesLeft || 0)}/{totalNudges} answered)
+                  ({nudgesLeft} of {totalNudges} nudges left)
                 </Typography>
               )}
             </Stack>
           )}
 
-          {/* Original Description or Most Recent Answer */}
-          {mostRecentResponse ? (
-            <Box sx={{ my: 1.5 }}>
-              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, fontStyle: 'italic' }}>
-                <Typography component="span" sx={{ fontWeight: 'bold', fontStyle: 'normal' }}>
-                  Last Update ({mostRecentResponse.date}):
-                </Typography>
-                {" "}{mostRecentResponse.answer}
-              </Typography>
-            </Box>
-          ) : (
-            <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}>
-              {description}
-            </Typography>
-          )}
+          {/* Original Description - always visible */}
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}> {/* Reduced mb */}
+            {description}
+          </Typography>
 
           {/* Explanation */}
           {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && ( // Only show if not an issued badge (explanation will be in collapse)
