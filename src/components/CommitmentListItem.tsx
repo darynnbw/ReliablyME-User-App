@@ -246,17 +246,19 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
-              <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
-              <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
-                {displayDateLabel} {displayDateValue}
-              </Typography>
-              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && ( // Added nudgesLeft > 0 condition
-                <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
+                <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
+                  {displayDateLabel} {displayDateValue}
+                </Typography>
+              </Stack>
+              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && (
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400, flexShrink: 0, ml: 1 }}>
                   ({nudgesLeft} of {totalNudges} nudges left)
                 </Typography>
               )}
-            </Stack>
+            </Box>
           )}
 
           {/* Original Description - always visible */}
