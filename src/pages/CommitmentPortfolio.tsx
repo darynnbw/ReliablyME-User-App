@@ -21,32 +21,6 @@ const CommitmentPortfolio: React.FC = () => {
   // Consolidated source for all my promises, including those that might become badges or unkept
   const allMyPromisesSource = [
     {
-      id: 166, // New nudge card
-      title: 'On Track (Mid-Week Progress)',
-      dueDate: dayjs().add(3, 'day').hour(12).minute(0).format('MMM D, YYYY, hh:mm A'),
-      committedDate: dayjs().subtract(4, 'day').hour(9).minute(0).format('MMM D, YYYY, hh:mm A'),
-      description: 'I will provide a mid-week progress update to ensure projects are on track and address any potential issues early.',
-      assignee: 'Alex Johnson',
-      type: 'nudge',
-      nudgesLeft: 5,
-      totalNudges: 8,
-      questions: [
-        'What have you accomplished since the start of the week?',
-        'Are you on track to meet your weekly goals?',
-        'Are there any obstacles hindering your progress?'
-      ],
-      responses: [
-        {
-          date: dayjs().subtract(11, 'day').format('MMM D, YYYY'),
-          answer: 'Completed the design mockups and started on the frontend implementation. No blockers so far.',
-          questions: [
-            'What have you accomplished since the start of the week?',
-            'Are you on track to meet your weekly goals?'
-          ]
-        }
-      ]
-    },
-    {
       id: 100,
       title: 'Weekly Progress Check-in',
       dueDate: dayjs().add(1, 'day').hour(17).minute(0).format('MMM D, YYYY, hh:mm A'), // Updated to a future date
