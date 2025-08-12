@@ -12,13 +12,32 @@ import {
   alpha,
   Chip,
   useTheme,
-  Collapse, // Import Collapse
+  Collapse,
   Divider,
 } from '@mui/material';
 import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon, Repeat } from '@mui/icons-material';
-import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
-import dayjs from 'dayjs'; // Import dayjs for sorting
-import BadgeContent from './BadgeContent'; // Import the new BadgeContent component
+import ContactTooltip from './ContactTooltip';
+import dayjs from 'dayjs';
+import BadgeContent from './BadgeContent';
+
+interface Commitment {
+  id: number;
+  title: string;
+  dueDate: string;
+  description: string;
+  assignee: string;
+  selected?: boolean;
+  committedDate?: string;
+  approvedDate?: string;
+  type?: string;
+  nudgesLeft?: number;
+  totalNudges?: number;
+  isExternal?: boolean;
+  questions?: string[];
+  explanation?: string;
+  responses?: { date: string; answer: string; questions?: string[] }[];
+  isOverdue?: boolean;
+}
 
 interface CommitmentListItemProps {
   id: number;
@@ -31,23 +50,23 @@ interface CommitmentListItemProps {
   color: string;
   showCheckbox: boolean;
   isCheckboxDisabled?: boolean;
-  showActionButton: boolean;
-  buttonText: string;
+  showActionButton: boolean; // This is for single action button (Request Badge, Answer Nudge)
+  buttonText: string; // Text for the single action button
   onViewDetails: () => void;
-  onActionButtonClick: () => void;
+  onActionButtonClick: () => void; // Callback for the single action button
   onToggleSelect: (id: number, checked: boolean) => void;
-  showBadgePlaceholder?: boolean; // This prop will now control rendering BadgeContent
-  showAcceptDeclineButtons?: boolean;
-  onAccept?: () => void;
-  onDecline?: () => void;
+  showBadgePlaceholder?: boolean;
+  showAcceptDeclineButtons?: boolean; // For Accept/Decline (Requests to Commit) or Approve/Reject (Badge Requests)
+  onAccept?: () => void; // Callback for Accept/Approve
+  onDecline?: () => void; // Callback for Decline/Reject
   isBulkSelecting?: boolean;
   hideDueDate?: boolean;
   isNudge?: boolean;
   nudgesLeft?: number;
-  totalNudges?: number; // Added totalNudges
-  isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
-  isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
-  isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
+  totalNudges?: number;
+  isMyPromisesTab?: boolean;
+  isMyBadgesTab?: boolean;
+  isBadgesIssuedTab?: boolean;
   isExternal?: boolean;
   isOverdue?: boolean;
   showRevokeButton?: boolean;
@@ -55,12 +74,18 @@ interface CommitmentListItemProps {
   showFromLabel?: boolean;
   acceptButtonText?: string;
   declineButtonText?: string;
-  responses?: { date: string; answer: string; questions?: string[] }[]; // New prop for historical responses
-  approvedDate?: string; // Added approvedDate prop
+  responses?: { date: string; answer: string; questions?: string[] }[];
+  approvedDate?: string;
   isExpanded: boolean;
   onToggleExpand: () => void;
   isActionsPage?: boolean;
-  isOthersCommitmentsSection?: boolean;
+  isOthersCommitmentsSection?: boolean; // To differentiate "Others' Commitments" section
+  isPromisesOwedToMeTab?: boolean; // New prop to specifically identify "Promises Owed to Me" tab
+
+  // New props for Promises Owed to Me actions
+  onClarifyOwed?: (commitment: Commitment) => void;
+  onRejectOwed?: (commitment: Commitment) => void;
+  onIssueBadge?: (commitment: Commitment) => void;
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -92,7 +117,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onViewDetails,
   onActionButtonClick,
   onToggleSelect,
-  showBadgePlaceholder = false, // This prop will now control rendering BadgeContent
+  showBadgePlaceholder = false,
   showAcceptDeclineButtons = false,
   onAccept,
   onDecline,
@@ -100,10 +125,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   hideDueDate = false,
   isNudge = false,
   nudgesLeft,
-  totalNudges, // Destructure totalNudges
-  isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
-  isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
-  isBadgesIssuedTab = false, // Destructure new prop
+  totalNudges,
+  isMyPromisesTab = false,
+  isMyBadgesTab = false,
+  isBadgesIssuedTab = false,
   isExternal = false,
   isOverdue = false,
   showRevokeButton = false,
@@ -111,12 +136,16 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   showFromLabel = false,
   acceptButtonText,
   declineButtonText,
-  responses, // Destructure responses
-  approvedDate, // Destructure approvedDate
+  responses,
+  approvedDate,
   isExpanded,
   onToggleExpand,
   isActionsPage = false,
   isOthersCommitmentsSection = false,
+  isPromisesOwedToMeTab = false, // Default to false
+  onClarifyOwed,
+  onRejectOwed,
+  onIssueBadge,
 }, ref) => {
   const theme = useTheme();
 
@@ -125,24 +154,23 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   };
 
   const handleExpandClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent card click from triggering
+    event.stopPropagation();
     onToggleExpand();
   };
 
-  // Determine the label and value based on the tab
   const displayDateLabel = isMyBadgesTab || isBadgesIssuedTab ? 'Approved' : 'Due';
   const displayDateValue = isMyBadgesTab || isBadgesIssuedTab ? (approvedDate || 'N/A') : dueDate;
 
-  // Determine the color and weight based on overdue status
   const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
   const dateTextWeight = isOverdue ? 600 : 'inherit';
 
-  // Determine the icon color based on overdue status or section color
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
-  // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
   const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
   const isRecurringNudge = isNudge && areQuestionsRecurring(responses);
+
+  // Determine if the new set of buttons for "Promises Owed to Me" should be shown
+  const showPromisesOwedToMeActions = isPromisesOwedToMeTab && isActionsPage;
 
   return (
     <Card
@@ -178,12 +206,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
-            height: 100, // Fixed height for consistency
+            height: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            alignSelf: 'center', // Add this
+            alignSelf: 'center',
           }}>
             <BadgeContent badgeType={title} size="list-item-large" />
           </Box>
@@ -202,7 +230,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           />
         )}
         <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
-          {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -266,7 +293,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Box>
           </Box>
 
-          {/* Due/Approved Date */}
           {!hideDueDate && (
             <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: isActionsPage ? 1.5 : 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
@@ -281,151 +307,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
           )}
 
-          {isActionsPage ? (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
-                  {description}
-                </Typography>
-                {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
-                  <Box
-                    sx={{
-                      bgcolor: '#f8f9fa',
-                      px: 2,
-                      py: 1.5,
-                      borderRadius: 2,
-                      border: '1px solid #e9ecef',
-                      mb: 1.5,
-                      maxWidth: '100%',
-                    }}
-                  >
-                    <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                      <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                        Explanation:{' '}
-                      </Typography>
-                      {explanation}
-                    </Typography>
-                  </Box>
-                )}
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}> {/* Added mb here */}
-                  <Person sx={{ fontSize: 16, color: color }} />
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    {showFromLabel ? 'From:' : 'To:'}{' '}
-                    {!isExternal ? (
-                      <ContactTooltip>
-                        <span
-                          style={{
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: 'inherit',
-                            fontFamily: 'inherit',
-                            fontWeight: 'inherit'
-                          }}
-                        >
-                          {assignee}
-                        </span>
-                      </ContactTooltip>
-                    ) : (
-                      assignee
-                    )}
-                  </Typography>
-                  {isExternal && (
-                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                      (Non-member)
-                    </Typography>
-                  )}
-                </Stack>
-              </Box>
-              <Box sx={{ flexShrink: 0 }}>
-                <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-                  {showActionButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onActionButtonClick}
-                      disabled={isBulkSelecting}
-                      startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
-                      sx={{
-                        bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: buttonText === 'Clarify' ? 6 : 3,
-                        py: 1,
-                        borderRadius: 1,
-                        flexShrink: 0,
-                        '&:hover': { 
-                          bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
-                            ? '#f4511e'
-                            : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
-                        },
-                      }}
-                    >
-                      {buttonText}
-                    </Button>
-                  )}
-                  {showAcceptDeclineButtons && (
-                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                      <Button
-                        variant="contained"
-                        onClick={onDecline}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#F44336',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#d32f2f' },
-                        }}
-                      >
-                        {declineButtonText || 'Decline'}
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={onAccept}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#4CAF50',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#388e3c' },
-                        }}
-                      >
-                        {acceptButtonText || 'Accept'}
-                      </Button>
-                    </Box>
-                  )}
-                  {showRevokeButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onRevoke}
-                      disabled={isBulkSelecting}
-                      sx={{
-                        bgcolor: '#F44336',
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: 4,
-                        py: 0.75,
-                        borderRadius: 1,
-                        '&:hover': { bgcolor: '#d32f2f' },
-                      }}
-                    >
-                      Revoke
-                    </Button>
-                  )}
-                </Box>
-              </Box>
-            </Box>
-          ) : (
-            <>
-              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}>
+          {/* Main content and action buttons */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
                 {description}
               </Typography>
               {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
@@ -448,66 +333,160 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   </Typography>
                 </Box>
               )}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Person sx={{ fontSize: 16, color: color }} />
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    {showFromLabel ? 'From:' : 'To:'}{' '}
-                    {!isExternal ? (
-                      <ContactTooltip>
-                        <span
-                          style={{
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: 'inherit',
-                            fontFamily: 'inherit',
-                            fontWeight: 'inherit'
-                          }}
-                        >
-                          {assignee}
-                        </span>
-                      </ContactTooltip>
-                    ) : (
-                      assignee
-                    )}
-                  </Typography>
-                  {isExternal && (
-                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                      (Non-member)
-                    </Typography>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                <Person sx={{ fontSize: 16, color: color }} />
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  {showFromLabel ? 'From:' : 'To:'}{' '}
+                  {!isExternal ? (
+                    <ContactTooltip>
+                      <span
+                        style={{
+                          color: '#666',
+                          cursor: 'pointer',
+                          fontSize: 'inherit',
+                          fontFamily: 'inherit',
+                          fontWeight: 'inherit'
+                        }}
+                      >
+                        {assignee}
+                      </span>
+                    </ContactTooltip>
+                  ) : (
+                    assignee
                   )}
-                </Stack>
-                <Box sx={{ minWidth: 130, textAlign: 'right' }}>
-                  {showActionButton && (
+                </Typography>
+                {isExternal && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                    (Non-member)
+                  </Typography>
+                )}
+              </Stack>
+            </Box>
+            <Box sx={{ flexShrink: 0 }}>
+              <Box sx={{ minWidth: 130, textAlign: 'right' }}>
+                {showPromisesOwedToMeActions ? (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, justifyContent: 'flex-end' }}>
                     <Button
                       variant="contained"
-                      onClick={onActionButtonClick}
+                      onClick={() => onClarifyOwed?.({ id, title, description, assignee, dueDate })}
                       disabled={isBulkSelecting}
-                      startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
                       sx={{
-                        bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
+                        bgcolor: 'primary.main',
                         color: 'white',
                         textTransform: 'none',
                         fontWeight: 'bold',
-                        px: buttonText === 'Clarify' ? 6 : 3,
-                        py: 1,
+                        px: 3,
+                        py: 0.75,
                         borderRadius: 1,
-                        flexShrink: 0,
-                        '&:hover': { 
-                          bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
-                            ? '#f4511e'
-                            : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
-                        },
+                        '&:hover': { bgcolor: 'primary.dark' },
                       }}
                     >
-                      {buttonText}
+                      Clarify Request
                     </Button>
-                  )}
-                  {showAcceptDeclineButtons && (
-                    <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="contained"
+                      onClick={() => onRejectOwed?.({ id, title, description, assignee, dueDate })}
+                      disabled={isBulkSelecting}
+                      sx={{
+                        bgcolor: '#F44336',
+                        color: 'white',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                        px: 3,
+                        py: 0.75,
+                        borderRadius: 1,
+                        '&:hover': { bgcolor: '#d32f2f' },
+                      }}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => onIssueBadge?.({ id, title, description, assignee, dueDate })}
+                      disabled={isBulkSelecting}
+                      sx={{
+                        bgcolor: '#4CAF50',
+                        color: 'white',
+                        textTransform: 'none',
+                        fontWeight: 'bold',
+                        px: 3,
+                        py: 0.75,
+                        borderRadius: 1,
+                        '&:hover': { bgcolor: '#388e3c' },
+                      }}
+                    >
+                      Issue Badge
+                    </Button>
+                  </Box>
+                ) : (
+                  <>
+                    {showActionButton && (
                       <Button
                         variant="contained"
-                        onClick={onDecline}
+                        onClick={onActionButtonClick}
+                        disabled={isBulkSelecting}
+                        startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
+                        sx={{
+                          bgcolor: (isNudge && isMyPromisesTab) ? '#ff7043' : color,
+                          color: 'white',
+                          textTransform: 'none',
+                          fontWeight: 'bold',
+                          px: buttonText === 'Clarify' ? 6 : 3,
+                          py: 1,
+                          borderRadius: 1,
+                          flexShrink: 0,
+                          '&:hover': {
+                            bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
+                              ? '#f4511e'
+                              : (buttonText === 'Clarify' ? '#1565c0' : alpha(color, 0.8))
+                          },
+                        }}
+                      >
+                        {buttonText}
+                      </Button>
+                    )}
+                    {showAcceptDeclineButtons && (
+                      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                        <Button
+                          variant="contained"
+                          onClick={onDecline}
+                          disabled={isBulkSelecting}
+                          sx={{
+                            bgcolor: '#F44336',
+                            color: 'white',
+                            textTransform: 'none',
+                            fontWeight: 'bold',
+                            px: 4,
+                            py: 0.75,
+                            borderRadius: 1,
+                            '&:hover': { bgcolor: '#d32f2f' },
+                          }}
+                        >
+                          {declineButtonText || 'Decline'}
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={onAccept}
+                          disabled={isBulkSelecting}
+                          sx={{
+                            bgcolor: '#4CAF50',
+                            color: 'white',
+                            textTransform: 'none',
+                            fontWeight: 'bold',
+                            px: 4,
+                            py: 0.75,
+                            borderRadius: 1,
+                            '&:hover': { bgcolor: '#388e3c' },
+                          }}
+                        >
+                          {acceptButtonText || 'Accept'}
+                        </Button>
+                      </Box>
+                    )}
+                    {showRevokeButton && (
+                      <Button
+                        variant="contained"
+                        onClick={onRevoke}
                         disabled={isBulkSelecting}
                         sx={{
                           bgcolor: '#F44336',
@@ -520,52 +499,15 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           '&:hover': { bgcolor: '#d32f2f' },
                         }}
                       >
-                        {declineButtonText || 'Decline'}
+                        Revoke
                       </Button>
-                      <Button
-                        variant="contained"
-                        onClick={onAccept}
-                        disabled={isBulkSelecting}
-                        sx={{
-                          bgcolor: '#4CAF50',
-                          color: 'white',
-                          textTransform: 'none',
-                          fontWeight: 'bold',
-                          px: 4,
-                          py: 0.75,
-                          borderRadius: 1,
-                          '&:hover': { bgcolor: '#388e3c' },
-                        }}
-                      >
-                        {acceptButtonText || 'Accept'}
-                      </Button>
-                    </Box>
-                  )}
-                  {showRevokeButton && (
-                    <Button
-                      variant="contained"
-                      onClick={onRevoke}
-                      disabled={isBulkSelecting}
-                      sx={{
-                        bgcolor: '#F44336',
-                        color: 'white',
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        px: 4,
-                        py: 0.75,
-                        borderRadius: 1,
-                        '&:hover': { bgcolor: '#d32f2f' },
-                      }}
-                    >
-                      Revoke
-                    </Button>
-                  )}
-                </Box>
+                    )}
+                  </>
+                )}
               </Box>
-            </>
-          )}
+            </Box>
+          </Box>
 
-          {/* Collapsible Responses / Explanation */}
           {showExpandIcon && (
             <Collapse in={isExpanded} timeout="auto" unmountOnExit>
               <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
