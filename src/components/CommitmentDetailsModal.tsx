@@ -26,12 +26,14 @@ interface CommitmentDetailsModalProps {
   onRequestBadgeClick?: () => void;
   isRequest?: boolean;
   onAcceptRequestClick?: () => void;
-  onDeclineRequestClick?: () => void;
+  onDeclineRequestClick?: () => void; // Renamed to be more generic for re-use
   isAwaitingResponse?: boolean;
   isOwedToMe?: boolean;
   onRevokeClick?: () => void;
   onClarifyClick?: () => void;
-  isCommitmentPortfolioPage?: boolean; // New prop
+  isCommitmentPortfolioPage?: boolean;
+  onIssueBadgeClick?: () => void; // New prop for Issue Badge
+  onRejectRequestClick?: () => void; // New prop for Reject (specific to Promises Owed to Me)
 }
 
 const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
@@ -46,12 +48,13 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
   isOwedToMe,
   onRevokeClick,
   onClarifyClick,
-  isCommitmentPortfolioPage = false, // Default to false
+  isCommitmentPortfolioPage = false,
+  onIssueBadgeClick, // Destructure new prop
+  onRejectRequestClick, // Destructure new prop
 }) => {
   if (!commitment) return null;
 
   const renderActionButtons = () => {
-    // If it's a "Promise Owed to Me" and on the Commitment Portfolio page, remove all buttons
     if (isOwedToMe && isCommitmentPortfolioPage) {
       return null;
     }
@@ -78,23 +81,57 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
     }
     if (isOwedToMe) {
       return (
-        <Button
-          variant="contained"
-          onClick={onClarifyClick}
-          fullWidth
-          sx={{
-            bgcolor: 'primary.main',
-            color: 'white',
-            textTransform: 'none',
-            py: 1.5,
-            fontSize: '16px',
-            fontWeight: 'bold',
-            borderRadius: 1,
-            '&:hover': { bgcolor: 'primary.dark' },
-          }}
-        >
-          Clarify
-        </Button>
+        <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+          <Button
+            variant="contained"
+            onClick={onClarifyClick}
+            fullWidth
+            sx={{
+              bgcolor: 'primary.main',
+              color: 'white',
+              textTransform: 'none',
+              py: 1.5,
+              fontSize: '16px',
+              fontWeight: 'bold',
+              borderRadius: 1,
+              '&:hover': { bgcolor: 'primary.dark' },
+            }}
+          >
+            Clarify Request
+          </Button>
+          <Button
+            variant="contained"
+            onClick={onRejectRequestClick} // Use new prop for Reject
+            fullWidth
+            sx={{
+              bgcolor: '#F44336',
+              color: 'white',
+              textTransform: 'none',
+              py: 1.5,
+              fontSize: '16px',
+              fontWeight: 'bold',
+              '&:hover': { bgcolor: '#d32f2f' },
+            }}
+          >
+            Reject
+          </Button>
+          <Button
+            variant="contained"
+            onClick={onIssueBadgeClick} // Use new prop for Issue Badge
+            fullWidth
+            sx={{
+              bgcolor: '#4CAF50',
+              color: 'white',
+              textTransform: 'none',
+              py: 1.5,
+              fontSize: '16px',
+              fontWeight: 'bold',
+              '&:hover': { bgcolor: '#388e3c' },
+            }}
+          >
+            Issue Badge
+          </Button>
+        </Box>
       );
     }
     if (isRequest) {
@@ -135,7 +172,6 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
         </Box>
       );
     }
-    // Default button (Request Badge) - only show if NOT on Commitment Portfolio page
     if (!isCommitmentPortfolioPage) {
       return (
         <Button
@@ -157,7 +193,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
         </Button>
       );
     }
-    return null; // No button if on Commitment Portfolio page
+    return null;
   };
 
   return (
