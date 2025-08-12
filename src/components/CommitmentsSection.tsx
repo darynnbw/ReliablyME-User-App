@@ -1124,7 +1124,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     '&:hover': { bgcolor: '#1565c0' },
                   }}
                 >
-                  Clarify
+                  Clarification Request
                 </Button>
               )}
 
@@ -1289,7 +1289,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
                       showActionButton={showActionButtonForListItem} // Use the new variable
-                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
+                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarification Request' : 'Request Badge')}
                       onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
@@ -1441,7 +1441,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Decline Invitations"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to decline {selectedCount} selected invitation{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+            {`Are you sure you want to decline ${selectedCount} selected invitation${selectedCount > 1 ? 's' : ''}? This action cannot be undone.`}
           </Typography>
         }
         onDecline={handleConfirmBulkDecline}
@@ -1475,7 +1475,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Bulk Revoke"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to revoke {selectedCount} selected request{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+            {`Are you sure you want to revoke ${selectedCount} selected request${selectedCount > 1 ? 's' : ''}? This action cannot be undone.`}
           </Typography>
         }
         onDecline={handleConfirmBulkRevoke}
@@ -1537,7 +1537,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Bulk Approve Requests"
         description={
           <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-            Are you sure you want to approve {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
+            {`Are you sure you want to approve ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
           </Typography>
         }
         onConfirm={handleConfirmBulkApprove}
@@ -1550,7 +1550,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Bulk Reject Requests"
         description={
           <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-            Are you sure you want to reject {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
+            {`Are you sure you want to reject ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
           </Typography>
         }
         onConfirm={handleConfirmBulkReject}
