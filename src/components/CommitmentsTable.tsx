@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // Import new icons
+import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp, Repeat } from '@mui/icons-material';
 import dayjs from 'dayjs'; // Import dayjs for sorting
 import BadgeIconWithTooltip from './BadgeIconWithTooltip';
 
@@ -58,6 +58,19 @@ interface CommitmentsTableProps {
   isMyBadgesTab?: boolean; // New prop
   isBadgesIssuedTab?: boolean; // New prop
 }
+
+const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
+  if (!responses || responses.length <= 1) {
+    return true;
+  }
+  const firstQuestions = JSON.stringify(responses[0].questions || []);
+  for (let i = 1; i < responses.length; i++) {
+    if (JSON.stringify(responses[i].questions || []) !== firstQuestions) {
+      return false;
+    }
+  }
+  return true;
+};
 
 const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   commitments,
@@ -327,114 +340,166 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </TableCell>
             </TableRow>
           ) : (
-            commitments.map((commitment, index) => (
-              <React.Fragment key={commitment.id}>
-                <TableRow
-                  sx={{
-                    '&:last-child td, &:last-child th': { border: 0 },
-                    bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
-                  }}
-                >
-                  <TableCell component="th" scope="row">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {(() => {
-                          const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
-                          const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation;
-                          return (
-                            <IconButton
-                              size="small"
-                              onClick={() => handleToggleExpand(commitment.id)}
-                              sx={{ visibility: (isNudgeWithResponses || isBadgeWithExplanation) ? 'visible' : 'hidden' }}
-                            >
-                              {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                            </IconButton>
-                          );
-                        })()}
-                      </Box>
-                      {(isActivePromisesTab || !isActivePromisesTab) && <BadgeIconWithTooltip badgeType={commitment.title} />}
-                      {commitment.title}
-                    </Box>
-                  </TableCell>
-                  <TableCell>{commitment.description}</TableCell>
-                  <TableCell>{commitment.assignee}</TableCell>
-                  {/* Reordered date cells */}
-                  <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
-                  <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
-                  {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
-                    <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
-                  )}
-                </TableRow>
-                {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
-                  <TableRow>
-                    <TableCell colSpan={numColumns} sx={{ py: 0, borderBottom: 'none' }}>
-                      <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
-                        <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-                          {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
-                            <>
-                              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                                All Responses ({commitment.responses.length}):
-                              </Typography>
-                              <Stack spacing={2}>
-                                {commitment.responses
-                                  .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
-                                  .map((response, idx) => (
-                                    <Box key={idx} sx={{ pb: 2, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
-                                      <Chip
-                                        label={response.date}
-                                        size="small"
-                                        sx={{
-                                          bgcolor: '#e3f2fd',
-                                          color: '#1976d2',
-                                          fontWeight: 700,
-                                          fontSize: '12px',
-                                          mb: 1.5,
-                                        }}
-                                      />
-                                      {response.questions && response.questions.length > 0 && (
-                                        <Box sx={{ mb: 1 }}>
-                                          <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
-                                            Questions Asked:
-                                          </Typography>
-                                          <Stack spacing={0.5}>
-                                            {response.questions.map((q, qIdx) => (
-                                              <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                                {q}
-                                              </Typography>
-                                            ))}
-                                          </Stack>
-                                        </Box>
-                                      )}
-                                      <Box>
-                                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
-                                          Your Answer:
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                          {response.answer}
-                                        </Typography>
-                                      </Box>
-                                    </Box>
-                                  ))}
-                              </Stack>
-                            </>
-                          )}
-                          {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation) && (
-                            <>
-                              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                                Explanation:
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                {commitment.explanation}
-                              </Typography>
-                            </>
-                          )}
+            commitments.map((commitment, index) => {
+              const isRecurringNudge = commitment.type === 'nudge' && areQuestionsRecurring(commitment.responses);
+              return (
+                <React.Fragment key={commitment.id}>
+                  <TableRow
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                      bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50',
+                    }}
+                  >
+                    <TableCell component="th" scope="row">
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                          {(() => {
+                            const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
+                            const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation;
+                            return (
+                              <IconButton
+                                size="small"
+                                onClick={() => handleToggleExpand(commitment.id)}
+                                sx={{ visibility: (isNudgeWithResponses || isBadgeWithExplanation) ? 'visible' : 'hidden' }}
+                              >
+                                {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                              </IconButton>
+                            );
+                          })()}
                         </Box>
-                      </Collapse>
+                        {(isActivePromisesTab || !isActivePromisesTab) && <BadgeIconWithTooltip badgeType={commitment.title} />}
+                        {commitment.title}
+                      </Box>
                     </TableCell>
+                    <TableCell>{commitment.description}</TableCell>
+                    <TableCell>{commitment.assignee}</TableCell>
+                    {/* Reordered date cells */}
+                    <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
+                    <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
+                    {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
+                      <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                    )}
                   </TableRow>
-                )}
-              </React.Fragment>
-            ))
+                  {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
+                    <TableRow>
+                      <TableCell colSpan={numColumns} sx={{ py: 0, borderBottom: 'none' }}>
+                        <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
+                          <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+                            {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
+                              isRecurringNudge ? (
+                                <>
+                                  {commitment.responses[0].questions && commitment.responses[0].questions.length > 0 && (
+                                    <Box sx={{ mb: 2 }}>
+                                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                                        Questions Asked:
+                                      </Typography>
+                                      <Stack spacing={0.5}>
+                                        {commitment.responses[0].questions.map((q, qIdx) => (
+                                          <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                                            {q}
+                                          </Typography>
+                                        ))}
+                                      </Stack>
+                                    </Box>
+                                  )}
+                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                                      All Responses ({commitment.responses.length}):
+                                    </Typography>
+                                    <Tooltip title="You’ll answer this same set of questions with each nudge.">
+                                      <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
+                                    </Tooltip>
+                                  </Box>
+                                  <Stack spacing={2}>
+                                    {commitment.responses
+                                      .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
+                                      .map((response, idx) => (
+                                        <Box key={idx} sx={{ pb: 2, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                                          <Chip
+                                            label={response.date}
+                                            size="small"
+                                            sx={{
+                                              bgcolor: '#e3f2fd',
+                                              color: '#1976d2',
+                                              fontWeight: 700,
+                                              fontSize: '12px',
+                                              mb: 1.5,
+                                            }}
+                                          />
+                                          <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                            {response.answer}
+                                          </Typography>
+                                        </Box>
+                                      ))}
+                                  </Stack>
+                                </>
+                              ) : (
+                                <>
+                                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                                    All Responses ({commitment.responses.length}):
+                                  </Typography>
+                                  <Stack spacing={2}>
+                                    {commitment.responses
+                                      .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
+                                      .map((response, idx) => (
+                                        <Box key={idx} sx={{ pb: 2, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
+                                          <Chip
+                                            label={response.date}
+                                            size="small"
+                                            sx={{
+                                              bgcolor: '#e3f2fd',
+                                              color: '#1976d2',
+                                              fontWeight: 700,
+                                              fontSize: '12px',
+                                              mb: 1.5,
+                                            }}
+                                          />
+                                          {response.questions && response.questions.length > 0 && (
+                                            <Box sx={{ mb: 1 }}>
+                                              <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                                Questions Asked:
+                                              </Typography>
+                                              <Stack spacing={0.5}>
+                                                {response.questions.map((q, qIdx) => (
+                                                  <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                                                    {q}
+                                                  </Typography>
+                                                ))}
+                                              </Stack>
+                                            </Box>
+                                          )}
+                                          <Box>
+                                            <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                              Your Answer:
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                              {response.answer}
+                                            </Typography>
+                                          </Box>
+                                        </Box>
+                                      ))}
+                                  </Stack>
+                                </>
+                              )
+                            )}
+                            {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation) && (
+                              <>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                                  Explanation:
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                  {commitment.explanation}
+                                </Typography>
+                              </>
+                            )}
+                          </Box>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              );
+            })
           )}
         </TableBody>
       </Table>
