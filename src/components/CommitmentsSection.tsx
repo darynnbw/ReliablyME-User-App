@@ -344,7 +344,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.assignee.toLowerCase().includes(searchTerm.toLowerCase());
 
-    if (!searchMatch && !disableActivePromisesFiltersInTable) return false; // Only apply search if not disabled
+    if (!searchMatch) return false;
 
     const personMatch = (() => {
       if (!personFilter) return true; // 'All' is selected
@@ -446,26 +446,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   // Effect to dynamically adjust the height of the content area
   useEffect(() => {
-    if (isTableView) {
-      setContainerContentHeight('auto'); // Table view handles its own height
+    if (isTableView || isUnkeptTab) {
+      setContainerContentHeight('auto');
       return;
     }
-
+  
     if (paginatedItems.length === 0) {
-      // When there are no items, set a fixed height for the empty state message
-      setContainerContentHeight('250px'); // This value might need fine-tuning
-    } else if (firstItemObservedHeight !== null) { // Use observed height
+      setContainerContentHeight('250px');
+    } else if (firstItemObservedHeight !== null) {
       const cardHeight = firstItemObservedHeight;
-      const spacing = 8; // From <Stack spacing={1}>
-
-      if (paginatedItems.length === 1) {
-        setContainerContentHeight(cardHeight);
-      } else {
-        // For 2 or more items, show 2 items and enable scrolling
-        setContainerContentHeight((cardHeight * 2) + spacing);
-      }
+      const spacing = 8;
+      const maxVisibleItems = 3; // Show up to 3 items before scrolling
+  
+      const itemsToShow = Math.min(paginatedItems.length, maxVisibleItems);
+      const calculatedHeight = (cardHeight * itemsToShow) + (spacing * (itemsToShow > 0 ? itemsToShow - 1 : 0));
+      setContainerContentHeight(calculatedHeight);
     }
-  }, [paginatedItems.length, isTableView, firstItemObservedHeight]); // Add observed height as dependency
+  }, [paginatedItems.length, isTableView, firstItemObservedHeight, isUnkeptTab]);
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -924,7 +921,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
               </Select>
             </FormControl>
 
-            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} disabled={isTableView && isActivePromisesTab} />
+            <TextField variant="outlined" size="small" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <InputAdornment position="start"><Search fontSize="small" /></InputAdornment> }} />
           </Box>
         </Box>
 
@@ -1227,9 +1224,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 onFilterChange={handleTableFilterChange}
                 badgeOptions={tableBadgeOptions}
                 assigneeOptions={tableAssigneeOptions}
-                isActivePromisesTab={isActivePromisesTab}
                 isMyBadgesTab={isMyBadgesTab}
                 isBadgesIssuedTab={isBadgesIssuedTab}
+                isUnkeptTab={isUnkeptTab}
                 itemColor={itemColor}
                 expandedRows={expandedRows}
                 onToggleExpand={handleToggleExpandRow}
