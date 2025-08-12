@@ -457,7 +457,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                           />
                                           {response.questions && response.questions.length > 0 && (
                                             <Box sx={{ mb: 1 }}>
-                                              <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f', mb: 0.5 }}>
+                                              <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
                                                 Questions Asked:
                                               </Typography>
                                               <Stack spacing={0.5}>
@@ -470,7 +470,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                             </Box>
                                           )}
                                           <Box>
-                                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f', mb: 0.5 }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
                                               Your Answer:
                                             </Typography>
                                             <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
