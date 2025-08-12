@@ -268,7 +268,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: isActionsPage ? 1.5 : 1 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -307,7 +307,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </Typography>
                   </Box>
                 )}
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}> {/* Added mb here */}
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, mb: 1.5 }}> {/* Added mt: 0.5 here */}
                   <Person sx={{ fontSize: 16, color: color }} />
                   <Typography variant="body2" sx={{ color: '#666' }}>
                     {showFromLabel ? 'From:' : 'To:'}{' '}
