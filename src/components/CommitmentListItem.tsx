@@ -201,7 +201,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         )}
         <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}> {/* Add this */}
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}> {/* Changed mb */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -266,7 +266,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}> {/* Changed mb */}
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Reduced mb */}
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -280,7 +280,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Original Description - always visible */}
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}>
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}> {/* Reduced mb */}
             {description}
           </Typography>
 
@@ -293,7 +293,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 py: 1.5,
                 borderRadius: 2,
                 border: '1px solid #e9ecef',
-                mb: 1.5,
+                mb: 1.5, // Reduced mb
                 maxWidth: '100%',
               }}
             >
@@ -307,7 +307,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Bottom row: Assignee and Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}> {/* Reduced mb */}
             {/* Assignee */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
