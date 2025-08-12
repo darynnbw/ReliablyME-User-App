@@ -174,7 +174,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 1 }, display: 'flex', gap: 1.5 }}> {/* Changed pb to 1 */}
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 0 }, display: 'flex', gap: 1.5 }}> {/* Changed pb to 0 */}
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
@@ -311,7 +311,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Box>
 
               {/* Assignee Info (the "person field") */}
-              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0 }}> {/* Changed mb to 0 */}
+              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0 }}>
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -341,7 +341,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Stack>
 
               {/* Action Buttons */}
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mt: 0 }}> {/* Changed mt to 0 */}
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mt: 0 }}>
                 <Box sx={{ minWidth: 130, textAlign: 'right' }}>
                   {showActionButton && (
                     <Button
@@ -455,7 +455,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 </Box>
               )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
-                <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0 }}> {/* Changed mb to 0 */}
+                <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0 }}>
                   <Person sx={{ fontSize: 16, color: color }} />
                   <Typography variant="body2" sx={{ color: '#666' }}>
                     {showFromLabel ? 'From:' : 'To:'}{' '}
