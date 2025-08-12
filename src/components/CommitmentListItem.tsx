@@ -430,7 +430,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       {responses[0].questions && responses[0].questions.length > 0 && (
                         <Box sx={{ mb: 2 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                            <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary' }}>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                               Questions Asked:
                             </Typography>
                             <Tooltip title="You’ll answer this same set of questions with each nudge.">
