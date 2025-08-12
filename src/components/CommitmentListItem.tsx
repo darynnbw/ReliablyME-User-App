@@ -14,7 +14,7 @@ import {
   useTheme,
   Collapse, // Import Collapse
 } from '@mui/material';
-import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Removed Shield
+import { CalendarToday, Person, MoreHoriz, Edit, ExpandMore as ExpandMoreIcon, Repeat } from '@mui/icons-material'; // Removed Shield
 import ContactTooltip from './ContactTooltip'; // Import ContactTooltip
 import dayjs from 'dayjs'; // Import dayjs for sorting
 import BadgeContent from './BadgeContent'; // Import the new BadgeContent component
@@ -425,9 +425,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         </Stack>
                       </Box>
                     )}
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                      All Responses ({responses.length}):
-                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                        All Responses ({responses.length}):
+                      </Typography>
+                      <Tooltip title="This set of questions is repeated for every nudge in this series.">
+                        <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
+                      </Tooltip>
+                    </Box>
                     <Stack spacing={2}>
                       {responses
                         .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf()) // Chronological
@@ -444,14 +449,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                 mb: 1.5,
                               }}
                             />
-                            <Box>
-                              <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
-                                Your Answer:
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                {response.answer}
-                              </Typography>
-                            </Box>
+                            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                              {response.answer}
+                            </Typography>
                           </Box>
                         ))}
                     </Stack>
