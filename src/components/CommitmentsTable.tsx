@@ -165,9 +165,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
         boxShadow: 'none',
         border: '1px solid #e8eaed',
         borderRadius: 3,
-        minHeight: commitments.length === 1 ? 'auto' : 392,
         width: '100%',
-        overflowY: 'scroll',
+        overflowX: 'auto',
       }}
     >
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
