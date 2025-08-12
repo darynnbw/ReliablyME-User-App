@@ -174,7 +174,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, display: 'flex', gap: 1.5 }}> {/* Changed p and pb */}
+      <CardContent sx={{ p: 1, '&:last-child': { pb: 0.5 }, display: 'flex', gap: 1.5 }}> {/* Changed p and pb */}
         {showBadgePlaceholder && (
           <Box sx={{
             width: 100,
@@ -203,7 +203,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         )}
         <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'flex-start' }}> {/* Changed alignSelf to flex-start */}
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}> {/* Reduced mb */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
