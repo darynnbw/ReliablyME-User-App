@@ -311,7 +311,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Box>
 
               {/* Assignee Info (the "person field") */}
-              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 1 }}> {/* Changed mb to 1 (8px) */}
+              <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 0 }}>
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
