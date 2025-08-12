@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -34,6 +35,18 @@ const theme = createTheme({
 });
 
 function App() {
+  useEffect(() => {
+    const fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap';
+    fontLink.rel = 'stylesheet';
+
+    // Check if the link already exists to avoid duplicates on hot reloads
+    const existingLink = document.querySelector(`link[href="${fontLink.href}"]`);
+    if (!existingLink) {
+      document.head.appendChild(fontLink);
+    }
+  }, []);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ThemeProvider theme={theme}>
