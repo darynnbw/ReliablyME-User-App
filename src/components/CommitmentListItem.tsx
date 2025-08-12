@@ -45,7 +45,6 @@ interface CommitmentListItemProps {
   nudgesLeft?: number;
   totalNudges?: number; // Added totalNudges
   isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
-  isActivePromisesTab?: boolean; // New prop
   isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
   isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
   isExternal?: boolean;
@@ -59,7 +58,7 @@ interface CommitmentListItemProps {
   approvedDate?: string; // Added approvedDate prop
 }
 
-const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
+const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemProps>(({
   id,
   title,
   dueDate,
@@ -85,7 +84,6 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   nudgesLeft,
   totalNudges, // Destructure totalNudges
   isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
-  isActivePromisesTab = false,
   isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
   isBadgesIssuedTab = false, // Destructure new prop
   isExternal = false,
@@ -97,7 +95,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
   declineButtonText,
   responses, // Destructure responses
   approvedDate, // Destructure approvedDate
-}) => {
+}, ref) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false); // State for inline collapse
 
@@ -126,6 +124,7 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
 
   return (
     <Card
+      ref={ref}
       sx={{
         position: 'relative',
         minHeight: 140,
@@ -252,9 +251,9 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
               </Typography>
-              {isActivePromisesTab && isNudge && totalNudges !== undefined && nudgesLeft !== undefined && (
+              {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && ( // Added nudgesLeft > 0 condition
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
-                  ({totalNudges - nudgesLeft}/{totalNudges} answered)
+                  ({nudgesLeft} of {totalNudges} nudges left)
                 </Typography>
               )}
             </Stack>
@@ -264,28 +263,6 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
           <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}> {/* Reduced mb */}
             {description}
           </Typography>
-
-          {/* Most Recent Answer for Active Nudges */}
-          {isActivePromisesTab && isNudge && responses && responses.length > 0 && (
-            <Box
-              sx={{
-                bgcolor: '#f8f9fa',
-                px: 2,
-                py: 1.5,
-                borderRadius: 2,
-                border: '1px solid #e9ecef',
-                mb: 1.5,
-                maxWidth: '100%',
-              }}
-            >
-              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                  Most Recent Answer:{' '}
-                </Typography>
-                {responses.sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())[0].answer}
-              </Typography>
-            </Box>
-          )}
 
           {/* Explanation */}
           {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && ( // Only show if not an issued badge (explanation will be in collapse)
@@ -497,6 +474,6 @@ const CommitmentListItem: React.FC<CommitmentListItemProps> = ({
       </CardContent>
     </Card>
   );
-};
+});
 
 export default CommitmentListItem;

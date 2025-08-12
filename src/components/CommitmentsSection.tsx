@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Paper,
   Typography,
@@ -219,6 +219,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
 
+  // State for dynamic container height
+  const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto');
+
   const handleOpenMakePromiseModal = (type: 'promise' | 'request') => {
     setMakePromiseModalType(type);
     setMakePromiseModalOpen(true);
@@ -418,6 +421,46 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
   // No pagination for My Badges tab
   const paginatedItems = currentItems;
+  // const totalPages = isMyBadgesTab ? Math.ceil(currentItems.length / itemsPerPage) : 0; // Removed
+
+  // Effect to observe the height of the first item
+  useEffect(() => {
+    if (firstItemRef.current) {
+      const observer = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          setFirstItemObservedHeight(entry.contentRect.height);
+        }
+      });
+      observer.observe(firstItemRef.current);
+      return () => observer.disconnect();
+    }
+  }, [paginatedItems.length, isTableView]); // Re-observe if items change or view mode changes
+
+  const firstItemRef = useRef<HTMLDivElement>(null); // Ref to get the height of a single list item
+  const [firstItemObservedHeight, setFirstItemObservedHeight] = useState<number | null>(null); // State to store observed height
+
+  // Effect to dynamically adjust the height of the content area
+  useEffect(() => {
+    if (isTableView) {
+      setContainerContentHeight('auto'); // Table view handles its own height
+      return;
+    }
+
+    if (paginatedItems.length === 0) {
+      // When there are no items, set a fixed height for the empty state message
+      setContainerContentHeight('250px'); // This value might need fine-tuning
+    } else if (firstItemObservedHeight !== null) { // Use observed height
+      const cardHeight = firstItemObservedHeight;
+      const spacing = 8; // From <Stack spacing={1}>
+
+      if (paginatedItems.length === 1) {
+        setContainerContentHeight(cardHeight);
+      } else {
+        // For 2 or more items, show 2 items and enable scrolling
+        setContainerContentHeight((cardHeight * 2) + spacing);
+      }
+    }
+  }, [paginatedItems.length, isTableView, firstItemObservedHeight]); // Add observed height as dependency
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -1090,14 +1133,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         )}
 
         <Box sx={{ 
-          height: 'auto',
-          minHeight: 0,
-          pr: isTableView ? 0 : 1,
-          overflowY: 'visible',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start',
-          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch',
+          height: containerContentHeight, // Apply dynamic height here
+          minHeight: 0, // Allow shrinking
+          pr: isTableView ? 0 : 1, // Padding for scrollbar in regular mode
+          overflowY: isTableView ? 'visible' : 'auto', // Use 'auto' for regular mode to enable scrolling
+          display: 'flex', // Ensure flex properties apply to its children
+          flexDirection: 'column', // Stack children vertically
+          justifyContent: paginatedItems.length === 0 ? 'center' : 'flex-start', // Center content if empty
+          alignItems: paginatedItems.length === 0 ? 'center' : 'stretch', // Center content if empty
         }}>
           {displayMode === 'table' ? ( /* Simplified condition */
             <Box sx={{ mt: 2 }}>
@@ -1122,7 +1165,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           ) : (
             <Stack spacing={1} sx={{ width: '100%', mt: 1 }}> {/* Adjusted mt to 1 */}
               {paginatedItems.length > 0 ? (
-                paginatedItems.map((item) => {
+                paginatedItems.map((item, _index) => {
                   const isNudgeItem = item.type === 'nudge';
                   // Checkboxes are shown only on Actions page and not for MyBadges/Unkept tabs
                   const showCheckboxes = isActionsPage && !isMyBadgesTab && !isUnkeptTab;
@@ -1156,6 +1199,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     <CommitmentListItem
                       key={item.id}
                       {...item}
+                      ref={_index === 0 ? firstItemRef : null} // Keep ref for the first item to measure its height
                       color={itemColor}
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
@@ -1176,7 +1220,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       totalNudges={item.totalNudges}
                       isMyPromisesTab={isMyPromisesTab}
                       isMyBadgesTab={isMyBadgesTab} // Pass this new prop
-                      isActivePromisesTab={isActivePromisesTab} // Pass this new prop
                       isBadgesIssuedTab={isBadgesIssuedTab} // Pass new prop
                       isExternal={item.isExternal}
                       isOverdue={item.isOverdue} // Pass the pre-calculated isOverdue
