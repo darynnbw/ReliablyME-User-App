@@ -223,10 +223,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [makePromiseModalOpen, setMakePromiseModalOpen] = useState(false);
   const [makePromiseModalType, setMakePromiseModalType] = useState<'promise' | 'request'>('promise');
 
-  // New states for Promises Owed to Me actions
-  const [issueBadgeSuccessModalOpen, setIssueBadgeSuccessModalOpen] = useState(false);
-  const [rejectOwedPromiseModalOpen, setRejectOwedPromiseModalOpen] = useState(false);
-
   // State for dynamic container height
   const [containerContentHeight, setContainerContentHeight] = useState<number | string>('auto');
 
@@ -253,10 +249,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     setShowClarificationSuccessModal(false);
   }, []);
 
-  // New close handlers for Promises Owed to Me actions
-  const handleCloseIssueBadgeSuccessModal = useCallback(() => setIssueBadgeSuccessModalOpen(false), []);
-  const handleCloseRejectOwedPromiseModal = useCallback(() => setRejectOwedPromiseModalOpen(false), []);
-
   // New functions for badge approval/rejection
   const handleApproveBadgeRequest = (commitment: Commitment) => {
     console.log('Approving badge request:', commitment.id);
@@ -279,19 +271,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Logic to handle the rejection confirmation
     setRejectBadgeModalOpen(false);
     setCommitmentToReject(null);
-  };
-
-  // New handlers for Promises Owed to Me buttons
-  const handleIssueBadge = (item: Commitment) => {
-    console.log('Issuing badge for commitment:', item.id);
-    setCommitments(prev => prev.filter(c => c.id !== item.id));
-    setIssueBadgeSuccessModalOpen(true);
-  };
-
-  const handleRejectOwedPromise = (item: Commitment) => {
-    console.log('Rejecting owed promise:', item.id);
-    setCommitments(prev => prev.filter(c => c.id !== item.id));
-    setRejectOwedPromiseModalOpen(true);
   };
 
   useEffect(() => {
@@ -1285,12 +1264,12 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   // Action button logic:
                   // Show if on Actions page AND (
                   //   (is a Nudge in My Promises tab) OR
-                  //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests, AND NOT OwedToMe)
+                  //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
                   // )
                   // Explicitly hide action button for 'Active Promises' tab in Commitment Portfolio
                   let showActionButtonForListItem = isActionsPage && (
                     (isNudgeItem && isMyPromisesTab) || 
-                    (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab && !isOwedToMe)
+                    (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
                   );
                   if (isCommitmentPortfolioPage && isActivePromisesTab) {
                       showActionButtonForListItem = false;
@@ -1310,8 +1289,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
                       showActionButton={showActionButtonForListItem} // Use the new variable
-                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : 'Request Badge'}
-                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : handleRequestBadge}
+                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify' : 'Request Badge')}
+                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
                       showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
@@ -1340,11 +1319,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       onToggleExpand={() => handleToggleExpandRow(item.id)}
                       isActionsPage={isActionsPage}
                       isOthersCommitmentsSection={isOthersCommitmentsSection}
-                      // New props for Promises Owed to Me
-                      isOwedToMe={isOwedToMe} // Pass this prop to CommitmentListItem
-                      onClarifyRequestOwedPromise={() => handleClarifyClick(item)} // Pass the handler for Clarify Request
-                      onRejectOwedPromise={() => handleRejectOwedPromise(item)}
-                      onIssueBadge={() => handleIssueBadge(item)}
                     />
                   );
                 })
@@ -1544,7 +1518,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         open={showClarificationSuccessModal} // Controlled by new state
         onClose={handleCloseClarificationSuccessModal}
         title="Request Sent!"
-        message="The clarification request has has been sent."
+        message="The clarification request has been sent."
       />
       <DeclineModal
         open={rejectBadgeModalOpen}
@@ -1563,7 +1537,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Bulk Approve Requests"
         description={
           <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-            {`Are you sure you want to approve ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
+            Are you sure you want to approve {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
           </Typography>
         }
         onConfirm={handleConfirmBulkApprove}
@@ -1576,7 +1550,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         title="Bulk Reject Requests"
         description={
           <Typography variant="body1" sx={{ mb: 4, color: '#333', fontSize: '16px', lineHeight: 1.6 }}>
-            {`Are you sure you want to reject ${selectedCount} selected badge request${selectedCount > 1 ? 's' : ''}?`}
+            Are you sure you want to reject {selectedCount} selected badge request{selectedCount > 1 ? 's' : ''}?
           </Typography>
         }
         onConfirm={handleConfirmBulkReject}
@@ -1589,26 +1563,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         open={makePromiseModalOpen}
         onClose={handleCloseMakePromiseModal}
         type={makePromiseModalType}
-      />
-
-      {/* Modals for Promises Owed to Me actions */}
-      <SuccessConfirmationModal
-        open={issueBadgeSuccessModalOpen}
-        onClose={handleCloseIssueBadgeSuccessModal}
-        title="Badge Issued!"
-        message="The badge has been successfully issued."
-      />
-      <DeclineModal
-        open={rejectOwedPromiseModalOpen}
-        onClose={handleCloseRejectOwedPromiseModal}
-        title="Reject Promise"
-        description={
-          <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to reject this promise? The sender will be notified.
-          </Typography>
-        }
-        onDecline={handleCloseRejectOwedPromiseModal} // Just close for now, actual logic is in handler
-        declineText="Reject"
       />
     </>
   );
