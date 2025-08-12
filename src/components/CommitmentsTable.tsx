@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp, Repeat } from '@mui/icons-material'; // Import new icons
+import { CalendarToday, ArrowDropDown, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // Import new icons
 import dayjs from 'dayjs'; // Import dayjs for sorting
 import BadgeIconWithTooltip from './BadgeIconWithTooltip';
 
@@ -372,31 +372,12 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                         <Box sx={{ my: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                           {commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0 && (
                             <>
-                              {commitment.responses[0].questions && commitment.responses[0].questions.length > 0 && (
-                                <Box sx={{ mb: 2 }}>
-                                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                                    Questions Asked:
-                                  </Typography>
-                                  <Stack spacing={0.5}>
-                                    {commitment.responses[0].questions.map((q, qIdx) => (
-                                      <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                        {q}
-                                      </Typography>
-                                    ))}
-                                  </Stack>
-                                </Box>
-                              )}
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                                  All Responses ({commitment.responses.length}):
-                                </Typography>
-                                <Tooltip title="This set of questions is repeated for every nudge in this series.">
-                                  <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
-                                </Tooltip>
-                              </Box>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                                All Responses ({commitment.responses.length}):
+                              </Typography>
                               <Stack spacing={2}>
                                 {commitment.responses
-                                  .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf()) // Chronological
+                                  .sort((a, b) => dayjs(b.date, 'MMM D, YYYY').valueOf() - dayjs(a.date, 'MMM D, YYYY').valueOf())
                                   .map((response, idx) => (
                                     <Box key={idx} sx={{ pb: 2, borderBottom: idx < commitment.responses!.length - 1 ? '1px dashed grey.300' : 'none' }}>
                                       <Chip
@@ -410,15 +391,34 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                           mb: 1.5,
                                         }}
                                       />
-                                      <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                        {response.answer}
-                                      </Typography>
+                                      {response.questions && response.questions.length > 0 && (
+                                        <Box sx={{ mb: 1 }}>
+                                          <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                            Questions Asked:
+                                          </Typography>
+                                          <Stack spacing={0.5}>
+                                            {response.questions.map((q, qIdx) => (
+                                              <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                                                {q}
+                                              </Typography>
+                                            ))}
+                                          </Stack>
+                                        </Box>
+                                      )}
+                                      <Box>
+                                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 0.5 }}>
+                                          Your Answer:
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                                          {response.answer}
+                                        </Typography>
+                                      </Box>
                                     </Box>
                                   ))}
                               </Stack>
                             </>
                           )}
-                          {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation && commitment.type !== 'nudge') && (
+                          {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation) && (
                             <>
                               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
                                 Explanation:
