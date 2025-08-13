@@ -282,8 +282,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {isActionsPage ? (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 2, width: '100%' }}>
-              <Box sx={{ flex: '1 1 0%', minWidth: '200px' }}> {/* Allow text to grow, but ensure a minimum width before wrapping */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+              <Box sx={{ flexGrow: 1, minWidth: 0, pr: 2 }}> {/* Text content, allow it to grow, add right padding */}
                 <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
                   {description}
                 </Typography>
@@ -300,9 +300,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     }}
                   >
                     <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                      <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                      <span style={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
                         Explanation:{' '}
-                      </Typography>
+                      </span>
                       {explanation}
                     </Typography>
                   </Box>
@@ -441,9 +441,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   }}
                 >
                   <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                    <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                    <span style={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
                       Explanation:{' '}
-                    </Typography>
+                    </span>
                     {explanation}
                   </Typography>
                 </Box>
