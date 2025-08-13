@@ -182,7 +182,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', gap: 1.5 }}>
+      <CardContent sx={{ px: 3, py: 2.5, '&:last-child': { pb: 2.5 }, display: 'flex', gap: 1.5 }}> {/* Adjusted padding */}
         {showBadgePlaceholder && !isActionsPage && ( // Hide badge placeholder on Actions page
           <Box sx={{
             width: 100,
@@ -209,9 +209,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center', display: 'flex', flexDirection: 'column' }}> {/* This box now controls its children in a column */}
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}> {/* Added alignItems: 'flex-start' */}
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mb: 1.5 }}> {/* Adjusted mb */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -276,7 +276,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}> {/* Adjusted mb */}
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -290,7 +290,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Description */}
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1.5 }}> {/* Adjusted mb */}
             {description}
           </Typography>
 
@@ -304,11 +304,11 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 borderRadius: 2,
                 border: '1px solid #e9ecef',
                 mt: 0, // No top margin, description's mb handles spacing
-                mb: 1, // Consistent margin below explanation
+                mb: 1.5, // Consistent margin below explanation
                 width: '100%', // Ensure it takes full available width
               }}
             >
-              <Typography component="span" variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
                 <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
                   Explanation:{' '}
                 </Typography>
@@ -318,7 +318,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* New flex container for Assignee Info and Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1 }}> {/* mt: 1 for consistent spacing */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1.5 }}> {/* Adjusted mt */}
             {/* Assignee Info */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
@@ -351,7 +351,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
             {/* Buttons section */}
             {showClarifyRejectIssueButtons ? ( // Specific case for Promises Owed to Me on Actions page
-              <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+              <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'flex-end' }}> {/* Adjusted gap */}
                 <Button
                   variant="contained"
                   onClick={onClarify} // Use new prop
@@ -407,7 +407,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Box>
             ) : (
               // Existing logic for other tabs/scenarios
-              <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+              <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'flex-end' }}> {/* Adjusted gap */}
                 {showActionButton && (
                   <Button
                     variant="contained"
@@ -434,7 +434,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   </Button>
                 )}
                 {showAcceptDeclineButtons && (
-                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                  <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'flex-end' }}> {/* Adjusted gap */}
                     <Button
                       variant="contained"
                       onClick={onDecline}
