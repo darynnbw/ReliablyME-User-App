@@ -1192,7 +1192,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       '&:hover': { bgcolor: '#388e3c' }
                     }}
                   >
-                    Approve
+                    Issue Badge
                   </Button>
                   <Button
                     variant="contained"
@@ -1296,7 +1296,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
                       onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
                       onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
-                      acceptButtonText={isBadgeRequestsTab ? 'Approve' : undefined}
+                      acceptButtonText={isBadgeRequestsTab ? 'Issue Badge' : undefined}
                       declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
                       isBulkSelecting={selectedCount > 0}
                       hideDueDate={hideDueDate}
