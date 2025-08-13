@@ -308,7 +308,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 width: '100%', // Ensure it takes full available width
               }}
             >
-              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+              <Typography component="span" variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
                 <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
                   Explanation:{' '}
                 </Typography>
@@ -361,7 +361,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     color: 'white',
                     textTransform: 'none',
                     fontWeight: 'bold',
-                    px: 6, // Clarify Request padding
+                    px: 4, // Clarify Request padding reduced from 6 to 4
                     py: 1,
                     borderRadius: 1,
                     flexShrink: 0,
