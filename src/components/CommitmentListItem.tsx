@@ -349,10 +349,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         color: 'white',
                         textTransform: 'none',
                         fontWeight: 'bold',
-                        px: buttonText === 'Clarify' ? 6 : 3,
+                        pl: 1, // Adjusted padding left
+                        pr: 3, // Adjusted padding right
                         py: 1,
                         borderRadius: 1,
                         flexShrink: 0,
+                        justifyContent: 'flex-start', // Align content to the left
+                        whiteSpace: 'normal', // Allow text wrapping
+                        textAlign: 'left', // Ensure text aligns left within the button
                         '&:hover': { 
                           bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
                             ? '#f4511e'
@@ -374,9 +378,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           color: 'white',
                           textTransform: 'none',
                           fontWeight: 'bold',
-                          px: 4,
+                          pl: 1, // Adjusted padding left
+                          pr: 3, // Adjusted padding right
                           py: 0.75,
                           borderRadius: 1,
+                          justifyContent: 'flex-start', // Align content to the left
+                          whiteSpace: 'normal', // Allow text wrapping
+                          textAlign: 'left', // Ensure text aligns left within the button
                           '&:hover': { bgcolor: '#d32f2f' },
                         }}
                       >
@@ -391,9 +399,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           color: 'white',
                           textTransform: 'none',
                           fontWeight: 'bold',
-                          px: 4,
+                          pl: 1, // Adjusted padding left
+                          pr: 3, // Adjusted padding right
                           py: 0.75,
                           borderRadius: 1,
+                          justifyContent: 'flex-start', // Align content to the left
+                          whiteSpace: 'normal', // Allow text wrapping
+                          textAlign: 'left', // Ensure text aligns left within the button
                           '&:hover': { bgcolor: '#388e3c' },
                         }}
                       >
@@ -411,9 +423,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         color: 'white',
                         textTransform: 'none',
                         fontWeight: 'bold',
-                        px: 4,
+                        pl: 1, // Adjusted padding left
+                        pr: 3, // Adjusted padding right
                         py: 0.75,
                         borderRadius: 1,
+                        justifyContent: 'flex-start', // Align content to the left
+                        whiteSpace: 'normal', // Allow text wrapping
+                        textAlign: 'left', // Ensure text aligns left within the button
                         '&:hover': { bgcolor: '#d32f2f' },
                       }}
                     >
@@ -489,10 +505,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         color: 'white',
                         textTransform: 'none',
                         fontWeight: 'bold',
-                        px: buttonText === 'Clarify' ? 6 : 3,
+                        pl: 1, // Adjusted padding left
+                        pr: 3, // Adjusted padding right
                         py: 1,
                         borderRadius: 1,
                         flexShrink: 0,
+                        justifyContent: 'flex-start', // Align content to the left
+                        whiteSpace: 'normal', // Allow text wrapping
+                        textAlign: 'left', // Ensure text aligns left within the button
                         '&:hover': { 
                           bgcolor: buttonText === 'Answer Nudge' || buttonText === 'Request Badge'
                             ? '#f4511e'
@@ -514,9 +534,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           color: 'white',
                           textTransform: 'none',
                           fontWeight: 'bold',
-                          px: 4,
+                          pl: 1, // Adjusted padding left
+                          pr: 3, // Adjusted padding right
                           py: 0.75,
                           borderRadius: 1,
+                          justifyContent: 'flex-start', // Align content to the left
+                          whiteSpace: 'normal', // Allow text wrapping
+                          textAlign: 'left', // Ensure text aligns left within the button
                           '&:hover': { bgcolor: '#d32f2f' },
                         }}
                       >
@@ -531,9 +555,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           color: 'white',
                           textTransform: 'none',
                           fontWeight: 'bold',
-                          px: 4,
+                          pl: 1, // Adjusted padding left
+                          pr: 3, // Adjusted padding right
                           py: 0.75,
                           borderRadius: 1,
+                          justifyContent: 'flex-start', // Align content to the left
+                          whiteSpace: 'normal', // Allow text wrapping
+                          textAlign: 'left', // Ensure text aligns left within the button
                           '&:hover': { bgcolor: '#388e3c' },
                         }}
                       >
@@ -551,9 +579,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                         color: 'white',
                         textTransform: 'none',
                         fontWeight: 'bold',
-                        px: 4,
+                        pl: 1, // Adjusted padding left
+                        pr: 3, // Adjusted padding right
                         py: 0.75,
                         borderRadius: 1,
+                        justifyContent: 'flex-start', // Align content to the left
+                        whiteSpace: 'normal', // Allow text wrapping
+                        textAlign: 'left', // Ensure text aligns left within the button
                         '&:hover': { bgcolor: '#d32f2f' },
                       }}
                     >
