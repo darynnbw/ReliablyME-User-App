@@ -65,6 +65,7 @@ interface CommitmentListItemProps {
   onClarify?: () => void; // New optional prop
   onReject?: () => void; // New optional prop
   onIssueBadge?: () => void; // New optional prop
+  isCommitmentPortfolioPage?: boolean; // New prop
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -125,6 +126,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onClarify, // Destructure new prop
   onReject, // Destructure new prop
   onIssueBadge, // Destructure new prop
+  isCommitmentPortfolioPage = false, // Default to false
 }, ref) => {
   const theme = useTheme();
 
@@ -276,7 +278,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: isActionsPage ? 2 : 1 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: (isActionsPage || isCommitmentPortfolioPage) ? 2 : 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
