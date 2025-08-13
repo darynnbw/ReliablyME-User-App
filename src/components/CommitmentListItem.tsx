@@ -310,7 +310,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Assignee Info */}
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: explanation ? 0 : 1, mb: 0 }}> {/* mt: 1 if no explanation, else 0. mb: 0 */}
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: explanation ? 0 : 1, mb: 0.5 }}> {/* Adjusted mb to 0.5 */}
             <Person sx={{ fontSize: 16, color: color }} />
             <Typography variant="body2" sx={{ color: '#666' }}>
               {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -325,8 +325,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       fontWeight: 'inherit'
                     }}
                   >
-                    {assignee}
-                  </span>
+                        {assignee}
+                      </span>
                 </ContactTooltip>
               ) : (
                 assignee
@@ -341,7 +341,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Buttons section - always full width, aligned to end */}
           {(showActionButton || showAcceptDeclineButtons || showRevokeButton) && (
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, width: '100%', mt: 1 }}> {/* mt: 1 */}
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, width: '100%', mt: 0 }}> {/* Adjusted mt to 0 */}
               {showActionButton && (
                 <Button
                   variant="contained"
