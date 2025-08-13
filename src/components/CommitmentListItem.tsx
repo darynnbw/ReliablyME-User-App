@@ -282,8 +282,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {isActionsPage ? (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 2, width: '100%' }}>
+              <Box sx={{ flex: '1 1 0%', minWidth: '200px' }}> {/* Allow text to grow, but ensure a minimum width before wrapping */}
                 <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
                   {description}
                 </Typography>
@@ -336,7 +336,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   )}
                 </Stack>
               </Box>
-              <Box sx={{ flexShrink: 0 }}>
+              <Box sx={{ flexShrink: 0, marginLeft: 'auto', alignSelf: 'flex-end' }}> {/* Push to right, align to bottom if wrapped */}
                 <Box sx={{ minWidth: 130, textAlign: 'right' }}>
                   {showActionButton && (
                     <Button
