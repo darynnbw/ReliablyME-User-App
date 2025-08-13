@@ -1317,7 +1317,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
                       isExpanded={expandedRows.has(item.id)}
                       onToggleExpand={() => handleToggleExpandRow(item.id)}
-                      isActionsPage={isActionsPage}
+                      isActionsPage={isActionsPage} // Pass the isActionsPage prop
                       isOthersCommitmentsSection={isOthersCommitmentsSection}
                     />
                   );
