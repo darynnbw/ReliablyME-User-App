@@ -308,7 +308,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 width: '100%', // Ensure it takes full available width
               }}
             >
-              <Typography component="span" variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
                 <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
                   Explanation:{' '}
                 </Typography>
@@ -318,7 +318,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* New flex container for Assignee Info and Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', width: '100%' }}> {/* Removed mt, set alignItems to baseline */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1.5 }}> {/* Adjusted mt */}
             {/* Assignee Info */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
