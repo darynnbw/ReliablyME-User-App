@@ -201,9 +201,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center', display: 'flex', flexDirection: 'column' }}> {/* Added flexDirection: 'column' */}
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}> {/* Adjusted mb to 1 */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -268,7 +268,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Adjusted mb to 1 */}
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -281,12 +281,15 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
           )}
 
-          {/* Description and Assignee on left, Buttons on right */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}> {/* Adjusted mb to 1 */}
-                {description}
-              </Typography>
+          {/* Description */}
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
+            {description}
+          </Typography>
+
+          {/* New flex container for Explanation and Assignee/Buttons */}
+          <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2, mt: 1 }}>
+            {/* Left side: Explanation and Assignee */}
+            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
               {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
                 <Box
                   sx={{
@@ -295,8 +298,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     py: 1.5,
                     borderRadius: 2,
                     border: '1px solid #e9ecef',
-                    mb: 1, // Adjusted mb to 1
-                    maxWidth: '100%',
+                    mb: 1, // Spacing after explanation
+                    width: '100%', // Should take full width of its parent (flexGrow:1 box)
                   }}
                 >
                   <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
@@ -307,7 +310,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   </Typography>
                 </Box>
               )}
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: explanation ? 0 : 1, mb: 0 }}> {/* Adjusted mt based on explanation presence, mb to 0 */}
+              {/* Assignee */}
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0 }}>
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -336,6 +340,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 )}
               </Stack>
             </Box>
+            {/* Right side: Action Buttons */}
             <Box sx={{ flexShrink: 0, alignSelf: 'flex-end' }}>
               {showActionButton && (
                 <Button
@@ -421,122 +426,122 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               )}
             </Box>
           </Box>
+        </Box>
 
-          {/* Collapsible Responses / Explanation (only show if not on Actions page) */}
-          {showExpandIcon && !isActionsPage && (
-            <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
-                {isNudge && responses && responses.length > 0 && (
-                  isRecurringNudge ? (
-                    <>
-                      {responses[0].questions && responses[0].questions.length > 0 && (
-                        <Box sx={{ mb: 2 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
-                              Questions Asked:
-                            </Typography>
-                            <Tooltip title="You’ll answer this same set of questions with each nudge.">
-                              <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
-                            </Tooltip>
-                          </Box>
-                          <Stack spacing={0.5}>
-                            {responses[0].questions.map((q, qIdx) => (
-                              <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                {q}
-                              </Typography>
-                            ))}
-                          </Stack>
+        {/* Collapsible Responses / Explanation (if not on Actions page) */}
+        {showExpandIcon && !isActionsPage && (
+          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+            <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+              {isNudge && responses && responses.length > 0 && (
+                isRecurringNudge ? (
+                  <>
+                    {responses[0].questions && responses[0].questions.length > 0 && (
+                      <Box sx={{ mb: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
+                            Questions Asked:
+                          </Typography>
+                          <Tooltip title="You’ll answer this same set of questions with each nudge.">
+                            <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
+                          </Tooltip>
                         </Box>
-                      )}
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: 1.5 }}>
-                        All Responses ({responses.length}):
-                      </Typography>
-                      <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
-                        {responses
-                          .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
-                          .map((response, idx) => (
-                            <Box key={idx}>
-                              <Chip
-                                label={response.date}
-                                size="small"
-                                sx={{
-                                  bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
-                                  color: color,
-                                  fontWeight: 700,
-                                  fontSize: '12px',
-                                  mb: 1,
-                                }}
-                              />
+                        <Stack spacing={0.5}>
+                          {responses[0].questions.map((q, qIdx) => (
+                            <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                              {q}
+                            </Typography>
+                          ))}
+                        </Stack>
+                      </Box>
+                    )}
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: 1.5 }}>
+                      All Responses ({responses.length}):
+                    </Typography>
+                    <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+                      {responses
+                        .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
+                        .map((response, idx) => (
+                          <Box key={idx}>
+                            <Chip
+                              label={response.date}
+                              size="small"
+                              sx={{
+                                bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
+                                color: color,
+                                fontWeight: 700,
+                                fontSize: '12px',
+                                mb: 1,
+                              }}
+                            />
+                            <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                              {response.answer}
+                            </Typography>
+                          </Box>
+                        ))}
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
+                      All Responses ({responses.length}):
+                    </Typography>
+                    <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+                      {responses
+                        .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
+                        .map((response, idx) => (
+                          <Box key={idx}>
+                            <Chip
+                              label={response.date}
+                              size="small"
+                              sx={{
+                                bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
+                                color: color,
+                                fontWeight: 700,
+                                fontSize: '12px',
+                                mb: 1.5,
+                              }}
+                            />
+                            {response.questions && response.questions.length > 0 && (
+                              <Box sx={{ mb: 1 }}>
+                                <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
+                                  Questions Asked:
+                                </Typography>
+                                <Stack spacing={0.5}>
+                                  {response.questions.map((q, qIdx) => (
+                                    <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
+                                      {q}
+                                    </Typography>
+                                  ))}
+                                </Stack>
+                              </Box>
+                            )}
+                            <Box>
+                              <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
+                                {isOthersCommitmentsSection ? 'Their Answer:' : 'Your Answer:'}
+                              </Typography>
                               <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
                                 {response.answer}
                               </Typography>
                             </Box>
-                          ))}
-                      </Stack>
-                    </>
-                  ) : (
-                    <>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
-                        All Responses ({responses.length}):
-                      </Typography>
-                      <Stack spacing={1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
-                        {responses
-                          .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
-                          .map((response, idx) => (
-                            <Box key={idx}>
-                              <Chip
-                                label={response.date}
-                                size="small"
-                                sx={{
-                                  bgcolor: color === '#ff7043' ? '#fff3e0' : (color === '#1976d2' ? '#e3f2fd' : 'grey.200'),
-                                  color: color,
-                                  fontWeight: 700,
-                                  fontSize: '12px',
-                                  mb: 1.5,
-                                }}
-                              />
-                              {response.questions && response.questions.length > 0 && (
-                                <Box sx={{ mb: 1 }}>
-                                  <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
-                                    Questions Asked:
-                                  </Typography>
-                                  <Stack spacing={0.5}>
-                                    {response.questions.map((q, qIdx) => (
-                                      <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
-                                        {q}
-                                      </Typography>
-                                    ))}
-                                  </Stack>
-                                </Box>
-                              )}
-                              <Box>
-                                <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
-                                  {isOthersCommitmentsSection ? 'Their Answer:' : 'Your Answer:'}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                                  {response.answer}
-                                </Typography>
-                              </Box>
-                            </Box>
-                          ))}
-                      </Stack>
-                    </>
-                  )
-                )}
-                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
-                  <>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
-                      Explanation:
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                      {explanation}
-                    </Typography>
+                          </Box>
+                        ))}
+                    </Stack>
                   </>
-                )}
-              </Box>
-            </Collapse>
-          )}
-        </Box>
+                )
+              )}
+              {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
+                <>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                    Explanation:
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                    {explanation}
+                  </Typography>
+                </>
+              )}
+            </Box>
+          </Collapse>
+        )}
       </CardContent>
     </Card>
   );
