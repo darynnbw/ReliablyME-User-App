@@ -203,7 +203,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         )}
         <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}> {/* Adjusted mb to 1 */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -268,7 +268,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Adjusted mb to 1 */}
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -284,7 +284,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Description and Assignee on left, Buttons on right */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 0 }}> {/* Adjusted mb to 0 */}
+              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}> {/* Adjusted mb to 1 */}
                 {description}
               </Typography>
               {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
@@ -295,7 +295,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     py: 1.5,
                     borderRadius: 2,
                     border: '1px solid #e9ecef',
-                    mb: 1.5, // Keep mb for separation from assignee
+                    mb: 1, // Adjusted mb to 1
                     maxWidth: '100%',
                   }}
                 >
@@ -307,7 +307,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   </Typography>
                 </Box>
               )}
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: explanation ? 0 : 1.5, mb: 0 }}> {/* Adjusted mt based on explanation presence, mb to 0 */}
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: explanation ? 0 : 1, mb: 0 }}> {/* Adjusted mt based on explanation presence, mb to 0 */}
                 <Person sx={{ fontSize: 16, color: color }} />
                 <Typography variant="body2" sx={{ color: '#666' }}>
                   {showFromLabel ? 'From:' : 'To:'}{' '}
