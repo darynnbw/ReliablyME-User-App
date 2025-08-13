@@ -61,6 +61,10 @@ interface CommitmentListItemProps {
   onToggleExpand: () => void;
   isActionsPage?: boolean; // Re-added this prop
   isOthersCommitmentsSection?: boolean;
+  showClarifyRejectIssueButtons?: boolean; // New prop for combined buttons
+  onClarify?: () => void; // New optional prop
+  onReject?: () => void; // New optional prop
+  onIssueBadge?: () => void; // New optional prop
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -117,6 +121,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onToggleExpand,
   isActionsPage = false, // Default to false
   isOthersCommitmentsSection = false,
+  showClarifyRejectIssueButtons = false, // Default to false
+  onClarify, // Destructure new prop
+  onReject, // Destructure new prop
+  onIssueBadge, // Destructure new prop
 }, ref) => {
   const theme = useTheme();
 
@@ -310,9 +318,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* New flex container for Assignee Info and Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 0, mb: 0.5 }}> {/* mt: 0, mb: 0.5 */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1 }}> {/* mt: 1 for consistent spacing */}
             {/* Assignee Info */}
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0 }}> {/* Set mt to 0 */}
+            <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
               <Typography variant="body2" sx={{ color: '#666' }}>
                 {showFromLabel ? 'From:' : 'To:'}{' '}
@@ -342,12 +350,68 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
 
             {/* Buttons section */}
-            {(showActionButton || showAcceptDeclineButtons || showRevokeButton) && (
+            {showClarifyRejectIssueButtons ? ( // Specific case for Promises Owed to Me on Actions page
+              <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                <Button
+                  variant="contained"
+                  onClick={onClarify} // Use new prop
+                  disabled={isBulkSelecting}
+                  sx={{
+                    bgcolor: color, // Use the item's color (blue for Others' Commitments)
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 6, // Clarify Request padding
+                    py: 1,
+                    borderRadius: 1,
+                    flexShrink: 0,
+                    '&:hover': { bgcolor: alpha(color, 0.8) },
+                  }}
+                >
+                  Clarify Request
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={onReject} // Use new prop
+                  disabled={isBulkSelecting}
+                  sx={{
+                    bgcolor: '#F44336', // Red
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 4, // Reject padding
+                    py: 0.75,
+                    borderRadius: 1,
+                    '&:hover': { bgcolor: '#d32f2f' },
+                  }}
+                >
+                  Reject
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={onIssueBadge} // Use new prop
+                  disabled={isBulkSelecting}
+                  sx={{
+                    bgcolor: '#4CAF50', // Green
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    px: 4, // Issue Badge padding
+                    py: 0.75,
+                    borderRadius: 1,
+                    '&:hover': { bgcolor: '#388e3c' },
+                  }}
+                >
+                  Issue Badge
+                </Button>
+              </Box>
+            ) : (
+              // Existing logic for other tabs/scenarios
               <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
                 {showActionButton && (
                   <Button
                     variant="contained"
-                    onClick={onActionButtonClick}
+                    onClick={onActionButtonClick} // This is the required prop
                     disabled={isBulkSelecting}
                     startIcon={isNudge && isMyPromisesTab ? <Edit /> : undefined}
                     sx={{

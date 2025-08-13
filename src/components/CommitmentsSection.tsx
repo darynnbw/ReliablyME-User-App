@@ -1259,26 +1259,49 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                   
                   const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
-                  const showRevokeButton = isAwaitingResponseTab;
-                  
-                  // Action button logic:
-                  // Show if on Actions page AND (
-                  //   (is a Nudge in My Promises tab) OR
-                  //   (is NOT MyBadges, NOT Unkept, NOT RequestsToCommit, NOT AwaitingResponse, NOT BadgeRequests)
-                  // )
-                  // Explicitly hide action button for 'Active Promises' tab in Commitment Portfolio
-                  let showActionButtonForListItem = isActionsPage && (
-                    (isNudgeItem && isMyPromisesTab) || 
-                    (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
-                  );
-                  if (isCommitmentPortfolioPage && isActivePromisesTab) {
-                      showActionButtonForListItem = false;
+                  const showRevokeButtonForListItem = isAwaitingResponseTab; // Renamed to avoid conflict
+
+                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isUnkeptTab;
+
+                  // Determine if it's the specific case for Promises Owed to Me on Actions page
+                  const showClarifyRejectIssueButtonsForListItem = isActionsPage && isOwedToMe; // Renamed
+
+                  // Define handlers for the single action button
+                  let singleActionButtonHandler: (() => void) = () => {}; // Initialize as no-op
+                  let singleActionButtonText = '';
+                  let showSingleActionButton = false;
+
+                  if (!showClarifyRejectIssueButtonsForListItem) { // Only consider single action button if not showing the 3-button group
+                    showSingleActionButton = isActionsPage && (
+                      (isNudgeItem && isMyPromisesTab) || 
+                      (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
+                    );
+                    if (isCommitmentPortfolioPage && isActivePromisesTab) {
+                        showSingleActionButton = false;
+                    }
+                    singleActionButtonText = isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify Request' : 'Request Badge');
+                    singleActionButtonHandler = isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge);
                   }
 
-                  // Determine 'From:' or 'To:' label based on tab
-                  // 'Badges Issued' should be 'To:'
-                  // 'Unkept Promises to Me' should be 'From:'
-                  const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isUnkeptTab;
+                  // Define handlers for the standard Accept/Decline buttons
+                  let standardAcceptHandler: (() => void) | undefined;
+                  let standardDeclineHandler: (() => void) | undefined;
+                  let standardAcceptButtonText: string | undefined;
+                  let standardDeclineButtonText: string | undefined;
+                  let showStandardAcceptDeclineButtons = false;
+
+                  if (!showClarifyRejectIssueButtonsForListItem) { // Only consider if not showing the 3-button group
+                    showStandardAcceptDeclineButtons = isRequestsToCommitTab || isBadgeRequestsTab;
+                    standardAcceptHandler = isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item);
+                    standardDeclineHandler = isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item);
+                    standardAcceptButtonText = isBadgeRequestsTab ? 'Issue Badge' : undefined;
+                    standardDeclineButtonText = isBadgeRequestsTab ? 'Reject' : undefined;
+                  }
+
+                  // Define handlers for the new Clarify/Reject/Issue Badge buttons (for Promises Owed to Me)
+                  const clarifyRequestButtonHandler = () => handleClarifyClick(item);
+                  const rejectBadgeButtonHandler = () => handleRejectBadgeRequest(item);
+                  const issueBadgeButtonHandler = () => handleApproveBadgeRequest(item);
 
                   return (
                     <CommitmentListItem
@@ -1288,37 +1311,41 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       color={itemColor}
                       showCheckbox={showCheckboxes}
                       isCheckboxDisabled={isCheckboxDisabled}
-                      showActionButton={showActionButtonForListItem} // Use the new variable
-                      buttonText={isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify Request' : 'Request Badge')}
-                      onActionButtonClick={isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge)}
+                      showActionButton={showSingleActionButton} // Use the new variable
+                      buttonText={singleActionButtonText} // Use the new variable
+                      onActionButtonClick={singleActionButtonHandler} // Use the new variable
                       onViewDetails={() => handleViewCommitmentDetails(item)}
                       onToggleSelect={handleToggleSelectItem}
-                      showAcceptDeclineButtons={isRequestsToCommitTab || isBadgeRequestsTab}
-                      onAccept={isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item)}
-                      onDecline={isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item)}
-                      acceptButtonText={isBadgeRequestsTab ? 'Issue Badge' : undefined}
-                      declineButtonText={isBadgeRequestsTab ? 'Reject' : undefined}
+                      showAcceptDeclineButtons={showStandardAcceptDeclineButtons} // Use the new variable
+                      onAccept={standardAcceptHandler} // Use the new variable
+                      onDecline={standardDeclineHandler} // Use the new variable
+                      acceptButtonText={standardAcceptButtonText}
+                      declineButtonText={standardDeclineButtonText}
                       isBulkSelecting={selectedCount > 0}
                       hideDueDate={hideDueDate}
                       isNudge={isNudgeItem}
                       nudgesLeft={item.nudgesLeft}
                       totalNudges={item.totalNudges}
                       isMyPromisesTab={isMyPromisesTab}
-                      isMyBadgesTab={isMyBadgesTab} // Pass this new prop
-                      isBadgesIssuedTab={isBadgesIssuedTab} // Pass new prop
+                      isMyBadgesTab={isMyBadgesTab}
+                      isBadgesIssuedTab={isBadgesIssuedTab}
                       isExternal={item.isExternal}
-                      isOverdue={item.isOverdue} // Pass the pre-calculated isOverdue
-                      showRevokeButton={showRevokeButton}
+                      isOverdue={item.isOverdue}
+                      showRevokeButton={showRevokeButtonForListItem}
                       onRevoke={() => handleRevokeClick(item)}
                       showFromLabel={showFromLabel}
                       explanation={item.explanation}
                       responses={item.responses}
-                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab || isOwedToMe} // Added isOwedToMe here
-                      approvedDate={item.approvedDate} // Pass approvedDate to CommitmentListItem
+                      showBadgePlaceholder={isMyBadgesTab || isActivePromisesTab || isBadgesIssuedTab || isOwedToMe}
+                      approvedDate={item.approvedDate}
                       isExpanded={expandedRows.has(item.id)}
                       onToggleExpand={() => handleToggleExpandRow(item.id)}
-                      isActionsPage={isActionsPage} // Pass the isActionsPage prop
+                      isActionsPage={isActionsPage}
                       isOthersCommitmentsSection={isOthersCommitmentsSection}
+                      showClarifyRejectIssueButtons={showClarifyRejectIssueButtonsForListItem} // Pass this prop
+                      onClarify={clarifyRequestButtonHandler} // Pass new handler
+                      onReject={rejectBadgeButtonHandler} // Pass new handler
+                      onIssueBadge={issueBadgeButtonHandler} // Pass new handler
                     />
                   );
                 })
