@@ -201,9 +201,9 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center', display: 'flex', flexDirection: 'column' }}> {/* This box now controls its children in a column */}
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}> {/* Adjusted mb to 1 */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -268,7 +268,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}> {/* Adjusted mb to 1 */}
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -281,62 +281,67 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             </Stack>
           )}
 
-          {/* Description and Assignee on left, Buttons on right */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 2 }}>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}> {/* Adjusted mb to 1 */}
-                {description}
-              </Typography>
-              {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
-                <Box
-                  sx={{
-                    bgcolor: '#f8f9fa',
-                    px: 2,
-                    py: 1.5,
-                    borderRadius: 2,
-                    border: '1px solid #e9ecef',
-                    mb: 1, // Adjusted mb to 1
-                    maxWidth: '100%',
-                  }}
-                >
-                  <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                    <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                      Explanation:{' '}
-                    </Typography>
-                    {explanation}
-                  </Typography>
-                </Box>
-              )}
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: explanation ? 0 : 1, mb: 0 }}> {/* Adjusted mt based on explanation presence, mb to 0 */}
-                <Person sx={{ fontSize: 16, color: color }} />
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  {showFromLabel ? 'From:' : 'To:'}{' '}
-                  {!isExternal ? (
-                    <ContactTooltip>
-                      <span
-                        style={{
-                          color: '#666',
-                          cursor: 'pointer',
-                          fontSize: 'inherit',
-                          fontFamily: 'inherit',
-                          fontWeight: 'inherit'
-                        }}
-                      >
-                        {assignee}
-                      </span>
-                    </ContactTooltip>
-                  ) : (
-                    assignee
-                  )}
+          {/* Description */}
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
+            {description}
+          </Typography>
+
+          {/* Explanation - always full width within this column flex container */}
+          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
+            <Box
+              sx={{
+                bgcolor: '#f8f9fa',
+                px: 2,
+                py: 1.5,
+                borderRadius: 2,
+                border: '1px solid #e9ecef',
+                mt: 0, // No top margin, description's mb handles spacing
+                mb: 1, // Consistent margin below explanation
+                width: '100%', // Ensure it takes full available width
+              }}
+            >
+              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                  Explanation:{' '}
                 </Typography>
-                {isExternal && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-                    (Non-member)
-                  </Typography>
-                )}
-              </Stack>
+                {explanation}
+              </Typography>
             </Box>
-            <Box sx={{ flexShrink: 0, alignSelf: 'flex-end' }}>
+          )}
+
+          {/* Assignee Info */}
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: explanation ? 0 : 1, mb: 0 }}> {/* mt: 1 if no explanation, else 0. mb: 0 */}
+            <Person sx={{ fontSize: 16, color: color }} />
+            <Typography variant="body2" sx={{ color: '#666' }}>
+              {showFromLabel ? 'From:' : 'To:'}{' '}
+              {!isExternal ? (
+                <ContactTooltip>
+                  <span
+                    style={{
+                      color: '#666',
+                      cursor: 'pointer',
+                      fontSize: 'inherit',
+                      fontFamily: 'inherit',
+                      fontWeight: 'inherit'
+                    }}
+                  >
+                    {assignee}
+                  </span>
+                </ContactTooltip>
+              ) : (
+                assignee
+              )}
+            </Typography>
+            {isExternal && (
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                (Non-member)
+              </Typography>
+            )}
+          </Stack>
+
+          {/* Buttons section - always full width, aligned to end */}
+          {(showActionButton || showAcceptDeclineButtons || showRevokeButton) && (
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, width: '100%', mt: 1 }}> {/* mt: 1 */}
               {showActionButton && (
                 <Button
                   variant="contained"
@@ -420,7 +425,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 </Button>
               )}
             </Box>
-          </Box>
+          )}
 
           {/* Collapsible Responses / Explanation (only show if not on Actions page) */}
           {showExpandIcon && !isActionsPage && (
