@@ -291,7 +291,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack 
+              direction="row" 
+              spacing={1} 
+              alignItems="center"
+              sx={{ mt: isCommitmentPortfolioPage ? -0.5 : 0 }} // Apply negative margin-top here
+            >
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
