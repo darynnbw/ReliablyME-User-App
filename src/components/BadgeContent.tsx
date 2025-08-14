@@ -5,8 +5,8 @@ interface BadgeContentProps {
   size: 'small' | 'large' | 'list-item-large';
 }
 
-const badgeConfig: { [key: string]: { color: string; displayText: string } } = {
-  'Promise Kept General': { color: '#ff7043', displayText: 'PROMISE\nKEPT' },
+const badgeConfig: { [key: string]: { color: string; displayText: string; imagePath?: string } } = {
+  'Promise Kept General': { color: '#ff7043', displayText: 'PROMISE\nKEPT', imagePath: '/images/PromiseKept.png' },
   'Attendance': { color: '#1976d2', displayText: 'ATTENDANCE' },
   'Teamwork': { color: '#4caf50', displayText: 'TEAMWORK' },
   'Leadership': { color: '#9c27b0', displayText: 'LEADERSHIP' },
@@ -18,6 +18,7 @@ const BadgeContent = ({ badgeType, size }: BadgeContentProps) => {
   const config = badgeConfig[badgeType] || badgeConfig['Promise Kept General']; // Fallback to general
   const badgeColor = config.color;
   const displayText = config.displayText;
+  const imagePath = config.imagePath;
 
   let dimensions;
   switch (size) {
@@ -76,6 +77,31 @@ const BadgeContent = ({ badgeType, size }: BadgeContentProps) => {
         titleMarginBottom: 0.2,
         bottomLogoFontSize: '2px',
       };
+  }
+
+  if (imagePath) {
+    return (
+      <Box
+        sx={{
+          width: dimensions.width,
+          height: dimensions.height,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden', // Ensure image doesn't overflow its container
+        }}
+      >
+        <img
+          src={imagePath}
+          alt={badgeType}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain', // Ensure the image scales correctly within the box
+          }}
+        />
+      </Box>
+    );
   }
 
   return (
