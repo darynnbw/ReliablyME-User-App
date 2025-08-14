@@ -10,7 +10,7 @@ const badgeConfig: { [key: string]: { color: string; displayText: string; imageP
   'Attendance': { color: '#1976d2', displayText: 'ATTENDANCE', imagePath: '/images/ATTENDANCE+badge.png' },
   'Teamwork': { color: '#4caf50', displayText: 'TEAMWORK', imagePath: '/images/teamwork.png' },
   'Leadership': { color: '#9c27b0', displayText: 'LEADERSHIP' },
-  'Communication Effectiveness - Nudging': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS' },
+  'Communication Effectiveness - Nudging': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS', imagePath: '/images/COMMUNICATION+EFFECTIVENESS+-+badge.png' },
   // Add more badge types as needed
 };
 
