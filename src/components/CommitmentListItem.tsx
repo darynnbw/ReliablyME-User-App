@@ -216,9 +216,17 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             disabled={isCheckboxDisabled}
           />
         )}
-        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'center', display: 'flex', flexDirection: 'column' }}> {/* This box now controls its children in a column */}
+        <Stack
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            alignSelf: 'center', // Aligns the whole stack vertically in the CardContent
+            justifyContent: 'center', // Aligns content *within* this stack vertically
+          }}
+          spacing={isCommitmentPortfolioPage ? 0.5 : 1} // Smaller spacing for portfolio
+        >
           {/* Top row: Title, MoreHoriz */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {title}
@@ -283,7 +291,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: isCommitmentPortfolioPage ? 1 : (isActionsPage ? 2 : 1) }}>
+            <Stack direction="row" spacing={1} alignItems="center">
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -297,7 +305,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Description */}
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
             {description}
           </Typography>
 
@@ -310,8 +318,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 py: 1.5,
                 borderRadius: 2,
                 border: '1px solid #e9ecef',
-                mt: 0, // No top margin, description's mb handles spacing
-                mb: 1, // Consistent margin below explanation
                 width: '100%', // Ensure it takes full available width
               }}
             >
@@ -325,7 +331,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* New flex container for Assignee Info and Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1 }}> {/* mt: 1 for consistent spacing */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             {/* Assignee Info */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
@@ -615,7 +621,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               </Box>
             </Collapse>
           )}
-        </Box>
+        </Stack>
       </CardContent>
     </Card>
   );
