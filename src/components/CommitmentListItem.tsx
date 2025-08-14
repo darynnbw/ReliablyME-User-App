@@ -295,7 +295,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               direction="row" 
               spacing={1} 
               alignItems="center"
-              sx={{ mt: isCommitmentPortfolioPage ? -1 : 0 }} // Apply negative margin-top here
+              sx={{ mt: isCommitmentPortfolioPage ? -1.5 : 0 }} // Apply stronger negative margin-top here
             >
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
