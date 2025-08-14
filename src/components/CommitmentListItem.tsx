@@ -184,7 +184,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', gap: 1.5 }}>
+      <CardContent sx={{ 
+        p: isCommitmentPortfolioPage ? 1.5 : 2, // Smaller padding for Commitment Portfolio
+        '&:last-child': { pb: isCommitmentPortfolioPage ? 1.5 : 2 }, 
+        display: 'flex', 
+        gap: isCommitmentPortfolioPage ? 1 : 1.5 // Smaller gap for Commitment Portfolio
+      }}>
         {showBadgePlaceholder && !isActionsPage && ( // Hide badge placeholder on Actions page
           <Box sx={{
             width: 100,
@@ -278,7 +283,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: (isActionsPage || isCommitmentPortfolioPage) ? 2 : 1 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: isCommitmentPortfolioPage ? 1 : (isActionsPage ? 2 : 1) }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
