@@ -517,13 +517,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Collapsible Responses / Explanation (only show if not on Actions page) */}
           {showExpandIcon && !isActionsPage && (
             <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: isCommitmentPortfolioPage ? 3.5 : 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+              <Box sx={{ mt: isCommitmentPortfolioPage ? 2 : 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                 {isNudge && responses && responses.length > 0 && (
                   isRecurringNudge ? (
                     <>
                       {responses[0].questions && responses[0].questions.length > 0 && (
-                        <Box sx={{ mb: isCommitmentPortfolioPage ? 4.5 : 2 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isCommitmentPortfolioPage ? 2.25 : 1 }}>
+                        <Box sx={{ mb: isCommitmentPortfolioPage ? 2 : 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isCommitmentPortfolioPage ? 1 : 0.5 }}>
                             <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
                               Questions Asked:
                             </Typography>
@@ -531,7 +531,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                               <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
                             </Tooltip>
                           </Box>
-                          <Stack spacing={isCommitmentPortfolioPage ? 1 : 0.5}>
+                          <Stack spacing={isCommitmentPortfolioPage ? 0.5 : 0.25}>
                             {responses[0].questions.map((q, qIdx) => (
                               <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
                                 {q}
@@ -540,10 +540,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           </Stack>
                         </Box>
                       )}
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: isCommitmentPortfolioPage ? 3.5 : 1.5 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: isCommitmentPortfolioPage ? 1.5 : 0.75 }}>
                         All Responses ({responses.length}):
                       </Typography>
-                      <Stack spacing={isCommitmentPortfolioPage ? 3.5 : 1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+                      <Stack spacing={isCommitmentPortfolioPage ? 1 : 0.75} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
@@ -556,7 +556,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                   color: color,
                                   fontWeight: 700,
                                   fontSize: '12px',
-                                  mb: isCommitmentPortfolioPage ? 2.25 : 1,
+                                  mb: isCommitmentPortfolioPage ? 1 : 0.5,
                                 }}
                               />
                               <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
@@ -568,10 +568,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </>
                   ) : (
                     <>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 3.5 : 1.5, color: 'text.primary' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 1.5 : 0.75, color: 'text.primary' }}>
                         All Responses ({responses.length}):
                       </Typography>
-                      <Stack spacing={isCommitmentPortfolioPage ? 3.5 : 1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+                      <Stack spacing={isCommitmentPortfolioPage ? 1 : 0.75} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
@@ -584,15 +584,15 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                   color: color,
                                   fontWeight: 700,
                                   fontSize: '12px',
-                                  mb: isCommitmentPortfolioPage ? 3.5 : 1.5,
+                                  mb: isCommitmentPortfolioPage ? 1.5 : 0.75,
                                 }}
                               />
                               {response.questions && response.questions.length > 0 && (
-                                <Box sx={{ mb: isCommitmentPortfolioPage ? 2.25 : 1 }}>
+                                <Box sx={{ mb: isCommitmentPortfolioPage ? 1 : 0.5 }}>
                                   <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
                                     Questions Asked:
                                   </Typography>
-                                  <Stack spacing={isCommitmentPortfolioPage ? 1 : 0.5}>
+                                  <Stack spacing={isCommitmentPortfolioPage ? 0.5 : 0.25}>
                                     {response.questions.map((q, qIdx) => (
                                       <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
                                         {q}
@@ -617,7 +617,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 )}
                 {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
                   <>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 2.25 : 1, color: 'text.primary' }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 1 : 0.5, color: 'text.primary' }}>
                       Explanation:
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
