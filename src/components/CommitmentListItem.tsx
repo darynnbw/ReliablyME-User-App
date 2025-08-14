@@ -130,17 +130,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 }, ref) => {
   const theme = useTheme();
 
-  // Conditional spacing values for Commitment Portfolio page
-  const cardContentPadding = isCommitmentPortfolioPage ? 2.5 : 2; // 20px vs 16px
-  const cardContentPb = isCommitmentPortfolioPage ? 2.5 : 2; // 20px vs 16px
-  const cardContentGap = isCommitmentPortfolioPage ? 2 : 1.5; // 16px vs 12px
-
-  const dueDateMarginBottom = isCommitmentPortfolioPage ? 2 : 1; // 16px vs 8px
-  const descriptionMarginBottom = isCommitmentPortfolioPage ? 1.5 : 1; // 12px vs 8px
-  const explanationMarginBottom = isCommitmentPortfolioPage ? 1.5 : 1; // 12px vs 8px
-  const assigneeButtonsMarginTop = isCommitmentPortfolioPage ? 1.5 : 1; // 12px vs 8px
-  const collapsibleContentMarginTop = isCommitmentPortfolioPage ? 2 : 1.5; // 16px vs 12px
-
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onToggleSelect(id, event.target.checked);
   };
@@ -195,7 +184,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           }}
         />
       )}
-      <CardContent sx={{ p: cardContentPadding, '&:last-child': { pb: cardContentPb }, display: 'flex', gap: cardContentGap }}>
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, display: 'flex', gap: 1.5 }}>
         {showBadgePlaceholder && !isActionsPage && ( // Hide badge placeholder on Actions page
           <Box sx={{
             width: 100,
@@ -289,7 +278,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
           {/* Due/Approved Date */}
           {!hideDueDate && (
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: dueDateMarginBottom }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: (isActionsPage || isCommitmentPortfolioPage) ? 2 : 1 }}>
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
                 {displayDateLabel} {displayDateValue}
@@ -303,7 +292,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Description */}
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: descriptionMarginBottom }}>
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: 1 }}>
             {description}
           </Typography>
 
@@ -317,7 +306,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 borderRadius: 2,
                 border: '1px solid #e9ecef',
                 mt: 0, // No top margin, description's mb handles spacing
-                mb: explanationMarginBottom, // Consistent margin below explanation
+                mb: 1, // Consistent margin below explanation
                 width: '100%', // Ensure it takes full available width
               }}
             >
@@ -331,7 +320,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* New flex container for Assignee Info and Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: assigneeButtonsMarginTop }}> {/* mt: 1 for consistent spacing */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1 }}> {/* mt: 1 for consistent spacing */}
             {/* Assignee Info */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
@@ -510,7 +499,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Collapsible Responses / Explanation (only show if not on Actions page) */}
           {showExpandIcon && !isActionsPage && (
             <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: collapsibleContentMarginTop, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+              <Box sx={{ mt: 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                 {isNudge && responses && responses.length > 0 && (
                   isRecurringNudge ? (
                     <>
