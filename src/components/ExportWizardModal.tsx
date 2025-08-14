@@ -120,14 +120,25 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   const resetState = useCallback(() => {
     setStep(1);
     setSelectedFormat('csv');
-    const myCommitmentScopes = Object.keys(dataSources.myCommitments).reduce((acc, key) => ({ ...acc, [key]: false }), {});
+    
+    // Default for Screen 2: Select 'My Badges'
+    const myCommitmentScopes = Object.keys(dataSources.myCommitments).reduce((acc, key) => ({ ...acc, [key]: key === 'My Badges' }), {});
     const othersCommitmentScopes = Object.keys(dataSources.othersCommitments).reduce((acc, key) => ({ ...acc, [key]: false }), {});
     setSelectedScopes({
       myCommitments: myCommitmentScopes,
       othersCommitments: othersCommitmentScopes,
     });
-    setRelevantFields(allExportFields);
-    setSelectedFields([]);
+
+    // Default for Screen 3: Select specific fields
+    const defaultSelectedFields = [
+      'title', // Badge Title
+      'explanation', // Explanation (for Badges)
+      'description', // Commitment Description
+      'approvedDate', // Approved Date
+    ];
+    setSelectedFields(defaultSelectedFields);
+
+    setRelevantFields(allExportFields); // This will be re-calculated in useEffect based on selectedScopes
     setPreviewContent('');
     setIsExporting(false);
     // Initialize expanded groups based on config
@@ -248,7 +259,12 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
 
       const newRelevantFields = allExportFields.filter(f => fields.has(f.id));
       setRelevantFields(newRelevantFields);
-      setSelectedFields(newRelevantFields.map(f => f.id));
+      // Only update selectedFields if they haven't been explicitly chosen by the user yet (e.g., on initial load of step 3)
+      // This logic is tricky with `useEffect` and `useState` interactions.
+      // The current `resetState` sets the initial `selectedFields` correctly.
+      // This `useEffect` ensures `relevantFields` is updated based on scope selection,
+      // but we don't want it to override user's choices if they navigate back and forth.
+      // For now, `resetState` handles the initial default.
     }
   }, [step, selectedScopes, getStructuredDataForExport]); // Updated dependency
 
