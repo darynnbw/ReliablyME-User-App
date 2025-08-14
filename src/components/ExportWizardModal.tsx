@@ -15,11 +15,11 @@ import {
   Checkbox,
   CircularProgress,
   Grid,
-  Accordion, // Added Accordion
-  AccordionSummary, // Added AccordionSummary
-  AccordionDetails, // Added AccordionDetails
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
-import { Close, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'; // Added ExpandMoreIcon
+import { Close, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { exportToCsv, exportToPdf, exportToXlsx } from '../utils/exportUtils';
 
 interface Commitment {
@@ -64,7 +64,6 @@ const allExportFields = [
   { id: 'isExternal', label: 'External Party' },
 ];
 
-// Define the groups and their fields for rendering
 const fieldGroupsConfig = [
   {
     id: 'badgeInfo',
@@ -86,7 +85,6 @@ const fieldGroupsConfig = [
   },
 ];
 
-// Define the new interfaces for structured export
 interface ExportDataRow {
   [key: string]: any;
 }
@@ -113,15 +111,14 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [previewContent, setPreviewContent] = useState<string>('');
   const [isExporting, setIsExporting] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({}); // State for accordion expanded status
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
-  const totalSteps = 5; // Define total steps
+  const totalSteps = 5;
 
   const resetState = useCallback(() => {
     setStep(1);
     setSelectedFormat('csv');
     
-    // Default for Screen 2: Select 'My Badges'
     const myCommitmentScopes = Object.keys(dataSources.myCommitments).reduce((acc, key) => ({ ...acc, [key]: key === 'My Badges' }), {});
     const othersCommitmentScopes = Object.keys(dataSources.othersCommitments).reduce((acc, key) => ({ ...acc, [key]: false }), {});
     setSelectedScopes({
@@ -129,19 +126,17 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       othersCommitments: othersCommitmentScopes,
     });
 
-    // Default for Screen 3: Select specific fields
     const defaultSelectedFields = [
-      'title', // Badge Title
-      'explanation', // Explanation (for Badges)
-      'description', // Commitment Description
-      'approvedDate', // Approved Date
+      'title',
+      'explanation',
+      'description',
+      'approvedDate',
     ];
     setSelectedFields(defaultSelectedFields);
 
-    setRelevantFields(allExportFields); // This will be re-calculated in useEffect based on selectedScopes
+    setRelevantFields(allExportFields);
     setPreviewContent('');
     setIsExporting(false);
-    // Initialize expanded groups based on config
     const initialExpanded: Record<string, boolean> = {};
     fieldGroupsConfig.forEach(group => {
       initialExpanded[group.id] = group.expandedByDefault;
@@ -155,7 +150,6 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     }
   }, [open, resetState]);
 
-  // Helper to format a single Commitment item into an ExportDataRow
   const formatCommitmentToRow = useCallback((item: Commitment, fieldsToInclude: string[]): ExportDataRow => {
     const row: ExportDataRow = {};
     fieldsToInclude.forEach(fieldId => {
@@ -183,7 +177,6 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     const sheets: ExportSheet[] = [];
     const columnHeaders = selectedFields.map(id => allExportFields.find(f => f.id === id)?.label || id);
 
-    // --- My Commitments Sheet ---
     const myCommitmentsSections: ExportSection[] = [];
     for (const key in dataSources.myCommitments) {
       if (selectedScopes.myCommitments[key]) {
@@ -202,7 +195,6 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       sheets.push({ sheetName: 'My Commitments', sections: myCommitmentsSections });
     }
 
-    // --- Others' Commitments Sheet ---
     const othersCommitmentsSections: ExportSection[] = [];
     for (const key in dataSources.othersCommitments) {
       if (selectedScopes.othersCommitments[key]) {
@@ -233,40 +225,34 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
 
       const fields = new Set<string>(['title', 'description', 'assignee', 'committedDate', 'dueDate']);
       
-      // Add fields relevant to badges (explanation, approvedDate)
       if (scopes.some(s => s.includes('Badge') || s.includes('Issued'))) {
         fields.add('explanation');
         fields.add('approvedDate');
       }
 
-      // Determine if any selected data contains nudges to include nudge-specific fields
+      // Corrected: Filter only 'data' sections before flatMapping to get actual data rows
       const combinedData = getStructuredDataForExport().flatMap(sheet => 
-        sheet.sections.flatMap(section => (section.type === 'data' ? section.content : []))
+        sheet.sections
+          .filter(section => section.type === 'data')
+          .flatMap(section => section.content as ExportDataRow[])
       );
       const hasNudges = combinedData.some(item => (item as Commitment).type === 'nudge');
 
       if (hasNudges) {
-        fields.add('type'); // 'type' field itself is useful for nudges
+        fields.add('type');
         fields.add('nudgesInfo');
         fields.add('responses');
       }
 
-      // Add fields relevant to unkept promises
       if (scopes.some(s => s.includes('Unkept'))) {
         fields.add('isOverdue');
       }
-      fields.add('isExternal'); // Always add isExternal as it's a general property
+      fields.add('isExternal');
 
       const newRelevantFields = allExportFields.filter(f => fields.has(f.id));
       setRelevantFields(newRelevantFields);
-      // Only update selectedFields if they haven't been explicitly chosen by the user yet (e.g., on initial load of step 3)
-      // This logic is tricky with `useEffect` and `useState` interactions.
-      // The current `resetState` sets the initial `selectedFields` correctly.
-      // This `useEffect` ensures `relevantFields` is updated based on scope selection,
-      // but we don't want it to override user's choices if they navigate back and forth.
-      // For now, `resetState` handles the initial default.
     }
-  }, [step, selectedScopes, getStructuredDataForExport]); // Updated dependency
+  }, [step, selectedScopes, getStructuredDataForExport]);
 
   const handleNext = () => {
     if (step === 3) {
@@ -302,12 +288,12 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     previewLines.push(`Selected Fields: ${selectedFields.map(id => allExportFields.find(f => f.id === id)?.label || id).join(', ')}`);
     
     dataToPreview.forEach(sheet => {
-      previewLines.push(`\n=== ${sheet.sheetName} ===`); // Main sheet title
+      previewLines.push(`\n=== ${sheet.sheetName} ===`);
       sheet.sections.forEach(section => {
         if (section.type === 'title') {
-          previewLines.push(`\n--- ${section.content} ---`); // Sub-section title
+          previewLines.push(`\n--- ${section.content} ---`);
         } else if (section.type === 'data' && Array.isArray(section.content)) {
-          section.content.slice(0, 2).forEach((record, index) => { // Show first 2 records per data section
+          section.content.slice(0, 2).forEach((record, index) => {
             previewLines.push(`  Record ${index + 1}:`);
             Object.entries(record).forEach(([key, value]) => {
               let displayValue = value;
@@ -325,7 +311,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     setIsExporting(true);
     try {
       const sheetsToExport = getStructuredDataForExport();
-      await new Promise(resolve => setTimeout(resolve, 100)); // Small delay for UX
+      await new Promise(resolve => setTimeout(resolve, 100));
       if (selectedFormat === 'csv') exportToCsv(sheetsToExport, 'Commitment_Portfolio');
       else if (selectedFormat === 'xlsx') exportToXlsx(sheetsToExport, 'Commitment_Portfolio');
       else if (selectedFormat === 'pdf') exportToPdf(sheetsToExport, 'Commitment_Portfolio');
@@ -375,7 +361,6 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     return false;
   };
 
-  // Helper to filter relevantFields into their respective groups
   const getFieldsForGroup = (groupFields: string[]) => {
     return relevantFields.filter(field => groupFields.includes(field.id));
   };
@@ -398,26 +383,26 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           borderRadius: 3,
           p: 3,
           maxWidth: '700px',
-          maxHeight: '90vh', // Adjusted max height to ensure header/footer visibility
+          maxHeight: '90vh',
           height: 'auto',
-          display: 'flex', // Ensure flex container for content
-          flexDirection: 'column', // Stack children vertically
+          display: 'flex',
+          flexDirection: 'column',
         },
       }}
     >
-      <DialogTitle sx={{ p: 0, mb: 2, flexShrink: 0 }}> {/* flexShrink to keep it from shrinking */}
+      <DialogTitle sx={{ p: 0, mb: 2, flexShrink: 0 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: '#333', fontSize: '24px' }}>Export ({step} of {totalSteps})</Typography>
           <IconButton onClick={onClose} sx={{ color: '#666' }}><Close /></IconButton>
         </Box>
       </DialogTitle>
-      <Divider sx={{ mb: 2, borderColor: '#e0e0e0', flexShrink: 0 }} /> {/* flexShrink */}
+      <Divider sx={{ mb: 2, borderColor: '#e0e0e0', flexShrink: 0 }} />
       <DialogContent sx={{
         p: 0,
         display: 'flex',
         flexDirection: 'column',
-        flex: 1, // Allows content to grow and take available space
-        overflowY: 'auto', // Enables scrolling only for the content area
+        flex: 1,
+        overflowY: 'auto',
       }}>
         {step === 1 && (
           <Box>
@@ -458,9 +443,9 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
                       border: '1px solid #e0e0e0',
                       borderRadius: 2,
                       mb: 1.5,
-                      '&:before': { display: 'none' }, // Remove default Accordion border
+                      '&:before': { display: 'none' },
                       '&.Mui-expanded': {
-                        margin: '1.5px 0', // Adjust margin when expanded to prevent jumping
+                        margin: '1.5px 0',
                       },
                     }}
                   >
@@ -511,7 +496,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
           </Box>
         )}
       </DialogContent>
-      <Box sx={{ display: 'flex', gap: 2, mt: 'auto', pt: 3, flexShrink: 0 }}> {/* flexShrink */}
+      <Box sx={{ display: 'flex', gap: 2, mt: 'auto', pt: 3, flexShrink: 0 }}>
         {step > 1 && <Button variant="outlined" onClick={handleBack} sx={{ textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, flex: 1 }}>Back</Button>}
         {step < 5 && <Button variant="contained" onClick={handleNext} disabled={isNextDisabled()} sx={{ bgcolor: '#1976d2', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#1565c0' }, flex: 1 }}>Next</Button>}
         {step === 5 && <Button variant="contained" onClick={handleDownload} disabled={isExporting} sx={{ bgcolor: '#4caf50', color: 'white', textTransform: 'none', px: 4, py: 1.5, borderRadius: 2, '&:hover': { bgcolor: '#388e3c' }, flex: 1 }}>Download</Button>}
