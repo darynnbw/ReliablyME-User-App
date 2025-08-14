@@ -129,54 +129,60 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   }, [open, resetState]);
 
   const getStructuredDataForExport = useCallback(() => {
-    const sheets = [];
-
-    // Process My Commitments tabs
-    for (const tabName in selectedScopes.myCommitments) {
-      if (selectedScopes.myCommitments[tabName]) {
-        const dataForTab = dataSources.myCommitments[tabName];
-        if (dataForTab && dataForTab.length > 0) {
-          sheets.push({
-            sheetName: `My Commitments - ${tabName}`,
-            data: dataForTab.map(item => {
-              const row: { [key: string]: any } = {};
-              selectedFields.forEach(field => {
-                let value: any = (item as any)[field];
-                if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
-                else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
-                else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
-                else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
-                if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
-              });
-              return row;
-            })
-          });
-        }
+    const myCommitmentsData: Commitment[] = [];
+    for (const key in selectedScopes.myCommitments) {
+      if (selectedScopes.myCommitments[key]) {
+        myCommitmentsData.push(...dataSources.myCommitments[key]);
       }
     }
 
-    // Process Others' Commitments tabs
-    for (const tabName in selectedScopes.othersCommitments) {
-      if (selectedScopes.othersCommitments[tabName]) {
-        const dataForTab = dataSources.othersCommitments[tabName];
-        if (dataForTab && dataForTab.length > 0) {
-          sheets.push({
-            sheetName: `Others' Commitments - ${tabName}`,
-            data: dataForTab.map(item => {
-              const row: { [key: string]: any } = {};
-              selectedFields.forEach(field => {
-                let value: any = (item as any)[field];
-                if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
-                else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
-                else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
-                else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
-                if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
-              });
-              return row;
-            })
-          });
-        }
+    const othersCommitmentsData: Commitment[] = [];
+    for (const key in selectedScopes.othersCommitments) {
+      if (selectedScopes.othersCommitments[key]) {
+        othersCommitmentsData.push(...dataSources.othersCommitments[key]);
       }
+    }
+
+    // Ensure uniqueness by ID within each category if items can overlap
+    const uniqueMyCommitments = Array.from(new Set(myCommitmentsData.map(c => c.id))).map(id => myCommitmentsData.find(c => c.id === id)!);
+    const uniqueOthersCommitments = Array.from(new Set(othersCommitmentsData.map(c => c.id))).map(id => othersCommitmentsData.find(c => c.id === id)!);
+
+    const sheets = [];
+
+    if (uniqueMyCommitments.length > 0) {
+      sheets.push({
+        sheetName: 'My Commitments',
+        data: uniqueMyCommitments.map(item => {
+          const row: { [key: string]: any } = {};
+          selectedFields.forEach(field => {
+            let value: any = (item as any)[field];
+            if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
+            else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
+            else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
+            else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
+            if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
+          });
+          return row;
+        })
+      });
+    }
+
+    if (uniqueOthersCommitments.length > 0) {
+      sheets.push({
+        sheetName: 'Others\' Commitments',
+        data: uniqueOthersCommitments.map(item => {
+          const row: { [key: string]: any } = {};
+          selectedFields.forEach(field => {
+            let value: any = (item as any)[field];
+            if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
+            else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
+            else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
+            else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
+            if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
+          });
+          return row;
+        })
+      });
     }
 
     return sheets;
