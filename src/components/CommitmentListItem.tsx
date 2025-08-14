@@ -185,10 +185,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         />
       )}
       <CardContent sx={{ 
-        p: isCommitmentPortfolioPage ? 1.5 : 2, // Smaller padding for Commitment Portfolio
-        '&:last-child': { pb: isCommitmentPortfolioPage ? 1.5 : 2 }, 
+        p: isCommitmentPortfolioPage ? 2.25 : 2, // Increased padding for Commitment Portfolio
+        '&:last-child': { pb: isCommitmentPortfolioPage ? 2.25 : 2 }, 
         display: 'flex', 
-        gap: isCommitmentPortfolioPage ? 1 : 1.5 // Smaller gap for Commitment Portfolio
+        gap: isCommitmentPortfolioPage ? 1.5 : 1.5 // Increased gap for Commitment Portfolio
       }}>
         {showBadgePlaceholder && !isActionsPage && ( // Hide badge placeholder on Actions page
           <Box sx={{
@@ -223,7 +223,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             alignSelf: 'center', // Aligns the whole stack vertically in the CardContent
             justifyContent: 'center', // Aligns content *within* this stack vertically
           }}
-          spacing={isCommitmentPortfolioPage ? 0.75 : 1} // Increased spacing for portfolio
+          spacing={isCommitmentPortfolioPage ? 1.25 : 1} // Increased spacing for portfolio
         >
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -305,7 +305,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* Description */}
-          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: isCommitmentPortfolioPage ? 1.5 : 1 }}>
+          <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: isCommitmentPortfolioPage ? 2.25 : 1 }}>
             {description}
           </Typography>
 
@@ -319,7 +319,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 borderRadius: 2,
                 border: '1px solid #e9ecef',
                 mt: 0, // No top margin, description's mb handles spacing
-                mb: isCommitmentPortfolioPage ? 1.5 : 1, // Consistent margin below explanation
+                mb: isCommitmentPortfolioPage ? 2.25 : 1, // Consistent margin below explanation
                 width: '100%', // Ensure it takes full available width
               }}
             >
@@ -333,7 +333,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           )}
 
           {/* New flex container for Assignee Info and Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: isCommitmentPortfolioPage ? 1.5 : 1 }}> {/* mt: 1.5 for consistent spacing */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: isCommitmentPortfolioPage ? 2.25 : 1 }}> {/* mt: 2.25 for consistent spacing */}
             {/* Assignee Info */}
             <Stack direction="row" spacing={1} alignItems="center">
               <Person sx={{ fontSize: 16, color: color }} />
@@ -512,13 +512,13 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Collapsible Responses / Explanation (only show if not on Actions page) */}
           {showExpandIcon && !isActionsPage && (
             <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: isCommitmentPortfolioPage ? 2.25 : 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+              <Box sx={{ mt: isCommitmentPortfolioPage ? 3.5 : 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                 {isNudge && responses && responses.length > 0 && (
                   isRecurringNudge ? (
                     <>
                       {responses[0].questions && responses[0].questions.length > 0 && (
-                        <Box sx={{ mb: isCommitmentPortfolioPage ? 3 : 2 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isCommitmentPortfolioPage ? 1.5 : 1 }}>
+                        <Box sx={{ mb: isCommitmentPortfolioPage ? 4.5 : 2 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: isCommitmentPortfolioPage ? 2.25 : 1 }}>
                             <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
                               Questions Asked:
                             </Typography>
@@ -526,7 +526,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                               <Repeat sx={{ fontSize: 16, color: 'text.secondary' }} />
                             </Tooltip>
                           </Box>
-                          <Stack spacing={isCommitmentPortfolioPage ? 0.75 : 0.5}>
+                          <Stack spacing={isCommitmentPortfolioPage ? 1 : 0.5}>
                             {responses[0].questions.map((q, qIdx) => (
                               <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
                                 {q}
@@ -535,10 +535,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                           </Stack>
                         </Box>
                       )}
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: isCommitmentPortfolioPage ? 2.25 : 1.5 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary', mb: isCommitmentPortfolioPage ? 3.5 : 1.5 }}>
                         All Responses ({responses.length}):
                       </Typography>
-                      <Stack spacing={isCommitmentPortfolioPage ? 2.25 : 1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+                      <Stack spacing={isCommitmentPortfolioPage ? 3.5 : 1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
@@ -551,7 +551,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                   color: color,
                                   fontWeight: 700,
                                   fontSize: '12px',
-                                  mb: isCommitmentPortfolioPage ? 1.5 : 1,
+                                  mb: isCommitmentPortfolioPage ? 2.25 : 1,
                                 }}
                               />
                               <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
@@ -563,10 +563,10 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </>
                   ) : (
                     <>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 2.25 : 1.5, color: 'text.primary' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 3.5 : 1.5, color: 'text.primary' }}>
                         All Responses ({responses.length}):
                       </Typography>
-                      <Stack spacing={isCommitmentPortfolioPage ? 2.25 : 1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+                      <Stack spacing={isCommitmentPortfolioPage ? 3.5 : 1.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
                         {responses
                           .sort((a, b) => dayjs(a.date, 'MMM D, YYYY').valueOf() - dayjs(b.date, 'MMM D, YYYY').valueOf())
                           .map((response, idx) => (
@@ -579,15 +579,15 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                                   color: color,
                                   fontWeight: 700,
                                   fontSize: '12px',
-                                  mb: isCommitmentPortfolioPage ? 2.25 : 1.5,
+                                  mb: isCommitmentPortfolioPage ? 3.5 : 1.5,
                                 }}
                               />
                               {response.questions && response.questions.length > 0 && (
-                                <Box sx={{ mb: isCommitmentPortfolioPage ? 1.5 : 1 }}>
+                                <Box sx={{ mb: isCommitmentPortfolioPage ? 2.25 : 1 }}>
                                   <Typography variant="body2" sx={{ fontWeight: 600, color: '#4f4f4f' }}>
                                     Questions Asked:
                                   </Typography>
-                                  <Stack spacing={isCommitmentPortfolioPage ? 0.75 : 0.5}>
+                                  <Stack spacing={isCommitmentPortfolioPage ? 1 : 0.5}>
                                     {response.questions.map((q, qIdx) => (
                                       <Typography key={qIdx} variant="body2" sx={{ color: '#666', lineHeight: 1.5 }}>
                                         {q}
@@ -612,7 +612,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                 )}
                 {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
                   <>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 1.5 : 1, color: 'text.primary' }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 2.25 : 1, color: 'text.primary' }}>
                       Explanation:
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
