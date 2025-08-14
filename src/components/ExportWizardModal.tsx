@@ -86,6 +86,22 @@ const fieldGroupsConfig = [
   },
 ];
 
+// Define the new interfaces for structured export
+interface ExportDataRow {
+  [key: string]: any;
+}
+
+interface ExportSection {
+  type: 'data' | 'title';
+  content: ExportDataRow[] | string;
+  headers?: string[];
+}
+
+interface ExportSheet {
+  sheetName: string;
+  sections: ExportSection[];
+}
+
 const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, dataSources }) => {
   const [step, setStep] = useState(1);
   const [selectedFormat, setSelectedFormat] = useState<'csv' | 'pdf' | 'xlsx'>('csv');
@@ -128,65 +144,74 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     }
   }, [open, resetState]);
 
-  const getStructuredDataForExport = useCallback(() => {
-    const myCommitmentsData: Commitment[] = [];
-    for (const key in selectedScopes.myCommitments) {
+  // Helper to format a single Commitment item into an ExportDataRow
+  const formatCommitmentToRow = useCallback((item: Commitment, fieldsToInclude: string[]): ExportDataRow => {
+    const row: ExportDataRow = {};
+    fieldsToInclude.forEach(fieldId => {
+      let value: any = (item as any)[fieldId];
+      const fieldLabel = allExportFields.find(f => f.id === fieldId)?.label || fieldId;
+
+      if (fieldId === 'nudgesInfo' && item.type === 'nudge') {
+        value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
+      } else if (fieldId === 'responses' && item.responses) {
+        value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
+      } else if (fieldId === 'isOverdue') {
+        value = item.isOverdue ? 'Yes' : 'No';
+      } else if (fieldId === 'isExternal') {
+        value = item.isExternal ? 'Yes' : 'No';
+      }
+
+      if (value !== undefined && value !== null) {
+        row[fieldLabel] = value;
+      }
+    });
+    return row;
+  }, []);
+
+  const getStructuredDataForExport = useCallback((): ExportSheet[] => {
+    const sheets: ExportSheet[] = [];
+    const columnHeaders = selectedFields.map(id => allExportFields.find(f => f.id === id)?.label || id);
+
+    // --- My Commitments Sheet ---
+    const myCommitmentsSections: ExportSection[] = [];
+    for (const key in dataSources.myCommitments) {
       if (selectedScopes.myCommitments[key]) {
-        myCommitmentsData.push(...dataSources.myCommitments[key]);
+        const dataForTab = dataSources.myCommitments[key];
+        if (dataForTab.length > 0) {
+          myCommitmentsSections.push({ type: 'title', content: key });
+          myCommitmentsSections.push({
+            type: 'data',
+            content: dataForTab.map(item => formatCommitmentToRow(item, selectedFields)),
+            headers: columnHeaders,
+          });
+        }
       }
     }
+    if (myCommitmentsSections.length > 0) {
+      sheets.push({ sheetName: 'My Commitments', sections: myCommitmentsSections });
+    }
 
-    const othersCommitmentsData: Commitment[] = [];
-    for (const key in selectedScopes.othersCommitments) {
+    // --- Others' Commitments Sheet ---
+    const othersCommitmentsSections: ExportSection[] = [];
+    for (const key in dataSources.othersCommitments) {
       if (selectedScopes.othersCommitments[key]) {
-        othersCommitmentsData.push(...dataSources.othersCommitments[key]);
+        const dataForTab = dataSources.othersCommitments[key];
+        if (dataForTab.length > 0) {
+          othersCommitmentsSections.push({ type: 'title', content: key });
+          othersCommitmentsSections.push({
+            type: 'data',
+            content: dataForTab.map(item => formatCommitmentToRow(item, selectedFields)),
+            headers: columnHeaders,
+          });
+        }
       }
     }
-
-    // Ensure uniqueness by ID within each category if items can overlap
-    const uniqueMyCommitments = Array.from(new Set(myCommitmentsData.map(c => c.id))).map(id => myCommitmentsData.find(c => c.id === id)!);
-    const uniqueOthersCommitments = Array.from(new Set(othersCommitmentsData.map(c => c.id))).map(id => othersCommitmentsData.find(c => c.id === id)!);
-
-    const sheets = [];
-
-    if (uniqueMyCommitments.length > 0) {
-      sheets.push({
-        sheetName: 'My Commitments',
-        data: uniqueMyCommitments.map(item => {
-          const row: { [key: string]: any } = {};
-          selectedFields.forEach(field => {
-            let value: any = (item as any)[field];
-            if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
-            else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
-            else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
-            else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
-            if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
-          });
-          return row;
-        })
-      });
-    }
-
-    if (uniqueOthersCommitments.length > 0) {
-      sheets.push({
-        sheetName: 'Others\' Commitments',
-        data: uniqueOthersCommitments.map(item => {
-          const row: { [key: string]: any } = {};
-          selectedFields.forEach(field => {
-            let value: any = (item as any)[field];
-            if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
-            else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
-            else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
-            else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
-            if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
-          });
-          return row;
-        })
-      });
+    if (othersCommitmentsSections.length > 0) {
+      sheets.push({ sheetName: 'Others\' Commitments', sections: othersCommitmentsSections });
     }
 
     return sheets;
-  }, [dataSources, selectedScopes, selectedFields]);
+  }, [dataSources, selectedScopes, selectedFields, formatCommitmentToRow]);
 
   useEffect(() => {
     if (step === 3) {
@@ -204,8 +229,10 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       }
 
       // Determine if any selected data contains nudges to include nudge-specific fields
-      const combinedData = getStructuredDataForExport().flatMap(sheet => sheet.data); // Get the data based on current scope selection
-      const hasNudges = combinedData.some(item => item.type === 'nudge');
+      const combinedData = getStructuredDataForExport().flatMap(sheet => 
+        sheet.sections.flatMap(section => (section.type === 'data' ? section.content : []))
+      );
+      const hasNudges = combinedData.some(item => (item as Commitment).type === 'nudge');
 
       if (hasNudges) {
         fields.add('type'); // 'type' field itself is useful for nudges
@@ -259,16 +286,20 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     previewLines.push(`Selected Fields: ${selectedFields.map(id => allExportFields.find(f => f.id === id)?.label || id).join(', ')}`);
     
     dataToPreview.forEach(sheet => {
-      previewLines.push(`\n--- ${sheet.sheetName} (${sheet.data.length} records) ---`);
-      sheet.data.slice(0, 2).forEach((record, index) => { // Show first 2 records per sheet
-        previewLines.push(`\n  Record ${index + 1}:`);
-        selectedFields.forEach(field => {
-          let value: any = (record as any)[allExportFields.find(f => f.id === field)?.label || field]; // Use mapped label as key
-          if (value !== undefined && value !== null && value !== '') {
-            if (typeof value === 'string' && value.length > 100) value = value.substring(0, 97) + '...';
-            previewLines.push(`    ${allExportFields.find(f => f.id === field)?.label || field}: ${value}`);
-          }
-        });
+      previewLines.push(`\n=== ${sheet.sheetName} ===`); // Main sheet title
+      sheet.sections.forEach(section => {
+        if (section.type === 'title') {
+          previewLines.push(`\n--- ${section.content} ---`); // Sub-section title
+        } else if (section.type === 'data' && Array.isArray(section.content)) {
+          section.content.slice(0, 2).forEach((record, index) => { // Show first 2 records per data section
+            previewLines.push(`  Record ${index + 1}:`);
+            Object.entries(record).forEach(([key, value]) => {
+              let displayValue = value;
+              if (typeof value === 'string' && value.length > 100) displayValue = value.substring(0, 97) + '...';
+              previewLines.push(`    ${key}: ${displayValue}`);
+            });
+          });
+        }
       });
     });
     setPreviewContent(previewLines.join('\n'));
