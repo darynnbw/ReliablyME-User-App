@@ -145,7 +145,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
 
   // Determine the color and weight based on overdue status
   const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
-  const dateTextWeight = 600;
+  const dateTextWeight = isOverdue ? 600 : 'inherit';
 
   // Determine the icon color based on overdue status or section color
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
@@ -223,7 +223,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             alignSelf: 'center', // Aligns the whole stack vertically in the CardContent
             justifyContent: 'center', // Aligns content *within* this stack vertically
           }}
-          spacing={isCommitmentPortfolioPage ? 0.5 : 1} // Reduced spacing for portfolio
+          spacing={isCommitmentPortfolioPage ? 1 : 1} // Reduced spacing for portfolio
         >
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
