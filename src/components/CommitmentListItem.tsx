@@ -223,7 +223,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             alignSelf: 'center', // Aligns the whole stack vertically in the CardContent
             justifyContent: 'center', // Aligns content *within* this stack vertically
           }}
-          spacing={isCommitmentPortfolioPage ? 1.25 : 1} // Increased spacing for portfolio
+          spacing={isCommitmentPortfolioPage ? 1 : 1} // Reduced spacing for portfolio
         >
           {/* Top row: Title, MoreHoriz */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
