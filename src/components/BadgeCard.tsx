@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { Shield } from '@mui/icons-material';
+import BadgeContent from './BadgeContent'; // Import the BadgeContent component
 
 interface BadgeCardProps {
   title: string;
@@ -31,18 +31,14 @@ const BadgeCard: React.FC<BadgeCardProps> = ({ title, count }) => {
     >
       <Box
         sx={{
-          width: 82, // Increased size by ~17%
-          height: 82, // Increased size by ~17%
           mb: 2,
-          bgcolor: 'primary.light',
-          color: 'primary.main',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          clipPath: 'polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%)', // Hexagon shape
+          // Removed fixed width/height and clipPath as BadgeContent handles its own sizing and shape
         }}
       >
-        <Shield sx={{ fontSize: 48 }} /> {/* Increased size */}
+        <BadgeContent badgeType={title} size="list-item-large" /> {/* Use BadgeContent with the appropriate size */}
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '1.1rem' }}>
