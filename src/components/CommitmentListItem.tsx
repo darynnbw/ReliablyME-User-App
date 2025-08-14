@@ -188,7 +188,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
         p: isCommitmentPortfolioPage ? 2.25 : 2, // Increased padding for Commitment Portfolio
         '&:last-child': { pb: isCommitmentPortfolioPage ? 2.25 : 2 }, 
         display: 'flex', 
-        gap: isCommitmentPortfolioPage ? 1.5 : 1.5 // Increased gap for Commitment Portfolio
+        gap: isCommitmentPortfolioPage ? 1.5 : 1.5, // Increased gap for Commitment Portfolio
+        alignItems: isCommitmentPortfolioPage ? 'center' : 'flex-start', // Align items vertically center for portfolio
       }}>
         {showBadgePlaceholder && !isActionsPage && ( // Hide badge placeholder on Actions page
           <Box sx={{
@@ -208,8 +209,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             size="small"
             sx={{
               p: 0,
-              mt: 0.5,
-              alignSelf: 'flex-start',
+              // Removed mt: 0.5 and alignSelf: 'flex-start' to allow vertical centering
             }}
             checked={selected}
             onChange={handleCheckboxChange}
