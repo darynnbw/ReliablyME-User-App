@@ -469,14 +469,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       const cardHeight = firstItemObservedHeight;
       const spacing = 8; // From <Stack spacing={1}>
 
-      if (paginatedItems.length === 1) {
-        setContainerContentHeight(cardHeight);
-      } else {
-        // For 2 or more items, show 2 items and enable scrolling
-        setContainerContentHeight((cardHeight * 2) + spacing);
+      let calculatedHeight = (cardHeight * 2) + spacing;
+
+      // Add extra height specifically for "My Commitments" section
+      if (title === "My Commitments") {
+        calculatedHeight += 20; // Add 20px for a "tidbit longer" effect
       }
+      
+      setContainerContentHeight(calculatedHeight);
     }
-  }, [paginatedItems.length, displayMode, firstItemObservedHeight]); // Add observed height as dependency
+  }, [paginatedItems.length, displayMode, firstItemObservedHeight, title]); // Add observed height and title as dependency
 
   const handleViewCommitmentDetails = (item: Commitment) => {
     if (isBadgeRequestsTab) {
@@ -798,7 +800,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   let expandAllState: 'collapsed' | 'expanded' | 'indeterminate' = 'collapsed';
   if (expandedCount === 0) {
     expandAllState = 'collapsed';
-  } else if (expandedCount === totalExpandable && totalExpandable > 0) {
+  } else if (totalExpandable > 0 && expandedCount === totalExpandable) {
     expandAllState = 'expanded';
   } else if (expandedCount > 0) {
     expandAllState = 'indeterminate';
@@ -845,7 +847,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         flexDirection: 'column',
         bgcolor: '#ffffff',
         borderRadius: 3,
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+        boxShadow: '0 44px 12px rgba(0, 0, 0, 0.08)',
         border: '1px solid #e8eaed',
         mb: 4,
       }}>
