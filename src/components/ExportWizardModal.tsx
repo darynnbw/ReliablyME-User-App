@@ -128,21 +128,65 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
     }
   }, [open, resetState]);
 
-  const getCombinedData = useCallback(() => {
-    let combinedData: Commitment[] = [];
+  const getStructuredDataForExport = useCallback(() => {
+    const myCommitmentsData: Commitment[] = [];
     for (const key in selectedScopes.myCommitments) {
       if (selectedScopes.myCommitments[key]) {
-        combinedData = [...combinedData, ...dataSources.myCommitments[key]];
+        myCommitmentsData.push(...dataSources.myCommitments[key]);
       }
     }
+
+    const othersCommitmentsData: Commitment[] = [];
     for (const key in selectedScopes.othersCommitments) {
       if (selectedScopes.othersCommitments[key]) {
-        combinedData = [...combinedData, ...dataSources.othersCommitments[key]];
+        othersCommitmentsData.push(...dataSources.othersCommitments[key]);
       }
     }
-    // Use a Set to ensure unique commitments by ID, then map back to full objects
-    return Array.from(new Set(combinedData.map(c => c.id))).map(id => combinedData.find(c => c.id === id)!);
-  }, [dataSources, selectedScopes]);
+
+    // Ensure uniqueness by ID within each category if items can overlap
+    const uniqueMyCommitments = Array.from(new Set(myCommitmentsData.map(c => c.id))).map(id => myCommitmentsData.find(c => c.id === id)!);
+    const uniqueOthersCommitments = Array.from(new Set(othersCommitmentsData.map(c => c.id))).map(id => othersCommitmentsData.find(c => c.id === id)!);
+
+    const sheets = [];
+
+    if (uniqueMyCommitments.length > 0) {
+      sheets.push({
+        sheetName: 'My Commitments',
+        data: uniqueMyCommitments.map(item => {
+          const row: { [key: string]: any } = {};
+          selectedFields.forEach(field => {
+            let value: any = (item as any)[field];
+            if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
+            else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
+            else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
+            else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
+            if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
+          });
+          return row;
+        })
+      });
+    }
+
+    if (uniqueOthersCommitments.length > 0) {
+      sheets.push({
+        sheetName: 'Others\' Commitments',
+        data: uniqueOthersCommitments.map(item => {
+          const row: { [key: string]: any } = {};
+          selectedFields.forEach(field => {
+            let value: any = (item as any)[field];
+            if (field === 'nudgesInfo' && item.type === 'nudge') value = `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left`;
+            else if (field === 'responses' && item.responses) value = item.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
+            else if (field === 'isOverdue') value = item.isOverdue ? 'Yes' : 'No';
+            else if (field === 'isExternal') value = item.isExternal ? 'Yes' : 'No';
+            if (value !== undefined && value !== null) row[allExportFields.find(f => f.id === field)?.label || field] = value;
+          });
+          return row;
+        })
+      });
+    }
+
+    return sheets;
+  }, [dataSources, selectedScopes, selectedFields]);
 
   useEffect(() => {
     if (step === 3) {
@@ -160,7 +204,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       }
 
       // Determine if any selected data contains nudges to include nudge-specific fields
-      const combinedData = getCombinedData(); // Get the data based on current scope selection
+      const combinedData = getStructuredDataForExport().flatMap(sheet => sheet.data); // Get the data based on current scope selection
       const hasNudges = combinedData.some(item => item.type === 'nudge');
 
       if (hasNudges) {
@@ -179,7 +223,7 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
       setRelevantFields(newRelevantFields);
       setSelectedFields(newRelevantFields.map(f => f.id));
     }
-  }, [step, selectedScopes, getCombinedData]); // Added getCombinedData to dependencies
+  }, [step, selectedScopes, getStructuredDataForExport]); // Updated dependency
 
   const handleNext = () => {
     if (step === 3) {
@@ -209,54 +253,35 @@ const ExportWizardModal: React.FC<ExportWizardModalProps> = ({ open, onClose, da
   };
 
   const generatePreview = useCallback(() => {
-    const dataToPreview = getCombinedData();
+    const dataToPreview = getStructuredDataForExport();
     const previewLines: string[] = [];
     previewLines.push(`Export Format: ${selectedFormat.toUpperCase()}`);
     previewLines.push(`Selected Fields: ${selectedFields.map(id => allExportFields.find(f => f.id === id)?.label || id).join(', ')}`);
-    previewLines.push(`Number of records: ${dataToPreview.length}`);
-    previewLines.push('\n--- Sample Data (first 2 records) ---');
-
-    dataToPreview.slice(0, 2).forEach((record, index) => {
-      previewLines.push(`\nRecord ${index + 1}:`);
-      selectedFields.forEach(field => {
-        let value: any = (record as any)[field];
-        if (field === 'nudgesInfo' && record.type === 'nudge') value = `${record.nudgesLeft || 0} of ${record.totalNudges || 0} nudges left`;
-        else if (field === 'responses' && record.responses) value = record.responses.map(r => `${r.date}: ${r.answer}`).join('; ');
-        else if (field === 'isOverdue') value = record.isOverdue ? 'Yes' : 'No';
-        else if (field === 'isExternal') value = record.isExternal ? 'Yes' : 'No';
-        else if (field === 'description' && value && value.length > 100) value = value.substring(0, 97) + '...';
-        else if (field === 'explanation' && value && value.length > 100) value = value.substring(0, 97) + '...';
-        if (value !== undefined && value !== null && value !== '') previewLines.push(`  ${allExportFields.find(f => f.id === field)?.label || field}: ${value}`);
+    
+    dataToPreview.forEach(sheet => {
+      previewLines.push(`\n--- ${sheet.sheetName} (${sheet.data.length} records) ---`);
+      sheet.data.slice(0, 2).forEach((record, index) => { // Show first 2 records per sheet
+        previewLines.push(`\n  Record ${index + 1}:`);
+        selectedFields.forEach(field => {
+          let value: any = (record as any)[allExportFields.find(f => f.id === field)?.label || field]; // Use mapped label as key
+          if (value !== undefined && value !== null && value !== '') {
+            if (typeof value === 'string' && value.length > 100) value = value.substring(0, 97) + '...';
+            previewLines.push(`    ${allExportFields.find(f => f.id === field)?.label || field}: ${value}`);
+          }
+        });
       });
     });
     setPreviewContent(previewLines.join('\n'));
-  }, [getCombinedData, selectedFormat, selectedFields]);
+  }, [getStructuredDataForExport, selectedFormat, selectedFields]);
 
   const handleDownload = async () => {
     setIsExporting(true);
     try {
-      const dataToExport = getCombinedData();
-      const headers = selectedFields.map(id => ({ id, label: allExportFields.find(f => f.id === id)?.label || id }));
-      const exportData = dataToExport.map(item => {
-        const row: { [key: string]: any } = {};
-        headers.forEach(header => {
-          const field = header.id;
-          let value;
-          switch (field) {
-            case 'nudgesInfo': value = item.type === 'nudge' ? `${item.nudgesLeft || 0} of ${item.totalNudges || 0} nudges left` : ''; break;
-            case 'responses': value = item.responses ? item.responses.map(r => `${r.date}: ${r.answer}`).join('; ') : ''; break;
-            case 'isOverdue': value = item.isOverdue ? 'Yes' : 'No'; break;
-            case 'isExternal': value = item.isExternal ? 'Yes' : 'No'; break;
-            default: value = (item as any)[field] || '';
-          }
-          row[header.label] = value;
-        });
-        return row;
-      });
-      await new Promise(resolve => setTimeout(resolve, 100));
-      if (selectedFormat === 'csv') exportToCsv(exportData, 'Commitment_Portfolio');
-      else if (selectedFormat === 'xlsx') exportToXlsx(exportData, 'Commitment_Portfolio');
-      else if (selectedFormat === 'pdf') exportToPdf(exportData, 'Commitment_Portfolio');
+      const sheetsToExport = getStructuredDataForExport();
+      await new Promise(resolve => setTimeout(resolve, 100)); // Small delay for UX
+      if (selectedFormat === 'csv') exportToCsv(sheetsToExport, 'Commitment_Portfolio');
+      else if (selectedFormat === 'xlsx') exportToXlsx(sheetsToExport, 'Commitment_Portfolio');
+      else if (selectedFormat === 'pdf') exportToPdf(sheetsToExport, 'Commitment_Portfolio');
       onClose();
     } catch (error) {
       console.error("Export failed:", error);
