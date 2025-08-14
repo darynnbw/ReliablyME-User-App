@@ -49,42 +49,12 @@ const Header: React.FC = () => {
         <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 1,
-                  bgcolor: '#ff7043',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  fontSize: '14px',
-                }}
-              >
-                ME
-              </Box>
-              <Typography
-                variant="h6"
-                sx={{ 
-                  color: '#1976d2', 
-                  fontWeight: 600,
-                  fontSize: '18px',
-                }}
-              >
-                RELIABLY
-                <Typography
-                  component="span"
-                  sx={{ 
-                    color: '#ff7043', 
-                    fontWeight: 600,
-                    fontSize: '18px',
-                  }}
-                >
-                  ME
-                </Typography>
-              </Typography>
+              {/* Replaced text logo with image */}
+              <img
+                src="/images/reliablyme-logo.png"
+                alt="ReliablyME Logo"
+                style={{ height: '40px', width: 'auto' }} // Adjust height as needed
+              />
             </Box>
             
             <Chip
