@@ -9,7 +9,7 @@ const badgeConfig: { [key: string]: { color: string; displayText: string; imageP
   'Promise Kept General': { color: '#ff7043', displayText: 'PROMISE\nKEPT', imagePath: '/images/PromiseKept.png' },
   'Attendance': { color: '#1976d2', displayText: 'ATTENDANCE', imagePath: '/images/ATTENDANCE+badge.png' },
   'Teamwork': { color: '#4caf50', displayText: 'TEAMWORK', imagePath: '/images/teamwork.png' },
-  'Leadership': { color: '#9c27b0', displayText: 'LEADERSHIP' },
+  'Leadership': { color: '#9c27b0', displayText: 'LEADERSHIP', imagePath: '/images/leadership.png' },
   'Communication Effectiveness - Nudging': { color: '#26a69a', displayText: 'COMMUNICATION\nEFFECTIVENESS', imagePath: '/images/COMMUNICATION+EFFECTIVENESS+-+badge.png' },
   // Add more badge types as needed
 };
