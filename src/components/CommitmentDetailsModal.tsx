@@ -224,7 +224,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             </Box>
           )}
 
-          {!(isAwaitingResponse && isOthersSection) && (
+          {!(isAwaitingResponse && isOthersSection) && !isRequest && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
