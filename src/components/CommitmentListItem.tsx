@@ -152,8 +152,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   // Determine the icon color based on overdue status or section color
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
-  // Show expand icon only for nudges with responses
-  const showExpandIcon = isNudge && responses && responses.length > 0;
+  // Show expand icon if it's a nudge with responses OR a badge with an explanation
+  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation);
   const isRecurringNudge = isNudge && areQuestionsRecurring(responses);
 
   return (
@@ -316,8 +316,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             {description}
           </Typography>
 
-          {/* Explanation for Badge Requests, Badges Issued, and My Badges */}
-          {(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation && (
+          {/* Explanation for Badge Requests */}
+          {isBadgeRequestsTab && explanation && (
             <Box
               sx={{
                 bgcolor: '#f8f9fa',
@@ -513,7 +513,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
           </Box>
 
-          {/* Collapsible Responses */}
+          {/* Collapsible Responses / Explanation */}
           {showExpandIcon && (
             <Collapse in={isExpanded} timeout="auto" unmountOnExit>
               <Box sx={{ mt: 1.5, p: 2, bgcolor: '#f8f9fa', borderRadius: 2, border: '1px solid #e9ecef' }}>
@@ -613,6 +613,16 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                       </Stack>
                     </>
                   )
+                )}
+                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
+                  <>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                      Explanation:
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                      {explanation}
+                    </Typography>
+                  </>
                 )}
               </Box>
             </Collapse>
