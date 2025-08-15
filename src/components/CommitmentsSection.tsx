@@ -1657,10 +1657,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <DeclineModal
         open={revokeModalOpen}
         onClose={handleCloseRevokeModal}
-        title="Revoke Request"
+        title="Revoke Promise"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to revoke this commitment request? This action cannot be undone.
+            Are you sure you want to revoke this promise? This action cannot be undone.
           </Typography>
         }
         onDecline={handleConfirmRevoke}
