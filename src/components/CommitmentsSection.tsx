@@ -837,6 +837,63 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const tableBadgeOptions = [...new Set(commitments.map(item => item.title))];
   const tableAssigneeOptions = [...new Set(commitments.map(item => item.assignee))];
 
+  const renderTableActions = (item: Commitment) => {
+    const isNudgeItem = item.type === 'nudge';
+    const showClarifyRejectIssueButtonsForListItem = isActionsPage && isOwedToMe;
+    const showStandardAcceptDeclineButtons = isRequestsToCommitTab || isBadgeRequestsTab;
+    const showRevokeButtonForListItem = isAwaitingResponseTab;
+    const showSingleActionButton = isActionsPage && (
+        (isNudgeItem && isMyPromisesTab) ||
+        (!isMyBadgesTab && !isUnkeptTab && !isRequestsToCommitTab && !isAwaitingResponseTab && !isBadgeRequestsTab)
+    );
+
+    if (showClarifyRejectIssueButtonsForListItem) {
+        return (
+            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                <Button size="small" variant="outlined" onClick={() => handleClarifyClick(item)}>Clarify</Button>
+                <Button size="small" variant="contained" color="error" onClick={() => handleRejectBadgeRequest(item)}>Reject</Button>
+                <Button size="small" variant="contained" color="success" onClick={() => handleApproveBadgeRequest(item)}>Issue Badge</Button>
+            </Box>
+        );
+    }
+    if (showStandardAcceptDeclineButtons) {
+        const acceptText = isBadgeRequestsTab ? 'Issue Badge' : 'Accept';
+        const declineText = isBadgeRequestsTab ? 'Reject' : 'Decline';
+        return (
+            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                <Button size="small" variant="contained" color="error" onClick={() => handleDeclineClick(item)}>{declineText}</Button>
+                <Button size="small" variant="contained" color="success" onClick={() => handleAcceptClick(item)}>{acceptText}</Button>
+            </Box>
+        );
+    }
+    if (showRevokeButtonForListItem) {
+        return <Button size="small" variant="contained" color="error" onClick={() => handleRevokeClick(item)}>Revoke</Button>;
+    }
+    if (showSingleActionButton) {
+        const buttonText = isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify Request' : 'Request Badge');
+        const handler = isNudgeItem && isMyPromisesTab ? () => handleAnswerNudge(item) : (isOwedToMe ? () => handleClarifyClick(item) : handleRequestBadge);
+        const bgColor = (isNudgeItem && isMyPromisesTab) ? '#ff7043' : itemColor;
+        const hoverBgColor = (isNudgeItem && isMyPromisesTab) ? '#f4511e' : alpha(itemColor, 0.8);
+
+        return (
+            <Button
+                size="small"
+                variant="contained"
+                onClick={handler}
+                sx={{
+                    bgcolor: bgColor,
+                    color: 'white',
+                    textTransform: 'none',
+                    '&:hover': { bgcolor: hoverBgColor },
+                }}
+            >
+                {buttonText}
+            </Button>
+        );
+    }
+    return null;
+  };
+
   return (
     <>
       <Paper sx={{
@@ -1247,6 +1304,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 itemColor={itemColor}
                 expandedRows={expandedRows}
                 onToggleExpand={handleToggleExpandRow}
+                renderActions={isActionsPage ? renderTableActions : undefined}
               />
             </Box>
           ) : (

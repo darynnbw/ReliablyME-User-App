@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
@@ -10,6 +10,8 @@ import NavigationTabs from '../components/NavigationTabs';
 import CommitmentsSection from '../components/CommitmentsSection';
 
 const Actions: React.FC = () => {
+  const [displayMode, setDisplayMode] = useState<'regular' | 'table'>('regular');
+
   const myPromisesItems = [
     {
       id: 100,
@@ -329,12 +331,26 @@ const Actions: React.FC = () => {
         <Grid container spacing={3}>
           {/* My Commitments */}
           <Grid item xs={12}>
-            <CommitmentsSection title="My Commitments" tabs={myCommitmentsTabs} showClearAllFilters={false} isActionsPage={true} />
+            <CommitmentsSection
+              title="My Commitments"
+              tabs={myCommitmentsTabs}
+              displayMode={displayMode}
+              onToggleDisplayMode={setDisplayMode}
+              showClearAllFilters={false}
+              isActionsPage={true}
+            />
           </Grid>
 
           {/* Commitments from Others */}
           <Grid item xs={12}>
-            <CommitmentsSection title="Others' Commitments" tabs={commitmentsReceivedTabs} showClearAllFilters={false} isActionsPage={true} />
+            <CommitmentsSection
+              title="Others' Commitments"
+              tabs={commitmentsReceivedTabs}
+              displayMode={displayMode}
+              onToggleDisplayMode={setDisplayMode}
+              showClearAllFilters={false}
+              isActionsPage={true}
+            />
           </Grid>
         </Grid>
       </Container>

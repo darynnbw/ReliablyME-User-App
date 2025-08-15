@@ -61,6 +61,7 @@ interface CommitmentsTableProps {
   itemColor: string;
   expandedRows: Set<number>;
   onToggleExpand: (id: number) => void;
+  renderActions?: (commitment: Commitment) => React.ReactNode;
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -88,6 +89,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   itemColor,
   expandedRows,
   onToggleExpand,
+  renderActions,
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
@@ -165,7 +167,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
   const approvedDateIconColor = filters.approvedDate ? theme.palette.primary.main : 'text.secondary';
 
-  const numColumns = 5 + (isMyBadgesTab || isBadgesIssuedTab ? 1 : 0);
+  let numColumns = 4; // Badge, Commitment, Assignee, Committed, Due
+  if (isMyBadgesTab || isBadgesIssuedTab) numColumns++;
+  if (renderActions) numColumns++;
 
   return (
     <TableContainer
@@ -182,7 +186,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="commitments table">
         <TableHead sx={{ bgcolor: 'grey.50' }}>
           <TableRow>
-            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '17%' }}>
+            <TableCell ref={badgeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '15%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Box sx={{ width: 32, flexShrink: 0, mr: 1 }} /> {/* Placeholder for alignment */}
                 Badge
@@ -208,7 +212,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Menu>
               </Box>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '32%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '25%' }}>
               Original Commitment
             </TableCell>
             <TableCell ref={assigneeCellRef} sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
@@ -237,7 +241,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </Box>
             </TableCell>
             {/* Reordered date columns */}
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
               <Tooltip title="The exact time when the user committed to doing something." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Committed
@@ -263,7 +267,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 </Box>
               </Tooltip>
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%' }}>
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
               <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Due
@@ -290,7 +294,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </Tooltip>
             </TableCell>
             {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
-              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '13%', pr: 4 }}>
+              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
                 <Tooltip title="The date when the person you committed to has approved the badge." placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     Approved
@@ -315,6 +319,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     />
                   </Box>
                 </Tooltip>
+              </TableCell>
+            )}
+            {renderActions && (
+              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%', textAlign: 'right', pr: 4 }}>
+                Actions
               </TableCell>
             )}
           </TableRow>
@@ -371,7 +380,12 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
                     <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
                     {(isMyBadgesTab || isBadgesIssuedTab) && ( // Conditionally render Approved column
-                      <TableCell sx={{ pr: 4 }}>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                      <TableCell>{renderFormattedDate(commitment.approvedDate)}</TableCell>
+                    )}
+                    {renderActions && (
+                      <TableCell align="right" sx={{ pr: 4 }}>
+                        {renderActions(commitment)}
+                      </TableCell>
                     )}
                   </TableRow>
                   {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
