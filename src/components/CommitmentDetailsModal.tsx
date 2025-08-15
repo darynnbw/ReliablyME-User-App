@@ -50,6 +50,8 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
 }) => {
   if (!commitment) return null;
 
+  const committedLabel = isRequest ? 'Requested' : 'Committed';
+
   const renderActionButtons = () => {
     // If it's a "Promise Owed to Me" and on the Commitment Portfolio page, remove all buttons
     if (isOwedToMe && isCommitmentPortfolioPage) {
@@ -207,7 +209,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Schedule sx={{ fontSize: 20, color: '#83B114' }} />
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-                Committed:{' '}
+                {committedLabel}:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                   {commitment.committedDate}
                 </Typography>

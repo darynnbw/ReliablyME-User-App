@@ -174,7 +174,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const committedDateIconColor = filters.committedDate ? theme.palette.primary.main : 'text.secondary';
   const approvedDateIconColor = filters.approvedDate ? theme.palette.primary.main : 'text.secondary';
 
-  let numColumns = 2; // Badge, Commitment, Assignee
+  let numColumns = 3; // Badge, Commitment, Assignee
   if (!isRequestsToCommitTab) numColumns++; // Committed/Requested
   if (!isRequestsToCommitTab) numColumns++; // Due
   if (isMyBadgesTab || isBadgesIssuedTab) numColumns++; // Approved
@@ -242,25 +242,23 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </Box>
             </TableCell>
             
-            {!isRequestsToCommitTab && (
-              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
-                <Tooltip title={isAwaitingResponseTab ? "The time when the commitment was requested." : (isBadgeRequestsTab ? "The original due date for the commitment." : "The exact time when the user committed to doing something.")} placement="top">
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    {isAwaitingResponseTab ? 'Requested' : (isBadgeRequestsTab ? 'Due' : 'Committed')}
-                    <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
-                      <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
-                    </IconButton>
-                    <DatePicker
-                      open={committedDateOpen}
-                      onClose={() => setCommittedDateOpen(false)}
-                      value={filters.committedDate}
-                      onChange={handleCommittedDateChange}
-                      slotProps={{ textField: { style: { display: 'none' } }, popper: { anchorEl: committedDateButtonRef.current } }}
-                    />
-                  </Box>
-                </Tooltip>
-              </TableCell>
-            )}
+            <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
+              <Tooltip title={isAwaitingResponseTab || isRequestsToCommitTab ? "The time when the commitment was requested." : (isBadgeRequestsTab ? "The original due date for the commitment." : "The exact time when the user committed to doing something.")} placement="top">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  {isAwaitingResponseTab || isRequestsToCommitTab ? 'Requested' : (isBadgeRequestsTab ? 'Due' : 'Committed')}
+                  <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
+                    <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
+                  </IconButton>
+                  <DatePicker
+                    open={committedDateOpen}
+                    onClose={() => setCommittedDateOpen(false)}
+                    value={filters.committedDate}
+                    onChange={handleCommittedDateChange}
+                    slotProps={{ textField: { style: { display: 'none' } }, popper: { anchorEl: committedDateButtonRef.current } }}
+                  />
+                </Box>
+              </Tooltip>
+            </TableCell>
 
             {!isRequestsToCommitTab && (
               <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
@@ -342,9 +340,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     <TableCell>{commitment.description}</TableCell>
                     <TableCell>{commitment.assignee}</TableCell>
                     
-                    {!isRequestsToCommitTab && (
-                      <TableCell>{renderFormattedDate(isBadgeRequestsTab ? commitment.dueDate : commitment.committedDate)}</TableCell>
-                    )}
+                    <TableCell>{renderFormattedDate(isBadgeRequestsTab ? commitment.dueDate : commitment.committedDate)}</TableCell>
                     {!isRequestsToCommitTab && (
                       <TableCell>{renderFormattedDate(isBadgeRequestsTab ? commitment.committedDate : commitment.dueDate)}</TableCell>
                     )}

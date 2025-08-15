@@ -989,6 +989,16 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     return null;
   };
 
+  const individualDeclineTitle = isRequestsToCommitTab ? 'Decline Request' : 'Decline Invitation';
+  const individualDeclineDescription = isRequestsToCommitTab
+    ? 'Are you sure you want to decline this request? This action cannot be undone.'
+    : 'Are you sure you want to decline this invitation? This action cannot be undone.';
+
+  const bulkDeclineTitle = isRequestsToCommitTab ? 'Decline Requests' : 'Decline Invitations';
+  const bulkDeclineDescription = isRequestsToCommitTab
+    ? `Are you sure you want to decline ${selectedCount} selected request${selectedCount > 1 ? 's' : ''}? This action cannot be undone.`
+    : `Are you sure you want to decline ${selectedCount} selected invitation${selectedCount > 1 ? 's' : ''}? This action cannot be undone.`;
+
   return (
     <>
       <Paper sx={{
@@ -1624,10 +1634,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <DeclineModal
         open={bulkDeclineModalOpen}
         onClose={handleCloseBulkDeclineModal}
-        title="Decline Invitations"
+        title={bulkDeclineTitle}
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to decline {selectedCount} selected invitation{selectedCount > 1 ? 's' : ''}? This action cannot be undone.
+            {bulkDeclineDescription}
           </Typography>
         }
         onDecline={handleConfirmBulkDecline}
@@ -1635,10 +1645,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <DeclineModal
         open={individualDeclineModalOpen}
         onClose={handleCloseIndividualDeclineModal}
-        title="Decline Invitation"
+        title={individualDeclineTitle}
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to decline this invitation? This action cannot be undone.
+            {individualDeclineDescription}
           </Typography>
         }
         onDecline={handleConfirmIndividualDecline}
