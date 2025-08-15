@@ -32,6 +32,7 @@ interface CommitmentDetailsModalProps {
   onRevokeClick?: () => void;
   onClarifyClick?: () => void;
   isCommitmentPortfolioPage?: boolean; // New prop
+  isOthersSection?: boolean;
 }
 
 const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
@@ -47,6 +48,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
   onRevokeClick,
   onClarifyClick,
   isCommitmentPortfolioPage = false, // Default to false
+  isOthersSection = false,
 }) => {
   if (!commitment) return null;
 
@@ -217,7 +219,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
             </Box>
           )}
 
-          {!isAwaitingResponse && (
+          {!(isAwaitingResponse && isOthersSection) && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>

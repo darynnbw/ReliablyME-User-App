@@ -1426,7 +1426,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                   // Also, items in 'Active Promises' tab are disabled for bulk select
                   const isCheckboxDisabled = isActionsPage ? (isMyPromisesTab && isNudgeItem) : isActivePromisesTab; 
                   
-                  const hideDueDate = isRequestsToCommitTab || isAwaitingResponseTab || isBadgeRequestsTab;
+                  const hideDueDate = isAwaitingResponseTab && isOthersCommitmentsSection;
                   const showRevokeButtonForListItem = isAwaitingResponseTab; // Renamed to avoid conflict
 
                   const showFromLabel = isRequestsToCommitTab || isOwedToMe || isBadgeRequestsTab || isUnkeptTab;
@@ -1577,6 +1577,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         onRevokeClick={handleRevokeFromDetails}
         onClarifyClick={handleClarifyFromDetails}
         isCommitmentPortfolioPage={isCommitmentPortfolioPage}
+        isOthersSection={isOthersCommitmentsSection}
       />
       <NudgeDetailsModal
         open={nudgeDetailsModalOpen}

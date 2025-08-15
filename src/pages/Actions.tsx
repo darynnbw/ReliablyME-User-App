@@ -133,7 +133,7 @@ const Actions: React.FC = () => {
     {
       id: 601,
       title: 'Promise Kept General',
-      dueDate: 'Pending',
+      dueDate: dayjs().add(3, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Requested on Jul 20, 11:00 AM',
       description: 'I will set up the new project repository and initial file structure, ensuring all necessary configurations are in place for the development team.',
       assignee: 'Dev Team Lead',
@@ -141,7 +141,7 @@ const Actions: React.FC = () => {
     {
       id: 602,
       title: 'Teamwork',
-      dueDate: 'Pending',
+      dueDate: dayjs().add(5, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Requested on Jul 19, 3:00 PM',
       description: 'I will send you the draft for the client presentation for your review.',
       assignee: 'Sarah Wilson',
@@ -149,7 +149,7 @@ const Actions: React.FC = () => {
     {
       id: 603,
       title: 'Promise Kept General',
-      dueDate: 'Pending',
+      dueDate: dayjs().add(7, 'day').format('MMM D, hh:mm A'),
       committedDate: 'Requested on Jul 21, 9:00 AM',
       description: 'I will send the new marketing assets for approval, including updated logos and campaign visuals.',
       assignee: '+1 555-555-1212',
