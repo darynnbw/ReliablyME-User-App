@@ -886,31 +886,40 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         return (
             <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start' }}>
                 <Tooltip title="Request Clarification" placement="top" arrow>
-                    <IconButton
-                        size="small"
-                        onClick={() => handleClarifyClick(item)}
-                        sx={{ bgcolor: '#fff8e1', color: '#ff9800', '&:hover': { bgcolor: '#fff3c4' } }}
-                    >
-                        <Undo fontSize="small" />
-                    </IconButton>
+                    <span>
+                        <IconButton
+                            size="small"
+                            onClick={() => handleClarifyClick(item)}
+                            disabled={selectedCount > 0}
+                            sx={{ bgcolor: '#fff8e1', color: '#ff9800', '&:hover': { bgcolor: '#fff3c4' } }}
+                        >
+                            <Undo fontSize="small" />
+                        </IconButton>
+                    </span>
                 </Tooltip>
                 <Tooltip title="Reject" placement="top" arrow>
-                    <IconButton
-                        size="small"
-                        onClick={() => handleRejectPromise(item)}
-                        sx={{ bgcolor: '#fde8e8', color: '#f44336', '&:hover': { bgcolor: '#f8d7da' } }}
-                    >
-                        <Close fontSize="small" />
-                    </IconButton>
+                    <span>
+                        <IconButton
+                            size="small"
+                            onClick={() => handleRejectPromise(item)}
+                            disabled={selectedCount > 0}
+                            sx={{ bgcolor: '#fde8e8', color: '#f44336', '&:hover': { bgcolor: '#f8d7da' } }}
+                        >
+                            <Close fontSize="small" />
+                        </IconButton>
+                    </span>
                 </Tooltip>
                 <Tooltip title="Issue" placement="top" arrow>
-                    <IconButton
-                        size="small"
-                        onClick={() => handleIssueBadge(item)}
-                        sx={{ bgcolor: '#e8f5e8', color: '#4caf50', '&:hover': { bgcolor: '#d4edda' } }}
-                    >
-                        <Check fontSize="small" />
-                    </IconButton>
+                    <span>
+                        <IconButton
+                            size="small"
+                            onClick={() => handleIssueBadge(item)}
+                            disabled={selectedCount > 0}
+                            sx={{ bgcolor: '#e8f5e8', color: '#4caf50', '&:hover': { bgcolor: '#d4edda' } }}
+                        >
+                            <Check fontSize="small" />
+                        </IconButton>
+                    </span>
                 </Tooltip>
             </Box>
         );
@@ -926,6 +935,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     size="small"
                     variant="contained"
                     onClick={onDeclineHandler}
+                    disabled={selectedCount > 0}
                     sx={{
                         bgcolor: '#F44336', color: 'white', textTransform: 'none', fontWeight: 'bold',
                         px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#d32f2f' },
@@ -937,6 +947,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     size="small"
                     variant="contained"
                     onClick={onAcceptHandler}
+                    disabled={selectedCount > 0}
                     sx={{
                         bgcolor: '#4CAF50', color: 'white', textTransform: 'none', fontWeight: 'bold',
                         px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#388e3c' },
@@ -954,6 +965,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     size="small"
                     variant="contained"
                     onClick={() => handleRevokeClick(item)}
+                    disabled={selectedCount > 0}
                     sx={{
                         bgcolor: '#F44336', color: 'white', textTransform: 'none', fontWeight: 'bold',
                         px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#d32f2f' },
@@ -976,6 +988,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     size="small"
                     variant="contained"
                     onClick={handler}
+                    disabled={selectedCount > 0}
                     sx={{
                         bgcolor: bgColor, color: 'white', textTransform: 'none', whiteSpace: 'nowrap',
                         '&:hover': { bgcolor: hoverBgColor },
