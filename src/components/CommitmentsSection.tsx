@@ -1755,7 +1755,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <ConfirmationModal
           open={issueBadgeModalOpen}
           onClose={() => setIssueBadgeModalOpen(false)}
-          title="Issue Badge"
+          title="Issue"
           description="This confirms the promise was kept and issues the badge to the recipient."
           onConfirm={handleConfirmIssueBadge}
           confirmText="Issue"
