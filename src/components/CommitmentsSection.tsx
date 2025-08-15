@@ -918,12 +918,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     if (showStandardAcceptDeclineButtons) {
         const acceptText = isBadgeRequestsTab ? 'Issue' : 'Accept';
         const declineText = isBadgeRequestsTab ? 'Reject' : 'Decline';
+        const onAcceptHandler = isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item);
+        const onDeclineHandler = isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item);
         return (
             <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start' }}>
                 <Button
                     size="small"
                     variant="contained"
-                    onClick={() => handleDeclineClick(item)}
+                    onClick={onDeclineHandler}
                     sx={{
                         bgcolor: '#F44336', color: 'white', textTransform: 'none', fontWeight: 'bold',
                         px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#d32f2f' },
@@ -934,7 +936,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 <Button
                     size="small"
                     variant="contained"
-                    onClick={() => handleAcceptClick(item)}
+                    onClick={onAcceptHandler}
                     sx={{
                         bgcolor: '#4CAF50', color: 'white', textTransform: 'none', fontWeight: 'bold',
                         px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#388e3c' },
@@ -1398,6 +1400,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 expandedRows={expandedRows}
                 onToggleExpand={handleToggleExpandRow}
                 renderActions={isActionsPage ? renderTableActions : undefined}
+                isRequestsToCommitTab={isRequestsToCommitTab}
+                isAwaitingResponseTab={isAwaitingResponseTab}
               />
             </Box>
           ) : (
@@ -1749,7 +1753,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <ConfirmationModal
           open={issueBadgeModalOpen}
           onClose={() => setIssueBadgeModalOpen(false)}
-          title="Issue Badge"
+          title="Issue"
           description="This confirms the promise was kept and issues the badge to the recipient."
           onConfirm={handleConfirmIssueBadge}
           confirmText="Issue"
