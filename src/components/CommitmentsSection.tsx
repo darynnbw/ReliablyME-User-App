@@ -1538,7 +1538,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       onReject={rejectBadgeButtonHandler} // Pass new handler
                       onIssueBadge={issueBadgeButtonHandler} // Pass new handler
                       isCommitmentPortfolioPage={isCommitmentPortfolioPage} // Pass the prop
-                      isBadgeRequestsTab={isBadgeRequestsTab}
                     />
                   );
                 })

@@ -316,6 +316,26 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             {description}
           </Typography>
 
+          {/* Explanation for Badge Requests */}
+          {isBadgeRequestsTab && explanation && (
+            <Box
+              sx={{
+                bgcolor: '#f8f9fa',
+                p: 2,
+                borderRadius: 2,
+                border: '1px solid #e9ecef',
+                my: 1,
+              }}
+            >
+              <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                  Explanation:{' '}
+                </Typography>
+                {explanation}
+              </Typography>
+            </Box>
+          )}
+
           {/* New flex container for Assignee Info and Buttons */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: isCommitmentPortfolioPage ? 2.25 : 1 }}> {/* mt: 2.25 for consistent spacing */}
             {/* Assignee Info */}
@@ -594,7 +614,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </>
                   )
                 )}
-                {(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation && (
+                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
                   <>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
                       Explanation:
