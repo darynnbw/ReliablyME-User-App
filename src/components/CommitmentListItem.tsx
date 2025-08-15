@@ -422,7 +422,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     '&:hover': { bgcolor: '#388e3c' },
                   }}
                 >
-                  Issue Badge
+                  Issue
                 </Button>
               </Box>
             ) : (

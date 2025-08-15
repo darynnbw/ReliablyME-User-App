@@ -871,7 +871,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                         <Close fontSize="small" />
                     </IconButton>
                 </Tooltip>
-                <Tooltip title="Issue Badge" placement="top" arrow>
+                <Tooltip title="Issue" placement="top" arrow>
                     <IconButton
                         size="small"
                         onClick={() => handleApproveBadgeRequest(item)}
@@ -884,7 +884,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         );
     }
     if (showStandardAcceptDeclineButtons) {
-        const acceptText = isBadgeRequestsTab ? 'Issue Badge' : 'Accept';
+        const acceptText = isBadgeRequestsTab ? 'Issue' : 'Accept';
         const declineText = isBadgeRequestsTab ? 'Reject' : 'Decline';
         return (
             <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start' }}>
@@ -1312,7 +1312,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       '&:hover': { bgcolor: '#388e3c' }
                     }}
                   >
-                    Issue Badge
+                    Issue
                   </Button>
                   <Button
                     variant="contained"
@@ -1415,7 +1415,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     showStandardAcceptDeclineButtons = isRequestsToCommitTab || isBadgeRequestsTab;
                     standardAcceptHandler = isBadgeRequestsTab ? () => handleApproveBadgeRequest(item) : () => handleAcceptClick(item);
                     standardDeclineHandler = isBadgeRequestsTab ? () => handleRejectBadgeRequest(item) : () => handleDeclineClick(item);
-                    standardAcceptButtonText = isBadgeRequestsTab ? 'Issue Badge' : undefined;
+                    standardAcceptButtonText = isBadgeRequestsTab ? 'Issue' : undefined;
                     standardDeclineButtonText = isBadgeRequestsTab ? 'Reject' : undefined;
                   }
 
