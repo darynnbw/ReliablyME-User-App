@@ -309,14 +309,22 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   };
 
   useEffect(() => {
+    const currentTabLabel = tabs[activeTab].label;
     setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
-    setExpandedRows(new Set());
-    // Reset filters when tab changes to a disabled filter tab, but keep personFilter
-    // Determine if filters should be disabled for the current tab
-    const currentTabLabel = tabs[activeTab].label;
+  
+    // Default expansion logic
+    if (currentTabLabel === 'Badge Requests') {
+      const idsToExpand = tabs[activeTab].items
+        .filter(item => !!item.explanation)
+        .map(item => item.id);
+      setExpandedRows(new Set(idsToExpand));
+    } else {
+      setExpandedRows(new Set());
+    }
+  
+    // Filter reset logic
     const disableFiltersForCurrentTab = currentTabLabel === 'Requests to Commit' || currentTabLabel === 'Awaiting Response' || currentTabLabel === 'Active Promises';
-
     if (disableFiltersForCurrentTab) {
       setDateFilter('All');
       setSortBy('dueDateNewest');
@@ -324,15 +332,15 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       setDateRange([null, null]);
       setTempDateRange([null, null]);
     }
-
-    // Set default sortBy for 'My Badges' and 'Badges Issued' tabs
+  
+    // Default sort logic
     if (currentTabLabel === 'My Badges' || currentTabLabel === 'Badges Issued') {
       setSortBy('approvedDateNewest');
     } else {
-      setSortBy('dueDateNewest'); // Default for other tabs
+      setSortBy('dueDateNewest');
     }
-
-    // Reset table-specific filters when tab changes
+  
+    // Reset table-specific filters
     setBadgeTableFilter('');
     setCommitmentTextTableFilter('');
     setAssigneeTableFilter('');

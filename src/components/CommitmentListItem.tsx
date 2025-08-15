@@ -66,6 +66,7 @@ interface CommitmentListItemProps {
   onReject?: () => void; // New optional prop
   onIssueBadge?: () => void; // New optional prop
   isCommitmentPortfolioPage?: boolean; // New prop
+  isBadgeRequestsTab?: boolean; // New prop
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -127,6 +128,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onReject, // Destructure new prop
   onIssueBadge, // Destructure new prop
   isCommitmentPortfolioPage = false, // Default to false
+  isBadgeRequestsTab = false, // New prop
 }, ref) => {
   const theme = useTheme();
 
@@ -150,8 +152,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   // Determine the icon color based on overdue status or section color
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
-  // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
-  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
+  // Show expand icon if it's a nudge with responses OR an issued/requested badge with an explanation
+  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation);
   const isRecurringNudge = isNudge && areQuestionsRecurring(responses);
 
   return (
@@ -315,7 +317,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Typography>
 
           {/* Explanation - always full width within this column flex container */}
-          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
+          {explanation && !(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && !isNudge && (
             <Box
               sx={{
                 bgcolor: '#f8f9fa',
@@ -615,7 +617,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </>
                   )
                 )}
-                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
+                {(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation && (
                   <>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 1 : 0.5, color: 'text.primary' }}>
                       Explanation:
