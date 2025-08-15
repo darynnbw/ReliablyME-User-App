@@ -53,6 +53,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
   if (!commitment) return null;
 
   const committedLabel = (isRequest || isAwaitingResponse) ? 'Requested' : 'Committed';
+  const personLabel = isRequest ? 'From:' : 'To:';
   
   let committedDateValue = commitment.committedDate;
   if ((isRequest || isAwaitingResponse) && committedDateValue?.startsWith('Requested on ')) {
@@ -205,7 +206,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              To:{' '}
+              {personLabel}{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
                 {commitment.assignee}
               </Typography>

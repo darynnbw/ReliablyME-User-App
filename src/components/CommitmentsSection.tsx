@@ -990,7 +990,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                     onClick={handler}
                     disabled={selectedCount > 0}
                     sx={{
-                        bgcolor: bgColor, color: 'white', textTransform: 'none', whiteSpace: 'nowrap',
+                        bgcolor: bgColor, color: 'white', textTransform: 'none', whiteSpace: 'nowrap', fontWeight: 'bold',
                         '&:hover': { bgcolor: hoverBgColor },
                     }}
                 >
