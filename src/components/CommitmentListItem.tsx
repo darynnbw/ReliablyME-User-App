@@ -496,7 +496,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           {/* Collapsible Responses / Explanation */}
           {showExpandIcon && (
             <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-              <Box sx={{ mt: isCommitmentPortfolioPage ? 2 : 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
+              <Box sx={{ mt: 1.5, p: 2, bgcolor: '#f8f9fa', borderRadius: 2, border: '1px solid #e9ecef' }}>
                 {isNudge && responses && responses.length > 0 && (
                   isRecurringNudge ? (
                     <>
@@ -595,14 +595,12 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   )
                 )}
                 {(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation && (
-                  <>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 1 : 0.5, color: 'text.primary' }}>
-                      Explanation:
+                  <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
+                    <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
+                      Explanation:{' '}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
-                      {explanation}
-                    </Typography>
-                  </>
+                    {explanation}
+                  </Typography>
                 )}
               </Box>
             </Collapse>
