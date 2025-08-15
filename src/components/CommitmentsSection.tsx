@@ -162,6 +162,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [commitmentForAnswerNudge, setCommitmentForAnswerNudge] = useState<Commitment | null>(null);
   const [commitmentToReject, setCommitmentToReject] = useState<Commitment | null>(null);
   const [commitmentForBadgeRequest, setCommitmentForBadgeRequest] = useState<Commitment | null>(null);
+  const [commitmentToModify, setCommitmentToModify] = useState<Commitment | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
   const handleCloseDetailsModal = useCallback(() => setModalOpen(false), []);
@@ -219,6 +220,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [bulkRejectModalOpen, setBulkRejectModalOpen] = useState(false);
   const [bulkApprovalSuccessOpen, setBulkApprovalSuccessOpen] = useState(false);
 
+  const [rejectPromiseModalOpen, setRejectPromiseModalOpen] = useState(false);
+  const [issueBadgeModalOpen, setIssueBadgeModalOpen] = useState(false);
+
   // New state for clarification success modal
   const [showClarificationSuccessModal, setShowClarificationSuccessModal] = useState(false);
 
@@ -274,6 +278,34 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
     // Logic to handle the rejection confirmation
     setRejectBadgeModalOpen(false);
     setCommitmentToReject(null);
+  };
+
+  const handleRejectPromise = (item: Commitment) => {
+    setCommitmentToModify(item);
+    setRejectPromiseModalOpen(true);
+  };
+
+  const handleConfirmRejectPromise = () => {
+      if (!commitmentToModify) return;
+      console.log('Rejecting promise:', commitmentToModify.id);
+      setCommitments(prev => prev.filter(c => c.id !== commitmentToModify.id));
+      setRejectPromiseModalOpen(false);
+      setCommitmentToModify(null);
+  };
+
+  const handleIssueBadge = (item: Commitment) => {
+      setCommitmentToModify(item);
+      setIssueBadgeModalOpen(true);
+  };
+
+  const handleConfirmIssueBadge = () => {
+      if (!commitmentToModify) return;
+      console.log('Issuing badge for promise:', commitmentToModify.id);
+      setCommitments(prev => prev.filter(c => c.id !== commitmentToModify.id));
+      setIssueBadgeModalOpen(false);
+      setRequesterForApproval(commitmentToModify.assignee);
+      setApprovalModalOpen(true);
+      setCommitmentToModify(null);
   };
 
   useEffect(() => {
@@ -865,7 +897,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 <Tooltip title="Reject" placement="top" arrow>
                     <IconButton
                         size="small"
-                        onClick={() => handleRejectBadgeRequest(item)}
+                        onClick={() => handleRejectPromise(item)}
                         sx={{ bgcolor: '#fde8e8', color: '#f44336', '&:hover': { bgcolor: '#f8d7da' } }}
                     >
                         <Close fontSize="small" />
@@ -874,7 +906,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 <Tooltip title="Issue" placement="top" arrow>
                     <IconButton
                         size="small"
-                        onClick={() => handleApproveBadgeRequest(item)}
+                        onClick={() => handleIssueBadge(item)}
                         sx={{ bgcolor: '#e8f5e8', color: '#4caf50', '&:hover': { bgcolor: '#d4edda' } }}
                     >
                         <Check fontSize="small" />
@@ -1421,8 +1453,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
                   // Define handlers for the new Clarify/Reject/Issue Badge buttons (for Promises Owed to Me)
                   const clarifyRequestButtonHandler = () => handleClarifyClick(item);
-                  const rejectBadgeButtonHandler = () => handleRejectBadgeRequest(item);
-                  const issueBadgeButtonHandler = () => handleApproveBadgeRequest(item);
+                  const rejectBadgeButtonHandler = isOwedToMe ? () => handleRejectPromise(item) : () => handleRejectBadgeRequest(item);
+                  const issueBadgeButtonHandler = isOwedToMe ? () => handleIssueBadge(item) : () => handleApproveBadgeRequest(item);
 
                   return (
                     <CommitmentListItem
@@ -1705,6 +1737,23 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         onConfirm={handleConfirmBulkReject}
         confirmText="Reject"
         confirmColor="error"
+      />
+      <DeclineModal
+          open={rejectPromiseModalOpen}
+          onClose={() => setRejectPromiseModalOpen(false)}
+          title="Reject Promise"
+          description="Are you sure you want to reject this promise? The sender will be notified."
+          onDecline={handleConfirmRejectPromise}
+          declineText="Reject the promise"
+      />
+      <ConfirmationModal
+          open={issueBadgeModalOpen}
+          onClose={() => setIssueBadgeModalOpen(false)}
+          title="Issue Badge"
+          description="This confirms the promise was kept and issues the badge to the recipient."
+          onConfirm={handleConfirmIssueBadge}
+          confirmText="Issue"
+          confirmColor="success"
       />
 
       {/* CommitmentActionModal for "Make a Promise" from empty state */}
