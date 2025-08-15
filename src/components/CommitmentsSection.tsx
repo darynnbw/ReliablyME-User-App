@@ -1709,14 +1709,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <DeclineModal
         open={rejectBadgeModalOpen}
         onClose={handleCloseRejectBadgeModal}
-        title="Reject Promise"
+        title="Reject Badge Request"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to reject this promise? The sender will be notified.
+            Are you sure you want to reject this badge request? The sender will be notified.
           </Typography>
         }
         onDecline={handleConfirmRejectBadge}
-        declineText="Reject the promise"
+        declineText="Reject Request"
       />
       <ConfirmationModal
         open={bulkApproveModalOpen}
@@ -1748,9 +1748,9 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           open={rejectPromiseModalOpen}
           onClose={() => setRejectPromiseModalOpen(false)}
           title="Reject Promise"
-          description="Are you sure you want to reject this promise? The sender will be notified."
+          description="Are you sure you want to reject this promise? This will cancel the commitment, and the user will be notified."
           onDecline={handleConfirmRejectPromise}
-          declineText="Reject the promise"
+          declineText="Reject Promise"
       />
       <ConfirmationModal
           open={issueBadgeModalOpen}
