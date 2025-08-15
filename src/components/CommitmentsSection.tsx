@@ -294,10 +294,8 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   };
 
   const handleIssueBadge = (item: Commitment) => {
-    console.log('Issuing badge for promise:', item.id);
-    setCommitments(prev => prev.filter(c => c.id !== item.id));
-    setRequesterForApproval(item.assignee);
-    setApprovalModalOpen(true);
+    setCommitmentToModify(item);
+    setIssueBadgeModalOpen(true);
   };
 
   const handleConfirmIssueBadge = () => {
@@ -828,7 +826,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   };
 
   const expandableCommitmentIds = currentItems
-    .filter(c => (c.type === 'nudge' && c.responses && c.responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && c.explanation))
+    .filter(c => (c.type === 'nudge' && c.responses && c.responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && c.explanation))
     .map(c => c.id);
 
   const expandedCount = expandedRows.size;
@@ -1404,6 +1402,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                 renderActions={isActionsPage ? renderTableActions : undefined}
                 isRequestsToCommitTab={isRequestsToCommitTab}
                 isAwaitingResponseTab={isAwaitingResponseTab}
+                isBadgeRequestsTab={isBadgeRequestsTab}
               />
             </Box>
           ) : (

@@ -64,6 +64,7 @@ interface CommitmentsTableProps {
   renderActions?: (commitment: Commitment) => React.ReactNode;
   isRequestsToCommitTab?: boolean; // New
   isAwaitingResponseTab?: boolean; // New
+  isBadgeRequestsTab?: boolean; // New
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -94,6 +95,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   renderActions,
   isRequestsToCommitTab = false,
   isAwaitingResponseTab = false,
+  isBadgeRequestsTab = false,
 }) => {
   const theme = useTheme();
   const [badgeAnchorEl, setBadgeAnchorEl] = useState<null | HTMLElement>(null);
@@ -138,13 +140,15 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   };
 
   const renderFormattedDate = (dateString?: string) => {
-    if (!dateString || dateString === 'N/A') {
-      return <Typography variant="body2">N/A</Typography>;
+    if (!dateString || dateString === 'N/A' || dateString === 'Pending') {
+      return <Typography variant="body2">{dateString || 'N/A'}</Typography>;
     }
     
     let cleanDateString = dateString;
     if (dateString.startsWith('Requested on ')) {
       cleanDateString = dateString.substring('Requested on '.length);
+    } else if (dateString.startsWith('Completed ')) {
+      cleanDateString = dateString.substring('Completed '.length);
     }
 
     const date = dayjs(cleanDateString, ['MMM D, YYYY, hh:mm A', 'MMM D, hh:mm A']);
@@ -172,7 +176,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
 
   let numColumns = 2; // Badge, Commitment, Assignee
   if (!isRequestsToCommitTab) numColumns++; // Committed/Requested
-  if (!isRequestsToCommitTab && !isAwaitingResponseTab) numColumns++; // Due
+  if (!isRequestsToCommitTab) numColumns++; // Due
   if (isMyBadgesTab || isBadgesIssuedTab) numColumns++; // Approved
   if (renderActions) numColumns++;
 
@@ -240,9 +244,9 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
             
             {!isRequestsToCommitTab && (
               <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
-                <Tooltip title={isAwaitingResponseTab ? "The time when the commitment was requested." : "The exact time when the user committed to doing something."} placement="top">
+                <Tooltip title={isAwaitingResponseTab ? "The time when the commitment was requested." : (isBadgeRequestsTab ? "The original due date for the commitment." : "The exact time when the user committed to doing something.")} placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    {isAwaitingResponseTab ? 'Requested' : 'Committed'}
+                    {isAwaitingResponseTab ? 'Requested' : (isBadgeRequestsTab ? 'Due' : 'Committed')}
                     <IconButton ref={committedDateButtonRef} size="small" onClick={() => setCommittedDateOpen(true)} aria-label="filter by committed date">
                       <CalendarToday fontSize="small" sx={{ color: committedDateIconColor }} />
                     </IconButton>
@@ -258,11 +262,11 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </TableCell>
             )}
 
-            {!isRequestsToCommitTab && !isAwaitingResponseTab && (
+            {!isRequestsToCommitTab && (
               <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
-                <Tooltip title="The end date for a commitment. If past this date, the commitment will be overdue." placement="top">
+                <Tooltip title={isBadgeRequestsTab ? "The date the commitment was completed." : "The end date for a commitment. If past this date, the commitment will be overdue."} placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    Due
+                    {isBadgeRequestsTab ? 'Completed' : 'Due'}
                     <IconButton ref={dueDateButtonRef} size="small" onClick={() => setDueDateOpen(true)} aria-label="filter by due date">
                       <CalendarToday fontSize="small" sx={{ color: dueDateIconColor }} />
                     </IconButton>
@@ -323,7 +327,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                         <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                           {(() => {
                             const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
-                            const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation;
+                            const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation;
                             return (
                               <IconButton size="small" onClick={() => onToggleExpand(commitment.id)} sx={{ visibility: (isNudgeWithResponses || isBadgeWithExplanation) ? 'visible' : 'hidden' }}>
                                 {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -339,10 +343,10 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     <TableCell>{commitment.assignee}</TableCell>
                     
                     {!isRequestsToCommitTab && (
-                      <TableCell>{renderFormattedDate(commitment.committedDate)}</TableCell>
+                      <TableCell>{renderFormattedDate(isBadgeRequestsTab ? commitment.dueDate : commitment.committedDate)}</TableCell>
                     )}
-                    {!isRequestsToCommitTab && !isAwaitingResponseTab && (
-                      <TableCell>{renderFormattedDate(commitment.dueDate)}</TableCell>
+                    {!isRequestsToCommitTab && (
+                      <TableCell>{renderFormattedDate(isBadgeRequestsTab ? commitment.committedDate : commitment.dueDate)}</TableCell>
                     )}
                     {(isMyBadgesTab || isBadgesIssuedTab) && (
                       <TableCell>{renderFormattedDate(commitment.approvedDate)}</TableCell>
@@ -353,7 +357,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       </TableCell>
                     )}
                   </TableRow>
-                  {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
+                  {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation)) && (
                     <TableRow>
                       <TableCell colSpan={numColumns} sx={{ py: 0, borderBottom: 'none' }}>
                         <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
@@ -407,7 +411,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                 </>
                               )
                             )}
-                            {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation) && (
+                            {((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation) && (
                               <>
                                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>Explanation:</Typography>
                                 <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>{commitment.explanation}</Typography>
