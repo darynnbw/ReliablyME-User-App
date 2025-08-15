@@ -52,7 +52,12 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
 }) => {
   if (!commitment) return null;
 
-  const committedLabel = isRequest ? 'Requested' : 'Committed';
+  const committedLabel = (isRequest || isAwaitingResponse) ? 'Requested' : 'Committed';
+  
+  let committedDateValue = commitment.committedDate;
+  if ((isRequest || isAwaitingResponse) && committedDateValue?.startsWith('Requested on ')) {
+    committedDateValue = committedDateValue.substring('Requested on '.length);
+  }
 
   const renderActionButtons = () => {
     // If it's a "Promise Owed to Me" and on the Commitment Portfolio page, remove all buttons
@@ -213,7 +218,7 @@ const CommitmentDetailsModal: React.FC<CommitmentDetailsModalProps> = ({
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
                 {committedLabel}:{' '}
                 <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                  {commitment.committedDate}
+                  {committedDateValue}
                 </Typography>
               </Typography>
             </Box>
