@@ -322,7 +322,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </TableCell>
             )}
             {renderActions && (
-              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%', textAlign: 'right', pr: 4 }}>
+              <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%', textAlign: 'left', pl: 2 }}>
                 Actions
               </TableCell>
             )}
@@ -383,7 +383,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       <TableCell>{renderFormattedDate(commitment.approvedDate)}</TableCell>
                     )}
                     {renderActions && (
-                      <TableCell align="right" sx={{ pr: 4 }}>
+                      <TableCell align="left" sx={{ pl: 2 }}>
                         {renderActions(commitment)}
                       </TableCell>
                     )}

@@ -18,6 +18,8 @@ import {
   alpha,
   SelectChangeEvent,
   SxProps,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import {
@@ -30,6 +32,7 @@ import {
   KeyboardArrowUp,
   KeyboardArrowDown,
   Remove,
+  Undo,
 } from '@mui/icons-material';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import dayjs, { Dayjs } from 'dayjs';
@@ -849,10 +852,34 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
 
     if (showClarifyRejectIssueButtonsForListItem) {
         return (
-            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                <Button size="small" variant="outlined" onClick={() => handleClarifyClick(item)}>Clarify</Button>
-                <Button size="small" variant="contained" color="error" onClick={() => handleRejectBadgeRequest(item)}>Reject</Button>
-                <Button size="small" variant="contained" color="success" onClick={() => handleApproveBadgeRequest(item)}>Issue Badge</Button>
+            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start' }}>
+                <Tooltip title="Request Clarification" placement="top" arrow>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleClarifyClick(item)}
+                        sx={{ bgcolor: '#fff8e1', color: '#ff9800', '&:hover': { bgcolor: '#fff3c4' } }}
+                    >
+                        <Undo fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Reject" placement="top" arrow>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleRejectBadgeRequest(item)}
+                        sx={{ bgcolor: '#fde8e8', color: '#f44336', '&:hover': { bgcolor: '#f8d7da' } }}
+                    >
+                        <Close fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Issue Badge" placement="top" arrow>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleApproveBadgeRequest(item)}
+                        sx={{ bgcolor: '#e8f5e8', color: '#4caf50', '&:hover': { bgcolor: '#d4edda' } }}
+                    >
+                        <Check fontSize="small" />
+                    </IconButton>
+                </Tooltip>
             </Box>
         );
     }
@@ -860,14 +887,48 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         const acceptText = isBadgeRequestsTab ? 'Issue Badge' : 'Accept';
         const declineText = isBadgeRequestsTab ? 'Reject' : 'Decline';
         return (
-            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                <Button size="small" variant="contained" color="error" onClick={() => handleDeclineClick(item)}>{declineText}</Button>
-                <Button size="small" variant="contained" color="success" onClick={() => handleAcceptClick(item)}>{acceptText}</Button>
+            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start' }}>
+                <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => handleDeclineClick(item)}
+                    sx={{
+                        bgcolor: '#F44336', color: 'white', textTransform: 'none', fontWeight: 'bold',
+                        px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#d32f2f' },
+                    }}
+                >
+                    {declineText}
+                </Button>
+                <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => handleAcceptClick(item)}
+                    sx={{
+                        bgcolor: '#4CAF50', color: 'white', textTransform: 'none', fontWeight: 'bold',
+                        px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#388e3c' },
+                    }}
+                >
+                    {acceptText}
+                </Button>
             </Box>
         );
     }
     if (showRevokeButtonForListItem) {
-        return <Button size="small" variant="contained" color="error" onClick={() => handleRevokeClick(item)}>Revoke</Button>;
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => handleRevokeClick(item)}
+                    sx={{
+                        bgcolor: '#F44336', color: 'white', textTransform: 'none', fontWeight: 'bold',
+                        px: 2, py: 0.5, borderRadius: 1, whiteSpace: 'nowrap', '&:hover': { bgcolor: '#d32f2f' },
+                    }}
+                >
+                    Revoke
+                </Button>
+            </Box>
+        );
     }
     if (showSingleActionButton) {
         const buttonText = isNudgeItem && isMyPromisesTab ? 'Answer Nudge' : (isOwedToMe ? 'Clarify Request' : 'Request Badge');
@@ -876,19 +937,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
         const hoverBgColor = (isNudgeItem && isMyPromisesTab) ? '#f4511e' : alpha(itemColor, 0.8);
 
         return (
-            <Button
-                size="small"
-                variant="contained"
-                onClick={handler}
-                sx={{
-                    bgcolor: bgColor,
-                    color: 'white',
-                    textTransform: 'none',
-                    '&:hover': { bgcolor: hoverBgColor },
-                }}
-            >
-                {buttonText}
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button
+                    size="small"
+                    variant="contained"
+                    onClick={handler}
+                    sx={{
+                        bgcolor: bgColor, color: 'white', textTransform: 'none', whiteSpace: 'nowrap',
+                        '&:hover': { bgcolor: hoverBgColor },
+                    }}
+                >
+                    {buttonText}
+                </Button>
+            </Box>
         );
     }
     return null;
