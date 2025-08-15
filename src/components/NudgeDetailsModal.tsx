@@ -77,7 +77,7 @@ const NudgeDetailsModal: React.FC<NudgeDetailsModalProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Person sx={{ fontSize: 20, color: '#FF7F41' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              To:{' '}
+              {isRequest ? 'From:' : 'To:'}{' '}
               <Typography component="span" sx={{ fontWeight: 400, fontSize: 'inherit' }}>
                 {commitment.assignee}
               </Typography>
