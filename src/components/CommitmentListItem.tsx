@@ -66,6 +66,7 @@ interface CommitmentListItemProps {
   onReject?: () => void; // New optional prop
   onIssueBadge?: () => void; // New optional prop
   isCommitmentPortfolioPage?: boolean; // New prop
+  isBadgeRequestsTab?: boolean; // New prop
 }
 
 const areQuestionsRecurring = (responses?: { questions?: string[] }[]): boolean => {
@@ -127,6 +128,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   onReject, // Destructure new prop
   onIssueBadge, // Destructure new prop
   isCommitmentPortfolioPage = false, // Default to false
+  isBadgeRequestsTab = false,
 }, ref) => {
   const theme = useTheme();
 
@@ -150,8 +152,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   // Determine the icon color based on overdue status or section color
   const calendarIconColor = isOverdue ? theme.palette.error.main : color;
 
-  // Show expand icon if it's a nudge with responses OR an issued badge with an explanation
-  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab) && explanation);
+  // Show expand icon if it's a nudge with responses OR a badge with an explanation
+  const showExpandIcon = (isNudge && responses && responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation);
   const isRecurringNudge = isNudge && areQuestionsRecurring(responses);
 
   return (
@@ -270,11 +272,11 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
               )}
             </Stack>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {showExpandIcon && !isActionsPage && ( // Hide expand icon on Actions page
+              {showExpandIcon && (
                 <IconButton
                   onClick={handleExpandClick}
                   aria-expanded={isExpanded}
-                  aria-label="show historical responses"
+                  aria-label="show more"
                   size="small"
                   sx={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
                 >
@@ -313,29 +315,6 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           <Typography variant="body2" sx={{ color: '#666', lineHeight: 1.5, mb: isCommitmentPortfolioPage ? 0.5 : 1 }}>
             {description}
           </Typography>
-
-          {/* Explanation - always full width within this column flex container */}
-          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
-            <Box
-              sx={{
-                bgcolor: '#f8f9fa',
-                px: 2,
-                py: 1.5,
-                borderRadius: 2,
-                border: '1px solid #e9ecef',
-                mt: 0, // No top margin, description's mb handles spacing
-                mb: isCommitmentPortfolioPage ? 2.25 : 1, // Consistent margin below explanation
-                width: '100%', // Ensure it takes full available width
-              }}
-            >
-              <Typography component="span" variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                  Explanation:{' '}
-                </Typography>
-                {explanation}
-              </Typography>
-            </Box>
-          )}
 
           {/* New flex container for Assignee Info and Buttons */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: isCommitmentPortfolioPage ? 2.25 : 1 }}> {/* mt: 2.25 for consistent spacing */}
@@ -514,8 +493,8 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             )}
           </Box>
 
-          {/* Collapsible Responses / Explanation (only show if not on Actions page) */}
-          {showExpandIcon && !isActionsPage && (
+          {/* Collapsible Responses / Explanation */}
+          {showExpandIcon && (
             <Collapse in={isExpanded} timeout="auto" unmountOnExit>
               <Box sx={{ mt: isCommitmentPortfolioPage ? 2 : 1.5, p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid grey.200' }}>
                 {isNudge && responses && responses.length > 0 && (
@@ -615,7 +594,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                     </>
                   )
                 )}
-                {(isMyBadgesTab || isBadgesIssuedTab) && explanation && (
+                {(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation && (
                   <>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: isCommitmentPortfolioPage ? 1 : 0.5, color: 'text.primary' }}>
                       Explanation:

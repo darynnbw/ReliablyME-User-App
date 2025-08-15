@@ -309,9 +309,19 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   };
 
   useEffect(() => {
-    setCommitments(tabs[activeTab].items.map(item => ({ ...item, selected: false })));
+    const currentItems = tabs[activeTab].items;
+    setCommitments(currentItems.map(item => ({ ...item, selected: false })));
     setSelectAll(false);
-    setExpandedRows(new Set());
+
+    if (tabs[activeTab].label === 'Badge Requests') {
+      const expandableIds = currentItems
+        .filter(item => !!item.explanation)
+        .map(item => item.id);
+      setExpandedRows(new Set(expandableIds));
+    } else {
+      setExpandedRows(new Set());
+    }
+    
     // Reset filters when tab changes to a disabled filter tab, but keep personFilter
     // Determine if filters should be disabled for the current tab
     const currentTabLabel = tabs[activeTab].label;
