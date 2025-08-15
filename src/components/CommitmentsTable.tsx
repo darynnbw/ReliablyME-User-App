@@ -317,21 +317,16 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           ) : (
             commitments.map((commitment, index) => {
               const isRecurringNudge = commitment.type === 'nudge' && areQuestionsRecurring(commitment.responses);
+              const showExpandIcon = (commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation);
               return (
                 <React.Fragment key={commitment.id}>
                   <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50' }}>
                     <TableCell component="th" scope="row">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                          {(() => {
-                            const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
-                            const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation;
-                            return (
-                              <IconButton size="small" onClick={() => onToggleExpand(commitment.id)} sx={{ visibility: (isNudgeWithResponses || isBadgeWithExplanation) ? 'visible' : 'hidden' }}>
-                                {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                              </IconButton>
-                            );
-                          })()}
+                          <IconButton size="small" onClick={() => onToggleExpand(commitment.id)} sx={{ visibility: showExpandIcon ? 'visible' : 'hidden' }}>
+                            {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                          </IconButton>
                         </Box>
                         {!isUnkeptTab && <BadgeIconWithTooltip badgeType={commitment.title} />}
                         {commitment.title}
@@ -353,7 +348,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       </TableCell>
                     )}
                   </TableRow>
-                  {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation)) && (
+                  {showExpandIcon && (
                     <TableRow>
                       <TableCell colSpan={numColumns} sx={{ py: 0, borderBottom: 'none' }}>
                         <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
