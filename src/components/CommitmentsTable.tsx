@@ -141,10 +141,17 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
     if (!dateString || dateString === 'N/A') {
       return <Typography variant="body2">N/A</Typography>;
     }
-    const date = dayjs(dateString, 'MMM D, YYYY, hh:mm A');
+    
+    let cleanDateString = dateString;
+    if (dateString.startsWith('Requested on ')) {
+      cleanDateString = dateString.substring('Requested on '.length);
+    }
+
+    const date = dayjs(cleanDateString, ['MMM D, YYYY, hh:mm A', 'MMM D, hh:mm A']);
     if (!date.isValid()) {
       return <Typography variant="body2">{dateString}</Typography>;
     }
+    
     return (
       <Box>
         <Typography variant="body2" sx={{ lineHeight: 1.3 }}>

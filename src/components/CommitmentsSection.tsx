@@ -294,8 +294,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   };
 
   const handleIssueBadge = (item: Commitment) => {
-      setCommitmentToModify(item);
-      setIssueBadgeModalOpen(true);
+    console.log('Issuing badge for promise:', item.id);
+    setCommitments(prev => prev.filter(c => c.id !== item.id));
+    setRequesterForApproval(item.assignee);
+    setApprovalModalOpen(true);
   };
 
   const handleConfirmIssueBadge = () => {
@@ -1690,13 +1692,13 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <SuccessConfirmationModal
         open={approvalModalOpen}
         onClose={handleCloseApprovalModal}
-        title="Badge Approved!"
+        title="Badge Issued!"
         message={requesterForApproval ? `${requesterForApproval} has been notified.` : 'The user has been notified.'}
       />
       <SuccessConfirmationModal
         open={bulkApprovalSuccessOpen}
         onClose={() => setBulkApprovalSuccessOpen(false)}
-        title="Badges Approved!"
+        title="Badges Issued!"
         message={`${selectedCount} ${selectedCount === 1 ? 'person has' : 'people have'} been notified.`}
       />
       <SuccessConfirmationModal
@@ -1708,13 +1710,14 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
       <DeclineModal
         open={rejectBadgeModalOpen}
         onClose={handleCloseRejectBadgeModal}
-        title="Reject Badge Request"
+        title="Reject Promise"
         description={
           <Typography variant="body1" sx={{ mb: 4 }}>
-            Are you sure you want to reject this badge request? The sender will be notified.
+            Are you sure you want to reject this promise? The sender will be notified.
           </Typography>
         }
         onDecline={handleConfirmRejectBadge}
+        declineText="Reject the promise"
       />
       <ConfirmationModal
         open={bulkApproveModalOpen}
