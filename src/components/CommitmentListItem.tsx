@@ -595,12 +595,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
                   )
                 )}
                 {(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && explanation && (
-                  <Typography variant="body2" sx={{ lineHeight: 1.6, color: '#333' }}>
-                    <Typography component="span" sx={{ fontWeight: 'bold', fontSize: 'inherit', color: 'inherit' }}>
-                      Explanation:{' '}
+                  <>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>
+                      Explanation:
                     </Typography>
-                    {explanation}
-                  </Typography>
+                    <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>
+                      {explanation}
+                    </Typography>
+                  </>
                 )}
               </Box>
             </Collapse>
