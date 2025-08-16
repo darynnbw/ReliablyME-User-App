@@ -1784,7 +1784,11 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           open={rejectPromiseModalOpen}
           onClose={() => setRejectPromiseModalOpen(false)}
           title="Reject Promise"
-          description="Are you sure you want to reject this promise? This will cancel the commitment, and the user will be notified."
+          description={
+            <Typography variant="body1" sx={{ mb: 4 }}>
+              Are you sure you want to reject this promise? This will cancel the commitment, and the user will be notified.
+            </Typography>
+          }
           onDecline={handleConfirmRejectPromise}
           declineText="Reject Promise"
       />
