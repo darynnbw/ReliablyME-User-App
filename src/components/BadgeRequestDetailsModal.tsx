@@ -12,16 +12,16 @@ import {
   alpha,
   useTheme,
 } from '@mui/material';
-import { Close, Person, CalendarToday, Schedule } from '@mui/icons-material';
-import dayjs, { Dayjs } from 'dayjs'; // Added Dayjs import
+import { Close, Person, CalendarToday, Schedule, TaskAltOutlined } from '@mui/icons-material';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface Commitment {
   title: string;
   description: string;
   explanation?: string;
   assignee: string;
-  dueDate: string; // e.g., "Completed Jul 18, 8:00 PM" or "Jul 10, 2024, 9:00 AM"
-  committedDate?: string; // e.g., "Jul 19, 2:00 PM"
+  dueDate: string;
+  committedDate?: string;
 }
 
 interface BadgeRequestDetailsModalProps {
@@ -55,8 +55,9 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
   const isCompleted = commitment.dueDate.startsWith('Completed ');
   const isOverdue = !isCompleted && parsedDueDate ? parsedDueDate.isBefore(dayjs()) : false;
 
-  const dateLabel = isCompleted ? 'Completed:' : 'Due:';
-  const dateValue = isCompleted ? commitment.dueDate.substring('Completed '.length) : commitment.dueDate;
+  const completionDate = isCompleted ? commitment.dueDate.substring('Completed '.length) : null;
+  // For completed items, the original due date is not available in the current data structure.
+  const originalDueDate = isCompleted ? null : commitment.dueDate;
 
   return (
     <Dialog
@@ -116,9 +117,9 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <CalendarToday sx={{ fontSize: 20, color: '#004C97' }} />
             <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
-              {dateLabel}{' '}
+              Due:{' '}
               <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
-                {dateValue}
+                {originalDueDate || 'N/A'}
               </Typography>
               {isOverdue && (
                 <Chip
@@ -136,6 +137,18 @@ const BadgeRequestDetailsModal: React.FC<BadgeRequestDetailsModalProps> = ({
               )}
             </Typography>
           </Box>
+
+          {isCompleted && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <TaskAltOutlined sx={{ fontSize: 20, color: '#4CAF50' }} />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', fontSize: '16px' }}>
+                Completed:{' '}
+                <Typography component="span" sx={{ fontWeight: 400, color: '#333', fontSize: '16px' }}>
+                  {completionDate}
+                </Typography>
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         <Typography variant="body1" sx={{ fontWeight: 600, mb: 1.5, color: '#333', fontSize: '16px' }}>

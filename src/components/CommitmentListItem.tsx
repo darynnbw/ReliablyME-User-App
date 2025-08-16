@@ -307,7 +307,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
             >
               <CalendarToday sx={{ fontSize: 16, color: calendarIconColor }} />
               <Typography variant="body2" sx={{ color: dateTextColor, fontWeight: dateTextWeight }}>
-                {displayDateLabel} {displayDateValue}
+                {displayDateLabel ? `${displayDateLabel} ${displayDateValue}` : displayDateValue}
               </Typography>
               {isNudge && nudgesLeft !== undefined && totalNudges !== undefined && nudgesLeft > 0 && (
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 400 }}>
