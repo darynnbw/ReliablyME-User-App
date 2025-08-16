@@ -142,8 +142,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   };
 
   // Determine the label and value based on the tab
-  const displayDateLabel = isMyBadgesTab || isBadgesIssuedTab ? 'Approved' : 'Due';
-  const displayDateValue = isMyBadgesTab || isBadgesIssuedTab ? (approvedDate || 'N/A') : dueDate;
+  let displayDateLabel = isMyBadgesTab || isBadgesIssuedTab ? 'Approved' : 'Due';
+  let displayDateValue = isMyBadgesTab || isBadgesIssuedTab ? (approvedDate || 'N/A') : dueDate;
+
+  // Logic for Badge Requests tab
+  if (isBadgeRequestsTab && dueDate.startsWith('Completed ')) {
+    displayDateLabel = ''; // No label
+    displayDateValue = dueDate; // The full "Completed ..." string
+  }
 
   // Determine the color and weight based on overdue status
   const dateTextColor = isOverdue ? theme.palette.error.main : '#666';
