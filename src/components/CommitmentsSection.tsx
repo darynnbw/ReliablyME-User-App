@@ -221,7 +221,6 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   const [bulkApprovalSuccessOpen, setBulkApprovalSuccessOpen] = useState(false);
 
   const [rejectPromiseModalOpen, setRejectPromiseModalOpen] = useState(false);
-  const [issueBadgeModalOpen, setIssueBadgeModalOpen] = useState(false);
 
   // New state for clarification success modal
   const [showClarificationSuccessModal, setShowClarificationSuccessModal] = useState(false);
@@ -294,18 +293,10 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
   };
 
   const handleIssueBadge = (item: Commitment) => {
-    setCommitmentToModify(item);
-    setIssueBadgeModalOpen(true);
-  };
-
-  const handleConfirmIssueBadge = () => {
-      if (!commitmentToModify) return;
-      console.log('Issuing badge for promise:', commitmentToModify.id);
-      setCommitments(prev => prev.filter(c => c.id !== commitmentToModify.id));
-      setIssueBadgeModalOpen(false);
-      setRequesterForApproval(commitmentToModify.assignee);
-      setApprovalModalOpen(true);
-      setCommitmentToModify(null);
+    console.log('Issuing badge for promise:', item.id);
+    setCommitments(prev => prev.filter(c => c.id !== item.id));
+    setRequesterForApproval(item.assignee);
+    setApprovalModalOpen(true);
   };
 
   useEffect(() => {
@@ -1792,16 +1783,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
           onDecline={handleConfirmRejectPromise}
           declineText="Reject Promise"
       />
-      <ConfirmationModal
-          open={issueBadgeModalOpen}
-          onClose={() => setIssueBadgeModalOpen(false)}
-          title="Issue"
-          description="This confirms the promise was kept and issues the badge to the recipient."
-          onConfirm={handleConfirmIssueBadge}
-          confirmText="Issue"
-          confirmColor="success"
-      />
-
+      
       {/* CommitmentActionModal for "Make a Promise" from empty state */}
       <CommitmentActionModal
         open={makePromiseModalOpen}

@@ -176,7 +176,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
 
   let numColumns = 3; // Badge, Commitment, Assignee
   if (!isRequestsToCommitTab) numColumns++; // Committed/Requested
-  if (!isRequestsToCommitTab) numColumns++; // Due
+  if (!isRequestsToCommitTab && !isAwaitingResponseTab) numColumns++; // Due
   if (isMyBadgesTab || isBadgesIssuedTab) numColumns++; // Approved
   if (renderActions) numColumns++;
 
@@ -260,7 +260,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
               </Tooltip>
             </TableCell>
 
-            {!isRequestsToCommitTab && (
+            {!isRequestsToCommitTab && !isAwaitingResponseTab && (
               <TableCell sx={{ fontWeight: 'bold', color: 'text.primary', whiteSpace: 'nowrap', width: '12%' }}>
                 <Tooltip title={isBadgeRequestsTab ? "The date the commitment was completed." : "The end date for a commitment. If past this date, the commitment will be overdue."} placement="top">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -341,7 +341,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                     <TableCell>{commitment.assignee}</TableCell>
                     
                     <TableCell>{renderFormattedDate(isBadgeRequestsTab ? commitment.dueDate : commitment.committedDate)}</TableCell>
-                    {!isRequestsToCommitTab && (
+                    {!isRequestsToCommitTab && !isAwaitingResponseTab && (
                       <TableCell>{renderFormattedDate(isBadgeRequestsTab ? commitment.committedDate : commitment.dueDate)}</TableCell>
                     )}
                     {(isMyBadgesTab || isBadgesIssuedTab) && (
