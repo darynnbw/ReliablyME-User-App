@@ -1510,6 +1510,7 @@ const CommitmentsSection: React.FC<CommitmentsSectionProps> = ({ title, tabs, di
                       isMyPromisesTab={isMyPromisesTab}
                       isMyBadgesTab={isMyBadgesTab}
                       isBadgesIssuedTab={isBadgesIssuedTab}
+                      isBadgeRequestsTab={isBadgeRequestsTab}
                       isExternal={item.isExternal}
                       isOverdue={item.isOverdue}
                       showRevokeButton={showRevokeButtonForListItem}

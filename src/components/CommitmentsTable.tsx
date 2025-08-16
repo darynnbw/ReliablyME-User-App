@@ -325,7 +325,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                         <Box sx={{ width: 32, flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                           {(() => {
                             const isNudgeWithResponses = commitment.type === 'nudge' && commitment.responses && commitment.responses.length > 0;
-                            const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation;
+                            const isBadgeWithExplanation = (isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation;
                             return (
                               <IconButton size="small" onClick={() => onToggleExpand(commitment.id)} sx={{ visibility: (isNudgeWithResponses || isBadgeWithExplanation) ? 'visible' : 'hidden' }}>
                                 {expandedRows.has(commitment.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -353,7 +353,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       </TableCell>
                     )}
                   </TableRow>
-                  {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation)) && (
+                  {((commitment.type === 'nudge' && commitment.responses) || ((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation)) && (
                     <TableRow>
                       <TableCell colSpan={numColumns} sx={{ py: 0, borderBottom: 'none' }}>
                         <Collapse in={expandedRows.has(commitment.id)} timeout="auto" unmountOnExit>
@@ -407,7 +407,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                 </>
                               )
                             )}
-                            {((isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && commitment.explanation) && (
+                            {((isMyBadgesTab || isBadgesIssuedTab) && commitment.explanation) && (
                               <>
                                 <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'text.primary' }}>Explanation:</Typography>
                                 <Typography variant="body2" sx={{ color: '#333', lineHeight: 1.5 }}>{commitment.explanation}</Typography>

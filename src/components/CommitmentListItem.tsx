@@ -48,6 +48,7 @@ interface CommitmentListItemProps {
   isMyPromisesTab?: boolean; // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
   isMyBadgesTab?: boolean; // New prop to specifically identify 'My Badges' tab
   isBadgesIssuedTab?: boolean; // New prop for Badges Issued tab
+  isBadgeRequestsTab?: boolean; // New prop
   isExternal?: boolean;
   isOverdue?: boolean;
   showRevokeButton?: boolean;
@@ -109,6 +110,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   isMyPromisesTab = false, // This prop is actually for the old 'My Promises' tab (now 'Active Promises')
   isMyBadgesTab = false, // New prop to specifically identify 'My Badges' tab
   isBadgesIssuedTab = false, // Destructure new prop
+  isBadgeRequestsTab = false, // Destructure new prop
   isExternal = false,
   isOverdue = false,
   showRevokeButton = false,
@@ -315,7 +317,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
           </Typography>
 
           {/* Explanation - always full width within this column flex container */}
-          {explanation && !(isMyBadgesTab || isBadgesIssuedTab) && !isNudge && (
+          {explanation && !(isMyBadgesTab || isBadgesIssuedTab || isBadgeRequestsTab) && !isNudge && (
             <Box
               sx={{
                 bgcolor: '#f8f9fa',
