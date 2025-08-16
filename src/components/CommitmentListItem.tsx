@@ -58,6 +58,7 @@ interface CommitmentListItemProps {
   declineButtonText?: string;
   responses?: { date: string; answer: string; questions?: string[] }[]; // New prop for historical responses
   approvedDate?: string; // Added approvedDate prop
+  completedDate?: string;
   isExpanded: boolean;
   onToggleExpand: () => void;
   isActionsPage?: boolean; // Re-added this prop
@@ -120,6 +121,7 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   declineButtonText,
   responses, // Destructure responses
   approvedDate, // Destructure approvedDate
+  completedDate,
   isExpanded,
   onToggleExpand,
   isActionsPage = false, // Default to false
@@ -146,9 +148,14 @@ const CommitmentListItem = React.forwardRef<HTMLDivElement, CommitmentListItemPr
   let displayDateValue = isMyBadgesTab || isBadgesIssuedTab ? (approvedDate || 'N/A') : dueDate;
 
   // Logic for Badge Requests tab
-  if (isBadgeRequestsTab && dueDate.startsWith('Completed ')) {
-    displayDateLabel = ''; // No label
-    displayDateValue = dueDate; // The full "Completed ..." string
+  if (isBadgeRequestsTab) {
+    if (completedDate) {
+      displayDateLabel = '';
+      displayDateValue = `Completed ${completedDate}`;
+    } else {
+      displayDateLabel = 'Due:';
+      displayDateValue = dueDate;
+    }
   }
 
   // Determine the color and weight based on overdue status
